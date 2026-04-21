@@ -154,8 +154,8 @@ app.post('/create-checkout-session', async (req, res) => {
       ],
       mode: 'payment',
       customer_email: req.body.email || undefined,
-      success_url: `${process.env.BASE_URL}/chat.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/caipy.html`,
+      success_url: `https://caipy-sfau.onrender.com/chat.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://caipy-sfau.onrender.com/caipy.html`,
       metadata: { product: 'caipy' },
     });
 
