@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caipy — Your Personal Cape Town Itinerary</title>
+<meta name="description" content="Chat with Caipy and get a complete personalised Cape Town itinerary in minutes. 10+ years of local knowledge, instantly yours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF7F2;--warm:#F3EDE3;--parchment:#EDE5D8;
+  --gold:#B8863A;--gold-l:#D4A85A;--gold-dim:#f5e8d0;
+  --text:#1C1C1A;--muted:#6B6560;--faint:#A09990;
+  --white:#fff;--border:rgba(0,0,0,0.08);
+  --sh1:0 2px 16px rgba(0,0,0,0.07);
+  --sh2:0 8px 40px rgba(0,0,0,0.13);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color:var(--text);line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:68px;background:rgba(250,247,242,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nb{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);text-decoration:none}
+.nb small{display:block;font-family:'Jost',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--faint);margin-top:-3px}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 5vw 60px;text-align:center;background:linear-gradient(160deg, var(--cream) 60%, var(--warm))}
+.hero-inner{max-width:720px}
+.badge{display:inline-block;background:var(--gold-dim);color:var(--gold);font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:6px 16px;border-radius:20px;margin-bottom:28px}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,8vw,82px);font-weight:400;line-height:1.08;color:var(--text);margin-bottom:24px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:540px;margin:0 auto 40px;line-height:1.8}
+.cta-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#fff;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:18px 40px;border-radius:4px;border:none;cursor:pointer;transition:all .25s;text-decoration:none}
+.btn-primary:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:var(--sh2)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary svg{width:18px;height:18px;flex-shrink:0}
+.price-note{font-size:13px;color:var(--faint);letter-spacing:.5px}
+.price-note strong{color:var(--muted)}
+
+/* WHAT YOU GET */
+.section{padding:80px 5vw;max-width:1100px;margin:0 auto}
+.section-label{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.section h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:400;margin-bottom:48px;line-height:1.2}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:64px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:32px;box-shadow:var(--sh1);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.card-icon{font-size:28px;margin-bottom:16px}
+.card h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-bottom:10px}
+.card p{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* HOW IT WORKS */
+.how{background:var(--warm);padding:80px 5vw}
+.how-inner{max-width:800px;margin:0 auto}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:28px;padding:28px 0;border-bottom:1px solid var(--parchment)}
+.step:last-child{border-bottom:none}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--gold);opacity:.6;min-width:48px;line-height:1}
+.step-body h4{font-size:16px;font-weight:500;margin-bottom:6px}
+.step-body p{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* SOCIAL PROOF */
+.trust{padding:60px 5vw;text-align:center;max-width:900px;margin:0 auto}
+.trust-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3vw,28px);font-style:italic;font-weight:300;color:var(--text);line-height:1.5;margin-bottom:20px}
+.trust-attr{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--faint)}
+
+/* PRICE BLOCK */
+.price-block{background:var(--text);color:var(--cream);padding:80px 5vw;text-align:center}
+.price-block h2{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,60px);font-weight:400;margin-bottom:16px}
+.price-block p{font-size:16px;color:rgba(250,247,242,.65);max-width:520px;margin:0 auto 40px}
+.price-amount{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--gold-l);line-height:1;margin-bottom:8px}
+.price-amount small{font-size:28px;vertical-align:super}
+.price-sub{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(250,247,242,.4);margin-bottom:40px}
+.btn-primary-dark{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#fff;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:18px 48px;border-radius:4px;border:none;cursor:pointer;transition:all .25s}
+.btn-primary-dark:hover{background:var(--gold-l);transform:translateY(-2px)}
+.guarantees{display:flex;justify-content:center;gap:32px;margin-top:32px;flex-wrap:wrap}
+.guarantee{font-size:12px;color:rgba(250,247,242,.45);display:flex;align-items:center;gap:6px}
+.guarantee::before{content:'✓';color:var(--gold-l)}
+
+/* FOOTER */
+footer{padding:32px 5vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+footer p{font-size:12px;color:var(--faint)}
+
+/* Loading state */
+.btn-loading{opacity:.7;pointer-events:none}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:600px){
+  .step{flex-direction:column;gap:12px}
+  .guarantees{gap:16px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nb">Cape Town<small>Planet Uncharted</small></a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="badge">Introducing Caipy</div>
+    <h1>Your <em>personal</em><br>Cape Town guide</h1>
+    <p class="lead">Chat with Caipy and get a complete day-by-day itinerary built around your trip — powered by 10+ years of living in Cape Town, not algorithm-generated fluff.</p>
+    <div class="cta-wrap">
+      <button class="btn-primary" onclick="startPayment()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Get My Itinerary — €49
+      </button>
+      <p class="price-note">One-time payment · <strong>Instant access</strong> · Download or email your itinerary</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<div class="section">
+  <div class="section-label">What you get</div>
+  <h2>Everything you need,<br>nothing you don't</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">📅</div>
+      <h3>Day-by-day itinerary</h3>
+      <p>A complete schedule built around your trip length, interests, and travel style. Morning, afternoon, evening — structured so you never waste a day.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🍽️</div>
+      <h3>Restaurant picks that matter</h3>
+      <p>The Black Sheep, Kloofstreet House, The Pot Luck Club — and more. Places Dirk actually eats at, not paid placements or tourist traps.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏔️</div>
+      <h3>Local-only hidden gems</h3>
+      <p>Beta Beach in Bakoven, the Durbanville Hills wine route, Noordhoek via Chapman's Peak. The spots you'll only find if you know someone who lives there.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <h3>Real safety advice</h3>
+      <p>How to travel like a local, what not to wear, which areas to avoid at night. Practical and direct — because knowing this makes a real difference.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💬</div>
+      <h3>Ask anything</h3>
+      <p>Caipy doesn't just generate and disappear. Ask follow-up questions, adjust days, get more detail on specific restaurants or experiences.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📤</div>
+      <h3>Download or email it</h3>
+      <p>Save your itinerary as a text file or email it directly to yourself. Yours to keep and use offline — no app, no account required.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how">
+  <div class="how-inner">
+    <div class="section-label">How it works</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,48px);font-weight:400;margin-bottom:40px">Three steps to your perfect trip</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>Pay once, access instantly</h4>
+          <p>One €49 payment unlocks your personal chat session with Caipy. No subscriptions, no recurring charges.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>Tell Caipy about your trip</h4>
+          <p>Caipy asks you a few questions — how long you're staying, your interests, travel style, who you're with. Takes about two minutes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>Get your personalised itinerary</h4>
+          <p>Caipy generates a complete day-by-day plan tailored to you. Ask follow-up questions, tweak days, or download and go.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST QUOTE -->
+<div class="trust">
+  <p class="trust-quote">"I've lived in Cape Town for over ten years. I built Caipy so that every visitor gets the same advice I'd give a close friend — not the tourist version, the real version."</p>
+  <p class="trust-attr">— Dirk Zeevenhooven, Cape Town local &amp; founder</p>
+</div>
+
+<!-- PRICE BLOCK -->
+<div class="price-block">
+  <h2>Ready to plan your trip?</h2>
+  <p>For a city this rich and this complex, a good itinerary is worth far more than €49. Get it right the first time.</p>
+  <div class="price-amount"><small>€</small>49</div>
+  <div class="price-sub">One-time · Unlimited chat session · Keep forever</div>
+  <button class="btn-primary-dark" onclick="startPayment()" id="main-cta">
+    Start My Cape Town Itinerary
+  </button>
+  <div class="guarantees">
+    <span class="guarantee">Secure payment via Stripe</span>
+    <span class="guarantee">Instant access after payment</span>
+    <span class="guarantee">Download or email your plan</span>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Planet Uncharted · Caipy Cape Town Guide</p>
+  <p>Questions? <a href="mailto:hello@planetuncharted.com" style="color:var(--gold)">hello@planetuncharted.com</a></p>
+</footer>
+
+<script>
+async function startPayment() {
+  const btns = document.querySelectorAll('.btn-primary, .btn-primary-dark');
+  btns.forEach(b => {
+    b.classList.add('btn-loading');
+    b.innerHTML = '<span class="spinner"></span> Preparing checkout…';
+  });
+
+  try {
+    const res = await fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Unknown error');
+    }
+  } catch (err) {
+    alert('Something went wrong: ' + err.message + '\nPlease try again.');
+    btns.forEach(b => {
+      b.classList.remove('btn-loading');
+      b.innerHTML = b === document.querySelector('.btn-primary-dark')
+        ? 'Start My Cape Town Itinerary'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Get My Itinerary — €49';
+    });
+  }
+}
+</script>
+</body>
+</html>

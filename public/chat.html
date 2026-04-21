@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caipy — Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF7F2;--warm:#F3EDE3;--parchment:#EDE5D8;
+  --gold:#B8863A;--gold-l:#D4A85A;--gold-dim:#f5e8d0;
+  --text:#1C1C1A;--muted:#6B6560;--faint:#A09990;
+  --white:#fff;--border:rgba(0,0,0,0.08);
+  --sh1:0 2px 16px rgba(0,0,0,0.07);
+  --sh2:0 8px 32px rgba(0,0,0,0.12);
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color:var(--text);display:flex;flex-direction:column}
+
+/* HEADER */
+.header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:60px;background:rgba(250,247,242,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:10}
+.header-left{display:flex;align-items:center;gap:12px}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.header-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
+.header-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-top:-3px}
+.header-actions{display:flex;gap:8px;align-items:center}
+.btn-sm{display:inline-flex;align-items:center;gap:6px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:4px;border:1px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-sm:hover{border-color:var(--gold);color:var(--gold)}
+.btn-sm svg{width:14px;height:14px;flex-shrink:0}
+.btn-sm.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn-sm.gold:hover{background:var(--gold-l);border-color:var(--gold-l)}
+
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:20px;scroll-behavior:smooth}
+.messages::-webkit-scrollbar{width:4px}
+.messages::-webkit-scrollbar-track{background:transparent}
+.messages::-webkit-scrollbar-thumb{background:var(--parchment);border-radius:2px}
+
+.msg{display:flex;gap:12px;max-width:760px}
+.msg.user{flex-direction:row-reverse;margin-left:auto}
+.msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;margin-top:2px}
+.msg.assistant .msg-avatar{background:linear-gradient(135deg,var(--gold),var(--gold-l))}
+.msg.user .msg-avatar{background:var(--parchment);font-size:13px;color:var(--muted);font-family:'Jost',sans-serif;font-weight:500}
+
+.bubble{padding:14px 18px;border-radius:14px;font-size:15px;line-height:1.75;max-width:640px}
+.msg.assistant .bubble{background:var(--white);border:1px solid var(--border);border-radius:4px 14px 14px 14px;box-shadow:var(--sh1)}
+.msg.user .bubble{background:var(--text);color:var(--cream);border-radius:14px 4px 14px 14px}
+
+/* Markdown rendering in bubbles */
+.bubble h1,.bubble h2,.bubble h3{font-family:'Cormorant Garamond',serif;font-weight:600;margin:20px 0 8px;line-height:1.3}
+.bubble h1{font-size:22px}
+.bubble h2{font-size:19px}
+.bubble h3{font-size:16px;color:var(--gold)}
+.bubble p{margin:0 0 10px}
+.bubble p:last-child{margin-bottom:0}
+.bubble strong{font-weight:500;color:var(--text)}
+.msg.user .bubble strong{color:var(--cream)}
+.bubble em{font-style:italic}
+.bubble ul,.bubble ol{padding-left:20px;margin:8px 0}
+.bubble li{margin-bottom:4px}
+.bubble hr{border:none;border-top:1px solid var(--border);margin:16px 0}
+.bubble code{background:var(--warm);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:13px}
+
+/* Typing indicator */
+.typing .bubble{display:flex;gap:5px;align-items:center;padding:16px 18px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--faint);animation:bounce 1.2s infinite ease-in-out}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+/* INPUT */
+.input-area{flex-shrink:0;padding:16px 20px;border-top:1px solid var(--border);background:rgba(250,247,242,.98);backdrop-filter:blur(20px)}
+.input-wrap{display:flex;gap:10px;align-items:flex-end;max-width:800px;margin:0 auto}
+.input-field{flex:1;resize:none;font-family:'Jost',sans-serif;font-size:15px;font-weight:300;color:var(--text);background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px 16px;line-height:1.5;outline:none;transition:border-color .2s;max-height:140px;min-height:48px}
+.input-field:focus{border-color:var(--gold)}
+.input-field::placeholder{color:var(--faint)}
+.send-btn{width:44px;height:44px;flex-shrink:0;border-radius:10px;background:var(--gold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;color:#fff}
+.send-btn:hover{background:var(--gold-l);transform:translateY(-1px)}
+.send-btn:disabled{background:var(--parchment);cursor:not-allowed;transform:none}
+.send-btn svg{width:18px;height:18px}
+
+/* GATE (pre-auth) */
+.gate{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.gate-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:48px 40px;max-width:440px;width:100%;text-align:center;box-shadow:var(--sh2)}
+.gate-icon{font-size:48px;margin-bottom:20px}
+.gate h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;margin-bottom:12px}
+.gate p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:28px}
+.gate .spinner-wrap{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:14px}
+.gate-spinner{width:22px;height:22px;border:2px solid var(--parchment);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--cream);padding:12px 24px;border-radius:8px;font-size:13px;z-index:1000;transition:transform .3s;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Itinerary actions bar */
+.itinerary-bar{display:none;align-items:center;gap:8px;padding:10px 20px;background:var(--gold-dim);border-top:1px solid rgba(184,134,58,.2);border-bottom:1px solid rgba(184,134,58,.2);font-size:13px;color:var(--gold)}
+.itinerary-bar.visible{display:flex}
+.itinerary-bar strong{flex:1}
+
+/* Email modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(28,28,26,.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:16px;padding:36px;max-width:400px;width:90%;box-shadow:var(--sh2)}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:8px}
+.modal p{font-size:14px;color:var(--muted);margin-bottom:20px}
+.modal input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:8px;font-family:'Jost',sans-serif;font-size:14px;outline:none;margin-bottom:12px;transition:border-color .2s}
+.modal input:focus{border-color:var(--gold)}
+.modal-actions{display:flex;gap:8px}
+.btn-cancel{flex:1;padding:11px;border:1px solid var(--border);border-radius:6px;background:transparent;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .2s}
+.btn-cancel:hover{border-color:var(--text);color:var(--text)}
+.btn-send{flex:2;padding:11px;border:none;border-radius:6px;background:var(--gold);font-family:'Jost',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:#fff;transition:all .2s}
+.btn-send:hover{background:var(--gold-l)}
+.btn-send:disabled{opacity:.6;cursor:not-allowed}
+
+@media(max-width:600px){
+  .header-actions .label{display:none}
+  .gate-card{padding:32px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- GATE: shown while verifying payment -->
+<div id="gate" class="gate">
+  <div class="gate-card">
+    <div class="gate-icon">🌍</div>
+    <h2>Verifying your access</h2>
+    <p>Confirming your payment and setting up your personal Cape Town guide session.</p>
+    <div class="spinner-wrap gate-spinner-wrap">
+      <div class="gate-spinner"></div>
+      Just a moment…
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CHAT (hidden until verified) -->
+<div id="app" style="display:none;flex-direction:column;height:100%">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="avatar">🌊</div>
+      <div>
+        <div class="header-title">Caipy</div>
+        <div class="header-sub">Cape Town · Dirk's Local Guide</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-sm" onclick="downloadItinerary()" id="btn-download" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="label">Download</span>
+      </button>
+      <button class="btn-sm" onclick="openEmailModal()" id="btn-email" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        <span class="label">Email me</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="input-area">
+    <div class="input-wrap">
+      <textarea
+        class="input-field"
+        id="input"
+        placeholder="Type your message…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL MODAL -->
+<div class="modal-overlay" id="email-modal">
+  <div class="modal">
+    <h3>Email your itinerary</h3>
+    <p>We'll send your complete Cape Town itinerary to your inbox — ready to use offline.</p>
+    <input type="email" id="email-input" placeholder="your@email.com">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEmailModal()">Cancel</button>
+      <button class="btn-send" id="email-send-btn" onclick="sendItineraryEmail()">Send Itinerary</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+let accessToken = null;
+let userEmail = '';
+let conversationHistory = []; // [{role, content}]
+let isStreaming = false;
+let itineraryText = ''; // Accumulates the last assistant message for download
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  // Check localStorage for existing token
+  const savedToken = localStorage.getItem('caipy_token');
+  if (savedToken) {
+    accessToken = savedToken;
+    userEmail = localStorage.getItem('caipy_email') || '';
+    showApp();
+    return;
+  }
+
+  if (!sessionId) {
+    showGateError('No payment session found. Please complete payment first.', '/caipy.html');
+    return;
+  }
+
+  try {
+    const res = await fetch('/verify-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId }),
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      showGateError(data.error || 'Payment verification failed.', '/caipy.html');
+      return;
+    }
+
+    accessToken = data.token;
+    userEmail = data.email || '';
+    localStorage.setItem('caipy_token', accessToken);
+    localStorage.setItem('caipy_email', userEmail);
+
+    // Clean URL
+    window.history.replaceState({}, '', '/chat.html');
+    showApp();
+  } catch (err) {
+    showGateError('Connection error. Please refresh the page.', null);
+  }
+}
+
+function showApp() {
+  document.getElementById('gate').style.display = 'none';
+  const app = document.getElementById('app');
+  app.style.display = 'flex';
+
+  // Prefill email modal if we have it
+  if (userEmail) {
+    document.getElementById('email-input').value = userEmail;
+  }
+
+  // Welcome message
+  appendMessage('assistant', `**Welcome to Cape Town!** 🌊
+
+I'm Caipy — your personal guide to one of the world's most extraordinary cities, built on 10+ years of Dirk's local knowledge.
+
+Before I build your itinerary, I'd love to know a little about your trip. Let's start with the basics:
+
+**How many days are you spending in Cape Town?**`);
+}
+
+function showGateError(msg, backUrl) {
+  const card = document.querySelector('.gate-card');
+  card.innerHTML = `
+    <div class="gate-icon">⚠️</div>
+    <h2>Access issue</h2>
+    <p>${msg}</p>
+    ${backUrl ? `<a href="${backUrl}" style="display:inline-block;background:var(--gold);color:#fff;padding:12px 28px;border-radius:4px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none">Go back</a>` : ''}
+  `;
+}
+
+// ─── Message rendering ────────────────────────────────────────────────────────
+function appendMessage(role, content) {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  const avatarDiv = document.createElement('div');
+  avatarDiv.className = 'msg-avatar';
+  avatarDiv.textContent = role === 'assistant' ? '🌊' : '✈';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = renderMarkdown(content);
+
+  div.appendChild(avatarDiv);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  scrollToBottom();
+  return bubble;
+}
+
+function appendTypingIndicator() {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg assistant typing';
+  div.id = 'typing-indicator';
+
+  const avatarDiv = document.createElement('div');
+  avatarDiv.className = 'msg-avatar';
+  avatarDiv.textContent = '🌊';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+
+  div.appendChild(avatarDiv);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  scrollToBottom();
+  return div;
+}
+
+function removeTypingIndicator() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+// Streaming: create bubble, return bubble element for appending
+function createStreamingBubble() {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+
+  const avatarDiv = document.createElement('div');
+  avatarDiv.className = 'msg-avatar';
+  avatarDiv.textContent = '🌊';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = '';
+
+  div.appendChild(avatarDiv);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  return bubble;
+}
+
+function scrollToBottom() {
+  const container = document.getElementById('messages');
+  container.scrollTop = container.scrollHeight;
+}
+
+// Simple markdown renderer
+function renderMarkdown(text) {
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^---$/gm, '<hr>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, s => `<ul>${s}</ul>`)
+    .replace(/\n{2,}/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^(?!<[hul]|<p|<hr)(.+)$/gm, '<p>$1</p>')
+    .replace(/<p><\/p>/g, '');
+}
+
+// ─── Send message ─────────────────────────────────────────────────────────────
+async function sendMessage() {
+  if (isStreaming) return;
+  const input = document.getElementById('input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  autoResize(input);
+
+  // Add to UI and history
+  appendMessage('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+
+  setStreaming(true);
+  removeTypingIndicator();
+
+  // Show streaming bubble
+  const bubble = createStreamingBubble();
+  let rawText = '';
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: accessToken, messages: conversationHistory }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Chat error');
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const payload = line.slice(6);
+        if (payload === '[DONE]') break;
+        try {
+          const { text: chunk, error } = JSON.parse(payload);
+          if (error) throw new Error(error);
+          if (chunk) {
+            rawText += chunk;
+            bubble.innerHTML = renderMarkdown(rawText);
+            scrollToBottom();
+          }
+        } catch {}
+      }
+    }
+
+    // Save to history
+    conversationHistory.push({ role: 'assistant', content: rawText });
+    itineraryText = rawText; // Track for download/email
+
+    // Show download/email buttons after first assistant response with substance
+    if (rawText.length > 400) {
+      document.getElementById('btn-download').style.display = 'inline-flex';
+      document.getElementById('btn-email').style.display = 'inline-flex';
+    }
+
+  } catch (err) {
+    bubble.innerHTML = `<em style="color:#c0392b">Something went wrong: ${err.message}. Please try again.</em>`;
+    conversationHistory.pop(); // Remove failed user message
+  }
+
+  setStreaming(false);
+}
+
+function setStreaming(on) {
+  isStreaming = on;
+  document.getElementById('send-btn').disabled = on;
+  document.getElementById('input').disabled = on;
+}
+
+// ─── Keyboard ─────────────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+// ─── Download ─────────────────────────────────────────────────────────────────
+function getFullItinerary() {
+  // Get all assistant messages concatenated
+  return conversationHistory
+    .filter(m => m.role === 'assistant')
+    .map(m => m.content)
+    .join('\n\n---\n\n');
+}
+
+function downloadItinerary() {
+  const text = getFullItinerary();
+  if (!text) return;
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'cape-town-itinerary-caipy.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Itinerary downloaded!');
+}
+
+// ─── Email ────────────────────────────────────────────────────────────────────
+function openEmailModal() {
+  document.getElementById('email-modal').classList.add('open');
+  document.getElementById('email-input').focus();
+}
+
+function closeEmailModal() {
+  document.getElementById('email-modal').classList.remove('open');
+}
+
+async function sendItineraryEmail() {
+  const email = document.getElementById('email-input').value.trim();
+  if (!email) return;
+
+  const btn = document.getElementById('email-send-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const res = await fetch('/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: accessToken,
+        email,
+        itinerary: getFullItinerary(),
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    closeEmailModal();
+    showToast('Itinerary sent to ' + email);
+  } catch (err) {
+    showToast('Error: ' + err.message, true);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Send Itinerary';
+}
+
+// Close modal on overlay click
+document.getElementById('email-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEmailModal();
+});
+
+// ─── Toast ────────────────────────────────────────────────────────────────────
+function showToast(msg, isError = false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.background = isError ? '#c0392b' : 'var(--text)';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ─── Start ────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

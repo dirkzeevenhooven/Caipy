@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cape Town 2026 — Planet Uncharted</title>
+<meta name="description" content="The best Cape Town travel guide for 2026. 15 essential experiences, curated 3-day itinerary, restaurant guide and practical tips. Not your grandfather's Lonely Planet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF7F2;--warm:#F3EDE3;--parchment:#EDE5D8;
+  --gold:#B8863A;--gold-l:#D4A85A;--gold-dim:#f5e8d0;
+  --text:#1C1C1A;--muted:#6B6560;--faint:#A09990;
+  --white:#fff;--border:rgba(0,0,0,0.08);
+  --sh1:0 2px 16px rgba(0,0,0,0.07);
+  --sh2:0 8px 40px rgba(0,0,0,0.13);
+  --sh3:0 24px 80px rgba(0,0,0,0.18);
+  --r:12px;--rl:20px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color:var(--text);line-height:1.7;overflow-x:hidden}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:68px;background:rgba(250,247,242,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+.nav.sc{box-shadow:var(--sh1)}
+.nb{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);cursor:pointer;text-decoration:none}
+.nb small{display:block;font-family:'Jost',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--faint);margin-top:-3px}
+.nl{display:flex;align-items:center;gap:2px}
+.nl a{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:8px 11px;border-radius:6px;transition:all .2s}
+.nl a:hover,.nl a.act{color:var(--text);background:var(--warm)}
+.nl a.act{color:var(--gold)}
+.ncta{background:var(--gold)!important;color:#fff!important;border-radius:8px!important;font-weight:500!important}
+.ncta:hover{background:#9a6e2a!important}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.ham span{width:22px;height:1.5px;background:var(--text);display:block}
+.mob{display:none;position:fixed;inset:0;z-index:490;background:var(--cream);padding:90px 5vw 5vw;flex-direction:column;gap:4px;overflow-y:auto}
+.mob.open{display:flex}
+.mob a{font-size:17px;font-weight:400;color:var(--text);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--border)}
+/* SECTIONS */
+.sec{display:none}.sec.on{display:block}
+/* HERO */
+.hero{height:100svh;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.hbg{position:absolute;inset:0;background-size:cover;background-position:center 40%}
+.hbg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,5,.82) 0%,rgba(10,8,5,.3) 50%,rgba(10,8,5,.05) 100%)}
+.hc{position:relative;z-index:2;padding:0 8vw 10vh;max-width:820px}
+.htag{display:inline-flex;align-items:center;gap:8px;background:rgba(184,134,58,.2);border:1px solid rgba(184,134,58,.45);color:#D4A85A;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;padding:6px 16px;border-radius:40px;margin-bottom:1.5rem;backdrop-filter:blur(8px)}
+.ht{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,10vw,8rem);font-weight:300;line-height:.92;letter-spacing:-1px;color:#fff;margin-bottom:1.5rem}
+.ht em{font-style:italic;color:#D4A85A;display:block}
+.hb{font-size:clamp(14px,1.8vw,17px);color:rgba(255,255,255,.72);font-weight:300;max-width:480px;line-height:1.7;margin-bottom:2.5rem}
+.hact{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{padding:15px 30px;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;border-radius:8px;transition:all .25s}
+.bg{background:var(--gold);color:#fff}
+.bg:hover{background:#9a6e2a;transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,134,58,.4)}
+.bgh{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.3)}
+.bgh:hover{background:rgba(255,255,255,.2)}
+.scr{position:absolute;bottom:2.5rem;right:5vw;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;color:rgba(255,255,255,.45);font-size:9px;letter-spacing:3px;text-transform:uppercase}
+.scrl{width:1px;height:48px;background:linear-gradient(to bottom,rgba(255,255,255,.5),transparent)}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--border)}
+.stat{padding:2rem;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.sv{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--gold);line-height:1;margin-bottom:.3rem}
+.sk{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint)}
+/* TYPOGRAPHY */
+.ey{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+.ph{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.5rem);font-weight:300;color:var(--text);line-height:1.05;margin-bottom:.5rem}
+.pi{font-size:15px;color:var(--muted);line-height:1.8;max-width:600px;margin-bottom:3rem}
+.bh{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;line-height:1.1;color:var(--text);margin-bottom:1.2rem}
+.bh em{font-style:italic;color:var(--gold)}
+.bp{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:1.2rem}
+.btxt{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;padding:0;display:inline-flex;align-items:center;gap:8px;transition:gap .2s}
+.btxt:hover{gap:14px}
+.btxt::after{content:'→'}
+/* SPLIT */
+.spl{display:grid;grid-template-columns:1fr 1fr;min-height:560px}
+.spl-txt{background:var(--warm);padding:6rem 6vw;display:flex;flex-direction:column;justify-content:center}
+.spl-img{overflow:hidden;position:relative;min-height:460px}
+.spl-i{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 6s}
+.spl:hover .spl-i{transform:scale(1.04)}
+/* STRIP */
+.strip{padding:4rem 0;background:#fff;overflow:hidden}
+.strip-h{padding:0 5vw;margin-bottom:2rem}
+.strip-r{display:flex;gap:16px;overflow-x:auto;padding:0 5vw 1rem;scrollbar-width:none;scroll-snap-type:x mandatory}
+.strip-r::-webkit-scrollbar{display:none}
+.sc-item{flex-shrink:0;width:290px;height:195px;border-radius:var(--r);overflow:hidden;scroll-snap-align:start;position:relative;box-shadow:var(--sh1);cursor:pointer}
+.sc-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s;display:block}
+.sc-item:hover img{transform:scale(1.07)}
+.sc-lbl{position:absolute;bottom:0;left:0;right:0;padding:.65rem 1rem;background:linear-gradient(to top,rgba(0,0,0,.65),transparent);color:#fff;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase}
+/* MAG GRID */
+.mag{padding:5rem 5vw;background:var(--cream)}
+.mag-h{margin-bottom:3rem}
+.mg{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:72px;gap:14px}
+.mc{position:relative;overflow:hidden;border-radius:var(--rl);cursor:pointer;box-shadow:var(--sh1)}
+.mc::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.05) 55%,transparent 100%);transition:opacity .3s}
+.mc:hover::after{opacity:.92}
+.mc-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .5s}
+.mc:hover .mc-bg{transform:scale(1.06)}
+.mc-b{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:1.2rem 1.4rem 1rem}
+.mc-n{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:rgba(255,255,255,.2);line-height:1;margin-bottom:.1rem;transition:color .3s}
+.mc:hover .mc-n{color:rgba(212,168,90,.7)}
+.mc-nm{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:#fff;line-height:1.15;margin-bottom:.2rem}
+.mc-ar{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.4rem}
+.mc-ds{font-size:11.5px;color:rgba(255,255,255,.75);line-height:1.5;max-height:0;overflow:hidden;opacity:0;transition:all .35s}
+.mc:hover .mc-ds{max-height:70px;opacity:1;margin-bottom:.5rem}
+.mc-ps{display:flex;gap:5px;flex-wrap:wrap}
+.mp{font-size:9px;font-weight:500;padding:2px 8px;border-radius:20px;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.8)}
+.mc-more{position:absolute;bottom:1rem;right:1.2rem;z-index:3;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.5);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:1px;opacity:0;transition:opacity .3s;cursor:pointer}
+.mc:hover .mc-more{opacity:1}
+/* GRID SPANS */
+.g45{grid-column:span 4;grid-row:span 5}
+.g65{grid-column:span 6;grid-row:span 5}
+.g35{grid-column:span 3;grid-row:span 5}
+/* FULL BLEED */
+.fb{height:68vh;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.fbbg{position:absolute;inset:0;background-size:cover;background-position:center}
+.fbbg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.58) 0%,transparent 55%)}
+.fbc{position:relative;z-index:2;padding:0 8vw 3.5rem}
+.fbc h3{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3.2rem);font-weight:300;color:#fff;line-height:1.1;margin-bottom:.5rem}
+.fbc p{font-size:14px;color:rgba(255,255,255,.65);max-width:500px;line-height:1.6;margin-bottom:.75rem}
+.fbl{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-l);background:none;border:none;border-bottom:1px solid rgba(212,168,90,.5);padding-bottom:2px;cursor:pointer;font-family:'Jost',sans-serif;transition:gap .2s}
+.fbl:hover{gap:14px}
+.fbl::after{content:'→'}
+/* FEATURE */
+.feat{display:grid;grid-template-columns:1fr 1fr;min-height:540px}
+.feat.rv .fi{order:2}.feat.rv .ft{order:1}
+.fi{overflow:hidden;position:relative;min-height:440px}
+.fii{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 6s}
+.feat:hover .fii{transform:scale(1.04)}
+.ft{padding:5rem 6vw;display:flex;flex-direction:column;justify-content:center;background:var(--warm)}
+.fn{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;line-height:1;color:var(--parchment);margin-bottom:-.5rem}
+.ftit{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.3rem);font-weight:400;line-height:1.15;color:var(--text);margin-bottom:.5rem}
+.floc{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.fd{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:1.5rem}
+.fps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
+.fp{font-size:10px;font-weight:500;letter-spacing:.5px;padding:5px 14px;border-radius:20px;background:var(--parchment);color:var(--muted);border:1px solid var(--border)}
+.fm{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;padding:0;display:inline-flex;align-items:center;gap:8px;transition:gap .2s}
+.fm:hover{gap:14px}
+.fm::after{content:'→'}
+/* NEIGHBOURHOOD */
+.ns{padding:5rem 5vw;background:#fff}
+.ng{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.nc{border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh1);cursor:pointer;transition:transform .3s,box-shadow .3s;background:#fff}
+.nc:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.nc-i{height:190px;background-size:cover;background-position:center;transition:transform .5s}
+.nc:hover .nc-i{transform:scale(1.05)}
+.nc-b{padding:1.4rem}
+.nc-nm{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--text);margin-bottom:.25rem}
+.nc-v{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.nc-d{font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:.75rem}
+.nc-ts{display:flex;flex-wrap:wrap;gap:6px}
+.nt{font-size:10px;padding:3px 10px;border-radius:20px;background:var(--gold-dim);color:var(--gold);font-weight:500}
+/* FOOD */
+.fs{padding:5rem 5vw;background:#fff}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.fc{border-radius:var(--rl);overflow:hidden;background:var(--cream);border:1px solid var(--border);box-shadow:var(--sh1);transition:transform .3s,box-shadow .3s;cursor:pointer}
+.fc:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.fc-iw{overflow:hidden;height:205px}
+.fc-img{width:100%;height:100%;object-fit:cover;transition:transform .5s;display:block}
+.fc:hover .fc-img{transform:scale(1.05)}
+.fc-b{padding:1.4rem}
+.fc-badge{display:inline-block;font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:.65rem}
+.bgold{background:#FEF0D5;color:#8a5e1a}
+.bred{background:#FDECEA;color:#8B2A1E}
+.bblue{background:#E8F0FE;color:#1A3A8A}
+.bgreen{background:#E8F5EC;color:#1A5E35}
+.fc-nm{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.15rem}
+.fc-mt{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);margin-bottom:.65rem}
+.fc-ds{font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:.6rem}
+.fc-pr{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold)}
+.fc-ls{display:flex;gap:10px;margin-top:.65rem;flex-wrap:wrap}
+.fcl{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,134,58,.35);padding-bottom:1px;transition:border-color .2s}
+.fcl:hover{border-color:var(--gold)}
+/* GEMS */
+.gms{padding:5rem 5vw;background:var(--parchment)}
+.gem-free{padding:2rem;background:var(--white);border-radius:var(--rl);border:2px solid var(--gold);margin-bottom:3rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+.gem-badge{background:var(--gold);color:#fff;padding:.5rem 1.25rem;border-radius:20px;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;flex-shrink:0}
+.gem-free-txt h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.gem-free-txt p{font-size:14px;color:var(--muted);line-height:1.6}
+.gems-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-bottom:3rem}
+.gem{border-radius:var(--rl);overflow:hidden;position:relative}
+.gem-bg{height:195px;background-size:cover;background-position:center;filter:blur(5px) brightness(.55);transform:scale(1.05)}
+.gem-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem}
+.gem-lock{font-size:1.75rem;margin-bottom:.5rem}
+.gem-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:.2rem}
+.gem-sub{font-size:11px;color:rgba(255,255,255,.65)}
+.gem-tiers{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tier{background:var(--white);border-radius:var(--rl);padding:2rem;border:1px solid var(--border);text-align:center;box-shadow:var(--sh1)}
+.tier.hi{border:2px solid var(--gold)}
+.tier-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.tier-price{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--text);margin-bottom:.5rem;line-height:1}
+.tier-inc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1.5rem}
+.tier-btn{display:block;width:100%;padding:13px;border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.tier-btn.gold{background:var(--gold);color:#fff}
+.tier-btn.gold:hover{background:#9a6e2a}
+.tier-btn.out{background:transparent;color:var(--gold);border:1.5px solid var(--gold)}
+.tier-btn.out:hover{background:var(--gold-dim)}
+/* ITINERARY */
+.itin{padding:5rem 5vw;background:var(--cream)}
+.dn{display:flex;gap:0;margin-bottom:3.5rem;border-bottom:1px solid var(--border)}
+.db{padding:1rem 1.75rem;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);cursor:pointer;transition:all .2s}
+.db.on,.db:hover{color:var(--text);border-bottom-color:var(--gold)}
+.dl{display:grid;grid-template-columns:1fr 390px;gap:5rem;align-items:start}
+.ds{position:sticky;top:88px;border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh2)}
+.ds-img{height:400px;background-size:cover;background-position:center}
+.ds-info{background:#fff;padding:1.4rem;border-top:2px solid var(--gold)}
+.ds-info h4{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem}
+.ds-info p{font-size:13px;color:var(--muted);font-style:italic;line-height:1.5}
+.it{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:300;color:var(--text);margin-bottom:.4rem}
+.itag{font-size:14px;color:var(--muted);font-style:italic;margin-bottom:2.5rem;line-height:1.6}
+.sps{display:flex;flex-direction:column}
+.sp{display:grid;grid-template-columns:58px 18px 1fr;gap:0 1rem;padding:1.4rem 0;border-bottom:1px solid var(--border)}
+.sp:last-child{border-bottom:none}
+.sp-t{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--gold);line-height:1;text-align:right;padding-top:3px}
+.sp-t small{display:block;font-family:'Jost',sans-serif;font-size:8px;letter-spacing:1.5px;color:var(--faint);font-weight:400}
+.sp-l{display:flex;flex-direction:column;align-items:center;padding-top:8px}
+.sp-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.sp-bar{flex:1;width:1px;background:var(--border);margin-top:6px;min-height:16px}
+.sp-b{padding-top:2px}
+.sp-nm{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.sp-d{font-size:13.5px;color:var(--muted);line-height:1.65}
+.sp-m{display:flex;flex-wrap:wrap;gap:8px;margin-top:.6rem}
+.sp-pill{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(184,134,58,.4);padding:3px 10px;border-radius:20px}
+.sp-map{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#2563a8;border:1px solid rgba(37,99,168,.3);padding:3px 10px;border-radius:20px;text-decoration:none}
+.sp-map:hover{background:rgba(37,99,168,.08)}
+.sp-info{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(184,134,58,.4);padding:3px 10px;border-radius:20px;cursor:pointer}
+/* PRACTICAL */
+.prs{padding:5rem 5vw;background:var(--warm)}
+.prg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:3rem}
+.prf{background:#fff;border-radius:var(--r);padding:1.5rem;border:1px solid var(--border);border-top:3px solid var(--gold);box-shadow:var(--sh1)}
+.prf-i{font-size:1.75rem;margin-bottom:.7rem}
+.prf-l{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.3rem}
+.prf-v{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.prf-s{font-size:12.5px;color:var(--muted);line-height:1.55}
+.tips2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tip{background:#fff;border-radius:var(--r);padding:1.4rem;border:1px solid var(--border);border-left:3px solid var(--gold)}
+.tiplbl{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.tiptxt{font-size:13.5px;color:var(--muted);line-height:1.7}
+/* CTA */
+.cta{position:relative;overflow:hidden;padding:7rem 5vw;text-align:center}
+.ctabg{position:absolute;inset:0;background-size:cover;background-position:center}
+.ctabg::after{content:'';position:absolute;inset:0;background:rgba(12,10,7,.8)}
+.ctac{position:relative;z-index:2}
+.ctaey{color:var(--gold-l);font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem}
+.ctah{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,4rem);font-weight:300;color:#fff;margin-bottom:.75rem;line-height:1.1}
+.ctap{font-size:15px;color:rgba(255,255,255,.6);max-width:480px;margin:0 auto 2.5rem;line-height:1.7}
+.ctafrm{display:flex;gap:0;max-width:440px;margin:0 auto;border-radius:10px;overflow:hidden;box-shadow:var(--sh3)}
+.ctain{flex:1;padding:16px 20px;background:rgba(255,255,255,.95);border:none;font-family:'Jost',sans-serif;font-size:14px;color:var(--text)}
+.ctain::placeholder{color:var(--faint)}
+.ctain:focus{outline:none}
+.ctasub{padding:16px 22px;background:var(--gold);color:#fff;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;transition:background .2s;white-space:nowrap}
+.ctasub:hover{background:#9a6e2a}
+.ctanote{font-size:11px;color:rgba(255,255,255,.35);margin-top:1rem}
+/* MODAL */
+.mo{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;padding:20px}
+.mo.open{display:flex;background:rgba(0,0,0,.75);backdrop-filter:blur(6px)}
+.mo-box{background:var(--cream);border-radius:var(--rl);max-width:840px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:var(--sh3);animation:mIn .3s}
+@keyframes mIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.mo-x{position:absolute;top:1.25rem;right:1.25rem;z-index:10;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.2);border:none;cursor:pointer;font-size:18px;color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s;backdrop-filter:blur(4px)}
+.mo-x:hover{background:rgba(0,0,0,.4)}
+.mo-hero{height:320px;background-size:cover;background-position:center;border-radius:var(--rl) var(--rl) 0 0;position:relative}
+.mo-hcap{position:absolute;bottom:0;left:0;right:0;padding:1rem 2rem 1.25rem;background:linear-gradient(to top,rgba(0,0,0,.65),transparent)}
+.mo-hcap .ey{color:var(--gold-l);margin-bottom:.3rem}
+.mo-hcap h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:400;color:#fff;line-height:1.1}
+.mo-body{padding:2rem 2.5rem 2.5rem}
+.mo-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.4rem}
+.mo-pill{font-size:10px;font-weight:500;letter-spacing:.5px;padding:5px 14px;border-radius:20px;background:var(--gold-dim);color:var(--gold);border:1px solid rgba(184,134,58,.3)}
+.mo-desc{font-size:15px;color:var(--muted);line-height:1.85;margin-bottom:1.4rem}
+.mo-dets{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin-bottom:1.5rem}
+.mo-det{background:var(--warm);border-radius:var(--r);padding:1rem;border:1px solid var(--border)}
+.mo-dl{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.3rem}
+.mo-dv{font-size:13.5px;color:var(--text);line-height:1.4}
+.mo-links{display:flex;gap:10px;flex-wrap:wrap}
+.mo-link{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;border-radius:8px;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all .2s}
+.mo-link.pri{background:var(--gold);color:#fff}
+.mo-link.pri:hover{background:#9a6e2a}
+.mo-link.sec{background:var(--warm);color:var(--text);border:1px solid var(--border)}
+.mo-link.sec:hover{background:var(--parchment)}
+.mo-tip{margin-top:1.4rem;padding:1rem 1.25rem;background:var(--gold-dim);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0}
+.mo-tip strong{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.3rem}
+.mo-tip p{font-size:13.5px;color:var(--muted);line-height:1.65}
+/* FOOTER */
+footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.frbr{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:rgba(255,255,255,.85)}
+.frurl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.frnote{font-size:11px;line-height:1.6;text-align:right}
+/* RESPONSIVE */
+@media(max-width:960px){
+  .spl,.feat,.dl{grid-template-columns:1fr}
+  .feat.rv .fi,.feat.rv .ft{order:0}
+  .ds{display:none}
+  .mg{grid-template-columns:repeat(6,1fr)}
+  .g65{grid-column:span 6}
+  .tips2{grid-template-columns:1fr}
+  .gem-tiers{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr 1fr}
+  .nl a:not(.ncta){display:none}
+  .ham{display:flex}
+  .mg{grid-template-columns:repeat(2,1fr)}
+  .g45,.g65,.g35{grid-column:span 1;grid-row:span 4}
+  .ht{font-size:3.5rem}
+  .mo-body{padding:1.25rem 1.5rem 1.75rem}
+  .mo-hero{height:230px}
+}
+</style>
+</head>
+<body>
+
+<div class="mo" id="mo">
+  <div class="mo-box">
+    <button class="mo-x" onclick="closeMo()">✕</button>
+    <div class="mo-hero" id="mo-hero">
+      <div class="mo-hcap">
+        <p class="ey" id="mo-hcap-area"></p>
+        <h2 id="mo-hcap-title"></h2>
+      </div>
+    </div>
+    <div class="mo-body">
+      <div class="mo-pills" id="mo-pills"></div>
+      <p class="mo-desc" id="mo-desc"></p>
+      <div class="mo-dets" id="mo-dets"></div>
+      <div class="mo-links" id="mo-links"></div>
+      <div class="mo-tip" id="mo-tip" style="display:none"><strong>Local tip</strong><p id="mo-tip-p"></p></div>
+    </div>
+  </div>
+</div>
+
+<nav class="nav" id="topnav">
+  <a class="nb" onclick="show('experiences');return false" href="#">Planet Uncharted<small>travelguide.capetown</small></a>
+  <div class="nl">
+    <a href="#" onclick="show('experiences');return false" id="nl-exp" class="act">Experiences</a>
+    <a href="#" onclick="show('neighbourhoods');return false" id="nl-neigh">Neighbourhoods</a>
+    <a href="#" onclick="show('itinerary');return false" id="nl-itin">3-Day Plan</a>
+    <a href="#" onclick="show('food');return false" id="nl-food">Eat &amp; Drink</a>
+    <a href="#" onclick="show('practical');return false" id="nl-prac">Practical</a>
+    <a href="#" onclick="show('gems');return false" id="nl-gems">Hidden Gems 🔒</a>
+    <a href="#" onclick="scrollCta();return false" class="ncta">Get Full Guide</a>
+  </div>
+  <button class="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob" id="mob">
+  <a href="#" onclick="show('experiences');toggleMob();return false">Experiences</a>
+  <a href="#" onclick="show('neighbourhoods');toggleMob();return false">Neighbourhoods</a>
+  <a href="#" onclick="show('itinerary');toggleMob();return false">3-Day Plan</a>
+  <a href="#" onclick="show('food');toggleMob();return false">Eat &amp; Drink</a>
+  <a href="#" onclick="show('practical');toggleMob();return false">Practical</a>
+  <a href="#" onclick="show('gems');toggleMob();return false" style="color:var(--gold)">🔒 Hidden Gems</a>
+  <a href="#" onclick="scrollCta();toggleMob();return false" style="color:var(--gold);border-bottom:none;font-weight:500">Get Full Guide — €9 →</a>
+</div>
+
+<div class="sec on" id="section-experiences">
+  <div class="hero">
+    <div class="hbg" style="background-image:url('photos/table-mountain.webp')"></div>
+    <div class="hc">
+      <div class="htag">Planet Uncharted · 2026 Edition</div>
+      <h1 class="ht">Cape<br><em>Town.</em></h1>
+      <p class="hb">Two oceans. One mountain. A thousand cultures. This is not your grandfather's travel guide — this is Cape Town for people who actually travel.</p>
+      <div class="hact">
+        <button class="btn bg" onclick="document.querySelector('.mag').scrollIntoView({behavior:'smooth'})">Explore the Guide</button>
+        <button class="btn bgh" onclick="show('itinerary')">Plan My 3 Days</button>
+      </div>
+    </div>
+    <div class="scr"><span>Scroll</span><div class="scrl"></div></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="sv">€1 ≈ R20</div><div class="sk">Exchange Rate</div></div>
+    <div class="stat"><div class="sv">Oct–Apr</div><div class="sk">Best Season</div></div>
+    <div class="stat"><div class="sv">35 min</div><div class="sk">Airport to City</div></div>
+    <div class="stat"><div class="sv">15</div><div class="sk">Essential Experiences</div></div>
+  </div>
+  <div class="spl">
+    <div class="spl-txt">
+      <p class="ey">Why Cape Town</p>
+      <h2 class="bh">The city that gets <em>under your skin.</em></h2>
+      <p class="bp">Table Mountain changing colour at dusk. The cold shock of the Atlantic at Clifton. Braai smoke drifting from a township courtyard on a Sunday. Cape Town is not a city you visit once — it's one you keep coming back to.</p>
+      <p class="bp">In 2026 it's more vibrant than ever. World-class wine 20 minutes from the city, a food scene that rivals any European capital, and beaches that make you question why you live where you do.</p>
+      <button class="btxt" onclick="document.querySelector('.mag').scrollIntoView({behavior:'smooth'})">See all 15 experiences</button>
+    </div>
+    <div class="spl-img"><div class="spl-i" style="background-image:url('images/img_03.jpg');background-position:center 30%"></div></div>
+  </div>
+  <div class="strip">
+    <div class="strip-h"><p class="ey">A taste of what's waiting — click any photo to discover more</p></div>
+    <div class="strip-r">
+      <div class="sc-item" onclick="openMo('mountain')"><img src="images/img_08.jpg" alt="Table Mountain" loading="lazy"><div class="sc-lbl">Table Mountain</div></div>
+      <div class="sc-item" onclick="openMo('bokaap')"><img src="images/img_03.jpg" alt="Bo-Kaap" loading="lazy"><div class="sc-lbl">Bo-Kaap</div></div>
+      <div class="sc-item" onclick="openMo('penguins')"><img src="images/img_10.jpg" alt="Boulders" loading="lazy"><div class="sc-lbl">Boulders penguins</div></div>
+      <div class="sc-item" onclick="openMo('muizenberg')"><img src="images/img_19.jpg" alt="Muizenberg" loading="lazy"><div class="sc-lbl">Muizenberg surf</div></div>
+      <div class="sc-item" onclick="openMo('kite')"><img src="images/img_13.jpg" alt="Kitesurf" loading="lazy"><div class="sc-lbl">Blouberg kitesurf</div></div>
+      <div class="sc-item" onclick="openMo('wine')"><img src="images/img_06.jpg" alt="Wine" loading="lazy"><div class="sc-lbl">Constantia wine</div></div>
+      <div class="sc-item" onclick="openMo('kirstenbosch')"><img src="images/img_18.jpg" alt="Kirstenbosch" loading="lazy"><div class="sc-lbl">Kirstenbosch concerts</div></div>
+      <div class="sc-item" onclick="openMo('noordhoek')"><img src="images/img_20.jpg" alt="Noordhoek" loading="lazy"><div class="sc-lbl">Noordhoek beach</div></div>
+    </div>
+  </div>
+  <div class="mag">
+    <div class="mag-h">
+      <p class="ey">Essential Experiences</p>
+      <h2 class="ph">15 reasons to book the flight today.</h2>
+      <p class="pi">Click any card for full details, opening hours, prices and Google Maps directions. Hover to preview.</p>
+    </div>
+    <div class="mg">
+      
+      <div class="mc g45" onclick="openMo('mountain')">
+        <div class="mc-bg" style="background-image:url('images/img_08.jpg');background-position:center 40%"></div>
+        <div class="mc-b"><div class="mc-n">01</div><p class="mc-nm">Table Mountain at Dawn</p><p class="mc-ar">City Bowl</p><p class="mc-ds">Hike Platteklip Gorge before the cable car opens. The city materialises below as the morning light hits it.</p><div class="mc-ps"><span class="mp">Hike free</span><span class="mp">Cable R400</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('bokaap')">
+        <div class="mc-bg" style="background-image:url('images/img_03.jpg');background-position:center 30%"></div>
+        <div class="mc-b"><div class="mc-n">02</div><p class="mc-nm">Bo-Kaap Before 8am</p><p class="mc-ar">Signal Hill Slopes</p><p class="mc-ds">Pastel houses, call to prayer, elderly men on stoeps. Before the tour groups. This neighbourhood breathes in the early light.</p><div class="mc-ps"><span class="mp">Free</span><span class="mp">Cape Malay</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('penguins')">
+        <div class="mc-bg" style="background-image:url('images/img_10.jpg');background-position:center 40%"></div>
+        <div class="mc-b"><div class="mc-n">03</div><p class="mc-nm">Boulders Beach Penguins</p><p class="mc-ar">Simon's Town</p><p class="mc-ds">African penguins alongside sunbathers. Genuinely surreal. Arrive before 9am and combine with Cape Point.</p><div class="mc-ps"><span class="mp">R220</span><span class="mp">Wildlife</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g65" onclick="openMo('kite')">
+        <div class="mc-bg" style="background-image:url('images/img_13.jpg');background-position:center 60%"></div>
+        <div class="mc-b"><div class="mc-n">04</div><p class="mc-nm">Kitesurf at Blouberg</p><p class="mc-ar">Table Bay · Atlantic Coast</p><p class="mc-ds">The Cape Doctor makes Table Bay one of the world's great kitesurf venues from October. The Table Mountain view from the water is the shot that defines this city.</p><div class="mc-ps"><span class="mp">Beach free</span><span class="mp">Lessons R800+</span><span class="mp">Oct–Mar</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g65" onclick="openMo('muizenberg')">
+        <div class="mc-bg" style="background-image:url('images/img_19.jpg');background-position:center 70%"></div>
+        <div class="mc-b"><div class="mc-n">05</div><p class="mc-nm">Muizenberg Surf Beach</p><p class="mc-ar">False Bay</p><p class="mc-ds">Iconic Victorian bathing huts, warmer water than the Atlantic, gentle consistent beach break. One of the world's best beginner surf spots.</p><div class="mc-ps"><span class="mp">Lessons R350</span><span class="mp">Beach free</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('capepoint')">
+        <div class="mc-bg" style="background-image:url('images/img_11.jpg');background-position:center 40%"></div>
+        <div class="mc-b"><div class="mc-n">06</div><p class="mc-nm">Cape Point & Good Hope</p><p class="mc-ar">Southern Peninsula</p><p class="mc-ds">Two oceans at the tip of Africa. Dramatic cliffs, Flying Dutchman funicular, cheeky baboons. Half-day from the city.</p><div class="mc-ps"><span class="mp">R353 park</span><span class="mp">Baboons!</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('kirstenbosch')">
+        <div class="mc-bg" style="background-image:url('images/img_18.jpg');background-position:center 30%"></div>
+        <div class="mc-b"><div class="mc-n">07</div><p class="mc-nm">Kirstenbosch Concerts</p><p class="mc-ar">Southern Suburbs</p><p class="mc-ds">Summer sunset concerts in the botanical garden with Table Mountain as the backdrop. Bring wine, blanket, no agenda.</p><div class="mc-ps"><span class="mp">Dec–Apr</span><span class="mp">R200–400</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('lionshead')">
+        <div class="mc-bg" style="background-image:url('images/img_04.jpg');background-position:center 30%"></div>
+        <div class="mc-b"><div class="mc-n">08</div><p class="mc-nm">Lion's Head Full Moon Hike</p><p class="mc-ar">Signal Hill</p><p class="mc-ds">360° views of Camps Bay, Clifton and both oceans. The full moon night hike is a Cape Town institution. Do it once.</p><div class="mc-ps"><span class="mp">Free</span><span class="mp">Full moon option</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('wine')">
+        <div class="mc-bg" style="background-image:url('images/img_06.jpg');background-position:center"></div>
+        <div class="mc-b"><div class="mc-n">09</div><p class="mc-nm">Constantia Wine Route</p><p class="mc-ar">Southern Suburbs</p><p class="mc-ds">South Africa's oldest wine estates since 1685. Groot, Klein and Beau Constantia, all within 20 minutes of the city.</p><div class="mc-ps"><span class="mp">Tasting R150–300</span><span class="mp">Weekdays best</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('biscuitmill')">
+        <div class="mc-bg" style="background-image:url('images/img_12.jpg');background-position:center"></div>
+        <div class="mc-b"><div class="mc-n">10</div><p class="mc-nm">Old Biscuit Mill Saturday</p><p class="mc-ar">Woodstock</p><p class="mc-ds">Cape Town's food scene in one market. Cape Malay curry, fresh oysters, sourdough, craft beer. Come hungry at 9am.</p><div class="mc-ps"><span class="mp">Free entry</span><span class="mp">Saturdays only</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('noordhoek')">
+        <div class="mc-bg" style="background-image:url('images/img_20.jpg');background-position:center 40%"></div>
+        <div class="mc-b"><div class="mc-n">11</div><p class="mc-nm">Noordhoek Beach</p><p class="mc-ar">Cape Peninsula</p><p class="mc-ds">8km of wild Atlantic beach, almost no one on it. 20 minutes from Cape Town. A world away from everything.</p><div class="mc-ps"><span class="mp">Free</span><span class="mp">Horse riding</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('robben')">
+        <div class="mc-bg" style="background-image:url('images/img_09.jpg');background-position:center"></div>
+        <div class="mc-b"><div class="mc-n">12</div><p class="mc-nm">Robben Island</p><p class="mc-ar">Table Bay</p><p class="mc-ds">Former political prisoners lead this tour. That detail alone makes it essential. Book weeks ahead.</p><div class="mc-ps"><span class="mp">R650+</span><span class="mp">Book ahead</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('zeitz')">
+        <div class="mc-bg" style="background-image:url('images/img_05.jpg');background-position:center 40%"></div>
+        <div class="mc-b"><div class="mc-n">13</div><p class="mc-nm">Zeitz MOCAA</p><p class="mc-ar">V&A Waterfront</p><p class="mc-ds">Africa's largest contemporary art museum carved from a grain silo. The atrium is extraordinary. Go before 11am.</p><div class="mc-ps"><span class="mp">R220</span><span class="mp">World-class art</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('kalky')">
+        <div class="mc-bg" style="background-image:url('images/img_14.jpg');background-position:center 40%"></div>
+        <div class="mc-b"><div class="mc-n">14</div><p class="mc-nm">Kalk Bay Harbour</p><p class="mc-ar">False Bay</p><p class="mc-ds">Fishermen, fur seals, colourful boats. Eat at Kalky's — the freshest fish and chips in the Cape. Cash only.</p><div class="mc-ps"><span class="mp">Free walk</span><span class="mp">Cash at Kalky's</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+      
+      <div class="mc g45" onclick="openMo('sunset')">
+        <div class="mc-bg" style="background-image:url('images/img_21.jpg');background-position:center 50%"></div>
+        <div class="mc-b"><div class="mc-n">15</div><p class="mc-nm">Signal Hill Sunset</p><p class="mc-ar">City Bowl</p><p class="mc-ds">Bring wine. Watch the Atlantic turn gold below you. Free, ten minutes from the city. The best thing you'll do all day.</p><div class="mc-ps"><span class="mp">Free</span><span class="mp">Uber up</span></div></div>
+        <span class="mc-more">Full details →</span>
+      </div>
+    </div>
+  </div>
+  <div class="fb">
+    <div class="fbbg" style="background-image:url('images/img_21.jpg');background-position:center 50%"></div>
+    <div class="fbc">
+      <h3>Blouberg at golden hour — kites, Table Mountain silhouette, the end of a perfect Cape Town day.</h3>
+      <p>This is your last image before sleep. You'll be back. Everyone always comes back.</p>
+      <button class="fbl" onclick="openMo('kite')">Read more about Blouberg</button>
+    </div>
+  </div>
+  <div class="feat">
+    <div class="fi"><div class="fii" style="background-image:url('images/img_06.jpg')"></div></div>
+    <div class="ft">
+      <div class="fn">09</div>
+      <p class="floc">Constantia · Southern Suburbs · 20 min from city</p>
+      <h3 class="ftit">World-class wine, 20 minutes from the ocean.</h3>
+      <p class="fd">Groot Constantia has been producing wine since 1685 — the oldest wine estate in South Africa. Klein Constantia, Beau Constantia and Steenberg complete one of the world's great wine routes within a 5km radius. Go on a weekday: estates are quiet, pours are generous, and the Cape Dutch manor houses under a summer sky are quietly spectacular.</p>
+      <div class="fps"><span class="fp">Est. 1685</span><span class="fp">Tasting R150–300</span><span class="fp">Weekdays best</span><span class="fp">20 min from CBD</span></div>
+      <button class="fm" onclick="openMo('wine')">Full experience details</button>
+    </div>
+  </div>
+  <div class="feat rv">
+    <div class="fi"><div class="fii" style="background-image:url('images/img_08.jpg')"></div></div>
+    <div class="ft">
+      <div class="fn">01</div>
+      <p class="floc">Table Mountain National Park · City Bowl</p>
+      <h3 class="ftit">The ledge where the city disappears below you.</h3>
+      <p class="fd">Platteklip Gorge is 3km and takes 90 minutes. Start at 6:30am and you'll have the summit to yourself for the first hour. The city materialises below as the morning light hits it. This is the moment you carry home from Cape Town. Leave by noon — clouds move in fast and conditions on the mountain change in minutes.</p>
+      <div class="fps"><span class="fp">Hike free</span><span class="fp">Cable car R400</span><span class="fp">Start 6:30am</span><span class="fp">Leave by noon</span></div>
+      <button class="fm" onclick="openMo('mountain')">Full experience details</button>
+    </div>
+  </div>
+  <div class="fb">
+    <div class="fbbg" style="background-image:url('images/img_04.jpg');background-position:center 30%"></div>
+    <div class="fbc">
+      <h3>From the summit of Table Mountain — Lion's Head, Camps Bay, the Atlantic, and all of Cape Town below you.</h3>
+      <p>This view cannot be described. It has to be experienced.</p>
+      <button class="fbl" onclick="openMo('mountain')">How to get here</button>
+    </div>
+  </div>
+  <div class="cta">
+    <div class="ctabg" style="background-image:url('images/img_04.jpg')"></div>
+    <div class="ctac">
+      <p class="ctaey">Get the Full Guide</p>
+      <h2 class="ctah">15 experiences.<br>One unforgettable city.</h2>
+      <p class="ctap">The complete Planet Uncharted Cape Town guide — every experience fully detailed, 3-day itinerary, 20 restaurants, neighbourhood guides and all 2026 practical info. One purchase, yours forever.</p>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+      <p class="ctanote">Or share with 3 friends who sign up and get it completely free →</p>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="section-neighbourhoods">
+  <div class="hero" style="height:60vh">
+    <div class="hbg" style="background-image:url('images/img_05.jpg');background-position:center 50%"></div>
+    <div class="hc" style="padding-bottom:8vh">
+      <div class="htag">Explore the City</div>
+      <h1 class="ht" style="font-size:clamp(3rem,7vw,5.5rem)">Every<br><em>neighbourhood</em><br>tells a story.</h1>
+    </div>
+  </div>
+  <div class="ns">
+    <p class="ey">Neighbourhood Guide</p>
+    <h2 class="ph">Know where to stay, where to wander.</h2>
+    <p class="pi">Each neighbourhood has a completely different personality. Click any card for full details — best streets, where to eat, who it's for, and the insider tip that makes the difference.</p>
+    <div class="ng">
+      
+      <div class="nc" onclick="openMo('citybowl')">
+        <div class="nc-i" style="background-image:url('images/img_09.jpg');background-position:center 30%"></div>
+        <div class="nc-b"><p class="nc-nm">City Bowl & CBD</p><p class="nc-v">Historic · Cultural · Central</p><p class="nc-d">Cape Town's historic heart. Company's Garden, Bree Street restaurants, St George's Cathedral, Parliament. Walkable by day, Uberable by night.</p><div class="nc-ts"><span class="nt">Bree Street</span><span class="nt">Bo-Kaap</span><span class="nt">Company's Garden</span></div></div>
+      </div>
+      
+      <div class="nc" onclick="openMo('bokaap')">
+        <div class="nc-i" style="background-image:url('images/img_03.jpg');background-position:center 30%"></div>
+        <div class="nc-b"><p class="nc-nm">Bo-Kaap</p><p class="nc-v">Cape Malay · Colourful · Soulful</p><p class="nc-d">One of Cape Town's oldest communities. Pastel houses, cobblestoned streets, Cape Malay cuisine and the oldest mosque in South Africa. Come before 8am.</p><div class="nc-ts"><span class="nt">Wale Street</span><span class="nt">Auwal Mosque</span><span class="nt">Cape Malay food</span></div></div>
+      </div>
+      
+      <div class="nc" onclick="openMo('waterfront')">
+        <div class="nc-i" style="background-image:url('images/img_05.jpg');background-position:center 60%"></div>
+        <div class="nc-b"><p class="nc-nm">V&A Waterfront</p><p class="nc-v">Lively · Tourist hub · World-class</p><p class="nc-d">Zeitz MOCAA, Robben Island ferries and the most photographed harbour in Africa. Yes, it's touristy. But the setting is genuinely extraordinary.</p><div class="nc-ts"><span class="nt">Zeitz MOCAA</span><span class="nt">Robben Island ferry</span><span class="nt">Harbour views</span></div></div>
+      </div>
+      
+      <div class="nc" onclick="openMo('woodstock')">
+        <div class="nc-i" style="background-image:url('images/img_12.jpg');background-position:center 30%"></div>
+        <div class="nc-b"><p class="nc-nm">Woodstock</p><p class="nc-v">Creative · Edgy · Foodie</p><p class="nc-d">Cape Town's creative hub. Old Biscuit Mill Saturday market, The Pot Luck Club, street art and design studios. The neighbourhood that gets it — and knows it.</p><div class="nc-ts"><span class="nt">Old Biscuit Mill</span><span class="nt">Pot Luck Club</span><span class="nt">Street art</span></div></div>
+      </div>
+      
+      <div class="nc" onclick="openMo('atlanticseaboard')">
+        <div class="nc-i" style="background-image:url('images/img_13.jpg');background-position:center 60%"></div>
+        <div class="nc-b"><p class="nc-nm">Atlantic Seaboard</p><p class="nc-v">Glamorous · Beachy · Active</p><p class="nc-d">Sea Point promenade, Clifton's four beaches, Camps Bay strip. Cold Atlantic, warm social scene. The most photogenic stretch of coastline in Africa.</p><div class="nc-ts"><span class="nt">Clifton beaches</span><span class="nt">Camps Bay</span><span class="nt">Sea Point</span></div></div>
+      </div>
+      
+      <div class="nc" onclick="openMo('southernsuburbs')">
+        <div class="nc-i" style="background-image:url('images/img_15.jpg');background-position:center"></div>
+        <div class="nc-b"><p class="nc-nm">Southern Suburbs</p><p class="nc-v">Leafy · Relaxed · Wine country</p><p class="nc-d">Constantia wine estates, Kirstenbosch, the university village of Rondebosch. Where Capetonians actually live. Quieter, greener, underrated by tourists.</p><div class="nc-ts"><span class="nt">Constantia wine</span><span class="nt">Kirstenbosch</span><span class="nt">Newlands</span></div></div>
+      </div>
+      
+      <div class="nc" onclick="openMo('falsebay')">
+        <div class="nc-i" style="background-image:url('images/img_19.jpg');background-position:center 70%"></div>
+        <div class="nc-b"><p class="nc-nm">False Bay Coast</p><p class="nc-v">Surf · Fishing villages · Wild</p><p class="nc-d">Muizenberg surf, Kalk Bay harbour, Simon's Town penguins. Warmer water, fishing village character, almost no tourist overlay. Cape Town's best-kept secret.</p><div class="nc-ts"><span class="nt">Muizenberg surf</span><span class="nt">Kalk Bay</span><span class="nt">Simon's Town</span></div></div>
+      </div>
+      
+      <div class="nc" onclick="openMo('peninsula')">
+        <div class="nc-i" style="background-image:url('images/img_20.jpg');background-position:center 40%"></div>
+        <div class="nc-b"><p class="nc-nm">Cape Peninsula</p><p class="nc-v">Wild · Dramatic · Untouched</p><p class="nc-d">Noordhoek beach, Chapman's Peak Drive, Cape Point. The most dramatic 50km of coastline on the continent. Requires a full day — two days is better.</p><div class="nc-ts"><span class="nt">Noordhoek</span><span class="nt">Chapman's Peak</span><span class="nt">Cape Point</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="cta">
+    <div class="ctabg" style="background-image:url('images/img_05.jpg')"></div>
+    <div class="ctac">
+      <p class="ctaey">Full Neighbourhood Guide</p>
+      <h2 class="ctah">Where to stay, eat and explore.</h2>
+      <p class="ctap">The complete guide includes detailed neighbourhood breakdowns with the best streets, restaurants, accommodation picks by budget and insider advice for every area of Cape Town.</p>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="section-itinerary">
+  <div class="itin">
+    <p class="ey">Curated Itinerary</p>
+    <h2 class="ph">3 days, done right.</h2>
+    <p class="pi">No fluff. Each day has a clear spine — mountain, peninsula, wine. Click any stop for full details and directions. Every stop links to Google Maps.</p>
+    <div class="dn">
+      <button class="db on" onclick="showDay(1,this)">Day 1 — The Mountain</button>
+      <button class="db" onclick="showDay(2,this)">Day 2 — The Peninsula</button>
+      <button class="db" onclick="showDay(3,this)">Day 3 — Wine & Culture</button>
+    </div>
+    <div class="dl">
+      <div>
+        <h3 class="it" id="it-title">Day 1 — The Mountain & City</h3>
+        <p class="itag" id="it-tag">Start with the thing that defines Cape Town. Hike at dawn, walk history, end with the best free sunset on the planet.</p>
+        <div class="sps" id="it-stops"></div>
+      </div>
+      <div class="ds">
+        <div class="ds-img" id="it-img"></div>
+        <div class="ds-info"><h4 id="it-cap">Table Mountain</h4><p id="it-sub">Where the city disappears below you at sunrise</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="cta">
+    <div class="ctabg" style="background-image:url('images/img_08.jpg')"></div>
+    <div class="ctac">
+      <p class="ctaey">Complete Itinerary</p>
+      <h2 class="ctah">Get the full 3-day plan.</h2>
+      <p class="ctap">Full timings, restaurant booking links, insider tips and backup plans for bad weather. Everything you need to make these 3 days the best of the year.</p>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="section-food">
+  <div class="hero" style="height:60vh">
+    <div class="hbg" style="background-image:url('images/img_01.jpg');background-position:center 30%"></div>
+    <div class="hc" style="padding-bottom:8vh">
+      <div class="htag">Eat &amp; Drink</div>
+      <h1 class="ht" style="font-size:clamp(3rem,7vw,5.5rem)">Where<br><em>Capetonians</em><br>actually eat.</h1>
+    </div>
+  </div>
+  <div class="fs">
+    <p class="ey">Restaurants &amp; Bars</p>
+    <h2 class="ph">Skip the hotel recommendations.</h2>
+    <p class="pi">These are the places worth the reservation, the queue, and the trip. Click any card for full details, address, opening hours and booking links.</p>
+    <div class="fg">
+      
+      <div class="fc" onclick="openMo('truthcoffee')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_12.jpg" alt="Truth Coffee Roasting" loading="lazy" style="object-position:center"></div>
+        <div class="fc-b">
+          <span class="fc-badge bgold">Best coffee in Cape Town</span>
+          <p class="fc-nm">Truth Coffee Roasting</p>
+          <p class="fc-mt">Breakfast · Buitenkant St, CBD</p>
+          <p class="fc-ds">Steampunk cathedral, world-class single-origin espresso. Voted the world's best coffee shop multiple times. Avo toast is elite. Come before 10am or expect a queue.</p>
+          <p class="fc-pr">R60–150 · Open 7am–5pm</p>
+          <div class="fc-ls"><a class="fcl" href="https://www.truth.coffee" target="_blank" onclick="event.stopPropagation()">Website & booking</a><a class="fcl" href="https://maps.google.com/?q=Truth+Coffee+Cape+Town" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('potluckclub')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_07.jpg" alt="The Pot Luck Club" loading="lazy" style="object-position:center 30%"></div>
+        <div class="fc-b">
+          <span class="fc-badge bred">Book 4 Weeks Ahead</span>
+          <p class="fc-nm">The Pot Luck Club</p>
+          <p class="fc-mt">Fine dining · Old Biscuit Mill, Woodstock</p>
+          <p class="fc-ds">Luke Dale-Roberts's iconic tapas-style sharing menu on the rooftop above Woodstock. One of Africa's consistently best restaurants. Book 4 weeks ahead minimum.</p>
+          <p class="fc-pr">R400–800pp · Tues–Sat</p>
+          <div class="fc-ls"><a class="fcl" href="https://www.thepotluckclub.co.za" target="_blank" onclick="event.stopPropagation()">Website & booking</a><a class="fcl" href="https://maps.google.com/?q=The+Pot+Luck+Club+Cape+Town" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('kalkys')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_14.jpg" alt="Kalky's Fish & Chips" loading="lazy" style="object-position:center 40%"></div>
+        <div class="fc-b">
+          <span class="fc-badge bblue">Local Legend</span>
+          <p class="fc-nm">Kalky's Fish & Chips</p>
+          <p class="fc-mt">Harbour fish · Kalk Bay Harbour</p>
+          <p class="fc-ds">Plastic chairs, paper plates, harbour wall, fur seals below. The freshest fish and chips in the Cape straight off the boats. Cash only. Queue moves fast.</p>
+          <p class="fc-pr">R80–120 · Open daily</p>
+          <div class="fc-ls"><a class="fcl" href="https://maps.google.com/?q=Kalky%27s+Kalk+Bay" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('beauConstantia')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_02.jpg" alt="Beau Constantia" loading="lazy" style="object-position:center 40%"></div>
+        <div class="fc-b">
+          <span class="fc-badge bgreen">Best Views + Best Wine</span>
+          <p class="fc-nm">Beau Constantia</p>
+          <p class="fc-mt">Wine estate restaurant · Constantia</p>
+          <p class="fc-ds">Boutique estate perched above False Bay with knockout views. Natural wines, exceptional seasonal food. One of the best lunch settings in the Western Cape.</p>
+          <p class="fc-pr">R300–500pp · Wed–Sun lunch</p>
+          <div class="fc-ls"><a class="fcl" href="https://www.beauconstantia.com" target="_blank" onclick="event.stopPropagation()">Website & booking</a><a class="fcl" href="https://maps.google.com/?q=Beau+Constantia" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('gold')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_03.jpg" alt="Gold Restaurant" loading="lazy" style="object-position:center 30%"></div>
+        <div class="fc-b">
+          <span class="fc-badge bgold">Full Cultural Experience</span>
+          <p class="fc-nm">Gold Restaurant</p>
+          <p class="fc-mt">Cape Malay experience · De Waterkant</p>
+          <p class="fc-ds">20-dish Cape Malay and African feast with live drumming and storytelling. More than dinner — it's an evening. Great for groups and first-timers to Cape cuisine.</p>
+          <p class="fc-pr">R350pp · Dinner nightly</p>
+          <div class="fc-ls"><a class="fcl" href="https://www.goldrestaurant.co.za" target="_blank" onclick="event.stopPropagation()">Website & booking</a><a class="fcl" href="https://maps.google.com/?q=Gold+Restaurant+Cape+Town" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('wakame')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_07.jpg" alt="Wakame" loading="lazy" style="object-position:center 30%"></div>
+        <div class="fc-b">
+          <span class="fc-badge bblue">Ocean-to-Plate Sushi</span>
+          <p class="fc-nm">Wakame</p>
+          <p class="fc-mt">Sushi & Japanese · Beach Rd, Sea Point</p>
+          <p class="fc-ds">Cape Town's freshest sushi with Atlantic views. The salmon roses and spicy tuna rolls are legendary. Ocean-to-plate quality you can actually taste in every bite.</p>
+          <p class="fc-pr">R150–350pp · Lunch & dinner</p>
+          <div class="fc-ls"><a class="fcl" href="https://maps.google.com/?q=Wakame+Sea+Point+Cape+Town" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('mzolis')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_02.jpg" alt="Mzoli's Place" loading="lazy" style="object-position:center 50%"></div>
+        <div class="fc-b">
+          <span class="fc-badge bgreen">Sunday Institution</span>
+          <p class="fc-nm">Mzoli's Place</p>
+          <p class="fc-mt">Township braai · Gugulethu</p>
+          <p class="fc-ds">The legendary township braai joint. Choose meat at the counter, they grill it, you eat in the joyful courtyard with Capetonians. Sunday afternoons are unmissable.</p>
+          <p class="fc-pr">R100–200 · Sundays best</p>
+          <div class="fc-ls"><a class="fcl" href="https://maps.google.com/?q=Mzoli%27s+Gugulethu" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('belly')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_15.jpg" alt="Belly of the Beast" loading="lazy" style="object-position:center"></div>
+        <div class="fc-b">
+          <span class="fc-badge bred">Book 6 Weeks Ahead</span>
+          <p class="fc-nm">Belly of the Beast</p>
+          <p class="fc-mt">Fine dining · City Centre</p>
+          <p class="fc-ds">Cape Town's most creative intimate fine dining. Set-menu tasting with locally foraged ingredients. Tiny restaurant, massive talent. Book 6 weeks ahead without exception.</p>
+          <p class="fc-pr">R700pp · Wed–Sat dinner</p>
+          <div class="fc-ls"><a class="fcl" href="https://www.bellyofthebeast.co.za" target="_blank" onclick="event.stopPropagation()">Website & booking</a><a class="fcl" href="https://maps.google.com/?q=Belly+of+the+Beast+Cape+Town" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+      
+      <div class="fc" onclick="openMo('grootconstantia')">
+        <div class="fc-iw"><img class="fc-img" src="images/img_06.jpg" alt="Groot Constantia Estate" loading="lazy" style="object-position:center"></div>
+        <div class="fc-b">
+          <span class="fc-badge bgreen">South Africa's Oldest Estate</span>
+          <p class="fc-nm">Groot Constantia Estate</p>
+          <p class="fc-mt">Wine tasting & restaurant · Constantia</p>
+          <p class="fc-ds">South Africa's oldest wine estate, established 1685. Exceptional wines, beautiful Cape Dutch manor house, great restaurants. The Vin de Constance sweet wine is legendary.</p>
+          <p class="fc-pr">Tasting R150–250 · Open daily</p>
+          <div class="fc-ls"><a class="fcl" href="https://www.grootconstantia.co.za" target="_blank" onclick="event.stopPropagation()">Website & booking</a><a class="fcl" href="https://maps.google.com/?q=Groot+Constantia+Wine+Estate" target="_blank" onclick="event.stopPropagation()">📍 Google Maps</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cta">
+    <div class="ctabg" style="background-image:url('images/img_01.jpg')"></div>
+    <div class="ctac">
+      <p class="ctaey">11 More Restaurants</p>
+      <h2 class="ctah">Get the full food guide.</h2>
+      <p class="ctap">20 restaurants, cafés and bars in total — including the places that don't show up on TripAdvisor and the spots only locals know about, from hidden sunset bars to the best Sunday braai in the Cape Flats.</p>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="section-practical">
+  <div class="prs">
+    <p class="ey">Know Before You Go</p>
+    <h2 class="ph">No rookie mistakes.</h2>
+    <p class="pi">The practical stuff that actually matters — money, safety, getting around, and the things no other guidebook tells you about Cape Town.</p>
+    <div class="prg">
+      <div class="prf"><div class="prf-i">💱</div><div class="prf-l">Exchange Rate</div><div class="prf-v">€1 ≈ R20</div><div class="prf-s">Wildly affordable for Europeans. Cards accepted almost everywhere. Carry cash for markets and Kalky's.</div></div>
+      <div class="prf"><div class="prf-i">☀️</div><div class="prf-l">Best Season</div><div class="prf-v">Oct – Apr</div><div class="prf-s">Summer. Clear skies, 25–35°C. October and November are ideal — busy season starts December.</div></div>
+      <div class="prf"><div class="prf-i">🚗</div><div class="prf-l">Getting Around</div><div class="prf-v">Uber + car hire</div><div class="prf-s">Uber is cheap (~R80 city). Rent a car for Cape Point and Winelands — essential for day trips.</div></div>
+      <div class="prf"><div class="prf-i">✈️</div><div class="prf-l">Airport → City</div><div class="prf-v">35 minutes</div><div class="prf-s">Uber ~R250. MyCiti bus R80. Never take metered taxis from the rank — use the app.</div></div>
+      <div class="prf"><div class="prf-i">📱</div><div class="prf-l">SIM Card</div><div class="prf-v">Vodacom / MTN</div><div class="prf-s">Buy at the airport. R50 covers a full week. WhatsApp is how restaurants, guides and everything here works.</div></div>
+      <div class="prf"><div class="prf-i">🔌</div><div class="prf-l">Power</div><div class="prf-v">Type M plug</div><div class="prf-s">3 large round pins. Universal adapter essential. Good hotels have generators for load shedding.</div></div>
+    </div>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;color:var(--text);margin-bottom:1.5rem">Things no other guidebook tells you</h3>
+    <div class="tips2">
+      <div class="tip"><div class="tiplbl">The Cape Doctor</div><div class="tiptxt">The SE gale blows hardest November–March afternoons. Plan mountain hikes for early morning, beach days for late afternoon when it drops. If you kitesurf, Table Bay is world-class. If you don't, an exposed beach at 2pm in January is miserable.</div></div>
+      <div class="tip"><div class="tiplbl">Safety — honestly</div><div class="tiptxt">Tourist areas are safe by day. Use Uber at night, don't walk alone in the CBD after dark, keep phones out of sight. The main risk is smash-and-grab in parked cars — leave absolutely nothing visible on seats. Be smart, not paranoid.</div></div>
+      <div class="tip"><div class="tiplbl">Restaurant bookings</div><div class="tiptxt">Book anything beyond a casual spot 48–72hrs ahead. WhatsApp bookings are completely normal here — don't be surprised when a restaurant confirms via voice note. Some of the best places have no website at all. Ask locals.</div></div>
+      <div class="tip"><div class="tiplbl">Water & load shedding</div><div class="tiptxt">Tap water is safe to drink. Day Zero is past but water consciousness is a point of local pride — keep showers short. Load shedding (scheduled outages) still happens — good hotels have generators, budget places might not.</div></div>
+      <div class="tip"><div class="tiplbl">Tipping culture</div><div class="tiptxt">10–15% at restaurants is standard and genuinely important — service staff earn very little in base salary. R20–50 for guides. R10–20 for parking attendants. Never skip tipping your waiter.</div></div>
+      <div class="tip"><div class="tiplbl">When not to go</div><div class="tiptxt">December and January are busy, expensive and congested. February and March are the sweet spot: full summer weather, fewer tourists, lower prices, and restaurants can actually fit you in without booking weeks ahead.</div></div>
+    </div>
+  </div>
+  <div class="fb">
+    <div class="fbbg" style="background-image:url('images/img_17.jpg');background-position:center 40%"></div>
+    <div class="fbc">
+      <h3>Welcome to the Mother City.</h3>
+      <p>The signs say it all — Waterfront, Table Mountain, Sea Point. You're finally here. Now use this guide well.</p>
+    </div>
+  </div>
+  <div class="feat">
+    <div class="fi"><div class="fii" style="background-image:url('images/img_05.jpg');background-position:center 50%"></div></div>
+    <div class="ft">
+      <div class="fn">35</div>
+      <p class="floc">Cape Town International Airport · CPT</p>
+      <h3 class="ftit">Getting in and out of the city.</h3>
+      <p class="fd">Cape Town International is 35 minutes from the city centre on a good day — 50 minutes in peak traffic. Uber is the move: ~R250 to the City Bowl, ~R300 to the Atlantic Seaboard. The MyCiti bus (Route 100A) costs R80 and runs to the CBD hourly. Never take a metered taxi from the official rank at arrivals — use the Uber app or Bolt instead.</p>
+      <div class="fps"><span class="fp">Uber ~R250</span><span class="fp">MyCiti bus R80</span><span class="fp">35–50 min to CBD</span></div>
+    </div>
+  </div>
+  <div class="cta">
+    <div class="ctabg" style="background-image:url('images/img_05.jpg')"></div>
+    <div class="ctac">
+      <p class="ctaey">Ready to Go?</p>
+      <h2 class="ctah">Book the flight.<br>We'll handle the rest.</h2>
+      <p class="ctap">The complete Planet Uncharted Cape Town guide — every experience detailed, full itinerary, 20 restaurants, neighbourhood guides and all the 2026 practical info you actually need.</p>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Get Full Guide — €9</button></div>
+      <p class="ctanote">Or share with 3 friends who sign up and get it completely free</p>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- WHEN TO VISIT -->
+  <div style="padding:5rem 5vw;background:var(--cream)">
+    <p class="ey">When to Visit</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--text);margin-bottom:.5rem;line-height:1.1">Pick your month wisely.</h2>
+    <p style="font-size:15px;color:var(--mut);line-height:1.8;max-width:620px;margin-bottom:2.5rem">Cape Town has two distinct seasons. Summer (Oct–Apr) is dry, warm and packed. Winter (May–Sep) is wet, quiet and has its own dramatic beauty.</p>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:3rem">
+
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:1px solid var(--bdr);cursor:default;transition:all .2s">
+        
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Jan</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">27°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: High</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Peak summer. Book everything weeks ahead. Cape Doctor at its strongest. Kitesurf season.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:1px solid var(--bdr);cursor:default;transition:all .2s">
+        
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Feb</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">27°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: High</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Still peak. Grape harvest starts in the Winelands. Cape Doctor strong.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:3px solid #B8863A;cursor:default;transition:all .2s">
+        <span style="display:inline-block;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:.4rem;background:#FEF0D5;color:#8a5e1a">Best time</span>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Mar</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">25°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Med</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Harvest season. Crowds thinning. Excellent wine estate visits.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:1px solid var(--bdr);cursor:default;transition:all .2s">
+        
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Apr</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">22°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Low</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Shoulder season. Good value, still warm. Beaches quieter.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:1px solid var(--bdr);cursor:default;transition:all .2s">
+        
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">May</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">18°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Low</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Winter approaching. Grey but dramatic. Incredibly beautiful light.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:3px solid #c4614a;cursor:default;transition:all .2s">
+        <span style="display:inline-block;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:.4rem;background:#FDECEA;color:#8B2A1E">Busy / Wet</span>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Jun</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">16°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Low</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Wettest month. Very quiet. Lowest prices. Dramatic winter storms.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:3px solid #c4614a;cursor:default;transition:all .2s">
+        <span style="display:inline-block;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:.4rem;background:#FDECEA;color:#8B2A1E">Busy / Wet</span>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Jul</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">15°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Low</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Mid-winter. Cold and wet. Mountains lush green. Some beautiful clear days.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:1px solid var(--bdr);cursor:default;transition:all .2s">
+        
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Aug</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">15°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Low</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Whale season! Southern right whales in False Bay. Wildflowers West Coast.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:1px solid var(--bdr);cursor:default;transition:all .2s">
+        
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Sep</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">17°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Low</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Spring arrives. Wildflowers in bloom. Whales still active. Pre-season prices.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:3px solid #B8863A;cursor:default;transition:all .2s">
+        <span style="display:inline-block;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:.4rem;background:#FEF0D5;color:#8a5e1a">Best time</span>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Oct</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">20°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Med</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Spring. Cape Doctor arrives. Best overall month — warm, dry, not crowded.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:3px solid #B8863A;cursor:default;transition:all .2s">
+        <span style="display:inline-block;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:.4rem;background:#FEF0D5;color:#8a5e1a">Best time</span>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Nov</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">23°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: Med</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">Pre-peak. Excellent value, great weather. Our top pick.</div>
+      </div>
+      <div style="border-radius:12px;padding:1.1rem 1rem;background:var(--white);border-top:3px solid #c4614a;cursor:default;transition:all .2s">
+        <span style="display:inline-block;font-size:8px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:.4rem;background:#FDECEA;color:#8B2A1E">Busy / Wet</span>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Dec</div>
+        <div style="font-size:11px;font-weight:500;color:var(--gold)">25°C</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:.15rem">Crowds: V.High</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.5;margin-top:.5rem">SA school holidays. Very crowded. Book 3 months ahead minimum.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- WHERE TO STAY -->
+  <div style="padding:5rem 5vw;background:var(--white)">
+    <p class="ey">Where to Stay</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--text);margin-bottom:.5rem;line-height:1.1">Choose your base wisely.</h2>
+    <p style="font-size:15px;color:var(--mut);line-height:1.8;max-width:620px;margin-bottom:2.5rem">Where you stay in Cape Town shapes your entire trip. Here's the honest breakdown — no hotel commissions involved.</p>
+    <div style="border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.09)">
+
+      <div style="display:grid;grid-template-columns:3rem 1fr auto;gap:1.5rem;padding:1.75rem 2.5rem;background:var(--white);border-bottom:1px solid var(--bdr)">
+        <span style="font-size:1.75rem;padding-top:.25rem">🏙</span>
+        <div><p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:.3rem">City Bowl / De Waterkant</p><p style="font-size:13.5px;color:var(--mut);line-height:1.65;margin-bottom:.35rem">Most central. Walk to everything. Best for first-timers. Bree Street restaurants on your doorstep. Lively at night — earplugs if you're a light sleeper.</p><p style="font-size:12px;color:var(--gold)">→ Pepperclub Hotel, The Gorgeous George, various boutique guesthouses</p></div>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--gold);white-space:nowrap;padding-top:.25rem">R800–3000/night</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:3rem 1fr auto;gap:1.5rem;padding:1.75rem 2.5rem;background:var(--warm);border-bottom:1px solid var(--bdr)">
+        <span style="font-size:1.75rem;padding-top:.25rem">🌊</span>
+        <div><p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Sea Point / Atlantic Seaboard</p><p style="font-size:13.5px;color:var(--mut);line-height:1.65;margin-bottom:.35rem">Ocean promenade, great restaurants, diverse neighbourhood. Popular with digital nomads — excellent coffee, walkable, genuine local feel. Slightly removed from CBD but Uber is easy and cheap.</p><p style="font-size:12px;color:var(--gold)">→ The Glen Boutique Hotel, various Airbnbs with Atlantic views</p></div>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--gold);white-space:nowrap;padding-top:.25rem">R1000–5000/night</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:3rem 1fr auto;gap:1.5rem;padding:1.75rem 2.5rem;background:var(--white);border-bottom:1px solid var(--bdr)">
+        <span style="font-size:1.75rem;padding-top:.25rem">🏖</span>
+        <div><p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Camps Bay</p><p style="font-size:13.5px;color:var(--mut);line-height:1.65;margin-bottom:.35rem">Expensive but spectacular. 5 minutes from the beach and the strip. Best for special occasions. The morning view of Table Mountain from your room will ruin all other hotel views forever.</p><p style="font-size:12px;color:var(--gold)">→ The Marly, Azure at The Twelve Apostles Hotel</p></div>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--gold);white-space:nowrap;padding-top:.25rem">R2000–8000/night</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:3rem 1fr auto;gap:1.5rem;padding:1.75rem 2.5rem;background:var(--warm);border-bottom:1px solid var(--bdr)">
+        <span style="font-size:1.75rem;padding-top:.25rem">🍷</span>
+        <div><p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Constantia / Southern Suburbs</p><p style="font-size:13.5px;color:var(--mut);line-height:1.65;margin-bottom:.35rem">Peaceful, leafy, next to the wine estates. 20 minutes from the city. Best for families or wine-focused trips. Beautiful guesthouses in garden settings with mountain views behind them.</p><p style="font-size:12px;color:var(--gold)">→ Steenberg Hotel, various boutique vineyard guesthouses</p></div>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--gold);white-space:nowrap;padding-top:.25rem">R900–4000/night</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:3rem 1fr auto;gap:1.5rem;padding:1.75rem 2.5rem;background:var(--white)">
+        <span style="font-size:1.75rem;padding-top:.25rem">🐧</span>
+        <div><p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Simon's Town</p><p style="font-size:13.5px;color:var(--mut);line-height:1.65;margin-bottom:.35rem">45 minutes south but a world away. Best for a peninsula-focused trip. Wake up near the penguins and Cape Point. Genuinely peaceful, completely different pace to the city.</p><p style="font-size:12px;color:var(--gold)">→ Simon's Town Boutique Backpackers, Boulders Beach Lodge</p></div>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--gold);white-space:nowrap;padding-top:.25rem">R600–2000/night</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FLIGHTS -->
+  <div style="padding:5rem 5vw;background:var(--warm)">
+    <p class="ey">Getting There</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--text);margin-bottom:.5rem;line-height:1.1">Direct from Europe.</h2>
+    <p style="font-size:15px;color:var(--mut);line-height:1.8;max-width:620px;margin-bottom:2.5rem">Cape Town is one of the best-value long-haul routes from Europe. Multiple direct options from Amsterdam, London and Frankfurt.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px">
+
+      <div style="background:var(--white);border-radius:12px;padding:1.5rem;border:1px solid var(--bdr);border-left:3px solid var(--gold)">
+        <p style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.4rem">From Amsterdam (AMS)</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Amsterdam → Cape Town</p>
+        <p style="font-size:13px;color:var(--mut);line-height:1.6">KLM direct, ~11 hours. Book 3–4 months out. Sit right side for the Table Mountain approach on landing — one of the best arrivals in aviation.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold);margin-top:.5rem">€500–900 return</p>
+      </div>
+
+      <div style="background:var(--white);border-radius:12px;padding:1.5rem;border:1px solid var(--bdr);border-left:3px solid var(--gold)">
+        <p style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.4rem">From London (LHR / LGW)</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.3rem">London → Cape Town</p>
+        <p style="font-size:13px;color:var(--mut);line-height:1.6">British Airways, Virgin Atlantic and SAA all fly direct. ~11.5 hours. One of the best-value long-haul routes from Europe. November and February offer the best prices.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold);margin-top:.5rem">£450–850 return</p>
+      </div>
+
+      <div style="background:var(--white);border-radius:12px;padding:1.5rem;border:1px solid var(--bdr);border-left:3px solid var(--gold)">
+        <p style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.4rem">From Frankfurt (FRA)</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Frankfurt → Cape Town</p>
+        <p style="font-size:13px;color:var(--mut);line-height:1.6">Lufthansa direct or via Johannesburg. ~11hrs direct. Code-share with SAA on many routes. Business class is excellent value when you catch a sale fare.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold);margin-top:.5rem">€550–1000 return</p>
+      </div>
+
+      <div style="background:var(--white);border-radius:12px;padding:1.5rem;border:1px solid var(--bdr);border-left:3px solid var(--gold)">
+        <p style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.4rem">From the Netherlands (AMS / RTM)</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Via Amsterdam or Brussels</p>
+        <p style="font-size:13px;color:var(--mut);line-height:1.6">Connect via AMS (KLM) or BRU (Brussels Airlines / SAA). Budget 2–3hrs for connection. Always book as one itinerary so your bags check through to Cape Town.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold);margin-top:.5rem">€480–850 return</p>
+      </div>
+
+      <div style="background:var(--white);border-radius:12px;padding:1.5rem;border:1px solid var(--bdr);border-left:3px solid var(--gold)">
+        <p style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.4rem">Best time to book</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.3rem">3–4 months ahead</p>
+        <p style="font-size:13px;color:var(--mut);line-height:1.6">October–November and February–March offer the best combo of great weather and manageable prices. December school holidays push prices and crowds to maximum.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold);margin-top:.5rem">Flexible dates = big savings</p>
+      </div>
+
+      <div style="background:var(--white);border-radius:12px;padding:1.5rem;border:1px solid var(--bdr);border-left:3px solid var(--gold)">
+        <p style="font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:.4rem">At Cape Town Airport (CPT)</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Cape Town International</p>
+        <p style="font-size:13px;color:var(--mut);line-height:1.6">One of Africa's best airports. Vodacom and MTN SIMs at arrivals. Uber from the designated pickup area — ignore the taxi touts at the exit. Card payments everywhere.</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--gold);margin-top:.5rem">35 min to city centre</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FULL BLEED -->
+  <div style="height:60vh;position:relative;overflow:hidden;display:flex;align-items:flex-end">
+    <div style="position:absolute;inset:0;background-image:url('images/img_16.jpg');background-size:cover;background-position:center 40%"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),transparent 55%)"></div>
+    <div style="position:relative;z-index:2;padding:0 8vw 3.5rem">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3.5rem);font-weight:300;color:#fff;line-height:1.1;margin-bottom:.5rem">Welcome to the Mother City.</h3>
+      <p style="font-size:14px;color:rgba(255,255,255,.62);max-width:500px;line-height:1.6">The signs point to Waterfront, Table Mountain, Sea Point. You've landed. Now you're here.</p>
+    </div>
+  </div>
+
+
+<div class="sec" id="section-gems">
+  <div class="hero" style="height:60vh">
+    <div class="hbg" style="background-image:url('images/img_21.jpg');filter:brightness(.65)"></div>
+    <div class="hc" style="padding-bottom:8vh">
+      <div class="htag">Exclusive Content</div>
+      <h1 class="ht" style="font-size:clamp(3rem,7vw,5.5rem)">The places<br><em>nobody</em><br>shares online.</h1>
+    </div>
+  </div>
+  <div class="gms">
+    <p class="ey">Hidden Gems</p>
+    <h2 class="ph">12 spots that don't show up<br>on TripAdvisor.</h2>
+    <p class="pi">Secret beaches. Sunset bars with no sign outside. The walk that only locals know. The braai that only happens on Sundays. Unlock the tier that works for you.</p>
+
+    <div class="gem-free">
+      <span class="gem-badge">✓ Free Preview</span>
+      <div class="gem-free-txt">
+        <h3>One Hidden Gem — on us</h3>
+        <p>Witsands beach on the Overberg coast: white sand dunes meeting turquoise water, 90 minutes from Cape Town, almost no one there. Drive the R44 south past Hermanus, turn left at the Witsands sign. Arrive before noon. Bring a picnic, nothing else. This is the Western Cape at its most raw and beautiful.</p>
+      </div>
+    </div>
+
+    <div class="gems-g">
+      <div class="gem"><div class="gem-bg" style="background-image:url('')"></div><div class="gem-ov"><div class="gem-lock">🔒</div><p class="gem-name">The Sunset Bar with No Sign</p><p class="gem-sub">Camps Bay · Unlock to discover</p></div></div>
+      <div class="gem"><div class="gem-bg" style="background-image:url('images/img_20.jpg')"></div><div class="gem-ov"><div class="gem-lock">🔒</div><p class="gem-name">Secret Tidal Pool at Dawn</p><p class="gem-sub">Atlantic Seaboard · Unlock to discover</p></div></div>
+      <div class="gem"><div class="gem-bg" style="background-image:url('images/img_02.jpg')"></div><div class="gem-ov"><div class="gem-lock">🔒</div><p class="gem-name">The Farm Table No One Knows</p><p class="gem-sub">Stellenbosch · Unlock to discover</p></div></div>
+      <div class="gem"><div class="gem-bg" style="background-image:url('images/img_18.jpg')"></div><div class="gem-ov"><div class="gem-lock">🔒</div><p class="gem-name">Kalk Bay Caves at Low Tide</p><p class="gem-sub">False Bay · Unlock to discover</p></div></div>
+    </div>
+
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;color:var(--text);margin-bottom:2rem;text-align:center">Choose your guide</h3>
+    <div class="gem-tiers">
+      <div class="tier">
+        <div class="tier-label">Starter Guide</div>
+        <div class="tier-price">€9</div>
+        <div class="tier-inc">15 full experience details with maps<br>3-day curated itinerary with timings<br>20 restaurants with booking links<br>Full neighbourhood guide<br>Practical 2026 info</div>
+        <button class="tier-btn out" onclick="alert('Payment coming soon — leave your email below to be first!')">Get Starter Guide</button>
+      </div>
+      <div class="tier hi">
+        <div class="tier-label" style="color:var(--gold)">★ Complete Guide</div>
+        <div class="tier-price">€19</div>
+        <div class="tier-inc">Everything in Starter, plus:<br><strong>12 Hidden Gems fully revealed</strong><br>Secret beaches &amp; sunset bars<br>Local-only food spots<br>Day trips to Stellenbosch &amp; Hermanus<br>Digital download, yours forever</div>
+        <button class="tier-btn gold" onclick="alert('Payment coming soon — leave your email below to be first!')">Get Complete Guide</button>
+      </div>
+    </div>
+
+    <div style="background:var(--white);border-radius:var(--rl);padding:2.5rem;margin-top:2rem;text-align:center;box-shadow:var(--sh1)">
+      <p class="ey" style="text-align:center">Not ready to buy? Get notified when we launch.</p>
+      <div class="ctafrm" style="margin-top:1rem">
+        <input class="ctain" style="background:var(--warm);border:1px solid var(--border)" type="email" placeholder="your@email.com">
+        <button class="ctasub">Notify me</button>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:.75rem">Or share Planet Uncharted with 3 friends who sign up and get the Complete Guide free →</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="frbr">Planet Uncharted</div>
+    <div class="frurl">travelguide.capetown</div>
+  </div>
+  <div class="frnote">
+    All information verified April 2026 · Prices in ZAR unless stated<br>
+    Not sponsored · Not paid placements · Honest picks from someone who's actually been there
+  </div>
+</footer>
+
+<script>
+const MODALS = {
+  mountain: {
+    img: 'images/img_08.jpg',
+    area: "Table Mountain \u00b7 City Bowl",
+    title: "Table Mountain at Dawn",
+    pills: ["Hike free", "Cable car R400", "Start 6:30am", "Leave by noon"],
+    desc: "Hike Platteklip Gorge before the cable car opens and you'll have the summit to yourself for the first hour. The 3km ascent takes 1.5\u20132hrs \u2014 pack water, a light layer and sunscreen. The city materialises below you as the morning light hits it. This is the moment you'll carry home from Cape Town. Leave by noon: Table Mountain's weather changes in minutes and clouds can disorient hikers completely. More people have died here than on Mt Everest \u2014 not from extreme climbing, but from sudden weather changes. Stay on marked paths.",
+    details: [{"l": "Entry fee", "v": "Hike: Free \u00b7 Cable car: R400 return"}, {"l": "Best time", "v": "6:30am start, year-round"}, {"l": "Duration", "v": "3\u20134 hours return (hiking)"}, {"l": "Difficulty", "v": "Moderate \u2014 good fitness required"}],
+    links: [{"href": "https://www.tablemountain.net", "label": "Table Mountain Aerial Cableway", "cls": "pri"}, {"href": "https://maps.google.com/?q=Platteklip+Gorge+Table+Mountain", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "Never hike alone. Stay on marked paths, bring extra water, and be off by noon. If clouds roll in fast \u2014 turn around immediately. The Platteklip Gorge route is well-marked and safe in good conditions; just respect the mountain.",
+  },
+  bokaap: {
+    img: 'images/img_03.jpg',
+    area: "Bo-Kaap \u00b7 Signal Hill Slopes",
+    title: "Bo-Kaap \u2014 Cape Town's oldest soul",
+    pills: ["Free to visit", "Cape Malay culture", "Dawn is best", "Walking distance from CBD"],
+    desc: "Bo-Kaap began in the mid-18th century as a garrison and came into its own in the 1830s when formerly enslaved people from Malaysia, Indonesia and elsewhere in Africa settled here after emancipation. The cobblestoned streets and pastel-painted houses are iconic, but the real Bo-Kaap is heard: the call to prayer from the Auwal Mosque (South Africa's oldest, built 1798), conversations of elderly residents on their stoeps, the smell of koeksister and bobotie from kitchen windows. Today its roots are predominantly Cape Muslim, with residents actively resisting gentrification.",
+    details: [{"l": "Entry", "v": "Free"}, {"l": "Best time", "v": "Before 8am or after 5pm"}, {"l": "Walking tour", "v": "~R200 with local guide"}, {"l": "Must-eat", "v": "Faeeza's Home Kitchen (book ahead)"}],
+    links: [{"href": "https://maps.google.com/?q=Bo-Kaap+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}, {"href": "https://maps.google.com/?q=Bo-Kaap+Museum+Cape+Town", "label": "Bo-Kaap Museum", "cls": "sec"}],
+    tip: "Come before 8am on a weekday. The morning light on the pastel houses is extraordinary and the neighbourhood is completely peaceful. By 10am it's tour groups and camera crews. The real Bo-Kaap happens early.",
+  },
+  penguins: {
+    img: 'images/img_10.jpg',
+    area: "Boulders Beach \u00b7 Simon's Town",
+    title: "Boulders Beach \u2014 African Penguins",
+    pills: ["R220 entry", "Open daily", "Arrive before 9am", "Combine with Cape Point"],
+    desc: "There are approximately 2,100 African penguins at Boulders Beach \u2014 a colony that established itself here in 1982. They share the beach with human swimmers in complete indifference. African penguins are an endangered species: fewer than 50,000 remain in the world. Boulders is one of only a handful of places where you can observe them this closely in their natural environment. The boardwalk keeps you just far enough away to avoid disturbing nesting pairs while close enough to see their personalities clearly.",
+    details: [{"l": "Entry fee", "v": "R220 adults \u00b7 R110 children"}, {"l": "Opening hours", "v": "Daily 8am\u20135pm (summer 7:30am)"}, {"l": "Best time", "v": "Arrive before 9am"}, {"l": "Getting there", "v": "35km from Cape Town CBD (40 min drive)"}],
+    links: [{"href": "https://maps.google.com/?q=Boulders+Beach+Simon%27s+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}, {"href": "https://www.sanparks.org/parks/table_mountain", "label": "SANParks info", "cls": "sec"}],
+    tip: "Buy tickets at the gate rather than online \u2014 you avoid booking fees and the queue is usually short. Combine with Cape Point on the same day: they're 20 minutes apart and together make the perfect Peninsula day trip.",
+  },
+  muizenberg: {
+    img: 'images/img_19.jpg',
+    area: "Muizenberg \u00b7 False Bay",
+    title: "Muizenberg \u2014 Cape Town's surf beach",
+    pills: ["Beach free", "Lessons R350+", "Warmer than Atlantic side", "Gary's Surf School"],
+    desc: "Muizenberg has been a beach resort since the Victorian era \u2014 the famous coloured bathing huts date from the 1930s and are now a protected heritage site. False Bay water is 4\u20136\u00b0C warmer than the Atlantic side (Clifton, Camps Bay) \u2014 still cool, but manageable. The beach break is gentle and consistent, making it genuinely one of the best beginner surf spots in the world. On weekend mornings every skill level from absolute beginners to experienced longboarders is in the water together.",
+    details: [{"l": "Entry", "v": "Beach is free"}, {"l": "Surf lessons", "v": "Gary's Surf School: R350 for 2hrs"}, {"l": "Water temp", "v": "17\u201322\u00b0C (warmer than Atlantic side)"}, {"l": "Getting there", "v": "30min from Cape Town by car or train"}],
+    links: [{"href": "https://maps.google.com/?q=Muizenberg+Beach+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}, {"href": "https://garysurf.com", "label": "Gary's Surf School", "cls": "sec"}],
+    tip: "The Southern Line train from Cape Town Station to Muizenberg costs R15 and takes 45 minutes along the False Bay coastline. One of the world's most scenic commuter train rides \u2014 infinitely better than driving and infinitely cheaper.",
+  },
+  kite: {
+    img: 'images/img_13.jpg',
+    area: "Blouberg Strand \u00b7 Table Bay",
+    title: "Kitesurf with Table Mountain behind you",
+    pills: ["Beach free", "Kite lessons R800+", "Oct\u2013Mar season", "Cape Doctor SE wind"],
+    desc: "The Cape Doctor \u2014 Cape Town's signature south-easter gale \u2014 blows from October through March with a consistency that makes Table Bay one of the world's premier kitesurfing venues. Blouberg Strand sits directly across Table Bay from Table Mountain, creating the iconic image on every Cape Town postcard: kites flying against the flat-topped mountain silhouette. The beach is free and wide \u2014 great for watching even if you don't kite. IKO-certified schools operate from the beach. If you kitesurf, this is genuinely world-class.",
+    details: [{"l": "Entry", "v": "Beach is free"}, {"l": "Kite lessons", "v": "From R800 for intro lesson (3hrs)"}, {"l": "Best months", "v": "October \u2013 March (Cape Doctor season)"}, {"l": "Distance", "v": "25km from Cape Town CBD (25 min drive)"}],
+    links: [{"href": "https://maps.google.com/?q=Blouberg+Beach+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "The sunset view of Table Mountain from Blouberg is the shot that appears on every Cape Town campaign. Arrive 30 minutes before sunset with a bottle of local wine. Bring a blanket \u2014 the Cape Doctor drops but the air stays cool. Best free thing in Cape Town.",
+  },
+  capepoint: {
+    img: 'images/img_11.jpg',
+    area: "Cape Point \u00b7 Southern Peninsula",
+    title: "Cape Point & Cape of Good Hope",
+    pills: ["R353 park entry", "Half-day trip", "Baboons \u2014 don't feed", "Flying Dutchman funicular"],
+    desc: "Cape Point is the dramatic rocky headland at the south-western tip of the Cape Peninsula, surrounded by sheer cliffs dropping straight into the ocean with views across both the Atlantic and Indian Ocean currents that meet nearby. The lighthouse sits 238m above sea level. The Cape of Good Hope \u2014 the actual southwestern-most point \u2014 is a short walk from Cape Point. Allow at least 2 hours in the park. The baboons here are bold and have learned that tourists mean food \u2014 keep car windows closed.",
+    details: [{"l": "Entry fee", "v": "R353 adults \u00b7 R177 children (park entry)"}, {"l": "Funicular", "v": "R85 return (Flying Dutchman)"}, {"l": "Opening hours", "v": "Daily 7am\u20135pm"}, {"l": "Distance", "v": "70km from CBD \u2014 allow 90 min drive"}],
+    links: [{"href": "https://maps.google.com/?q=Cape+Point+South+Africa", "label": "\ud83d\udccd Google Maps", "cls": "pri"}, {"href": "https://www.sanparks.org", "label": "SANParks info", "cls": "sec"}],
+    tip: "Baboons will enter your car if a window is open. Keep windows closed, don't eat visibly near them, and don't try to feed or photograph them at close range. They bite. Rangers on site will assist. Treat them like wild animals \u2014 because they are.",
+  },
+  wine: {
+    img: 'images/img_06.jpg',
+    area: "Constantia \u00b7 Southern Suburbs",
+    title: "Constantia Wine Route",
+    pills: ["Est. 1685", "Tasting R150\u2013300", "20 min from CBD", "Weekdays best"],
+    desc: "The Constantia Valley is South Africa's oldest wine region, established in 1685 when Dutch governor Simon van der Stel planted the first vineyards here. The valley lies in a natural amphitheatre below the Constantiaberg mountains, cooled by False Bay breezes. Groot Constantia, Klein Constantia, Beau Constantia, Steenberg and Constantia Uitsig all produce exceptional wines within a 5km radius. The Vin de Constance sweet wine from Klein Constantia was Napoleon's favourite wine during his exile on St Helena.",
+    details: [{"l": "Wine tasting", "v": "R150\u2013300 per estate"}, {"l": "Distance", "v": "20km from Cape Town CBD"}, {"l": "Best day", "v": "Tuesday\u2013Thursday (quietest)"}, {"l": "Must-taste", "v": "Klein Constantia Vin de Constance"}],
+    links: [{"href": "https://www.grootconstantia.co.za", "label": "Groot Constantia", "cls": "pri"}, {"href": "https://www.beauconstantia.com", "label": "Beau Constantia", "cls": "sec"}],
+    tip: "Beau Constantia has the best views and most interesting natural wine portfolio. Groot Constantia is the most historically significant. Do both in one afternoon \u2014 they're 5 minutes apart. End with a picnic on the Groot Constantia lawns.",
+  },
+  kirstenbosch: {
+    img: 'images/img_18.jpg',
+    area: "Kirstenbosch \u00b7 Southern Suburbs",
+    title: "Kirstenbosch Summer Concerts",
+    pills: ["Dec\u2013Apr", "R200\u2013400 ticket", "BYOB wine", "Table Mountain backdrop"],
+    desc: "Kirstenbosch National Botanical Garden hosts summer sunset concerts every Sunday from December through April. The stage is set against the eastern slopes of Table Mountain. Capetonians bring elaborate picnics, wine, blankets and friends \u2014 it's one of the most beautiful event settings in the world. The garden itself is world-class: 528 hectares of indigenous South African flora with the Boomslang treetop walkway arching through the forest canopy.",
+    details: [{"l": "Concert tickets", "v": "R200\u2013400 (varies by artist)"}, {"l": "Garden entry", "v": "R220 adults (included with concert)"}, {"l": "Season", "v": "December \u2013 April, Sundays 5:30pm"}, {"l": "Distance", "v": "15km from CBD (20 min drive)"}],
+    links: [{"href": "https://www.sanbi.org/gardens/kirstenbosch/", "label": "Kirstenbosch website", "cls": "pri"}, {"href": "https://maps.google.com/?q=Kirstenbosch+National+Botanical+Garden", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "Arrive 90 minutes early to walk the gardens before the light fades. The Boomslang walkway at golden hour with Table Mountain behind you is one of the most beautiful things you'll experience in Cape Town. Don't rush to your picnic spot.",
+  },
+  lionshead: {
+    img: 'images/img_04.jpg',
+    area: "Lion's Head \u00b7 Signal Hill",
+    title: "Lion's Head \u2014 Full Moon Hike",
+    pills: ["Free", "2\u20133 hours", "Chain ladders", "Full moon hike legendary"],
+    desc: "Lion's Head is the conical peak between Table Mountain and Signal Hill. The circular hike (5km) uses chain ladders and metal rungs to navigate the rocky upper section \u2014 slightly scrambling but accessible to anyone reasonably fit. From the summit: 360\u00b0 views of Table Mountain, the Atlantic Seaboard, Camps Bay, and both oceans. The full moon hike \u2014 done on the night of each full moon \u2014 is a Cape Town institution. Headlamps, wine, and usually a spontaneous sing-along on the summit.",
+    details: [{"l": "Entry", "v": "Free"}, {"l": "Duration", "v": "2\u20133 hours circular route"}, {"l": "Difficulty", "v": "Moderate \u2014 chain ladder sections"}, {"l": "Full moon dates", "v": "timeanddate.com/moon/south-africa"}],
+    links: [{"href": "https://maps.google.com/?q=Lion%27s+Head+Cape+Town+parking", "label": "\ud83d\udccd Parking \u2014 Google Maps", "cls": "pri"}],
+    tip: "The full moon hike is done at night with headlamps \u2014 completely safe and absolutely beautiful. The city lights below you, Table Mountain lit by moonlight, a string of headlamps on the trail. Don't miss it if the timing works with your trip dates.",
+  },
+  biscuitmill: {
+    img: 'images/img_12.jpg',
+    area: "Old Biscuit Mill \u00b7 Woodstock",
+    title: "Old Biscuit Mill \u2014 Saturday Market",
+    pills: ["Free entry", "Saturdays 9am\u20133pm", "Come hungry", "Cape Town's best food market"],
+    desc: "The Neighbourgoods Market at the Old Biscuit Mill is Cape Town's most celebrated Saturday market \u2014 a converted Victorian factory housing some of the city's most exciting food producers, coffee roasters and artisan makers. Cape Malay curry, fresh oysters on ice, artisan sourdough, South African craft beer, single-origin coffee, biltong, koeksisters, bobotie burgers. The building also houses permanent design studios open daily \u2014 the Saturday market is the main event.",
+    details: [{"l": "Entry", "v": "Free"}, {"l": "Hours", "v": "Saturdays 9am\u20133pm"}, {"l": "Address", "v": "373\u2013375 Albert Rd, Woodstock"}, {"l": "Getting there", "v": "10 min from CBD \u2014 Uber recommended"}],
+    links: [{"href": "https://theoldbiscuitmill.co.za", "label": "Old Biscuit Mill website", "cls": "pri"}, {"href": "https://maps.google.com/?q=Old+Biscuit+Mill+Woodstock+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "Arrive by 9am \u2014 it gets genuinely crowded by 11am. Fresh oysters with Tabasco and a glass of cold Sauvignon Blanc at 9:30am while the market is still uncrowded is one of Cape Town's great Saturday morning rituals. Cash and cards accepted.",
+  },
+  noordhoek: {
+    img: 'images/img_20.jpg',
+    area: "Noordhoek \u00b7 Cape Peninsula",
+    title: "Noordhoek \u2014 8km of wild Atlantic beach",
+    pills: ["Free", "Horse riding available", "Almost no crowds", "Chapman's Peak route"],
+    desc: "Noordhoek is an 8km arc of white sand on the Atlantic side of the Peninsula, sheltered by Chapman's Peak. One of the longest unspoilt beaches in the Western Cape \u2014 only 25km from central Cape Town but sees a fraction of the visitors that Clifton gets. The Atlantic water is cold (14\u201316\u00b0C) but the setting is extraordinary: dunes, fynbos, the Slangkop Lighthouse in the distance, Chapman's Peak rising behind you. Horse riding on the beach at sunset is unmissable.",
+    details: [{"l": "Entry", "v": "Free"}, {"l": "Horse riding", "v": "Sleepy Hollow: R350/hr"}, {"l": "Parking", "v": "Free parking at beach entrance"}, {"l": "Distance", "v": "25km from CBD via Chapman's Peak (35 min)"}],
+    links: [{"href": "https://maps.google.com/?q=Noordhoek+Beach+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "Drive via Chapman's Peak on the way back to Cape Town \u2014 the toll road costs R52 and delivers 9km of the most dramatic coastal driving you'll ever experience. Chiselled into a sheer cliff face 600m above the ocean. Do it at sunset.",
+  },
+  robben: {
+    img: 'images/img_09.jpg',
+    area: "Robben Island \u00b7 Table Bay",
+    title: "Robben Island \u2014 History you can't skip",
+    pills: ["R650+ including ferry", "Book weeks ahead", "3\u20134 hours total", "Former prisoners as guides"],
+    desc: "Nelson Mandela spent 18 of his 27 years of imprisonment on Robben Island. Tours are led by former political prisoners \u2014 that detail alone makes this non-negotiable. You'll see the lime quarry where Mandela and others worked, the isolation section, and Mandela's cell in Section B. The ferry crossing with Table Mountain growing smaller behind you, then larger on return, is part of the experience. Bring a warm layer \u2014 Table Bay is windy even in summer.",
+    details: [{"l": "Ticket price", "v": "R650+ adults (includes ferry)"}, {"l": "Duration", "v": "4\u20135 hours total including ferry"}, {"l": "Booking", "v": "Book at least 2\u20133 weeks ahead \u2014 often sold out"}, {"l": "Ferry departs", "v": "V&A Waterfront, Nelson Mandela Gateway"}],
+    links: [{"href": "https://www.robben-island.org.za", "label": "Book tickets", "cls": "pri"}, {"href": "https://maps.google.com/?q=Nelson+Mandela+Gateway+Cape+Town", "label": "\ud83d\udccd Ferry terminal \u2014 Google Maps", "cls": "sec"}],
+    tip: "Tours sell out weeks ahead, particularly in peak season (December\u2013January). Book the moment you know your travel dates. The earliest morning ferry (usually 9am) gives you the best weather and light on the island.",
+  },
+  zeitz: {
+    img: 'images/img_05.jpg',
+    area: "Zeitz MOCAA \u00b7 V&A Waterfront",
+    title: "Zeitz Museum of Contemporary Art Africa",
+    pills: ["R220 entry", "Open Wed\u2013Mon", "Go before 11am", "Grain silo architecture"],
+    desc: "Zeitz MOCAA opened in 2017 and immediately became one of the most significant art institutions on the continent. Thomas Heatherwick carved 80 gallery spaces out of the cylindrical concrete cells of a converted grain silo. The atrium \u2014 where the silo tubes are carved away to create a soaring cathedral space \u2014 is one of the most extraordinary interiors anywhere. The collection focuses entirely on contemporary African and African-diaspora art: photography, painting, sculpture, video, performance documentation.",
+    details: [{"l": "Entry fee", "v": "R220 adults \u00b7 R110 students \u00b7 Under 18 free"}, {"l": "Opening hours", "v": "Wed\u2013Mon 10am\u20136pm (Fri until 9pm)"}, {"l": "Location", "v": "Silo District, V&A Waterfront"}, {"l": "Best time", "v": "Before 11am (quieter) or Friday evening"}],
+    links: [{"href": "https://www.zeitzmocaa.museum", "label": "Book tickets", "cls": "pri"}, {"href": "https://maps.google.com/?q=Zeitz+MOCAA+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "Friday evenings Zeitz stays open until 9pm and becomes a social event \u2014 drinks, sometimes live music, completely different atmosphere from daytime. One of Cape Town's best Friday evening options.",
+  },
+  kalky: {
+    img: 'images/img_14.jpg',
+    area: "Kalk Bay Harbour \u00b7 False Bay",
+    title: "Kalk Bay \u2014 Cape Town's most characterful harbour",
+    pills: ["Harbour free", "Kalky's R80\u2013120", "Cash only", "False Bay coast"],
+    desc: "Kalk Bay is a working fishing harbour 30km south of Cape Town. Every morning, colourful fishing boats return with snoek, harders, yellowtail and whatever the season brings. Fur seals wait on the dockside. Kalky's \u2014 the famous chip shop on the harbour \u2014 has been there for decades. The fish is so fresh it was swimming within hours of reaching your plate. The surrounding village rewards slow wandering: antique shops, art galleries, craft beer bars and good restaurants.",
+    details: [{"l": "Kalky's prices", "v": "R80\u2013120 per portion"}, {"l": "Payment", "v": "Cash only at Kalky's"}, {"l": "Opening hours", "v": "Daily 9am\u20138pm approx"}, {"l": "Getting there", "v": "30km from CBD \u2014 train R15 or 35 min drive"}],
+    links: [{"href": "https://maps.google.com/?q=Kalky%27s+Kalk+Bay+Harbour", "label": "\ud83d\udccd Kalky's \u2014 Google Maps", "cls": "pri"}, {"href": "https://maps.google.com/?q=Kalk+Bay+Harbour", "label": "\ud83d\udccd Harbour \u2014 Google Maps", "cls": "sec"}],
+    tip: "Take the Southern Line train from Cape Town Station to Kalk Bay \u2014 R15 each way, runs along the False Bay coastline the entire journey. More scenic than driving and you don't have to worry about parking.",
+  },
+  sunset: {
+    img: 'images/img_21.jpg',
+    area: "Signal Hill \u00b7 City Bowl",
+    title: "Signal Hill Sunset \u2014 The best free thing in Cape Town",
+    pills: ["Free", "Drive or Uber up", "Bring wine", "Best Oct\u2013Apr"],
+    desc: "Signal Hill is the flat-topped ridge connecting Lion's Head to the city. The tarred road to the summit is accessible by car or Uber. The viewing area looks directly west over the Atlantic Ocean, with Robben Island to the north and the Twelve Apostles range to the south. This is where Cape Town comes to mark the end of the day. Bring Chenin Blanc from Woolworths, find a rock to sit on, and watch the Atlantic turn every shade of gold and orange. Free, ten minutes from the city, impossible to improve.",
+    details: [{"l": "Entry", "v": "Free"}, {"l": "Access", "v": "Drive or Uber \u2014 10 min from CBD"}, {"l": "Best months", "v": "October\u2013April (longest sunsets)"}, {"l": "What to bring", "v": "Local wine, snacks, light layer for the breeze"}],
+    links: [{"href": "https://maps.google.com/?q=Signal+Hill+viewpoint+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "The Signal Hill noon cannon fires every day at noon \u2014 a tradition since 1806 to allow ships in Table Bay to set their chronometers. If you're near the city at noon, you'll hear it. Startlingly loud the first time.",
+  },
+  citybowl: {
+    img: 'images/img_09.jpg',
+    area: "City Bowl & CBD \u00b7 Cape Town",
+    title: "City Bowl & CBD \u2014 Cape Town's historic heart",
+    pills: ["Walkable by day", "Uber at night", "Bree St dining", "First Thursdays"],
+    desc: "The City Bowl is the natural amphitheatre formed by Table Mountain, Devil's Peak, Lion's Head and Signal Hill, with the CBD at its base. The Dutch East India Company established its refreshment station here in 1652 \u2014 making it one of the oldest European settlements in sub-Saharan Africa. The Company's Garden, Slave Lodge, St George's Cathedral, Parliament and the Castle of Good Hope are all within walking distance. Bree Street has become one of Africa's great restaurant strips.",
+    details: [{"l": "Best for", "v": "Culture, history, restaurants, walking"}, {"l": "Stay here if", "v": "You want to be central and walkable"}, {"l": "Best street", "v": "Bree Street \u2014 Cape Town's finest dining strip"}, {"l": "Don't miss", "v": "First Thursdays \u2014 galleries open late, first Thurs of month"}],
+    links: [{"href": "https://maps.google.com/?q=Cape+Town+City+Bowl", "label": "\ud83d\udccd Google Maps", "cls": "pri"}, {"href": "https://www.first-thursdays.co.za", "label": "First Thursdays info", "cls": "sec"}],
+    tip: "First Thursdays (first Thursday of each month) transforms the CBD into a giant pedestrian zone with galleries, pop-ups and food stalls. If your trip dates align, don't miss it \u2014 it shows the most energetic, creative side of Cape Town.",
+  },
+  waterfront: {
+    img: 'images/img_05.jpg',
+    area: "V&A Waterfront \u00b7 Cape Town",
+    title: "V&A Waterfront \u2014 Harbour, art and mountain views",
+    pills: ["Touristy but worth it", "Zeitz MOCAA", "Robben Island ferry", "Avoid chain restaurants"],
+    desc: "The Victoria & Alfred Waterfront is Cape Town's most visited destination \u2014 a working harbour converted into restaurants, shops, hotels and cultural institutions. Yes, it's touristy. But Zeitz MOCAA is here. The Robben Island ferry departs from here. The Two Oceans Aquarium is here. Table Mountain forms the backdrop for almost every photograph taken in this area. The setting is genuinely spectacular and the craft beer is excellent.",
+    details: [{"l": "Best for", "v": "Zeitz MOCAA, Robben Island, harbour views"}, {"l": "Stay here if", "v": "Convenience and security are priorities"}, {"l": "Best eat", "v": "The Test Kitchen (book 2 months ahead)"}, {"l": "Getting there", "v": "10 min from CBD by foot or MyCiti bus"}],
+    links: [{"href": "https://www.waterfront.co.za", "label": "V&A Waterfront website", "cls": "pri"}, {"href": "https://maps.google.com/?q=V%26A+Waterfront+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "The Test Kitchen at the Old Biscuit Mill is Luke Dale-Roberts's flagship \u2014 considered by many the best restaurant in Africa. Book 2 months ahead. Worth every rand. It's not at the Waterfront itself but most visitors combine both.",
+  },
+  woodstock: {
+    img: 'images/img_12.jpg',
+    area: "Woodstock \u00b7 Cape Town",
+    title: "Woodstock \u2014 Cape Town's creative engine",
+    pills: ["Old Biscuit Mill Sat", "Pot Luck Club", "Street art", "10 min from CBD"],
+    desc: "Woodstock is a former working-class neighbourhood that has gentrified rapidly over 15 years, following the pattern of Brooklyn and Shoreditch. The result is a genuinely interesting mix: street art, design studios, the best food market in the city, South Africa's most celebrated restaurant, coffee roasters, craft gin distilleries and remnants of the neighbourhood's industrial past. About 10 minutes from the CBD and feels like a completely different world.",
+    details: [{"l": "Best for", "v": "Food, creativity, markets, restaurants"}, {"l": "Stay here if", "v": "You want cool and central without tourist overlay"}, {"l": "Saturday market", "v": "Neighbourgoods Market \u2014 9am\u20133pm"}, {"l": "Don't miss", "v": "Street art along Albert Road"}],
+    links: [{"href": "https://maps.google.com/?q=Woodstock+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}, {"href": "https://theoldbiscuitmill.co.za", "label": "Old Biscuit Mill", "cls": "sec"}],
+    tip: "The Pot Luck Club is in the Old Biscuit Mill building, top floor. Book weeks ahead. The rooftop views over Woodstock at night are spectacular \u2014 consistently ranked as one of the best restaurants in Africa.",
+  },
+  atlanticseaboard: {
+    img: 'images/img_13.jpg',
+    area: "Atlantic Seaboard \u00b7 Cape Town",
+    title: "Atlantic Seaboard \u2014 Cape Town's glamour coast",
+    pills: ["Clifton beaches", "Camps Bay strip", "Sea Point promenade", "Cold water warm scene"],
+    desc: "The Atlantic Seaboard runs from Green Point through Sea Point, Clifton and Camps Bay. Clifton has four beaches separated by granite boulders \u2014 Clifton 4th is the social beach. Water is 12\u201316\u00b0C (cold but swimmable in summer). Camps Bay has the strip of restaurants facing the beach with the Twelve Apostles mountains behind \u2014 as beautiful as it sounds. Sea Point has the most authentic everyday life: a 2km promenade, outdoor pool and great coffee shops.",
+    details: [{"l": "Best beaches", "v": "Clifton 4th (social) \u00b7 Clifton 2nd (quieter)"}, {"l": "Water temp", "v": "12\u201316\u00b0C \u2014 cold but swimmable in summer"}, {"l": "Sunset spot", "v": "Any Camps Bay restaurant terrace"}, {"l": "For families", "v": "Sea Point Pavilion outdoor pools (R40)"}],
+    links: [{"href": "https://maps.google.com/?q=Clifton+4th+Beach+Cape+Town", "label": "\ud83d\udccd Clifton 4th \u2014 Google Maps", "cls": "pri"}],
+    tip: "Clifton 4th has no parking \u2014 you park at the top and walk 5 minutes down. Leave before noon or after 4pm on busy days. The beach is at its most social and vibrant late afternoon when the Cape Doctor begins to drop.",
+  },
+  southernsuburbs: {
+    img: 'images/img_15.jpg',
+    area: "Southern Suburbs \u00b7 Cape Town",
+    title: "Southern Suburbs \u2014 Where Capetonians actually live",
+    pills: ["Constantia wine", "Kirstenbosch", "Leafy and quiet", "Cape Dutch architecture"],
+    desc: "The Southern Suburbs stretch from Observatory (creative, cheap, university-adjacent) through Rondebosch and Newlands (leafy, rugby, old money) to Constantia (wine estates, Cape Dutch manor houses). Kirstenbosch National Botanical Garden sits at the base of Table Mountain's eastern slope. The wine route is extraordinary. Tokai Forest offers mountain biking. Boulders, Cape Point and Muizenberg are all accessible from here. Most tourists don't reach this area \u2014 which is exactly why it's worth going.",
+    details: [{"l": "Best for", "v": "Wine, botanic gardens, relaxed pace"}, {"l": "Stay here if", "v": "You want residential calm and wine estate access"}, {"l": "Must-do", "v": "Kirstenbosch \u00b7 Groot Constantia \u00b7 Beau Constantia"}, {"l": "Getting there", "v": "15\u201320 min from CBD by car"}],
+    links: [{"href": "https://maps.google.com/?q=Constantia+Valley+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "Tokai Arboretum, 5 minutes from Constantia, is one of Cape Town's best-kept secrets: mountain biking through pine and oak forest, almost no tourists, almost no entry fee. Ask a local.",
+  },
+  falsebay: {
+    img: 'images/img_19.jpg',
+    area: "False Bay Coast \u00b7 Cape Town",
+    title: "False Bay \u2014 the coast Cape Town keeps to itself",
+    pills: ["Muizenberg surf", "Kalk Bay harbour", "Warmer water", "Simon's Town penguins"],
+    desc: "The False Bay coast runs from Muizenberg south through Kalk Bay, Fish Hoek and Simon's Town to Boulders Beach. It faces north into False Bay \u2014 water is 4\u20136\u00b0C warmer than the Atlantic side and the prevailing wind is offshore in the mornings. The communities here have a fishing village character entirely different from the Atlantic Seaboard's glamour. Antique shops, Cape Malay restaurants, whale watching in winter, and the world's only city-centre African penguin colony.",
+    details: [{"l": "Best for", "v": "Surf, fishing harbour, penguins, whale watching"}, {"l": "Water temp", "v": "18\u201322\u00b0C (warmer than Atlantic side)"}, {"l": "Getting there", "v": "Southern Line train or 35 min drive"}, {"l": "Whale season", "v": "June\u2013November (southern right whales)"}],
+    links: [{"href": "https://maps.google.com/?q=Kalk+Bay+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "The Southern Line train from Cape Town to Simon's Town runs along the coastline the entire journey \u2014 one of the world's most scenic commuter rail routes. R15 each way. Do it at least once, even if you're hiring a car for everything else.",
+  },
+  peninsula: {
+    img: 'images/img_20.jpg',
+    area: "Cape Peninsula",
+    title: "Cape Peninsula \u2014 50km of the world's most dramatic coastline",
+    pills: ["Noordhoek beach", "Chapman's Peak Drive", "Cape Point", "Full-day trip"],
+    desc: "The Cape Peninsula is a 50km finger of mountainous land extending south from Cape Town. It is bordered on the west by the cold Atlantic and on the east by warmer False Bay \u2014 you can see both oceans from the summit peaks. The Peninsula contains Table Mountain National Park, which covers 73% of its land area. Chapman's Peak Drive \u2014 9km of coastal road carved into the cliff face \u2014 is one of the world's great drives. A full day minimum; two days is ideal.",
+    details: [{"l": "Recommended loop", "v": "Atlantic side down \u2192 Cape Point \u2192 False Bay coast up"}, {"l": "Chapman's Peak toll", "v": "R52 per vehicle"}, {"l": "Transport", "v": "Car hire essential \u2014 Uber too expensive for this"}, {"l": "Allow", "v": "Full day minimum; two days is ideal"}],
+    links: [{"href": "https://maps.google.com/?q=Chapman%27s+Peak+Drive", "label": "\ud83d\udccd Chapman's Peak \u2014 Google Maps", "cls": "pri"}],
+    tip: "The recommended loop: drive the Atlantic side via Hout Bay and Chapman's Peak Drive, visit Cape Point and Boulders, return via the False Bay coast through Kalk Bay and Muizenberg. Stops for coffee and fish and chips along the way.",
+  },
+  truthcoffee: {
+    img: 'images/img_12.jpg',
+    area: "Truth Coffee Roasting \u00b7 Buitenkant St, CBD",
+    title: "Truth Coffee Roasting",
+    pills: ["Best coffee in Cape Town", "Steampunk interior", "Breakfast until 3pm", "Come before 10am"],
+    desc: "Truth Coffee Roasting has been voted the world's best coffee shop multiple times. The interior is full steampunk: copper pipes, Edison bulbs, leather, brass gauges. The coffee is single-origin, roasted in-house and extracted with precision. The avo toast is genuinely excellent. The bacon and eggs are better. Service is warm. Come before 10am to avoid the queue.",
+    details: [{"l": "Price range", "v": "R60\u2013150 for breakfast"}, {"l": "Opening hours", "v": "Mon\u2013Fri 7am\u20135pm \u00b7 Sat\u2013Sun 8am\u20133pm"}, {"l": "Address", "v": "36 Buitenkant St, CBD"}, {"l": "Booking", "v": "No reservations \u2014 walk in only"}],
+    links: [{"href": "https://www.truth.coffee", "label": "Truth Coffee website", "cls": "pri"}, {"href": "https://maps.google.com/?q=Truth+Coffee+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "The queue looks worse than it is \u2014 moves fast. If it's very long, the counter near the roaster inside often has seats that open up faster than the main tables.",
+  },
+  potluckclub: {
+    img: 'images/img_07.jpg',
+    area: "The Pot Luck Club \u00b7 Old Biscuit Mill, Woodstock",
+    title: "The Pot Luck Club",
+    pills: ["Book 4 weeks ahead", "Sharing plates", "Rooftop Woodstock views", "One of Africa's best"],
+    desc: "Luke Dale-Roberts opened The Pot Luck Club in 2012 and it has been consistently ranked as one of the best restaurants in Africa. The concept is sharing plates \u2014 five to six dishes per person from a menu organised by taste profile. The rooftop terrace overlooks the Old Biscuit Mill and beyond it, Woodstock. Booking 4 weeks ahead is not an exaggeration.",
+    details: [{"l": "Price range", "v": "R400\u2013800pp (drinks additional)"}, {"l": "Opening hours", "v": "Tues\u2013Sat dinner from 6pm \u00b7 Sat lunch from noon"}, {"l": "Booking", "v": "Essential \u2014 via website, at least 4 weeks ahead"}, {"l": "Address", "v": "Old Biscuit Mill, 373 Albert Rd, Woodstock"}],
+    links: [{"href": "https://www.thepotluckclub.co.za", "label": "Book a table", "cls": "pri"}, {"href": "https://maps.google.com/?q=The+Pot+Luck+Club+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "The Test Kitchen is Luke Dale-Roberts's more formal flagship in the same building \u2014 considered by many the best restaurant in South Africa. Book that one even further ahead. Both are worth the effort and the cost.",
+  },
+  kalkys: {
+    img: 'images/img_14.jpg',
+    area: "Kalky's \u00b7 Kalk Bay Harbour",
+    title: "Kalky's Fish & Chips",
+    pills: ["Cash only", "R80\u2013120", "Open daily", "Queue moves fast"],
+    desc: "Kalky's is a hatch in the wall of a harbour building, a counter where you order fried fish and chips in paper, and the harbour wall where you eat it while watching fur seals wait hopefully below. The fish comes directly from the boats that tie up at Kalk Bay Harbour each morning. The calamari is fresh-caught and tender. The linefish changes daily \u2014 snoek, harders, yellowtail or whatever the boats brought in. No tables, no atmosphere beyond the harbour itself. It is perfect.",
+    details: [{"l": "Price range", "v": "R80\u2013120 per portion"}, {"l": "Payment", "v": "Cash only \u2014 no cards"}, {"l": "Opening hours", "v": "Daily approximately 9am\u20138pm"}, {"l": "Address", "v": "Kalk Bay Harbour, off Main Rd"}],
+    links: [{"href": "https://maps.google.com/?q=Kalky%27s+Kalk+Bay", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "Arrive before 12:30pm on weekdays and before 11am on weekends \u2014 they sell out of the best fish early. The snoek (if in season) and the calamari are both outstanding. Ask what's freshest when you order.",
+  },
+  beauConstantia: {
+    img: 'images/img_02.jpg',
+    area: "Beau Constantia \u00b7 Constantia",
+    title: "Beau Constantia Wine Estate",
+    pills: ["Book ahead", "Best views", "Natural wines", "R300\u2013500pp lunch"],
+    desc: "A small boutique wine estate perched on the Constantiaberg above the valley floor, with views extending across the Cape Flats to False Bay and, on clear days, the Hottentots Holland Mountains. The wine programme focuses on natural wine production. The restaurant serves exceptional seasonal food. The combination of natural wine, great food, and one of the Western Cape's best views is hard to beat anywhere in South Africa.",
+    details: [{"l": "Price range", "v": "R300\u2013500pp for lunch (wine additional)"}, {"l": "Opening hours", "v": "Wed\u2013Sun lunch \u00b7 Tasting daily"}, {"l": "Booking", "v": "Essential \u2014 book via website"}, {"l": "Address", "v": "Constantia Nek, Constantia"}],
+    links: [{"href": "https://www.beauconstantia.com", "label": "Book a table", "cls": "pri"}, {"href": "https://maps.google.com/?q=Beau+Constantia", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "The Cab Franc is outstanding. Ask to sit on the terrace if weather permits \u2014 the view from inside is good but the terrace is exceptional. Arrive early enough to walk the estate before lunch.",
+  },
+  gold: {
+    img: 'images/img_03.jpg',
+    area: "Gold Restaurant \u00b7 De Waterkant",
+    title: "Gold Restaurant \u2014 Cape Malay feast",
+    pills: ["20-dish feast", "Live drumming", "Book ahead", "Great for groups"],
+    desc: "Gold Restaurant in De Waterkant is an experience as much as a restaurant. The set menu includes approximately 20 dishes of Cape Malay and Pan-African cuisine \u2014 bobotie, sosaties, koeksisters, Cape Malay curry, tagine. Live drumming and African storytelling are part of the evening. It's theatrical. Not the most refined food in Cape Town. But as an introduction to the depth and variety of Cape culinary culture, it's unmatched \u2014 particularly for groups or first-time visitors.",
+    details: [{"l": "Price range", "v": "R350pp including entertainment"}, {"l": "Opening hours", "v": "Dinner nightly from 6:30pm"}, {"l": "Booking", "v": "Essential \u2014 book at least a week ahead"}, {"l": "Address", "v": "15 Bennett St, De Waterkant"}],
+    links: [{"href": "https://www.goldrestaurant.co.za", "label": "Book a table", "cls": "pri"}, {"href": "https://maps.google.com/?q=Gold+Restaurant+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "Book the Gold Dinner experience with drumming \u2014 not the \u00e0 la carte menu. The drumming lesson at the start of dinner is genuinely fun. Great for groups of 6 or more.",
+  },
+  mzolis: {
+    img: 'images/img_02.jpg',
+    area: "Mzoli's Place \u00b7 Gugulethu",
+    title: "Mzoli's Place \u2014 Sunday braai institution",
+    pills: ["Sundays are peak", "R100\u2013200", "Township Gugulethu", "Buy at counter"],
+    desc: "Mzoli's is a butchery and braai in Gugulethu township, about 15km from central Cape Town. You choose meat from the counter, they season and grill it on the open fire, and you eat in the courtyard with a cold beer while live music plays. On Sunday afternoons the place is packed with Capetonians of all backgrounds \u2014 one of the most genuinely integrated social spaces in Cape Town. A far more real experience than the tourist trail.",
+    details: [{"l": "Price range", "v": "R100\u2013200 per person"}, {"l": "Best time", "v": "Sunday afternoons from 1pm"}, {"l": "Getting there", "v": "Uber from CBD ~R100 each way"}, {"l": "Address", "v": "NY 115, Gugulethu"}],
+    links: [{"href": "https://maps.google.com/?q=Mzoli%27s+Gugulethu", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "Go with an open mind and stay at least 2 hours. The experience is as much about the atmosphere, music and people as the food. Bring cash. Sunday afternoon from about 1pm is the sweet spot.",
+  },
+  belly: {
+    img: 'images/img_15.jpg',
+    area: "Belly of the Beast \u00b7 City Centre",
+    title: "Belly of the Beast",
+    pills: ["Book 6 weeks ahead", "Set menu tasting", "R700pp", "Wed\u2013Sat dinner only"],
+    desc: "A tiny, intimate fine dining restaurant in Cape Town's CBD. Chef Neil Swart's set-menu tasting uses hyper-local, foraged and seasonal ingredients \u2014 the menu changes constantly and is never published in advance. The restaurant seats about 20 people. The cooking is genuinely world-class and regularly cited as one of the two or three best restaurants in South Africa. Booking six weeks ahead is not an exaggeration.",
+    details: [{"l": "Price range", "v": "R700pp tasting menu (drinks additional)"}, {"l": "Opening hours", "v": "Wed\u2013Sat dinner only \u00b7 One seating per night"}, {"l": "Booking", "v": "Book 6 weeks ahead via website \u2014 fills immediately"}, {"l": "Dress code", "v": "Smart casual"}],
+    links: [{"href": "https://www.bellyofthebeast.co.za", "label": "Book a table", "cls": "pri"}, {"href": "https://maps.google.com/?q=Belly+of+the+Beast+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "The wine pairing is worth doing \u2014 budget R400\u2013500 additional per person. The sommelier is excellent and the pairings are inventive. If you can't get a reservation, The Test Kitchen at the Old Biscuit Mill is the comparable alternative.",
+  },
+  wakame: {
+    img: 'images/img_07.jpg',
+    area: "Wakame \u00b7 Beach Rd, Sea Point",
+    title: "Wakame \u2014 Cape Town's best sushi",
+    pills: ["Atlantic views", "Fresh daily", "R150\u2013350pp", "Lunch & dinner daily"],
+    desc: "Located on Beach Road in Sea Point, facing the Atlantic. Sushi made daily with fish sourced from the Cape Town fish market. The salmon is exceptional \u2014 cold Atlantic waters produce rich, fatty fish. The spicy tuna and salmon roses are the signature dishes. The interior is bright and contemporary. Not cheap by Cape Town standards but extraordinary value compared to equivalent quality anywhere in Europe.",
+    details: [{"l": "Price range", "v": "R150\u2013350pp"}, {"l": "Opening hours", "v": "Daily 12pm\u201310pm"}, {"l": "Booking", "v": "Recommended on weekends"}, {"l": "Address", "v": "Beach Rd, Sea Point"}],
+    links: [{"href": "https://maps.google.com/?q=Wakame+Sea+Point+Cape+Town", "label": "\ud83d\udccd Google Maps", "cls": "pri"}],
+    tip: "Book the outdoor Atlantic terrace specifically when reserving. Order salmon sashimi as a starter, the Wakame Dragon Roll, and the spicy tuna maki. Green tea ice cream for dessert.",
+  },
+  grootconstantia: {
+    img: 'images/img_06.jpg',
+    area: "Groot Constantia \u00b7 Constantia",
+    title: "Groot Constantia \u2014 South Africa's oldest estate",
+    pills: ["Est. 1685", "R150\u2013250 tasting", "Open daily", "Cape Dutch manor"],
+    desc: "Established by VOC Governor Simon van der Stel in 1685, Groot Constantia is the oldest wine estate in South Africa. The Cape Dutch manor house is a national monument. The estate produces consistently excellent wines, from the workhorse Gouverneurs Reserve to the exceptional Vin de Constance sweet wine \u2014 a recreation of the Constantia wine that was Napoleon's favourite. The grounds are beautiful for a picnic.",
+    details: [{"l": "Wine tasting", "v": "R150\u2013250 depending on selection"}, {"l": "Opening hours", "v": "Daily 9am\u20135pm"}, {"l": "Address", "v": "Groot Constantia Rd, Constantia"}, {"l": "Restaurants", "v": "Jonkershuis and Simon's \u2014 both excellent"}],
+    links: [{"href": "https://www.grootconstantia.co.za", "label": "Groot Constantia website", "cls": "pri"}, {"href": "https://maps.google.com/?q=Groot+Constantia+Wine+Estate", "label": "\ud83d\udccd Google Maps", "cls": "sec"}],
+    tip: "The Vin de Constance from Klein Constantia (just down the road) is Napoleon's wine. If you taste one wine in the Constantia Valley, make it this one. Available at Klein Constantia estate.",
+  },
+};
+const DAYS = {
+  1: {
+    title: "Day 1 \u2014 The Mountain & City",
+    tag: "Start with the thing that defines Cape Town. Hike at dawn, walk history, end with the best free sunset on the planet.",
+    img: 'images/img_08.jpg',
+    cap: "Table Mountain",
+    sub: "Where the city disappears below you at sunrise",
+    stops: [{"t": "6:30", "p": "AM", "n": "Platteklip Gorge hike", "d": "Start before the heat. 3km, 1.5\u20132hrs, pack water. Sunrise from the summit is something else. Leave by noon.", "tip": "", "maps": "https://maps.google.com/?q=Platteklip+Gorge+Table+Mountain", "modal": "mountain"}, {"t": "9:30", "p": "AM", "n": "Truth Coffee", "d": "Cape Town's steampunk coffee cathedral. World-class flat whites, elite avo toast. Come before 10am.", "tip": "Before 10am", "maps": "https://maps.google.com/?q=Truth+Coffee+Cape+Town", "modal": "truthcoffee"}, {"t": "11:00", "p": "AM", "n": "Bo-Kaap & Slave Lodge", "d": "Walk cobblestoned Bo-Kaap before the tour groups. 30 min at the Slave Lodge \u2014 sobering, essential context.", "tip": "", "maps": "https://maps.google.com/?q=Bo-Kaap+Cape+Town", "modal": "bokaap"}, {"t": "13:30", "p": "PM", "n": "Lunch on Bree Street", "d": "Cape Town's best restaurant strip. The Shortmarket Club for SA cuisine, Jason Bakery for casual. Book 48hrs ahead.", "tip": "Book ahead", "maps": "https://maps.google.com/?q=Bree+Street+Cape+Town", "modal": ""}, {"t": "16:00", "p": "PM", "n": "Signal Hill sunset", "d": "Uber up. Bring local Chenin Blanc. Watch the Atlantic turn gold below you. The best free thing in Cape Town.", "tip": "", "maps": "https://maps.google.com/?q=Signal+Hill+Cape+Town", "modal": "sunset"}, {"t": "19:30", "p": "PM", "n": "Dinner in De Waterkant", "d": "The Pot Luck Club if booked ahead. Otherwise walk Bree Street and pick what draws you in.", "tip": "", "maps": "https://maps.google.com/?q=De+Waterkant+Cape+Town", "modal": "potluckclub"}],
+  },
+  2: {
+    title: "Day 2 \u2014 The Peninsula",
+    tag: "Drive the most dramatic coastline in Africa. Penguins, two oceans, the world's best fish and chips.",
+    img: 'images/img_10.jpg',
+    cap: "Boulders Beach",
+    sub: "African penguins in natural habitat \u2014 arrive before 9am",
+    stops: [{"t": "7:00", "p": "AM", "n": "Drive south to Simon's Town", "d": "Beat tour buses on the M3 along False Bay. The coastal drive is already worth the early start.", "tip": "", "maps": "https://maps.google.com/?q=Simon%27s+Town+Cape+Town", "modal": ""}, {"t": "8:30", "p": "AM", "n": "Boulders Beach penguins", "d": "African penguins alongside sunbathers. Buy tickets at the gate. 45 minutes is enough, then drive south.", "tip": "Cash at gate", "maps": "https://maps.google.com/?q=Boulders+Beach+Simons+Town", "modal": "penguins"}, {"t": "10:30", "p": "AM", "n": "Cape Point & Cape of Good Hope", "d": "2hrs in the park. Hike or take the funicular. Watch for baboons \u2014 don't feed them.", "tip": "R353 entry", "maps": "https://maps.google.com/?q=Cape+Point+South+Africa", "modal": "capepoint"}, {"t": "13:00", "p": "PM", "n": "Kalky's, Kalk Bay Harbour", "d": "Freshest fish and chips in the Cape on the harbour wall while fur seals wait below. Cash only.", "tip": "Cash only", "maps": "https://maps.google.com/?q=Kalky%27s+Kalk+Bay", "modal": "kalky"}, {"t": "15:00", "p": "PM", "n": "Muizenberg surf", "d": "Book a 2hr lesson with Gary's Surf School or just walk past the famous Victorian bathing huts.", "tip": "", "maps": "https://maps.google.com/?q=Muizenberg+Beach+Cape+Town", "modal": "muizenberg"}, {"t": "18:30", "p": "PM", "n": "Sundowners at Harbour House", "d": "Kalk Bay Harbour deck. Local wine, fishing boats coming in. One of the finest settings in the Western Cape.", "tip": "Book ahead", "maps": "https://maps.google.com/?q=Harbour+House+Restaurant+Kalk+Bay", "modal": ""}],
+  },
+  3: {
+    title: "Day 3 \u2014 Wine & Culture",
+    tag: "Cape Town's other world \u2014 vines, art, township life. End with a meal you'll talk about for years.",
+    img: 'images/img_15.jpg',
+    cap: "Groot Constantia",
+    sub: "South Africa's oldest wine estate \u2014 since 1685",
+    stops: [{"t": "8:00", "p": "AM", "n": "Old Biscuit Mill (if Saturday)", "d": "Saturday market: Cape Malay curry, oysters, sourdough, craft beer. The city's food scene in one place.", "tip": "Saturdays only", "maps": "https://maps.google.com/?q=Old+Biscuit+Mill+Woodstock", "modal": "biscuitmill"}, {"t": "10:00", "p": "AM", "n": "Constantia wine estates", "d": "Klein Constantia for history. Beau Constantia for natural wines and False Bay views. Groot Constantia est. 1685.", "tip": "Weekdays quieter", "maps": "https://maps.google.com/?q=Constantia+Valley+Wine+Route", "modal": "wine"}, {"t": "13:30", "p": "PM", "n": "Lunch at Beau Constantia", "d": "Exceptional food, natural wine, False Bay in the distance. Book ahead. Cancel your afternoon plans.", "tip": "Book ahead", "maps": "https://maps.google.com/?q=Beau+Constantia", "modal": "beauConstantia"}, {"t": "15:30", "p": "PM", "n": "Zeitz MOCAA or Langa tour", "d": "Zeitz Museum at the Waterfront for art. Guided walk through Langa township for something that stays with you.", "tip": "", "maps": "https://maps.google.com/?q=Zeitz+MOCAA+Cape+Town", "modal": "zeitz"}, {"t": "19:00", "p": "PM", "n": "Final dinner \u2014 Gold or Belly", "d": "Gold Restaurant for Cape Malay feast in De Waterkant. Belly of the Beast for the most creative fine dining in the city.", "tip": "Book 4\u20136 weeks ahead", "maps": "https://maps.google.com/?q=Gold+Restaurant+Cape+Town", "modal": "gold"}],
+  },
+};
+
+// ── MODAL SYSTEM ──────────────────────────────────────────────────────────
+function openMo(id) {
+  const d = MODALS[id];
+  if (!d) return;
+  document.getElementById('mo-hero').style.backgroundImage = `url('${d.img}')`;
+  document.getElementById('mo-hcap-area').textContent = d.area;
+  document.getElementById('mo-hcap-title').textContent = d.title;
+  document.getElementById('mo-pills').innerHTML = (d.pills||[]).map(p=>`<span class="mo-pill">${p}</span>`).join('');
+  document.getElementById('mo-desc').textContent = d.desc;
+  document.getElementById('mo-dets').innerHTML = (d.details||[]).map(x=>`<div class="mo-det"><div class="mo-dl">${x.l}</div><div class="mo-dv">${x.v}</div></div>`).join('');
+  document.getElementById('mo-links').innerHTML = (d.links||[]).map(l=>`<a class="mo-link ${l.cls}" href="${l.href}" target="_blank">${l.label}</a>`).join('');
+  const tipEl = document.getElementById('mo-tip');
+  if (d.tip) { tipEl.style.display='block'; document.getElementById('mo-tip-p').textContent = d.tip; }
+  else { tipEl.style.display='none'; }
+  document.getElementById('mo').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMo() {
+  document.getElementById('mo').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeMo(); });
+document.getElementById('mo').addEventListener('click', e => { if(e.target===document.getElementById('mo')) closeMo(); });
+
+// ── ITINERARY ──────────────────────────────────────────────────────────────
+function showDay(n, btn) {
+  document.querySelectorAll('.db').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const d = DAYS[n];
+  document.getElementById('it-title').textContent = d.title;
+  document.getElementById('it-tag').textContent = d.tag;
+  document.getElementById('it-img').style.backgroundImage = `url('${d.img}')`;
+  document.getElementById('it-cap').textContent = d.cap;
+  document.getElementById('it-sub').textContent = d.sub;
+  document.getElementById('it-stops').innerHTML = d.stops.map(s => `
+    <div class="sp" ${s.modal ? `onclick="openMo('${s.modal}')" style="cursor:pointer"` : ''}>
+      <div class="sp-t">${s.t}<small>${s.p}</small></div>
+      <div class="sp-l"><div class="sp-dot"></div><div class="sp-bar"></div></div>
+      <div class="sp-b">
+        <p class="sp-nm" ${s.modal ? 'style="text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(184,134,58,.4)"' : ''}>${s.n}</p>
+        <p class="sp-d">${s.d}</p>
+        <div class="sp-m">
+          ${s.tip ? `<span class="sp-pill">${s.tip}</span>` : ''}
+          ${s.maps ? `<a class="sp-map" href="${s.maps}" target="_blank" onclick="event.stopPropagation()">📍 Directions</a>` : ''}
+          ${s.modal ? `<span class="sp-info" onclick="event.stopPropagation();openMo('${s.modal}')">More info →</span>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── NAV / SECTION SWITCHING ───────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById('section-'+id).classList.add('on');
+  const ids = ['exp','neigh','itin','food','prac','gems'];
+  const names = ['experiences','neighbourhoods','itinerary','food','practical','gems'];
+  ids.forEach((k,i) => {
+    const el = document.getElementById('nl-'+k);
+    if (el) el.classList.toggle('act', names[i]===id);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (id==='itinerary') showDay(1, document.querySelector('.db'));
+}
+function scrollCta() {
+  const a = document.querySelector('.sec.on .cta');
+  if(a) a.scrollIntoView({behavior:'smooth'});
+}
+function toggleMob() {
+  document.getElementById('mob').classList.toggle('open');
+}
+window.addEventListener('scroll',()=>{
+  document.getElementById('topnav').classList.toggle('sc', window.scrollY>20);
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+showDay(1, document.querySelector('.db'));
+
+</script>
+</body>
+</html>
