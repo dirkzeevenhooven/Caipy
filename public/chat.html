@@ -123,12 +123,12 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 </head>
 <body>
 
-<!-- GATE: shown while verifying payment -->
-<div id="gate" class="gate">
+<!-- GATE: shown while verifying payment after email purchase -->
+<div id="gate" class="gate" style="display:none">
   <div class="gate-card">
-    <div class="gate-icon">🌍</div>
-    <h2>Verifying your access</h2>
-    <p>Confirming your payment and setting up your personal Cape Town guide session.</p>
+    <div class="gate-icon">📧</div>
+    <h2>Sending your itinerary</h2>
+    <p>Payment confirmed — sending your Cape Town itinerary to your inbox now.</p>
     <div class="spinner-wrap gate-spinner-wrap">
       <div class="gate-spinner"></div>
       Just a moment…
@@ -136,8 +136,8 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
   </div>
 </div>
 
-<!-- MAIN CHAT (hidden until verified) -->
-<div id="app" style="display:none;flex-direction:column;height:100%">
+<!-- MAIN CHAT -->
+<div id="app" style="display:flex;flex-direction:column;height:100%">
 
   <div class="header">
     <div class="header-left">
@@ -181,12 +181,12 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 <!-- EMAIL MODAL -->
 <div class="modal-overlay" id="email-modal">
   <div class="modal">
-    <h3>Email your itinerary</h3>
-    <p>We'll send your complete Cape Town itinerary to your inbox — ready to use offline.</p>
+    <h3>Receive your itinerary</h3>
+    <p>Enter your email and pay €49 — your complete personalised Cape Town itinerary will be sent instantly to your inbox.</p>
     <input type="email" id="email-input" placeholder="your@email.com">
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeEmailModal()">Cancel</button>
-      <button class="btn-send" id="email-send-btn" onclick="sendItineraryEmail()">Send Itinerary</button>
+      <button class="btn-send" id="email-send-btn" onclick="startEmailPayment()">Pay €49 & Send →</button>
     </div>
   </div>
 </div>
@@ -207,57 +207,62 @@ async function init() {
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get('session_id');
 
-  // Check localStorage for existing token
-  const savedToken = localStorage.getItem('caipy_token');
-  if (savedToken) {
-    accessToken = savedToken;
-    userEmail = localStorage.getItem('caipy_email') || '';
-    showApp();
-    return;
-  }
-
-  if (!sessionId) {
-    showGateError('No payment session found. Please complete payment first.', '/caipy.html');
-    return;
-  }
-
-  try {
-    const res = await fetch('/verify-payment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId }),
-    });
-    const data = await res.json();
-
-    if (!res.ok || !data.success) {
-      showGateError(data.error || 'Payment verification failed.', '/caipy.html');
-      return;
-    }
-
-    accessToken = data.token;
-    userEmail = data.email || '';
-    localStorage.setItem('caipy_token', accessToken);
-    localStorage.setItem('caipy_email', userEmail);
-
-    // Clean URL
+  // If returning from Stripe payment — verify and auto-send email
+  if (sessionId) {
+    document.getElementById('gate').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    try {
+      const res = await fetch('/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        accessToken = data.token;
+        userEmail = data.email || localStorage.getItem('caipy_pending_email') || '';
+        const itinerary = localStorage.getItem('caipy_pending_itinerary') || '';
+        localStorage.removeItem('caipy_pending_email');
+        localStorage.removeItem('caipy_pending_itinerary');
+        if (itinerary && userEmail) {
+          await fetch('/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: accessToken, email: userEmail, itinerary }),
+          });
+        }
+        window.history.replaceState({}, '', '/chat.html');
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        showToast('✅ Itinerary sent to ' + userEmail);
+        restoreConversation();
+        return;
+      }
+    } catch (err) {}
     window.history.replaceState({}, '', '/chat.html');
-    showApp();
-  } catch (err) {
-    showGateError('Connection error. Please refresh the page.', null);
   }
+
+  // Normal load — chat is free, just show the app
+  restoreConversation();
 }
 
-function showApp() {
-  document.getElementById('gate').style.display = 'none';
-  const app = document.getElementById('app');
-  app.style.display = 'flex';
-
-  // Prefill email modal if we have it
-  if (userEmail) {
-    document.getElementById('email-input').value = userEmail;
+function restoreConversation() {
+  const saved = localStorage.getItem('caipy_conversation');
+  if (saved) {
+    try {
+      conversationHistory = JSON.parse(saved);
+      conversationHistory.forEach(m => appendMessage(m.role, m.content));
+      if (conversationHistory.some(m => m.role === 'assistant' && m.content.length > 400)) {
+        document.getElementById('btn-download').style.display = 'inline-flex';
+        document.getElementById('btn-email').style.display = 'inline-flex';
+      }
+      return;
+    } catch {}
   }
+  showWelcome();
+}
 
-  // Welcome message
+function showWelcome() {
   appendMessage('assistant', `**Welcome to Cape Town!** 🌊
 
 I'm Caipy — your personal guide to one of the world's most extraordinary cities, built on 10+ years of Dirk's local knowledge.
@@ -392,7 +397,7 @@ async function sendMessage() {
     const res = await fetch('/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: accessToken, messages: conversationHistory }),
+      body: JSON.stringify({ messages: conversationHistory }),
     });
 
     if (!res.ok) {
@@ -430,7 +435,8 @@ async function sendMessage() {
 
     // Save to history
     conversationHistory.push({ role: 'assistant', content: rawText });
-    itineraryText = rawText; // Track for download/email
+    itineraryText = rawText;
+    localStorage.setItem('caipy_conversation', JSON.stringify(conversationHistory));
 
     // Show download/email buttons after first assistant response with substance
     if (rawText.length > 400) {
@@ -498,35 +504,35 @@ function closeEmailModal() {
   document.getElementById('email-modal').classList.remove('open');
 }
 
-async function sendItineraryEmail() {
+async function startEmailPayment() {
   const email = document.getElementById('email-input').value.trim();
   if (!email) return;
 
   const btn = document.getElementById('email-send-btn');
   btn.disabled = true;
-  btn.textContent = 'Sending…';
+  btn.textContent = 'Redirecting…';
+
+  // Save itinerary + email so we can send after payment returns
+  localStorage.setItem('caipy_pending_email', email);
+  localStorage.setItem('caipy_pending_itinerary', getFullItinerary());
 
   try {
-    const res = await fetch('/send-email', {
+    const res = await fetch('/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        token: accessToken,
-        email,
-        itinerary: getFullItinerary(),
-      }),
+      body: JSON.stringify({ email }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-
-    closeEmailModal();
-    showToast('Itinerary sent to ' + email);
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error('No checkout URL returned');
+    }
   } catch (err) {
     showToast('Error: ' + err.message, true);
+    btn.disabled = false;
+    btn.textContent = 'Pay €49 & Send →';
   }
-
-  btn.disabled = false;
-  btn.textContent = 'Send Itinerary';
 }
 
 // Close modal on overlay click

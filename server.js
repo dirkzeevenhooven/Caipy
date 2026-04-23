@@ -197,13 +197,9 @@ app.post('/verify-payment', async (req, res) => {
   }
 });
 
-// Chat endpoint — streaming SSE
+// Chat endpoint — streaming SSE (free, no token required)
 app.post('/chat', async (req, res) => {
-  const { token, messages } = req.body;
-
-  if (!token || !isValidToken(token)) {
-    return res.status(403).json({ error: 'Invalid or expired access token' });
-  }
+  const { messages } = req.body;
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Messages required' });
