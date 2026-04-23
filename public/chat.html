@@ -243,18 +243,7 @@ async function init() {
 }
 
 function restoreConversation() {
-  const saved = localStorage.getItem('caipy_conversation');
-  if (saved) {
-    try {
-      conversationHistory = JSON.parse(saved);
-      conversationHistory.forEach(m => appendMessage(m.role, m.content));
-      if (conversationHistory.some(m => m.role === 'assistant' && m.content.length > 400)) {
-        document.getElementById('btn-download').style.display = 'inline-flex';
-        document.getElementById('btn-email').style.display = 'inline-flex';
-      }
-      return;
-    } catch {}
-  }
+  localStorage.removeItem('caipy_conversation');
   showWelcome();
 }
 
