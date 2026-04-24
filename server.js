@@ -348,8 +348,9 @@ app.post('/speak', async (req, res) => {
       return res.status(response.status).json({ error: 'Voice generation failed' });
     }
 
+    const buffer = await response.arrayBuffer();
     res.set('Content-Type', 'audio/mpeg');
-    response.body.pipe(res);
+    res.send(Buffer.from(buffer));
   } catch (err) {
     console.error('Speak error:', err);
     res.status(500).json({ error: err.message });
