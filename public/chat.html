@@ -448,6 +448,7 @@ function setStreaming(on) {
   isStreaming = on;
   document.getElementById('send-btn').disabled = on;
   document.getElementById('input').disabled = on;
+  if (!on) document.getElementById('input').focus();
 }
 
 // ─── Keyboard ─────────────────────────────────────────────────────────────────
