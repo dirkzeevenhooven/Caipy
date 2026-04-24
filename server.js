@@ -314,6 +314,9 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
+// ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // ─── Start ────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
