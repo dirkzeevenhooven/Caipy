@@ -601,29 +601,36 @@ init();
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
 <script>
-// Auto-start voice call on first interaction
+// Auto-start voice call — clicks the phone button in ElevenLabs widget shadow DOM
 function autoStartCall() {
   const widget = document.querySelector('elevenlabs-convai');
   if (!widget) return;
+
+  let attempts = 0;
   const tryClick = () => {
+    attempts++;
+    if (attempts > 30) return; // give up after 9 seconds
+
     const shadow = widget.shadowRoot;
     if (!shadow) { setTimeout(tryClick, 300); return; }
-    // Try any button that looks like "start call"
+
+    // Find all buttons and click the first visible one (the call button)
     const btns = shadow.querySelectorAll('button');
-    for (const btn of btns) {
-      const text = btn.textContent.toLowerCase();
-      if (text.includes('call') || text.includes('start') || text.includes('speak')) {
-        btn.click(); return;
+    if (btns.length > 0) {
+      // Click the button that contains a phone/call icon
+      for (const btn of btns) {
+        btn.click();
+        return;
       }
     }
     setTimeout(tryClick, 300);
   };
-  setTimeout(tryClick, 800);
+  setTimeout(tryClick, 1000);
 }
 
-// Trigger on first click anywhere — browser requires user gesture for audio
+// Start automatically when user clicks the Chat with Caipy button or anywhere
 document.addEventListener('click', function startOnce() {
-  autoStartCall();
+  setTimeout(autoStartCall, 300);
   document.removeEventListener('click', startOnce);
 }, { once: true });
 
