@@ -263,11 +263,11 @@ function restoreConversation() {
 }
 
 function showWelcome() {
-  appendMessage('assistant', `**Welcome to Cape Town!** 🌊
+  appendMessage('assistant', `**Welcome to the Cape Town Guide!** 🌊
 
-I'm Caipy — your personal guide to one of the world's most extraordinary cities, built on 10+ years of Dirk's local knowledge.
+I'm Caipy — your personal travel agent, and I'm excited to help you create an unforgettable experience in the Mother City.
 
-Before I build your itinerary, I'd love to know a little about your trip. Let's start with the basics:
+Let me start by asking you a few questions so I can provide you with a tailor-made itinerary for your trip to Cape Town.
 
 **How many days are you spending in Cape Town?**`);
 
@@ -601,6 +601,26 @@ init();
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
 <script>
+// Auto-start voice call when page loads
+function autoStartCall() {
+  const widget = document.querySelector('elevenlabs-convai');
+  if (widget) {
+    // Try to find and click the start call button inside the widget's shadow DOM
+    const tryClick = () => {
+      const btn = widget.shadowRoot && widget.shadowRoot.querySelector('button');
+      if (btn) { btn.click(); return; }
+      setTimeout(tryClick, 500);
+    };
+    setTimeout(tryClick, 1500);
+  }
+}
+
+// Auto-start on first user interaction (browser requires gesture)
+document.addEventListener('click', function startOnce() {
+  autoStartCall();
+  document.removeEventListener('click', startOnce);
+}, { once: true });
+
 // Show itinerary button when voice call ends
 window.addEventListener('elevenlabs-convai:call-ended', () => {
   // Show the email button in the header
