@@ -601,21 +601,27 @@ init();
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
 <script>
-// Auto-start voice call when page loads
+// Auto-start voice call on first interaction
 function autoStartCall() {
   const widget = document.querySelector('elevenlabs-convai');
-  if (widget) {
-    // Try to find and click the start call button inside the widget's shadow DOM
-    const tryClick = () => {
-      const btn = widget.shadowRoot && widget.shadowRoot.querySelector('button');
-      if (btn) { btn.click(); return; }
-      setTimeout(tryClick, 500);
-    };
-    setTimeout(tryClick, 1500);
-  }
+  if (!widget) return;
+  const tryClick = () => {
+    const shadow = widget.shadowRoot;
+    if (!shadow) { setTimeout(tryClick, 300); return; }
+    // Try any button that looks like "start call"
+    const btns = shadow.querySelectorAll('button');
+    for (const btn of btns) {
+      const text = btn.textContent.toLowerCase();
+      if (text.includes('call') || text.includes('start') || text.includes('speak')) {
+        btn.click(); return;
+      }
+    }
+    setTimeout(tryClick, 300);
+  };
+  setTimeout(tryClick, 800);
 }
 
-// Auto-start on first user interaction (browser requires gesture)
+// Trigger on first click anywhere — browser requires user gesture for audio
 document.addEventListener('click', function startOnce() {
   autoStartCall();
   document.removeEventListener('click', startOnce);
