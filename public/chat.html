@@ -210,7 +210,7 @@ function toggleMute() {
 }
 
 async function speakText(text) {
-  if (!autoSpeak) return;
+  if (!autoSpeak) return false;
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   try {
     const res = await fetch('/speak', {
@@ -218,14 +218,17 @@ async function speakText(text) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text }),
     });
-    if (!res.ok) return;
+    if (!res.ok) return false;
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     currentAudio = new Audio(url);
     currentAudio.onended = () => { URL.revokeObjectURL(url); currentAudio = null; };
-    currentAudio.play().catch(() => {});
+    await currentAudio.play();
+    return true;
   } catch (err) {
+    if (err.name === 'NotAllowedError') return false; // autoplay blocked by browser
     console.error('Voice error:', err);
+    return false;
   }
 }
 
@@ -293,6 +296,18 @@ I'm Caipy — your personal guide to one of the world's most extraordinary citie
 Before I build your itinerary, I'd love to know a little about your trip. Let's start with the basics:
 
 **How many days are you spending in Cape Town?**`);
+
+  const welcomeText = "Welcome to Cape Town! I'm Caipy — your personal guide to one of the world's most extraordinary cities, built on 10 plus years of Dirk's local knowledge. Before I build your itinerary, I'd love to know a little about your trip. How many days are you spending in Cape Town?";
+
+  // Try to speak immediately. If browser blocks autoplay, speak on first interaction.
+  speakText(welcomeText).then(played => {
+    if (!played) {
+      const handler = () => { speakText(welcomeText); };
+      document.addEventListener('click', handler, { once: true });
+      document.addEventListener('keydown', handler, { once: true });
+    }
+  });
+
   document.getElementById('input').focus();
 }
 
