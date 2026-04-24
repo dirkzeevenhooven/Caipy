@@ -419,13 +419,21 @@ async function sendMessage() {
     }
 
     // Save to history
-    conversationHistory.push({ role: 'assistant', content: rawText });
-    itineraryText = rawText;
-    localStorage.setItem('caipy_conversation', JSON.stringify(conversationHistory));
-
-    // Show download/email buttons after first assistant response with substance
-    if (rawText.length > 400) {
-      document.getElementById('btn-email').style.display = 'inline-flex';
+    // Extract hidden itinerary if present
+    const itinMatch = rawText.match(/<!--ITINERARY_START-->([\s\S]*?)<!--ITINERARY_END-->/);
+    if (itinMatch) {
+      itineraryText = itinMatch[1].trim();
+      // Remove the hidden block from displayed text
+      const displayText = rawText.replace(/<!--ITINERARY_START-->[\s\S]*?<!--ITINERARY_END-->/, '').trim();
+      bubble.innerHTML = renderMarkdown(displayText);
+      // Show pay CTA button
+      const cta = document.createElement('div');
+      cta.style.cssText = 'margin-top:16px';
+      cta.innerHTML = `<button onclick="openEmailModal()" style="background:var(--gold);color:#fff;border:none;padding:13px 24px;border-radius:6px;font-family:inherit;font-size:13px;font-weight:500;letter-spacing:.5px;cursor:pointer;width:100%">📩 Receive my itinerary — €49</button>`;
+      bubble.appendChild(cta);
+      conversationHistory.push({ role: 'assistant', content: displayText });
+    } else {
+      conversationHistory.push({ role: 'assistant', content: rawText });
     }
 
   } catch (err) {
