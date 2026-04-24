@@ -420,8 +420,9 @@ async function sendMessage() {
     }
 
     // Save to history
-    if (rawText.trim() === 'ITINERARY_READY') {
-      bubble.innerHTML = `<p style="margin-bottom:14px">✅ Your personalised Cape Town itinerary is ready — packed with day-by-day plans, restaurant picks, hidden gems, and a personal note from Dirk.</p><button onclick="openEmailModal()" style="background:var(--gold);color:#fff;border:none;padding:13px 24px;border-radius:6px;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.3px;cursor:pointer;width:100%">📩 Receive my itinerary — €49</button>`;
+    if (rawText.includes('ITINERARY_READY')) {
+      const displayText = rawText.replace('ITINERARY_READY', '').trim();
+      bubble.innerHTML = (displayText ? renderMarkdown(displayText) + '<br>' : '') + `<p style="margin:14px 0 14px">✅ Your personalised Cape Town itinerary is ready — packed with day-by-day plans, restaurant picks, hidden gems, and a personal note from Dirk.</p><button onclick="openEmailModal()" style="background:var(--gold);color:#fff;border:none;padding:13px 24px;border-radius:6px;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.3px;cursor:pointer;width:100%">📩 Receive my itinerary — €49</button>`;
       conversationHistory.push({ role: 'assistant', content: 'ITINERARY_READY' });
     } else {
       conversationHistory.push({ role: 'assistant', content: rawText });
