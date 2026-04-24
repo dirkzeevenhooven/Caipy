@@ -81,6 +81,12 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 .send-btn:disabled{background:var(--parchment);cursor:not-allowed;transform:none}
 .send-btn svg{width:18px;height:18px}
 
+/* Mic button */
+.mic-btn{width:44px;height:44px;flex-shrink:0;border-radius:10px;background:var(--warm);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:20px}
+.mic-btn:hover{background:var(--parchment);border-color:var(--gold)}
+.mic-btn.listening{background:#fee2e2;border-color:#fca5a5;animation:micPulse 1s ease infinite}
+@keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
 /* GATE (pre-auth) */
 .gate{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
 .gate-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:48px 40px;max-width:440px;width:100%;text-align:center;box-shadow:var(--sh2)}
@@ -173,6 +179,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
         onkeydown="handleKey(event)"
         oninput="autoResize(this)"
       ></textarea>
+      <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Speak to Caipy">🎙️</button>
       <button class="send-btn" id="send-btn" onclick="sendMessage()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
@@ -587,6 +594,48 @@ function showToast(msg, isError = false) {
   toast.style.background = isError ? '#c0392b' : 'var(--text)';
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ─── Voice Input ─────────────────────────────────────────────────────────────
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let isListening = false;
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = 'en-GB';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    stopListening();
+    document.getElementById('input').value = transcript;
+    sendMessage();
+  };
+
+  recognition.onerror = () => stopListening();
+  recognition.onend = () => stopListening();
+} else {
+  const micBtn = document.getElementById('mic-btn');
+  if (micBtn) micBtn.style.display = 'none';
+}
+
+function toggleMic() {
+  if (!recognition) return;
+  if (isListening) { recognition.stop(); stopListening(); return; }
+  if (isStreaming) return;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  isListening = true;
+  document.getElementById('mic-btn').classList.add('listening');
+  document.getElementById('mic-btn').textContent = '🔴';
+  recognition.start();
+}
+
+function stopListening() {
+  isListening = false;
+  const btn = document.getElementById('mic-btn');
+  if (btn) { btn.classList.remove('listening'); btn.textContent = '🎙️'; }
 }
 
 // ─── Start ────────────────────────────────────────────────────────────────────
