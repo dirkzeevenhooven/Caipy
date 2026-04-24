@@ -615,44 +615,33 @@ init();
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
 <script>
-// Called when user clicks the overlay — this IS the user gesture browsers require
+// Called when user clicks "Start Speaking" — browser gesture requirement satisfied
 function startVoiceCall() {
   document.getElementById('voice-overlay').style.display = 'none';
-  autoStartCall();
-}
 
-// Auto-start voice call — clicks the phone button in ElevenLabs widget shadow DOM
-function autoStartCall() {
   const widget = document.querySelector('elevenlabs-convai');
   if (!widget) return;
 
-  let attempts = 0;
-  const tryClick = () => {
-    attempts++;
-    if (attempts > 30) return; // give up after 9 seconds
-
+  // Use MutationObserver to detect when shadow DOM button appears and click it
+  let clicked = false;
+  const clickBtn = () => {
+    if (clicked) return;
     const shadow = widget.shadowRoot;
-    if (!shadow) { setTimeout(tryClick, 300); return; }
-
-    // Find all buttons and click the first visible one (the call button)
+    if (!shadow) return;
     const btns = shadow.querySelectorAll('button');
-    if (btns.length > 0) {
-      // Click the button that contains a phone/call icon
-      for (const btn of btns) {
-        btn.click();
-        return;
-      }
-    }
-    setTimeout(tryClick, 300);
+    btns.forEach(btn => {
+      if (!clicked) { btn.click(); clicked = true; }
+    });
   };
-  setTimeout(tryClick, 1000);
-}
 
-// Start automatically when user clicks the Chat with Caipy button or anywhere
-document.addEventListener('click', function startOnce() {
-  setTimeout(autoStartCall, 300);
-  document.removeEventListener('click', startOnce);
-}, { once: true });
+  // Try immediately and keep retrying until success
+  let attempts = 0;
+  const interval = setInterval(() => {
+    attempts++;
+    clickBtn();
+    if (clicked || attempts > 40) clearInterval(interval);
+  }, 200);
+}
 
 // Show itinerary button when voice call ends
 window.addEventListener('elevenlabs-convai:call-ended', () => {
