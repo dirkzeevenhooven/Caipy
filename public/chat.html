@@ -596,20 +596,6 @@ function stopListening() {
 init();
 </script>
 
-<!-- ElevenLabs Conversational AI — live voice widget -->
-<elevenlabs-convai agent-id="agent_0501kpzmqy56e3saj586hkn7kanq"></elevenlabs-convai>
-<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-
-<script>
-
-// Show itinerary button when voice call ends
-window.addEventListener('elevenlabs-convai:call-ended', () => {
-  // Show the email button in the header
-  document.getElementById('btn-email').style.display = 'inline-flex';
-  // Add a message in the chat prompting them to get their itinerary
-  appendMessage('assistant', `Great conversation! 🌟 Your personalised Cape Town itinerary is ready.\n\nClick **📩 Email me** at the top to receive it — just pay €49 and it lands in your inbox instantly.`);
-  openEmailModal();
-});
-</script>
+<!-- Voice handled by ElevenLabs widget in parent frame (index.html) -->
 </body>
 </html>
