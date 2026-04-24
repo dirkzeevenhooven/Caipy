@@ -420,19 +420,9 @@ async function sendMessage() {
     }
 
     // Save to history
-    // Extract hidden itinerary if present
-    const itinMatch = rawText.match(/<!--ITINERARY_START-->([\s\S]*?)<!--ITINERARY_END-->/);
-    if (itinMatch) {
-      itineraryText = itinMatch[1].trim();
-      // Remove the hidden block from displayed text
-      const displayText = rawText.replace(/<!--ITINERARY_START-->[\s\S]*?<!--ITINERARY_END-->/, '').trim();
-      bubble.innerHTML = renderMarkdown(displayText);
-      // Show pay CTA button
-      const cta = document.createElement('div');
-      cta.style.cssText = 'margin-top:16px';
-      cta.innerHTML = `<button onclick="openEmailModal()" style="background:var(--gold);color:#fff;border:none;padding:13px 24px;border-radius:6px;font-family:inherit;font-size:13px;font-weight:500;letter-spacing:.5px;cursor:pointer;width:100%">📩 Receive my itinerary — €49</button>`;
-      bubble.appendChild(cta);
-      conversationHistory.push({ role: 'assistant', content: displayText });
+    if (rawText.trim() === 'ITINERARY_READY') {
+      bubble.innerHTML = `<p style="margin-bottom:14px">✅ Your personalised Cape Town itinerary is ready — packed with day-by-day plans, restaurant picks, hidden gems, and a personal note from Dirk.</p><button onclick="openEmailModal()" style="background:var(--gold);color:#fff;border:none;padding:13px 24px;border-radius:6px;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.3px;cursor:pointer;width:100%">📩 Receive my itinerary — €49</button>`;
+      conversationHistory.push({ role: 'assistant', content: 'ITINERARY_READY' });
     } else {
       conversationHistory.push({ role: 'assistant', content: rawText });
     }
