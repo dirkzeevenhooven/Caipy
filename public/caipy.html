@@ -108,11 +108,11 @@ footer p{font-size:12px;color:var(--faint)}
     <h1>Your <em>personal</em><br>Cape Town guide</h1>
     <p class="lead">Chat with Caipy and get a complete day-by-day itinerary built around your trip — powered by 10+ years of living in Cape Town, not algorithm-generated fluff.</p>
     <div class="cta-wrap">
-      <button class="btn-primary" onclick="startPayment()">
+      <a class="btn-primary" href="chat.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Get My Itinerary — €49
-      </button>
-      <p class="price-note">One-time payment · <strong>Instant access</strong> · Download or email your itinerary</p>
+        Create my Itinerary — free
+      </a>
+      <p class="price-note">Chat free · <strong>Pay €49</strong> to receive your itinerary by email</p>
     </div>
   </div>
 </section>
@@ -149,8 +149,8 @@ footer p{font-size:12px;color:var(--faint)}
     </div>
     <div class="card">
       <div class="card-icon">📤</div>
-      <h3>Download or email it</h3>
-      <p>Save your itinerary as a text file or email it directly to yourself. Yours to keep and use offline — no app, no account required.</p>
+      <h3>Delivered to your inbox</h3>
+      <p>Your itinerary is emailed to you instantly after payment. Yours to keep and use offline — no app, no account required.</p>
     </div>
   </div>
 </div>
@@ -164,22 +164,22 @@ footer p{font-size:12px;color:var(--faint)}
       <div class="step">
         <div class="step-num">01</div>
         <div class="step-body">
-          <h4>Pay once, access instantly</h4>
-          <p>One €49 payment unlocks your personal chat session with Caipy. No subscriptions, no recurring charges.</p>
+          <h4>Chat with Caipy — free</h4>
+          <p>Caipy asks you a few questions — how long you're staying, your interests, travel style, who you're with. Takes about two minutes.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <div class="step-body">
-          <h4>Tell Caipy about your trip</h4>
-          <p>Caipy asks you a few questions — how long you're staying, your interests, travel style, who you're with. Takes about two minutes.</p>
+          <h4>Your itinerary is prepared</h4>
+          <p>Caipy builds a complete day-by-day plan tailored exactly to you — hidden gems, restaurants, safety tips, and a personal note from Dirk.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <div class="step-body">
-          <h4>Get your personalised itinerary</h4>
-          <p>Caipy generates a complete day-by-day plan tailored to you. Ask follow-up questions, tweak days, or download and go.</p>
+          <h4>Pay €49 · receive it by email</h4>
+          <p>One-time payment. Your full personalised itinerary lands in your inbox instantly. No subscriptions, no recurring charges.</p>
         </div>
       </div>
     </div>
@@ -198,13 +198,13 @@ footer p{font-size:12px;color:var(--faint)}
   <p>For a city this rich and this complex, a good itinerary is worth far more than €49. Get it right the first time.</p>
   <div class="price-amount"><small>€</small>49</div>
   <div class="price-sub">One-time · Unlimited chat session · Keep forever</div>
-  <button class="btn-primary-dark" onclick="startPayment()" id="main-cta">
-    Start My Cape Town Itinerary
-  </button>
+  <a class="btn-primary-dark" href="chat.html" id="main-cta">
+    Create my Cape Town Itinerary
+  </a>
   <div class="guarantees">
+    <span class="guarantee">Chat free — pay only when ready</span>
     <span class="guarantee">Secure payment via Stripe</span>
-    <span class="guarantee">Instant access after payment</span>
-    <span class="guarantee">Download or email your plan</span>
+    <span class="guarantee">Delivered to your inbox instantly</span>
   </div>
 </div>
 
@@ -213,36 +213,5 @@ footer p{font-size:12px;color:var(--faint)}
   <p>Questions? <a href="mailto:hello@planetuncharted.com" style="color:var(--gold)">hello@planetuncharted.com</a></p>
 </footer>
 
-<script>
-async function startPayment() {
-  const btns = document.querySelectorAll('.btn-primary, .btn-primary-dark');
-  btns.forEach(b => {
-    b.classList.add('btn-loading');
-    b.innerHTML = '<span class="spinner"></span> Preparing checkout…';
-  });
-
-  try {
-    const res = await fetch('/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({}),
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      throw new Error(data.error || 'Unknown error');
-    }
-  } catch (err) {
-    alert('Something went wrong: ' + err.message + '\nPlease try again.');
-    btns.forEach(b => {
-      b.classList.remove('btn-loading');
-      b.innerHTML = b === document.querySelector('.btn-primary-dark')
-        ? 'Start My Cape Town Itinerary'
-        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Get My Itinerary — €49';
-    });
-  }
-}
-</script>
 </body>
 </html>
