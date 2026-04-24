@@ -308,6 +308,54 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
+// ─── ElevenLabs TTS proxy — API key stays server-side ────────────────────────
+app.post('/speak', async (req, res) => {
+  const { text } = req.body;
+  if (!text || !text.trim()) return res.status(400).json({ error: 'No text provided' });
+
+  const apiKey = process.env.ELEVENLABS_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'Voice not configured' });
+
+  // Strip HTML tags, markdown syntax, HTML entities — limit to 500 chars
+  const clean = text
+    .replace(/<[^>]*>/g, '')
+    .replace(/\*\*/g, '').replace(/\*/g, '').replace(/#{1,3}\s/g, '')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&[a-z]+;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .substring(0, 500);
+
+  if (!clean) return res.status(400).json({ error: 'Empty text after cleaning' });
+
+  try {
+    const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/RR95SlpB4SjmhuKa4GsP', {
+      method: 'POST',
+      headers: {
+        'xi-api-key': apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg',
+      },
+      body: JSON.stringify({
+        text: clean,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      console.error('ElevenLabs error:', response.status, err);
+      return res.status(response.status).json({ error: 'Voice generation failed' });
+    }
+
+    res.set('Content-Type', 'audio/mpeg');
+    response.body.pipe(res);
+  } catch (err) {
+    console.error('Speak error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
