@@ -615,32 +615,22 @@ init();
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
 <script>
-// Called when user clicks "Start Speaking" — browser gesture requirement satisfied
-function startVoiceCall() {
+// Called when user clicks "Start Speaking" — browser gesture context is active here
+async function startVoiceCall() {
   document.getElementById('voice-overlay').style.display = 'none';
 
   const widget = document.querySelector('elevenlabs-convai');
   if (!widget) return;
 
-  // Use MutationObserver to detect when shadow DOM button appears and click it
-  let clicked = false;
-  const clickBtn = () => {
-    if (clicked) return;
-    const shadow = widget.shadowRoot;
-    if (!shadow) return;
-    const btns = shadow.querySelectorAll('button');
-    btns.forEach(btn => {
-      if (!clicked) { btn.click(); clicked = true; }
-    });
-  };
+  // Primary: call widget's public startSession() method directly (no shadow DOM needed)
+  if (typeof widget.startSession === 'function') {
+    try { await widget.startSession(); return; } catch(e) { console.warn('startSession failed:', e); }
+  }
 
-  // Try immediately and keep retrying until success
-  let attempts = 0;
-  const interval = setInterval(() => {
-    attempts++;
-    clickBtn();
-    if (clicked || attempts > 40) clearInterval(interval);
-  }, 200);
+  // Fallback: synchronous shadow DOM click (preserves gesture context — no setInterval)
+  const shadow = widget.shadowRoot;
+  const btn = shadow && shadow.querySelector('button');
+  if (btn) btn.click();
 }
 
 // Show itinerary button when voice call ends
