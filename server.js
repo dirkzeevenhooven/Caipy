@@ -206,19 +206,23 @@ app.post('/generate-itinerary', async (req, res) => {
   if (!conversationId) return res.status(400).json({ error: 'conversationId required' });
 
   try {
-    // Fetch transcript from ElevenLabs
-    const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${conversationId}`, {
-      headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
-    });
-    if (!elRes.ok) throw new Error(`ElevenLabs API error: ${elRes.status}`);
-    const elData = await elRes.json();
+    // Poll ElevenLabs for transcript — it can take a few seconds after call ends
+    let transcript = '';
+    for (let attempt = 0; attempt < 8; attempt++) {
+      await new Promise(r => setTimeout(r, 2000));
+      const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${conversationId}`, {
+        headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
+      });
+      if (!elRes.ok) throw new Error(`ElevenLabs API error: ${elRes.status}`);
+      const elData = await elRes.json();
+      transcript = (elData.transcript || [])
+        .map(t => `${t.role === 'agent' ? 'Caipy' : 'Traveller'}: ${t.message}`)
+        .join('\n');
+      if (transcript) break;
+      console.log(`Transcript not ready yet, attempt ${attempt + 1}/8...`);
+    }
 
-    // Extract transcript lines
-    const transcript = (elData.transcript || [])
-      .map(t => `${t.role === 'agent' ? 'Caipy' : 'Traveller'}: ${t.message}`)
-      .join('\n');
-
-    if (!transcript) throw new Error('Empty transcript');
+    if (!transcript) throw new Error('Empty transcript after retries');
 
     // Generate itinerary with Claude
     const message = await anthropic.messages.create({
