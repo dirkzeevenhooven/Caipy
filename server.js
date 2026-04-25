@@ -129,6 +129,23 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   res.json({ received: true });
 });
 
+// ─── CORS ─────────────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  'https://thecapetownguide.com',
+  'https://www.thecapetownguide.com',
+  'https://caipy-sfau.onrender.com',
+];
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 // ─── JSON middleware (after webhook route) ────────────────────────────────────
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
