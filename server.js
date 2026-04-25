@@ -200,42 +200,45 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
-// Store transcript — returns pendingId immediately, itinerary generated after payment
-app.post('/store-transcript', async (req, res) => {
-  const { transcript, conversationId } = req.body;
-  const pendingId = crypto.randomBytes(16).toString('hex');
-  const transcriptText = (transcript || '').trim();
-  console.log('Storing transcript, length:', transcriptText.length, 'conversationId:', conversationId);
-  pendingItineraries.set(pendingId, { transcript: transcriptText, conversationId: conversationId || null, itinerary: null, createdAt: Date.now() });
-  res.json({ pendingId });
-});
-
 // Create Stripe Checkout Session
+// Accepts: email, conversationId (from ElevenLabs), transcript (collected client-side)
+// Both conversationId AND transcript stored in Stripe metadata as persistent fallback
 app.post('/create-checkout-session', async (req, res) => {
   try {
-    const { email, pendingId } = req.body;
+    const { email, conversationId, transcript } = req.body;
+    const transcriptText = (transcript || '').trim();
+
+    // Also cache transcript in memory for fast path (may be gone if server restarts — that's OK, we have conversationId fallback)
+    const pendingId = crypto.randomBytes(16).toString('hex');
+    if (transcriptText || conversationId) {
+      pendingItineraries.set(pendingId, { transcript: transcriptText, createdAt: Date.now() });
+    }
+
+    console.log('Creating checkout. email:', email, 'convId:', conversationId, 'transcriptLen:', transcriptText.length);
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: 'Caipy — Personal Cape Town Itinerary',
-              description:
-                'Chat with Caipy and get a complete personalised day-by-day Cape Town itinerary, curated from 10+ years of local knowledge.',
-              images: [],
-            },
-            unit_amount: 4900, // €49.00
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: 'Caipy — Personal Cape Town Itinerary',
+            description: 'Chat with Caipy and get a complete personalised day-by-day Cape Town itinerary, curated from 10+ years of local knowledge.',
           },
-          quantity: 1,
+          unit_amount: 4900,
         },
-      ],
+        quantity: 1,
+      }],
       mode: 'payment',
       customer_email: email || undefined,
       success_url: `https://thecapetownguide.com?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `https://thecapetownguide.com`,
-      metadata: { product: 'caipy', pendingId: pendingId || '' },
+      metadata: {
+        product: 'caipy',
+        pendingId,
+        // conversationId stored in Stripe — survives server restarts, the ultimate fallback
+        conversationId: (conversationId || '').slice(0, 490),
+      },
     });
 
     res.json({ url: session.url });
@@ -245,21 +248,65 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// Verify payment and issue access token
+// Helper: fetch transcript from ElevenLabs with retries
+async function fetchElevenLabsTranscript(conversationId) {
+  for (let attempt = 0; attempt < 6; attempt++) {
+    await new Promise(r => setTimeout(r, 5000));
+    try {
+      const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${conversationId}`, {
+        headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
+      });
+      if (!elRes.ok) { console.error('ElevenLabs API error:', elRes.status); continue; }
+      const elData = await elRes.json();
+      const conv = Array.isArray(elData) ? elData[0] : elData;
+      const arr = conv?.transcript || conv?.messages || [];
+      const transcript = arr
+        .filter(t => (t.message || t.text || t.content || '').trim())
+        .map(t => `${(t.role === 'agent' || t.role === 'assistant') ? 'Caipy' : 'Traveller'}: ${t.message || t.text || t.content}`)
+        .join('\n');
+      if (transcript) { console.log('ElevenLabs transcript ready, length:', transcript.length); return transcript; }
+    } catch (e) { console.error('ElevenLabs fetch error:', e.message); }
+    console.log(`ElevenLabs transcript not ready yet, attempt ${attempt + 1}/6`);
+  }
+  return null;
+}
+
+// Helper: generate itinerary and send email — used after payment
+async function generateAndEmailItinerary(email, transcript, conversationId) {
+  let finalTranscript = transcript;
+
+  // Fallback to ElevenLabs API if no transcript (server restarted, or onMessage didn't fire)
+  if (!finalTranscript && conversationId) {
+    console.log('No client transcript — fetching from ElevenLabs. convId:', conversationId);
+    finalTranscript = await fetchElevenLabsTranscript(conversationId);
+  }
+
+  if (!finalTranscript) {
+    console.error('No transcript available. Cannot generate itinerary for:', email);
+    return;
+  }
+
+  console.log('Generating itinerary with Claude for:', email);
+  const message = await anthropic.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 4096,
+    messages: [{
+      role: 'user',
+      content: `Based on this conversation between Caipy (a Cape Town travel agent) and a traveller, write a complete personalised Cape Town itinerary. Make it detailed, day-by-day, warm in tone, and include specific restaurant recommendations, activities, and local tips from the conversation. Format it beautifully with markdown.\n\nConversation:\n${finalTranscript}`,
+    }],
+  });
+
+  const itinerary = message.content[0].text;
+  await sendItineraryEmail(email, itinerary);
+  console.log('✅ Itinerary email sent to:', email);
+}
+
+// Verify payment — triggered when user returns from Stripe checkout
 app.post('/verify-payment', async (req, res) => {
   const { session_id } = req.body;
   if (!session_id) return res.status(400).json({ error: 'Missing session_id' });
 
   try {
-    // Check if webhook already processed it
-    const preCreated = sessions.get(`stripe:${session_id}`);
-    if (preCreated) {
-      sessions.delete(`stripe:${session_id}`);
-      sessions.set(preCreated.token, { email: preCreated.email, createdAt: preCreated.createdAt });
-      return res.json({ success: true, token: preCreated.token, email: preCreated.email });
-    }
-
-    // Fallback: verify directly with Stripe
     const stripeSession = await stripe.checkout.sessions.retrieve(session_id);
     if (stripeSession.payment_status !== 'paid') {
       return res.status(402).json({ error: 'Payment not completed' });
@@ -269,46 +316,27 @@ app.post('/verify-payment', async (req, res) => {
     const email = stripeSession.customer_details?.email || '';
     sessions.set(token, { email, createdAt: Date.now() });
 
-    // Generate itinerary and email it after payment
+    // Get persistent identifiers from Stripe metadata
     const pendingId = stripeSession.metadata?.pendingId;
-    if (pendingId && pendingItineraries.has(pendingId) && email) {
-      const pending = pendingItineraries.get(pendingId);
-      pendingItineraries.delete(pendingId);
-      // Fire-and-forget: generate with Claude then email
-      (async () => {
-        try {
-          let transcript = pending.transcript || '';
-          console.log('Post-payment itinerary generation, transcript length:', transcript.length);
-          if (!transcript && pending.conversationId) {
-            // Fallback: try ElevenLabs API (has had time to process by now)
-            for (let attempt = 0; attempt < 5; attempt++) {
-              await new Promise(r => setTimeout(r, 3000));
-              const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${pending.conversationId}`, {
-                headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
-              });
-              if (!elRes.ok) break;
-              const elData = await elRes.json();
-              const conv = Array.isArray(elData) ? elData[0] : elData;
-              const arr = conv?.transcript || conv?.messages || [];
-              transcript = arr.map(t => `${t.role === 'agent' || t.role === 'assistant' ? 'Caipy' : 'Traveller'}: ${t.message || t.text || t.content || ''}`).join('\n');
-              if (transcript) break;
-            }
-          }
-          if (!transcript) { console.error('No transcript for itinerary generation'); return; }
-          const message = await anthropic.messages.create({
-            model: 'claude-sonnet-4-6',
-            max_tokens: 4096,
-            messages: [{ role: 'user', content: `Based on this conversation between Caipy (a Cape Town travel agent) and a traveller, write a complete personalised Cape Town itinerary. Make it detailed, day-by-day, warm in tone, and include specific restaurant recommendations, activities, and local tips from the conversation. Format it beautifully with markdown.\n\nConversation:\n${transcript}` }],
-          });
-          const itinerary = message.content[0].text;
-          await sendItineraryEmail(email, itinerary);
-          console.log('Itinerary email sent to:', email);
-        } catch (err) {
-          console.error('Post-payment itinerary error:', err);
-        }
-      })();
-    } else {
-      console.log('No pendingId or itinerary found. pendingId:', pendingId, 'has entry:', pendingItineraries.has(pendingId));
+    const conversationId = stripeSession.metadata?.conversationId;
+
+    console.log('Payment verified. email:', email, 'pendingId:', pendingId, 'conversationId:', conversationId);
+
+    if (email) {
+      // Get transcript from memory cache (fast path)
+      let transcript = '';
+      if (pendingId && pendingItineraries.has(pendingId)) {
+        transcript = pendingItineraries.get(pendingId).transcript || '';
+        pendingItineraries.delete(pendingId);
+        console.log('Got cached transcript, length:', transcript.length);
+      } else {
+        console.log('No cached transcript (server may have restarted) — will use ElevenLabs fallback');
+      }
+
+      // Fire and forget — respond immediately, generate in background
+      generateAndEmailItinerary(email, transcript, conversationId).catch(err => {
+        console.error('generateAndEmailItinerary error:', err.message);
+      });
     }
 
     res.json({ success: true, token, email });
