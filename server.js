@@ -200,34 +200,39 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
-// Generate itinerary from ElevenLabs conversation transcript
+// Generate itinerary — accepts either a direct transcript (from client) or conversationId (ElevenLabs fallback)
 app.post('/generate-itinerary', async (req, res) => {
-  const { conversationId } = req.body;
-  if (!conversationId) return res.status(400).json({ error: 'conversationId required' });
+  const { conversationId, transcript: rawTranscript } = req.body;
 
   try {
-    // Poll ElevenLabs for transcript — it can take a few seconds after call ends
     let transcript = '';
-    for (let attempt = 0; attempt < 8; attempt++) {
-      await new Promise(r => setTimeout(r, 2000));
-      const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${conversationId}`, {
-        headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
-      });
-      if (!elRes.ok) throw new Error(`ElevenLabs API error: ${elRes.status}`);
-      const elData = await elRes.json();
-      // Response is the conversation object directly
-      const conv = Array.isArray(elData) ? elData[0] : elData;
-      console.log('ElevenLabs conv keys:', conv ? Object.keys(conv) : 'null');
-      console.log('ElevenLabs transcript field:', JSON.stringify(conv?.transcript).slice(0, 300));
-      const transcriptArr = conv?.transcript || conv?.messages || [];
-      transcript = transcriptArr
-        .map(t => `${t.role === 'agent' || t.role === 'assistant' ? 'Caipy' : 'Traveller'}: ${t.message || t.text || t.content || ''}`)
-        .join('\n');
-      if (transcript) break;
-      console.log(`Transcript not ready yet, attempt ${attempt + 1}/8...`);
+
+    if (rawTranscript && rawTranscript.trim().length > 20) {
+      // Use client-provided transcript directly — no ElevenLabs API needed
+      transcript = rawTranscript.trim();
+      console.log('Using client-provided transcript, length:', transcript.length);
+    } else if (conversationId) {
+      // Fallback: poll ElevenLabs for transcript
+      console.log('Fetching transcript from ElevenLabs for conversationId:', conversationId);
+      for (let attempt = 0; attempt < 8; attempt++) {
+        await new Promise(r => setTimeout(r, 2000));
+        const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${conversationId}`, {
+          headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
+        });
+        if (!elRes.ok) throw new Error(`ElevenLabs API error: ${elRes.status}`);
+        const elData = await elRes.json();
+        const conv = Array.isArray(elData) ? elData[0] : elData;
+        console.log('ElevenLabs conv keys:', conv ? Object.keys(conv) : 'null');
+        const transcriptArr = conv?.transcript || conv?.messages || [];
+        transcript = transcriptArr
+          .map(t => `${t.role === 'agent' || t.role === 'assistant' ? 'Caipy' : 'Traveller'}: ${t.message || t.text || t.content || ''}`)
+          .join('\n');
+        if (transcript) break;
+        console.log(`Transcript not ready yet, attempt ${attempt + 1}/8...`);
+      }
     }
 
-    if (!transcript) throw new Error('Empty transcript after retries');
+    if (!transcript) throw new Error('No transcript available — conversation may have been too short');
 
     // Generate itinerary with Claude
     const message = await anthropic.messages.create({
