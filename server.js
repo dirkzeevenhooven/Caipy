@@ -200,59 +200,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
-// Generate itinerary — accepts either a direct transcript (from client) or conversationId (ElevenLabs fallback)
-app.post('/generate-itinerary', async (req, res) => {
-  const { conversationId, transcript: rawTranscript } = req.body;
-
-  try {
-    let transcript = '';
-
-    if (rawTranscript && rawTranscript.trim().length > 20) {
-      // Use client-provided transcript directly — no ElevenLabs API needed
-      transcript = rawTranscript.trim();
-      console.log('Using client-provided transcript, length:', transcript.length);
-    } else if (conversationId) {
-      // Fallback: poll ElevenLabs for transcript
-      console.log('Fetching transcript from ElevenLabs for conversationId:', conversationId);
-      for (let attempt = 0; attempt < 8; attempt++) {
-        await new Promise(r => setTimeout(r, 2000));
-        const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${conversationId}`, {
-          headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
-        });
-        if (!elRes.ok) throw new Error(`ElevenLabs API error: ${elRes.status}`);
-        const elData = await elRes.json();
-        const conv = Array.isArray(elData) ? elData[0] : elData;
-        console.log('ElevenLabs conv keys:', conv ? Object.keys(conv) : 'null');
-        const transcriptArr = conv?.transcript || conv?.messages || [];
-        transcript = transcriptArr
-          .map(t => `${t.role === 'agent' || t.role === 'assistant' ? 'Caipy' : 'Traveller'}: ${t.message || t.text || t.content || ''}`)
-          .join('\n');
-        if (transcript) break;
-        console.log(`Transcript not ready yet, attempt ${attempt + 1}/8...`);
-      }
-    }
-
-    if (!transcript) throw new Error('No transcript available — conversation may have been too short');
-
-    // Generate itinerary with Claude
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4096,
-      messages: [{
-        role: 'user',
-        content: `Based on this conversation between Caipy (a Cape Town travel agent) and a traveller, write a complete personalised Cape Town itinerary. Make it detailed, day-by-day, warm in tone, and include specific restaurant recommendations, activities, and local tips from the conversation. Format it beautifully with markdown.\n\nConversation:\n${transcript}`,
-      }],
-    });
-
-    const itinerary = message.content[0].text;
-    const pendingId = crypto.randomBytes(16).toString('hex');
-    pendingItineraries.set(pendingId, { itinerary, createdAt: Date.now() });
-
-    res.json({ pendingId, itinerary });
-  } catch (err) {
-    console.error('Generate itinerary error:', err);
-    res.status(500).json({ error: err.message });
-  }
+// Store transcript — returns pendingId immediately, itinerary generated after payment
+app.post('/store-transcript', async (req, res) => {
+  const { transcript, conversationId } = req.body;
+  const pendingId = crypto.randomBytes(16).toString('hex');
+  const transcriptText = (transcript || '').trim();
+  console.log('Storing transcript, length:', transcriptText.length, 'conversationId:', conversationId);
+  pendingItineraries.set(pendingId, { transcript: transcriptText, conversationId: conversationId || null, itinerary: null, createdAt: Date.now() });
+  res.json({ pendingId });
 });
 
 // Create Stripe Checkout Session
@@ -314,13 +269,46 @@ app.post('/verify-payment', async (req, res) => {
     const email = stripeSession.customer_details?.email || '';
     sessions.set(token, { email, createdAt: Date.now() });
 
-    // Auto-send itinerary email if we have one stored
+    // Generate itinerary and email it after payment
     const pendingId = stripeSession.metadata?.pendingId;
     if (pendingId && pendingItineraries.has(pendingId) && email) {
-      const { itinerary } = pendingItineraries.get(pendingId);
+      const pending = pendingItineraries.get(pendingId);
       pendingItineraries.delete(pendingId);
-      // Fire-and-forget — don't block the response
-      sendItineraryEmail(email, itinerary).catch(err => console.error('Auto-email error:', err));
+      // Fire-and-forget: generate with Claude then email
+      (async () => {
+        try {
+          let transcript = pending.transcript || '';
+          console.log('Post-payment itinerary generation, transcript length:', transcript.length);
+          if (!transcript && pending.conversationId) {
+            // Fallback: try ElevenLabs API (has had time to process by now)
+            for (let attempt = 0; attempt < 5; attempt++) {
+              await new Promise(r => setTimeout(r, 3000));
+              const elRes = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${pending.conversationId}`, {
+                headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY },
+              });
+              if (!elRes.ok) break;
+              const elData = await elRes.json();
+              const conv = Array.isArray(elData) ? elData[0] : elData;
+              const arr = conv?.transcript || conv?.messages || [];
+              transcript = arr.map(t => `${t.role === 'agent' || t.role === 'assistant' ? 'Caipy' : 'Traveller'}: ${t.message || t.text || t.content || ''}`).join('\n');
+              if (transcript) break;
+            }
+          }
+          if (!transcript) { console.error('No transcript for itinerary generation'); return; }
+          const message = await anthropic.messages.create({
+            model: 'claude-sonnet-4-6',
+            max_tokens: 4096,
+            messages: [{ role: 'user', content: `Based on this conversation between Caipy (a Cape Town travel agent) and a traveller, write a complete personalised Cape Town itinerary. Make it detailed, day-by-day, warm in tone, and include specific restaurant recommendations, activities, and local tips from the conversation. Format it beautifully with markdown.\n\nConversation:\n${transcript}` }],
+          });
+          const itinerary = message.content[0].text;
+          await sendItineraryEmail(email, itinerary);
+          console.log('Itinerary email sent to:', email);
+        } catch (err) {
+          console.error('Post-payment itinerary error:', err);
+        }
+      })();
+    } else {
+      console.log('No pendingId or itinerary found. pendingId:', pendingId, 'has entry:', pendingItineraries.has(pendingId));
     }
 
     res.json({ success: true, token, email });
