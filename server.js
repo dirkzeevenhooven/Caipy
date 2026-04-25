@@ -215,9 +215,11 @@ app.post('/generate-itinerary', async (req, res) => {
       });
       if (!elRes.ok) throw new Error(`ElevenLabs API error: ${elRes.status}`);
       const elData = await elRes.json();
-      console.log('ElevenLabs response keys:', Object.keys(elData));
-      console.log('ElevenLabs raw data:', JSON.stringify(elData).slice(0, 500));
-      const transcriptArr = elData.transcript || elData.messages || elData.conversation || [];
+      // Response is the conversation object directly
+      const conv = Array.isArray(elData) ? elData[0] : elData;
+      console.log('ElevenLabs conv keys:', conv ? Object.keys(conv) : 'null');
+      console.log('ElevenLabs transcript field:', JSON.stringify(conv?.transcript).slice(0, 300));
+      const transcriptArr = conv?.transcript || conv?.messages || [];
       transcript = transcriptArr
         .map(t => `${t.role === 'agent' || t.role === 'assistant' ? 'Caipy' : 'Traveller'}: ${t.message || t.text || t.content || ''}`)
         .join('\n');
