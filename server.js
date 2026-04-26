@@ -6,6 +6,7 @@ const express = require('express');
 const Stripe = require('stripe');
 const Anthropic = require('@anthropic-ai/sdk');
 const nodemailer = require('nodemailer');
+const PDFDocument = require('pdfkit');
 const crypto = require('crypto');
 const path = require('path');
 
@@ -39,6 +40,78 @@ function isValidToken(token) {
   return Date.now() - createdAt < 30 * 24 * 60 * 60 * 1000;
 }
 
+// ─── PDF Generator ───────────────────────────────────────────────────────────
+function stripMd(text) {
+  return text.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1').replace(/`(.+?)`/g, '$1');
+}
+
+async function generateItineraryPDF(itinerary) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ size: 'A4', margin: 60 });
+    const buffers = [];
+    doc.on('data', chunk => buffers.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(buffers)));
+    doc.on('error', reject);
+
+    const navy = '#1C1C1A';
+    const gold = '#B8863A';
+    const muted = '#6B6560';
+    const W = doc.page.width - 120;
+
+    // ── Header ──
+    doc.rect(0, 0, doc.page.width, 72).fill(navy);
+    doc.fillColor(gold).fontSize(22).font('Times-Roman')
+       .text('The Cape Town Guide', 60, 20, { width: W, lineBreak: false });
+    doc.fillColor('white').fontSize(8).font('Helvetica')
+       .text('PLANET UNCHARTED  ·  TRAVELGUIDE', 60, 50, { width: W, lineBreak: false });
+
+    // ── Title block ──
+    doc.rect(60, 88, W, 1.5).fill(gold);
+    doc.fillColor(navy).fontSize(26).font('Times-Roman')
+       .text('Your Cape Town Itinerary', 60, 100, { width: W });
+    doc.fillColor(muted).fontSize(9).font('Helvetica')
+       .text('CURATED BY CAIPY  ·  DIRK\'S LOCAL KNOWLEDGE', { width: W, characterSpacing: 1 });
+    doc.moveDown(0.6);
+    doc.rect(60, doc.y, W, 1).fill(gold);
+    doc.moveDown(1.5);
+
+    // ── Body ──
+    for (const line of itinerary.split('\n')) {
+      const t = line.trim();
+      if (!t) { doc.moveDown(0.4); continue; }
+
+      if (t.startsWith('# ')) {
+        doc.moveDown(0.5);
+        doc.fillColor(navy).fontSize(18).font('Times-Roman').text(t.slice(2), { width: W });
+        doc.moveDown(0.2);
+      } else if (t.startsWith('## ')) {
+        doc.moveDown(0.4);
+        doc.fillColor(gold).fontSize(14).font('Times-Roman').text(t.slice(3), { width: W });
+        doc.moveDown(0.2);
+      } else if (t.startsWith('### ')) {
+        doc.moveDown(0.2);
+        doc.fillColor(navy).fontSize(11).font('Helvetica-Bold').text(t.slice(4), { width: W });
+        doc.moveDown(0.1);
+      } else if (t.startsWith('- ') || t.startsWith('* ')) {
+        doc.fillColor(navy).fontSize(10).font('Helvetica')
+           .text('• ' + stripMd(t.slice(2)), { width: W - 15, indent: 15 });
+      } else {
+        doc.fillColor(navy).fontSize(10).font('Helvetica').text(stripMd(t), { width: W });
+      }
+    }
+
+    // ── Footer ──
+    doc.moveDown(2);
+    doc.rect(60, doc.y, W, 1).fill(gold);
+    doc.moveDown(0.6);
+    doc.fillColor(muted).fontSize(8).font('Helvetica')
+       .text('The Cape Town Guide  ·  thecapetownguide.com  ·  Powered by Caipy', { width: W, align: 'center' });
+    doc.text('10+ years of Cape Town local knowledge, curated by Dirk Zeevenhooven', { width: W, align: 'center' });
+
+    doc.end();
+  });
+}
+
 // ─── Email helper ─────────────────────────────────────────────────────────────
 async function sendItineraryEmail(email, itinerary) {
   const transporter = nodemailer.createTransport({
@@ -57,11 +130,18 @@ async function sendItineraryEmail(email, itinerary) {
     .replace(/^# (.+)$/gm, '<h1>$1</h1>')
     .replace(/\n/g, '<br>');
 
+  const pdfBuffer = await generateItineraryPDF(itinerary);
+
   await transporter.sendMail({
     from: `Caipy — Cape Town Guide <${process.env.SMTP_FROM}>`,
     to: email,
     subject: 'Your Cape Town Itinerary from Caipy',
     text: itinerary,
+    attachments: [{
+      filename: 'Cape-Town-Itinerary-Caipy.pdf',
+      content: pdfBuffer,
+      contentType: 'application/pdf',
+    }],
     html: `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
       <body style="font-family:Georgia,serif;max-width:680px;margin:0 auto;padding:40px 20px;color:#1C1C1A;line-height:1.7;">
         <div style="border-bottom:2px solid #B8863A;padding-bottom:24px;margin-bottom:32px;">
