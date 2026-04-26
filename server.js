@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const crypto = require('crypto');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -112,8 +113,115 @@ async function generateItineraryPDF(itinerary) {
   });
 }
 
+// ─── Guide HTML helpers ──────────────────────────────────────────────────────
+
+// Simple markdown → HTML for day card bodies
+function mdToHtml(text) {
+  const lines = text.split('\n');
+  const out = [];
+  let inUl = false;
+  for (const raw of lines) {
+    const safe = raw
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    if (/^#{1,4}\s/.test(raw)) {
+      if (inUl) { out.push('</ul>'); inUl = false; }
+      out.push(`<h4>${safe.replace(/^#{1,4}\s+/, '')}</h4>`);
+    } else if (/^[-*]\s/.test(raw)) {
+      if (!inUl) { out.push('<ul>'); inUl = true; }
+      out.push(`<li>${safe.replace(/^[-*]\s/, '')}</li>`);
+    } else if (raw.trim() === '') {
+      if (inUl) { out.push('</ul>'); inUl = false; }
+    } else {
+      if (inUl) { out.push('</ul>'); inUl = false; }
+      out.push(`<p>${safe}</p>`);
+    }
+  }
+  if (inUl) out.push('</ul>');
+  return out.join('');
+}
+
+// Convert itinerary markdown → accordion day cards HTML
+function itineraryToDayCards(itinerary) {
+  const days = [];
+  let current = null;
+  for (const line of itinerary.split('\n')) {
+    const m = line.match(/^##\s+Day\s+(\d+)[:\s—–-]*(.+)?/i);
+    if (m) {
+      if (current) days.push(current);
+      current = { num: m[1], title: (m[2] || `Day ${m[1]}`).trim(), lines: [] };
+    } else if (current) {
+      if (/^#{1,2}\s+(A Note|Note from)/i.test(line) || /^#\s/.test(line)) {
+        days.push(current); current = null;
+      } else {
+        current.lines.push(line);
+      }
+    }
+  }
+  if (current) days.push(current);
+
+  if (days.length === 0) {
+    return `<div class="day-card fade-in">
+      <div class="day-card-header">
+        <div class="day-number">1</div>
+        <div class="day-title-wrap">
+          <div class="day-label">Your Itinerary</div>
+          <div class="day-title">Cape Town Adventure</div>
+        </div>
+        <div class="day-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="day-card-body"><div class="day-content">${mdToHtml(itinerary)}</div></div>
+    </div>`;
+  }
+
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return days.map(day => `
+    <div class="day-card fade-in">
+      <div class="day-card-header">
+        <div class="day-number">${day.num}</div>
+        <div class="day-title-wrap">
+          <div class="day-label">Day ${day.num}</div>
+          <div class="day-title">${esc(day.title)}</div>
+        </div>
+        <div class="day-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="day-card-body"><div class="day-content">${mdToHtml(day.lines.join('\n'))}</div></div>
+    </div>`).join('\n');
+}
+
+// Fill template placeholders and save to public/guides/[id].html
+async function generateAndSaveGuide(itinerary, tripData, guideId) {
+  const templatePath = path.join(__dirname, 'guide-template.html');
+  if (!fs.existsSync(templatePath)) {
+    console.error('Guide template not found:', templatePath);
+    return null;
+  }
+  const template = fs.readFileSync(templatePath, 'utf8');
+  const esc = s => (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const html = template
+    .replace(/\{\{CUSTOMER_NAME\}\}/g, esc(tripData.customerName || 'Traveller'))
+    .replace(/\{\{TRIP_DAYS\}\}/g, esc(tripData.tripDays || ''))
+    .replace(/\{\{TRIP_MONTH\}\}/g, esc(tripData.tripMonth || ''))
+    .replace(/\{\{TRIP_GROUP\}\}/g, esc(tripData.tripGroup || ''))
+    .replace(/\{\{TRIP_BUDGET\}\}/g, esc(tripData.tripBudget || ''))
+    .replace(/\{\{TRIP_INTERESTS\}\}/g, esc(tripData.tripInterests || ''))
+    .replace('{{ITINERARY_DAYS_HTML}}', itineraryToDayCards(itinerary))
+    .replace(/\{\{GUIDE_ID\}\}/g, guideId.toUpperCase())
+    .replace(/\{\{GENERATED_DATE\}\}/g, date);
+
+  const guidesDir = path.join(__dirname, 'public', 'guides');
+  fs.mkdirSync(guidesDir, { recursive: true });
+  fs.writeFileSync(path.join(guidesDir, `${guideId}.html`), html, 'utf8');
+
+  const baseUrl = process.env.BASE_URL || 'https://caipy-sfau.onrender.com';
+  return `${baseUrl}/guides/${guideId}.html`;
+}
+
 // ─── Email helper ─────────────────────────────────────────────────────────────
-async function sendItineraryEmail(email, itinerary) {
+async function sendItineraryEmail(email, itinerary, guideUrl) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '587'),
@@ -148,9 +256,15 @@ async function sendItineraryEmail(email, itinerary) {
           <h1 style="font-size:28px;font-weight:400;margin:0 0 4px 0;">Your Cape Town Itinerary</h1>
           <p style="color:#6B6560;margin:0;font-size:14px;font-family:sans-serif;letter-spacing:1px;text-transform:uppercase;">Curated by Caipy · Dirk's local knowledge</p>
         </div>
+        ${guideUrl ? `<div style="background:#FAF7F2;border:1px solid rgba(184,134,58,0.3);border-radius:12px;padding:24px 28px;margin-bottom:36px;text-align:center;">
+          <p style="font-family:sans-serif;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#B8863A;margin:0 0 10px 0;">Your Interactive Guide is Ready</p>
+          <p style="font-family:Georgia,serif;font-size:17px;color:#1C1C1A;margin:0 0 18px 0;">Open your personalised Cape Town guide — with photos, day-by-day itinerary, maps and local tips.</p>
+          <a href="${guideUrl}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:14px 32px;border-radius:100px;text-decoration:none;">Open My Guide →</a>
+        </div>` : ''}
         <div style="font-size:16px;">${htmlItinerary}</div>
         <div style="margin-top:48px;padding-top:24px;border-top:1px solid #EDE5D8;color:#6B6560;font-size:13px;font-family:sans-serif;">
           <p>Generated by Caipy — powered by 10+ years of Cape Town local knowledge from Dirk Zeevenhooven.</p>
+          ${guideUrl ? `<p>Can't click the button above? Copy this link: <a href="${guideUrl}" style="color:#B8863A;">${guideUrl}</a></p>` : ''}
         </div>
       </body></html>`,
   });
@@ -302,10 +416,10 @@ app.post('/create-checkout-session', async (req, res) => {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: 'Caipy — Personal Cape Town Itinerary',
-            description: 'Chat with Caipy and get a complete personalised day-by-day Cape Town itinerary, curated from 10+ years of local knowledge.',
+            name: 'Caipy — Personal Cape Town Interactive Travel Guide',
+            description: 'A stunning personalised interactive travel guide with day-by-day itinerary, photos, local tips, booking links and more — curated from 10+ years of Cape Town local knowledge.',
           },
-          unit_amount: 4900,
+          unit_amount: 7900,
         },
         quantity: 1,
       }],
@@ -369,16 +483,67 @@ async function generateAndEmailItinerary(email, transcript, conversationId) {
   console.log('Generating itinerary with Claude for:', email);
   const message = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 4096,
+    max_tokens: 5000,
     messages: [{
       role: 'user',
-      content: `Based on this conversation between Caipy (a Cape Town travel agent) and a traveller, write a complete personalised Cape Town itinerary. Make it detailed, day-by-day, warm in tone, and include specific restaurant recommendations, activities, and local tips from the conversation. Format it beautifully with markdown.\n\nConversation:\n${finalTranscript}`,
+      content: `Based on this conversation between Caipy (a Cape Town travel agent) and a traveller, do two things:
+
+1. First output a JSON object between <trip-data> tags extracting these details from the conversation:
+<trip-data>
+{
+  "customerName": "their first name, or 'Traveller' if not mentioned",
+  "tripDays": "number of days as a numeral string, e.g. '7'",
+  "tripMonth": "month or season they're travelling, e.g. 'December'",
+  "tripGroup": "who they travel with: 'Solo', 'Couple', 'Family' or 'Friends'",
+  "tripBudget": "budget level: 'Budget-Friendly', 'Mid-Range' or 'Luxury'",
+  "tripInterests": "main interests in 2-4 words, e.g. 'Nature & Food'"
+}
+</trip-data>
+
+2. Then write a complete personalised Cape Town day-by-day itinerary in markdown. Structure each day exactly as:
+## Day N: [Descriptive Title]
+### Morning
+[content]
+### Afternoon
+[content]
+### Evening
+[content]
+
+Make it warm, specific, and personal. Include restaurant names, times, practical tips. End with:
+## A Note from Dirk
+[personal warm note]
+
+Conversation:
+${finalTranscript}`,
     }],
   });
 
-  const itinerary = message.content[0].text;
-  await sendItineraryEmail(email, itinerary);
-  console.log('✅ Itinerary email sent to:', email);
+  const responseText = message.content[0].text;
+
+  // Parse structured trip data
+  let tripData = { customerName: 'Traveller', tripDays: '', tripMonth: '', tripGroup: '', tripBudget: '', tripInterests: '' };
+  const tripDataMatch = responseText.match(/<trip-data>([\s\S]*?)<\/trip-data>/);
+  if (tripDataMatch) {
+    try { tripData = { ...tripData, ...JSON.parse(tripDataMatch[1].trim()) }; } catch(e) { console.log('Trip data parse error:', e.message); }
+  }
+
+  // Extract itinerary (everything after </trip-data>)
+  const itinerary = responseText.replace(/<trip-data>[\s\S]*?<\/trip-data>/g, '').trim();
+
+  console.log('Trip data:', tripData);
+
+  // Generate interactive guide and get URL
+  const guideId = crypto.randomBytes(6).toString('hex');
+  let guideUrl = null;
+  try {
+    guideUrl = await generateAndSaveGuide(itinerary, tripData, guideId);
+    console.log('Guide saved:', guideUrl);
+  } catch (e) {
+    console.error('Guide generation error:', e.message);
+  }
+
+  await sendItineraryEmail(email, itinerary, guideUrl);
+  console.log('✅ Itinerary email sent to:', email, guideUrl ? '+ guide URL' : '(no guide URL)');
 }
 
 // Verify payment — triggered when user returns from Stripe checkout
@@ -488,7 +653,7 @@ app.post('/send-email', async (req, res) => {
   }
 
   try {
-    await sendItineraryEmail(email, itinerary);
+    await sendItineraryEmail(email, itinerary, null);
     res.json({ success: true });
   } catch (err) {
     console.error('Email error:', err);

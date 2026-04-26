@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cape Town Guide — {{CUSTOMER_NAME}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Jost', sans-serif;
+      background: #FAF7F2;
+      color: #1C1C1A;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { border: none; background: none; cursor: pointer; font-family: inherit; }
+
+    /* ─── CSS VARIABLES ────────────────────────────────────────── */
+    :root {
+      --navy: #1C1C1A;
+      --gold: #B8863A;
+      --gold-light: #D4A55A;
+      --cream: #FAF7F2;
+      --white: #ffffff;
+      --muted: #6B6560;
+      --muted-light: #9B9491;
+      --border: rgba(184,134,58,0.2);
+      --border-light: rgba(184,134,58,0.12);
+      --shadow-sm: 0 2px 12px rgba(28,28,26,0.08);
+      --shadow-md: 0 8px 32px rgba(28,28,26,0.12);
+      --shadow-lg: 0 20px 60px rgba(28,28,26,0.18);
+    }
+
+    /* ─── TYPOGRAPHY ───────────────────────────────────────────── */
+    .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; line-height: 1.15; }
+    .section-label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 500;
+      line-height: 1.1;
+      color: inherit;
+      margin-bottom: 0.4rem;
+    }
+    .section-subtitle {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    /* ─── ANIMATIONS ───────────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+    .fade-in-delay-5 { transition-delay: 0.5s; }
+
+    /* ─── 1. HERO ───────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      height: 100dvh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+    }
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://thecapetownguide.com/images/camps-bay.jpg') center center / cover no-repeat;
+      transform: scale(1.06);
+      transition: transform 8s ease-out;
+    }
+    #hero-bg.loaded { transform: scale(1); }
+    #hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        165deg,
+        rgba(28,28,26,0.68) 0%,
+        rgba(28,28,26,0.48) 50%,
+        rgba(28,28,26,0.72) 100%
+      );
+    }
+    #hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 1.5rem;
+      max-width: 820px;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(184,134,58,0.45);
+      padding: 0.42rem 1.1rem;
+      border-radius: 100px;
+      margin-bottom: 1.6rem;
+      backdrop-filter: blur(4px);
+      background: rgba(184,134,58,0.08);
+    }
+    #hero h1 {
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      margin-bottom: 0.7rem;
+    }
+    .hero-crafted {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 2.4rem;
+      display: block;
+    }
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      padding: 0.5rem 1.1rem;
+      border-radius: 100px;
+    }
+    .hero-pill span.pill-icon { font-size: 0.9rem; }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .hero-scroll-arrow {
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .hero-scroll-arrow svg { width: 12px; height: 12px; fill: none; stroke: rgba(255,255,255,0.7); stroke-width: 2; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+
+    /* ─── 2. STICKY NAV ────────────────────────────────────────── */
+    #sticky-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(28,28,26,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(184,134,58,0.15);
+      transform: translateY(-100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #sticky-nav.visible { transform: translateY(0); }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      list-style: none;
+    }
+    .nav-links li a {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      padding: 0.6rem 0.85rem;
+      position: relative;
+      transition: color 0.25s;
+      display: block;
+    }
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0.85rem;
+      right: 0.85rem;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transition: transform 0.25s ease;
+      border-radius: 2px;
+    }
+    .nav-links li a:hover,
+    .nav-links li a.active { color: var(--white); }
+    .nav-links li a:hover::after,
+    .nav-links li a.active::after { transform: scaleX(1); }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 6px;
+      cursor: pointer;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .nav-mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: rgba(28,28,26,0.98);
+      z-index: 999;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid rgba(184,134,58,0.15);
+    }
+    .nav-mobile-menu.open { display: block; }
+    .nav-mobile-menu a {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      transition: color 0.2s;
+    }
+    .nav-mobile-menu a:last-child { border-bottom: none; }
+    .nav-mobile-menu a:hover { color: var(--gold); }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    /* ─── SECTION WRAPPER ──────────────────────────────────────── */
+    .section-wrap {
+      padding: 6rem 1.5rem;
+    }
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .section-header {
+      margin-bottom: 3.5rem;
+    }
+    @media (max-width: 768px) {
+      .section-wrap { padding: 4rem 1.25rem; }
+    }
+
+    /* ─── 3. TRIP OVERVIEW ─────────────────────────────────────── */
+    #overview {
+      background: var(--cream);
+    }
+    .overview-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 3.5rem;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 1.6rem 1.2rem;
+      text-align: center;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .stat-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+    .stat-value {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.1;
+      margin-bottom: 0.3rem;
+    }
+    .stat-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    @media (max-width: 700px) {
+      .overview-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Photo Strip */
+    .photo-strip-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    .photo-strip-wrap::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      background: linear-gradient(to right, transparent, var(--cream));
+      pointer-events: none;
+      z-index: 1;
+    }
+    .photo-strip {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 0.5rem;
+    }
+    .photo-strip::-webkit-scrollbar { display: none; }
+    .photo-strip-item {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      height: 200px;
+    }
+    .photo-strip-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .photo-strip-item:hover img { transform: scale(1.05); }
+    .photo-strip-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.2rem 1rem 0.9rem;
+      background: linear-gradient(to top, rgba(28,28,26,0.75) 0%, transparent 100%);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--white);
+    }
+    @media (max-width: 600px) {
+      .photo-strip-item { flex: 0 0 220px; height: 160px; }
+    }
+
+    /* ─── 4. ITINERARY ─────────────────────────────────────────── */
+    #itinerary {
+      background: var(--navy);
+    }
+    #itinerary .section-label { color: var(--gold); }
+    #itinerary .section-title { color: var(--white); }
+    #itinerary .section-subtitle { color: rgba(255,255,255,0.5); }
+
+    .itinerary-timeline {
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .itinerary-timeline::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--gold) 10%, var(--gold) 90%, transparent);
+      opacity: 0.3;
+    }
+
+    .day-card {
+      position: relative;
+      margin-bottom: 1.5rem;
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: border-color 0.3s;
+    }
+    .day-card:hover { border-color: rgba(184,134,58,0.25); }
+    .day-card::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 1.6rem;
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(184,134,58,0.2), 0 0 0 6px rgba(184,134,58,0.08);
+    }
+    .day-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.4rem 1.6rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .day-number {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(184,134,58,0.35);
+    }
+    .day-title-wrap { flex: 1; min-width: 0; }
+    .day-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+    .day-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .day-toggle {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.3s;
+    }
+    .day-toggle svg { width: 12px; height: 12px; stroke: rgba(255,255,255,0.5); fill: none; stroke-width: 2; transition: transform 0.3s; }
+    .day-card.open .day-toggle { background: rgba(184,134,58,0.15); }
+    .day-card.open .day-toggle svg { transform: rotate(180deg); stroke: var(--gold); }
+    .day-card-body {
+      padding: 0 1.6rem 1.6rem;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .day-card-body .day-content {
+      color: rgba(255,255,255,0.72);
+      font-size: 0.92rem;
+      line-height: 1.85;
+      font-weight: 300;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 1.2rem;
+    }
+    /* Rich content inside day cards */
+    .day-content h3, .day-content h4 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin: 1.2rem 0 0.5rem;
+    }
+    .day-content h3:first-child, .day-content h4:first-child { margin-top: 0; }
+    .day-content p { margin-bottom: 0.8rem; }
+    .day-content p:last-child { margin-bottom: 0; }
+    .day-content strong { color: var(--white); font-weight: 500; }
+    .day-content em { color: var(--gold-light); font-style: italic; }
+    .day-content ul, .day-content ol {
+      padding-left: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+    .day-content li { margin-bottom: 0.35rem; }
+    .day-content a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ─── 5. HIGHLIGHTS ────────────────────────────────────────── */
+    #highlights { background: var(--cream); }
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 900px) {
+      .highlights-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .highlights-grid { grid-template-columns: 1fr; }
+    }
+    .highlight-card {
+      background: var(--white);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .highlight-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    .highlight-img-wrap {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+    .highlight-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .highlight-card:hover .highlight-img-wrap img { transform: scale(1.06); }
+    .highlight-badge {
+      position: absolute;
+      top: 0.85rem;
+      left: 0.85rem;
+      background: rgba(28,28,26,0.7);
+      backdrop-filter: blur(8px);
+      color: var(--gold);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+    }
+    .highlight-body {
+      padding: 1.4rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .highlight-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .highlight-desc {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 1.2rem;
+      font-weight: 300;
+    }
+    .highlight-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.73rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      transition: gap 0.2s;
+    }
+    .highlight-link:hover { gap: 0.7rem; }
+    .highlight-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ─── 6. TIPS ───────────────────────────────────────────────── */
+    #tips { background: var(--white); }
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 1000px) {
+      .tips-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .tips-grid { grid-template-columns: 1fr; }
+    }
+    .tip-card {
+      background: var(--cream);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 1.6rem 1.3rem;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+    .tip-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border);
+    }
+    .tip-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.9rem;
+      display: block;
+      line-height: 1;
+    }
+    .tip-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+    }
+    .tip-body {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ─── 7. MAP ────────────────────────────────────────────────── */
+    #map-section { background: var(--navy); }
+    #map-section .section-label { color: var(--gold); }
+    #map-section .section-title { color: var(--white); }
+    #map-section .section-subtitle { color: rgba(255,255,255,0.5); }
+    .map-container {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      height: 480px;
+      border: 1px solid rgba(184,134,58,0.2);
+    }
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .map-note {
+      margin-top: 1.4rem;
+      font-size: 0.84rem;
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+    .map-note a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    @media (max-width: 600px) {
+      .map-container { height: 320px; }
+    }
+
+    /* ─── 8. NOTE FROM DIRK ─────────────────────────────────────── */
+    #note {
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    #note::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184,134,58,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #note::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184,134,58,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .note-inner {
+      max-width: 740px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .note-quotes {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 7rem;
+      line-height: 0.5;
+      color: var(--gold);
+      opacity: 0.25;
+      display: block;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+    .note-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--navy);
+      line-height: 1.65;
+      margin-bottom: 2.2rem;
+    }
+    .note-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+      margin: 0 auto 1.5rem;
+    }
+    .note-signature {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      margin-bottom: 2.5rem;
+    }
+    .note-logo {
+      display: inline-block;
+      padding: 0.7rem 1.8rem;
+      border: 1px solid rgba(184,134,58,0.35);
+      border-radius: 100px;
+    }
+    .note-logo-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--navy);
+      letter-spacing: 0.06em;
+    }
+    .note-logo-text span { color: var(--gold); }
+
+    /* ─── 9. FOOTER ─────────────────────────────────────────────── */
+    #footer {
+      background: var(--navy);
+      padding: 3.5rem 1.5rem 2.5rem;
+      border-top: 1px solid rgba(184,134,58,0.15);
+    }
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: 0.04em;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-tagline {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .footer-link {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: var(--gold); }
+    .footer-divider {
+      width: 100%;
+      max-width: 320px;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+    .footer-meta {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── GOLD DIVIDER ──────────────────────────────────────────── */
+    .gold-rule {
+      width: 56px;
+      height: 2px;
+      background: linear-gradient(to right, var(--gold), var(--gold-light));
+      border-radius: 2px;
+      margin: 1rem 0 2rem;
+    }
+
+    /* ─── SCROLL PROGRESS ───────────────────────────────────────── */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--gold), var(--gold-light));
+      z-index: 1001;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ─── ITINERARY DAYS (generated) ────────────────────────────── */
+    /* These styles apply to {{ITINERARY_DAYS_HTML}} content */
+    #itinerary-days .day-card-body { max-height: 2000px; }
+    @media (max-width: 768px) {
+      #itinerary-days .day-card-body:not(.force-open) { max-height: 0; }
+      #itinerary-days .day-card.open .day-card-body { max-height: 2000px; }
+    }
+
+    /* ─── BACK TO TOP ───────────────────────────────────────────── */
+    #back-to-top {
+      position: fixed;
+      bottom: 1.8rem;
+      right: 1.5rem;
+      z-index: 900;
+      width: 44px;
+      height: 44px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(184,134,58,0.4);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s;
+      cursor: pointer;
+    }
+    #back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #back-to-top svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2.5; }
+
+    /* ─── PREMIUM BADGE ─────────────────────────────────────────── */
+    .premium-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, rgba(184,134,58,0.12), rgba(184,134,58,0.06));
+      border: 1px solid rgba(184,134,58,0.3);
+      border-radius: 100px;
+      padding: 0.38rem 0.95rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .premium-badge::before {
+      content: '✦';
+      font-size: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Scroll Progress -->
+<div id="scroll-progress"></div>
+
+<!-- Back to Top -->
+<button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- ═══════════════════════════════════════════════════════════
+     2. STICKY NAV
+════════════════════════════════════════════════════════════ -->
+<nav id="sticky-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-logo">The <span>Cape Town</span> Guide</div>
+  <ul class="nav-links">
+    <li><a href="#overview" data-section="overview">Overview</a></li>
+    <li><a href="#itinerary" data-section="itinerary">Itinerary</a></li>
+    <li><a href="#highlights" data-section="highlights">Highlights</a></li>
+    <li><a href="#tips" data-section="tips">Tips</a></li>
+    <li><a href="#map-section" data-section="map-section">Map</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="nav-mobile-menu" role="menu">
+  <a href="#overview" role="menuitem">Overview</a>
+  <a href="#itinerary" role="menuitem">Itinerary</a>
+  <a href="#highlights" role="menuitem">Highlights</a>
+  <a href="#tips" role="menuitem">Tips</a>
+  <a href="#map-section" role="menuitem">Map</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     1. HERO
+════════════════════════════════════════════════════════════ -->
+<section id="hero" aria-label="Hero">
+  <div id="hero-bg"></div>
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <span class="hero-eyebrow">The Cape Town Guide · Premium Edition</span>
+    <h1>Your Cape Town<br>Adventure</h1>
+    <span class="hero-crafted">Crafted for {{CUSTOMER_NAME}}</span>
+    <div class="hero-pills">
+      <div class="hero-pill"><span class="pill-icon">📅</span> {{TRIP_DAYS}} Days</div>
+      <div class="hero-pill"><span class="pill-icon">👥</span> {{TRIP_GROUP}}</div>
+      <div class="hero-pill"><span class="pill-icon">✨</span> {{TRIP_INTERESTS}}</div>
+    </div>
+  </div>
+  <button class="hero-scroll" onclick="document.getElementById('overview').scrollIntoView({behavior:'smooth'})" aria-label="Scroll down">
+    <span>Explore</span>
+    <div class="hero-scroll-arrow">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </button>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     3. TRIP OVERVIEW
+════════════════════════════════════════════════════════════ -->
+<section id="overview" class="section-wrap">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Your Journey</span>
+      <h2 class="section-title">{{TRIP_DAYS}} Days in Cape Town</h2>
+      <div class="gold-rule"></div>
+      <p class="section-subtitle">Your personalised guide to the Mother City — curated for the way you travel.</p>
+    </div>
+
+    <div class="overview-stats">
+      <div class="stat-card fade-in fade-in-delay-1">
+        <span class="stat-icon">📅</span>
+        <div class="stat-value">{{TRIP_DAYS}}</div>
+        <div class="stat-label">Days</div>
+      </div>
+      <div class="stat-card fade-in fade-in-delay-2">
+        <span class="stat-icon">🌞</span>
+        <div class="stat-value">{{TRIP_MONTH}}</div>
+        <div class="stat-label">Travel Month</div>
+      </div>
+      <div class="stat-card fade-in fade-in-delay-3">
+        <span class="stat-icon">👥</span>
+        <div class="stat-value" style="font-size:1.25rem; padding-top:0.15rem;">{{TRIP_GROUP}}</div>
+        <div class="stat-label">Travel Party</div>
+      </div>
+      <div class="stat-card fade-in fade-in-delay-4">
+        <span class="stat-icon">💎</span>
+        <div class="stat-value" style="font-size:1.25rem; padding-top:0.15rem;">{{TRIP_BUDGET}}</div>
+        <div class="stat-label">Budget Level</div>
+      </div>
+    </div>
+
+    <div class="photo-strip-wrap fade-in">
+      <div class="photo-strip" id="photo-strip">
+        <div class="photo-strip-item">
+          <img src="https://thecapetownguide.com/images/bloubergstrand.jpg" alt="Bloubergstrand" loading="lazy" />
+          <div class="photo-strip-caption">Bloubergstrand</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://thecapetownguide.com/images/table-mountain-sunset.jpg" alt="Table Mountain at Sunset" loading="lazy" />
+          <div class="photo-strip-caption">Table Mountain at Sunset</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" />
+          <div class="photo-strip-caption">Bo-Kaap</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://thecapetownguide.com/images/waterfront.jpg" alt="V&A Waterfront" loading="lazy" />
+          <div class="photo-strip-caption">V&amp;A Waterfront</div>
+        </div>
+        <div class="photo-strip-item">
+          <img src="https://thecapetownguide.com/images/noordhoek-beach.jpg" alt="Noordhoek Beach" loading="lazy" />
+          <div class="photo-strip-caption">Noordhoek Beach</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     4. DAY-BY-DAY ITINERARY
+════════════════════════════════════════════════════════════ -->
+<section id="itinerary" class="section-wrap">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">The Journey</span>
+      <h2 class="section-title" style="color:var(--white)">Day by Day</h2>
+      <div class="gold-rule"></div>
+      <p class="section-subtitle" style="color:rgba(255,255,255,0.5)">Your complete {{TRIP_DAYS}}-day Cape Town itinerary, curated for {{CUSTOMER_NAME}}.</p>
+    </div>
+
+    <div class="itinerary-timeline fade-in">
+      <div id="itinerary-days">
+        {{ITINERARY_DAYS_HTML}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     5. CAPE TOWN HIGHLIGHTS
+════════════════════════════════════════════════════════════ -->
+<section id="highlights" class="section-wrap">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Must See</span>
+      <h2 class="section-title">The Highlights</h2>
+      <div class="gold-rule"></div>
+      <p class="section-subtitle">Six iconic experiences that define Cape Town. Don't leave without them.</p>
+    </div>
+
+    <div class="highlights-grid">
+
+      <div class="highlight-card fade-in fade-in-delay-1">
+        <div class="highlight-img-wrap">
+          <img src="https://thecapetownguide.com/images/table-mountain.jpg" alt="Table Mountain" loading="lazy" />
+          <span class="highlight-badge">Icon</span>
+        </div>
+        <div class="highlight-body">
+          <h3 class="highlight-name">Table Mountain</h3>
+          <p class="highlight-desc">The flat-topped icon of Cape Town — ride the rotating cable car to the summit for 360° views across the peninsula, city and both oceans. One of the New Seven Wonders of Nature.</p>
+          <a href="https://www.tablemountain.net" target="_blank" rel="noopener" class="highlight-link">
+            Book Tickets
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="highlight-card fade-in fade-in-delay-2">
+        <div class="highlight-img-wrap">
+          <img src="https://thecapetownguide.com/images/boulders-beach.jpg" alt="Boulders Beach Penguins" loading="lazy" />
+          <span class="highlight-badge">Wildlife</span>
+        </div>
+        <div class="highlight-body">
+          <h3 class="highlight-name">Boulders Beach Penguins</h3>
+          <p class="highlight-desc">Walk alongside a colony of African penguins at this sheltered cove in Simon's Town. The boardwalks take you within metres of these charming birds in their natural habitat.</p>
+          <a href="https://www.sanparks.org/parks/table_mountain/tourism/attractions.php" target="_blank" rel="noopener" class="highlight-link">
+            Plan Visit
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="highlight-card fade-in fade-in-delay-3">
+        <div class="highlight-img-wrap">
+          <img src="https://thecapetownguide.com/images/cape-point.jpg" alt="Cape Point" loading="lazy" />
+          <span class="highlight-badge">Nature</span>
+        </div>
+        <div class="highlight-body">
+          <h3 class="highlight-name">Cape Point</h3>
+          <p class="highlight-desc">At the dramatic southern tip of the peninsula, dramatic cliffs meet crashing Atlantic waves. Part of the Table Mountain National Park — home to baboons, ostriches and spectacular hiking trails.</p>
+          <a href="https://www.capepoint.co.za" target="_blank" rel="noopener" class="highlight-link">
+            Explore
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="highlight-card fade-in fade-in-delay-4">
+        <div class="highlight-img-wrap">
+          <img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Chapman's Peak Drive" loading="lazy" />
+          <span class="highlight-badge">Scenic Drive</span>
+        </div>
+        <div class="highlight-body">
+          <h3 class="highlight-name">Chapman's Peak Drive</h3>
+          <p class="highlight-desc">One of the world's most spectacular coastal roads — 9km of hairpin bends cut into the cliffs above the Atlantic Ocean. Best at golden hour with the windows down.</p>
+          <a href="https://www.chapmanspeakdrive.co.za" target="_blank" rel="noopener" class="highlight-link">
+            Route Info
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="highlight-card fade-in fade-in-delay-5">
+        <div class="highlight-img-wrap">
+          <img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" />
+          <span class="highlight-badge">Culture</span>
+        </div>
+        <div class="highlight-body">
+          <h3 class="highlight-name">Bo-Kaap</h3>
+          <p class="highlight-desc">Cape Town's most colourful neighbourhood — cobbled streets lined with pastel-painted houses, the oldest mosque in South Africa, and the warm heritage of the Cape Malay community.</p>
+          <a href="https://www.getyourguide.com/cape-town-l103/bo-kaap-walking-tour-tc24/" target="_blank" rel="noopener" class="highlight-link">
+            Walking Tour
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="highlight-card fade-in fade-in-delay-1">
+        <div class="highlight-img-wrap">
+          <img src="https://thecapetownguide.com/images/robben-island.jpg" alt="Robben Island" loading="lazy" />
+          <span class="highlight-badge">History</span>
+        </div>
+        <div class="highlight-body">
+          <h3 class="highlight-name">Robben Island</h3>
+          <p class="highlight-desc">Where Nelson Mandela was held prisoner for 18 of his 27 years. A powerful UNESCO World Heritage site — guided by former political prisoners, this is one of the most moving experiences in Africa.</p>
+          <a href="https://www.robben-island.org.za" target="_blank" rel="noopener" class="highlight-link">
+            Book Tour
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     6. PRACTICAL TRAVEL TIPS
+════════════════════════════════════════════════════════════ -->
+<section id="tips" class="section-wrap">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Be Prepared</span>
+      <h2 class="section-title">Everything You Need to Know</h2>
+      <div class="gold-rule"></div>
+      <p class="section-subtitle">Practical advice from someone who's lived in Cape Town for over 10 years.</p>
+    </div>
+
+    <div class="tips-grid">
+
+      <div class="tip-card fade-in fade-in-delay-1">
+        <span class="tip-icon">💳</span>
+        <div class="tip-title">Money &amp; Cards</div>
+        <div class="tip-body">Use Revolut for great exchange rates. Notify your bank before travel. Some Dutch cards are not accepted in South Africa. Always carry a credit card as backup.</div>
+      </div>
+
+      <div class="tip-card fade-in fade-in-delay-2">
+        <span class="tip-icon">📱</span>
+        <div class="tip-title">Stay Connected</div>
+        <div class="tip-body">Get an Airalo eSIM before you depart — cheap and easy. Good 4G coverage throughout the city. Download an offline Maps.ME map of Cape Town for backup navigation.</div>
+      </div>
+
+      <div class="tip-card fade-in fade-in-delay-3">
+        <span class="tip-icon">🚗</span>
+        <div class="tip-title">Getting Around</div>
+        <div class="tip-body">Uber is safe, reliable and very affordable. Rent a car for Peninsula day trips and the Winelands. Avoid metered taxis — they are unreliable and often overpriced.</div>
+      </div>
+
+      <div class="tip-card fade-in fade-in-delay-4">
+        <span class="tip-icon">🛡️</span>
+        <div class="tip-title">Safety</div>
+        <div class="tip-body">Travel smart. Leave flashy jewellery at home. Keep your phone in your bag in busy areas. Lock car doors when driving. Use hotel parking or secured underground parking.</div>
+      </div>
+
+      <div class="tip-card fade-in fade-in-delay-1">
+        <span class="tip-icon">💊</span>
+        <div class="tip-title">Health &amp; Packing</div>
+        <div class="tip-body">Bring an international power adapter (Type N or M). Pack a portable charger. Strong sunscreen is essential — the African sun is intense. Bring light layers for cool evenings.</div>
+      </div>
+
+      <div class="tip-card fade-in fade-in-delay-2">
+        <span class="tip-icon">🌤️</span>
+        <div class="tip-title">Weather</div>
+        <div class="tip-body">Summer runs November to March with averages of 25–28°C. Table Mountain's iconic cloud "tablecloth" can roll in fast — always check conditions before hiking.</div>
+      </div>
+
+      <div class="tip-card fade-in fade-in-delay-3">
+        <span class="tip-icon">💰</span>
+        <div class="tip-title">Budget Tips</div>
+        <div class="tip-body">Currency is ZAR (Rand). €1 ≈ R20–22, making Cape Town excellent value for Europeans. Wine from R80/bottle. Uber rides from R50. Excellent restaurants from R180/main.</div>
+      </div>
+
+      <div class="tip-card fade-in fade-in-delay-4">
+        <span class="tip-icon">✈️</span>
+        <div class="tip-title">Before You Fly</div>
+        <div class="tip-body">EU citizens receive 90 days visa-free. Travel insurance is essential. Notify your bank. Make sure your passport has at least 30 days validity beyond your return date.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     7. MAP SECTION
+════════════════════════════════════════════════════════════ -->
+<section id="map-section" class="section-wrap">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-label">Find Your Way</span>
+      <h2 class="section-title" style="color:var(--white)">Your Cape Town Map</h2>
+      <div class="gold-rule"></div>
+      <p class="section-subtitle" style="color:rgba(255,255,255,0.5)">All the key areas at a glance — from the City Bowl to the Southern Peninsula.</p>
+    </div>
+    <div class="map-container fade-in">
+      <iframe
+        src="https://maps.google.com/maps?q=-33.9249,18.4241&z=11&output=embed"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Cape Town Map"
+        aria-label="Interactive map of Cape Town"
+      ></iframe>
+    </div>
+    <p class="map-note fade-in">Save this map for offline use with <a href="https://maps.me" target="_blank" rel="noopener">Maps.ME</a> — your best companion for exploring Cape Town without data.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     8. A NOTE FROM DIRK
+════════════════════════════════════════════════════════════ -->
+<section id="note" class="section-wrap">
+  <div class="container">
+    <div class="note-inner fade-in">
+      <span class="note-quotes">"</span>
+      <p class="note-text">
+        Cape Town has been my home for over 10 years. Every time I drive Chapman's Peak, or watch the sun set over the Atlantic from Camps Bay, I still catch my breath. This city does something to you. I built this guide because I want you to experience Cape Town the way locals do — not from a tourist bus, but from the inside. Enjoy every moment.
+      </p>
+      <div class="note-divider"></div>
+      <div class="note-signature">— Dirk Zeevenhooven</div>
+      <div class="note-logo">
+        <span class="note-logo-text">The <span>Cape Town</span> Guide</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     9. FOOTER
+════════════════════════════════════════════════════════════ -->
+<footer id="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-logo">The <span>Cape Town</span> Guide</div>
+    <div class="footer-tagline">Planet Uncharted · Travelguide</div>
+    <a href="https://thecapetownguide.com" target="_blank" rel="noopener" class="footer-link">thecapetownguide.com</a>
+    <div class="footer-divider"></div>
+    <div class="footer-meta">Guide #{{GUIDE_ID}} · Generated {{GENERATED_DATE}}</div>
+    <div class="footer-meta" style="margin-top:0.3rem; font-size:0.65rem;">
+      This guide was crafted for {{CUSTOMER_NAME}} · Premium Personal Edition
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Scroll Progress ──────────────────────────────────────── */
+  var progressBar = document.getElementById('scroll-progress');
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docH = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docH > 0 ? (scrollTop / docH) * 100 : 0;
+    progressBar.style.width = pct + '%';
+  }
+
+  /* ── Sticky Nav ───────────────────────────────────────────── */
+  var nav = document.getElementById('sticky-nav');
+  var hero = document.getElementById('hero');
+  var backToTop = document.getElementById('back-to-top');
+  var heroHeight = 0;
+
+  function updateHeroHeight() {
+    heroHeight = hero ? hero.offsetHeight : 600;
+  }
+  updateHeroHeight();
+  window.addEventListener('resize', updateHeroHeight, { passive: true });
+
+  function onScroll() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    updateProgress();
+
+    // Sticky nav
+    if (scrollY > heroHeight * 0.6) {
+      nav.classList.add('visible');
+    } else {
+      nav.classList.remove('visible');
+    }
+
+    // Back to top
+    if (scrollY > 600) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+
+    // Active nav link
+    updateActiveNav();
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ── Active Nav Link ──────────────────────────────────────── */
+  var sections = ['overview', 'itinerary', 'highlights', 'tips', 'map-section'];
+
+  function updateActiveNav() {
+    var scrollY = window.scrollY + 100;
+    var current = '';
+    sections.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) {
+        current = id;
+      }
+    });
+    var links = document.querySelectorAll('.nav-links a');
+    links.forEach(function (link) {
+      link.classList.toggle('active', link.dataset.section === current);
+    });
+  }
+
+  /* ── Mobile Hamburger ─────────────────────────────────────── */
+  var hamburger = document.getElementById('nav-hamburger');
+  var mobileMenu = document.getElementById('nav-mobile-menu');
+  var isMenuOpen = false;
+
+  hamburger.addEventListener('click', function () {
+    isMenuOpen = !isMenuOpen;
+    hamburger.setAttribute('aria-expanded', isMenuOpen);
+    mobileMenu.classList.toggle('open', isMenuOpen);
+  });
+
+  // Close mobile menu on link click
+  var mobileLinks = mobileMenu.querySelectorAll('a');
+  mobileLinks.forEach(function (link) {
+    link.addEventListener('click', function () {
+      isMenuOpen = false;
+      hamburger.setAttribute('aria-expanded', false);
+      mobileMenu.classList.remove('open');
+    });
+  });
+
+  /* ── Hero Parallax ────────────────────────────────────────── */
+  var heroBg = document.getElementById('hero-bg');
+  heroBg.classList.add('loaded');
+
+  function onHeroParallax() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    if (scrollY < window.innerHeight && heroBg) {
+      heroBg.style.transform = 'translateY(' + (scrollY * 0.35) + 'px)';
+    }
+  }
+  window.addEventListener('scroll', onHeroParallax, { passive: true });
+
+  /* ── Fade-In Observer ─────────────────────────────────────── */
+  if ('IntersectionObserver' in window) {
+    var fadeEls = document.querySelectorAll('.fade-in');
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    fadeEls.forEach(function (el) { observer.observe(el); });
+  } else {
+    // Fallback: show all
+    document.querySelectorAll('.fade-in').forEach(function (el) {
+      el.classList.add('visible');
+    });
+  }
+
+  /* ── Day Cards — Collapsible ──────────────────────────────── */
+  function initDayCards() {
+    var cards = document.querySelectorAll('#itinerary-days .day-card');
+    var isMobile = window.innerWidth <= 768;
+
+    cards.forEach(function (card, idx) {
+      var header = card.querySelector('.day-card-header');
+      var body = card.querySelector('.day-card-body');
+      if (!header || !body) return;
+
+      // On desktop: all open by default
+      // On mobile: only first card open by default
+      if (!isMobile || idx === 0) {
+        card.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      } else {
+        body.style.maxHeight = '0px';
+      }
+
+      header.addEventListener('click', function () {
+        var wasOpen = card.classList.contains('open');
+
+        // On mobile: toggle this card
+        if (isMobile) {
+          cards.forEach(function (c) {
+            var b = c.querySelector('.day-card-body');
+            if (b) {
+              c.classList.remove('open');
+              b.style.maxHeight = '0px';
+            }
+          });
+          if (!wasOpen) {
+            card.classList.add('open');
+            body.style.maxHeight = body.scrollHeight + 'px';
+          }
+        } else {
+          // On desktop: individual toggle
+          card.classList.toggle('open');
+          if (card.classList.contains('open')) {
+            body.style.maxHeight = body.scrollHeight + 'px';
+          } else {
+            body.style.maxHeight = body.scrollHeight + 'px'; // animate from current
+            requestAnimationFrame(function () {
+              body.style.maxHeight = '0px';
+            });
+          }
+        }
+      });
+    });
+  }
+
+  // Run after DOM is ready and also after a short delay (in case itinerary HTML is rendered server-side)
+  initDayCards();
+  window.addEventListener('resize', function () {
+    // Re-evaluate on resize
+    var isMobile = window.innerWidth <= 768;
+    var cards = document.querySelectorAll('#itinerary-days .day-card');
+    cards.forEach(function (card) {
+      var body = card.querySelector('.day-card-body');
+      if (!body) return;
+      if (!isMobile) {
+        card.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  }, { passive: true });
+
+  /* ── Photo Strip — Touch Drag ─────────────────────────────── */
+  var strip = document.getElementById('photo-strip');
+  if (strip) {
+    var isDown = false;
+    var startX, scrollLeft;
+
+    strip.addEventListener('mousedown', function (e) {
+      isDown = true;
+      strip.style.cursor = 'grabbing';
+      startX = e.pageX - strip.offsetLeft;
+      scrollLeft = strip.scrollLeft;
+    });
+    strip.addEventListener('mouseleave', function () { isDown = false; strip.style.cursor = ''; });
+    strip.addEventListener('mouseup', function () { isDown = false; strip.style.cursor = ''; });
+    strip.addEventListener('mousemove', function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var x = e.pageX - strip.offsetLeft;
+      var walk = (x - startX) * 1.4;
+      strip.scrollLeft = scrollLeft - walk;
+    });
+  }
+
+  /* ── Smooth Scroll for all anchor links ───────────────────── */
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var href = link.getAttribute('href');
+      if (href === '#') return;
+      var target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        var offset = 68; // nav height
+        var top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* ── Lazy Image Observer ──────────────────────────────────── */
+  if ('IntersectionObserver' in window) {
+    var lazyImgs = document.querySelectorAll('img[loading="lazy"]');
+    var imgObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var img = entry.target;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          imgObserver.unobserve(img);
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+
+    lazyImgs.forEach(function (img) { imgObserver.observe(img); });
+  }
+
+  /* ── Initial call ─────────────────────────────────────────── */
+  onScroll();
+
+})();
+</script>
+
+</body>
+</html>
