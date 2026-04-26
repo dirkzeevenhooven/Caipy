@@ -94,6 +94,8 @@
       justify-content: center;
       overflow: hidden;
       text-align: center;
+      /* Beautiful fallback when photo hasn't loaded yet */
+      background: linear-gradient(135deg, #1C1C1A 0%, #2D2820 45%, #1a1714 100%);
     }
     #hero-bg {
       position: absolute;
@@ -545,14 +547,31 @@
     }
     /* Rich content inside day cards */
     .day-content h3, .day-content h4 {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      color: var(--gold);
-      font-size: 1.1rem;
-      font-weight: 500;
-      margin: 1.2rem 0 0.5rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 1.4rem 0 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
     }
     .day-content h3:first-child, .day-content h4:first-child { margin-top: 0; }
-    .day-content p { margin-bottom: 0.8rem; }
+    /* Time-of-day heading variants */
+    h4.tod-morning  { color: #F6B26B; background: rgba(246,178,107,0.08); border-left: 2px solid #F6B26B; }
+    h4.tod-breakfast{ color: #F6B26B; background: rgba(246,178,107,0.08); border-left: 2px solid #F6B26B; }
+    h4.tod-afternoon{ color: #7EC8E3; background: rgba(126,200,227,0.08); border-left: 2px solid #7EC8E3; }
+    h4.tod-lunch    { color: #7EC8E3; background: rgba(126,200,227,0.08); border-left: 2px solid #7EC8E3; }
+    h4.tod-evening  { color: #B8A9E3; background: rgba(184,169,227,0.08); border-left: 2px solid #B8A9E3; }
+    h4.tod-night    { color: #B8A9E3; background: rgba(184,169,227,0.08); border-left: 2px solid #B8A9E3; }
+    h4.tod-dinner   { color: #B8A9E3; background: rgba(184,169,227,0.08); border-left: 2px solid #B8A9E3; }
+    /* Fallback non-time headings */
+    .day-content h4:not([class]) { color: var(--gold); background: rgba(184,134,58,0.06); border-left: 2px solid var(--gold); }
+    .tod-icon { font-size: 1rem; line-height: 1; }
+    .day-content p { margin-bottom: 0.8rem; color: rgba(255,255,255,0.72); }
     .day-content p:last-child { margin-bottom: 0; }
     .day-content strong { color: var(--white); font-weight: 500; }
     .day-content em { color: var(--gold-light); font-style: italic; }
@@ -560,7 +579,7 @@
       padding-left: 1.4rem;
       margin-bottom: 0.8rem;
     }
-    .day-content li { margin-bottom: 0.35rem; }
+    .day-content li { margin-bottom: 0.35rem; color: rgba(255,255,255,0.68); }
     .day-content a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
 
     /* ─── 5. HIGHLIGHTS ────────────────────────────────────────── */
@@ -939,6 +958,61 @@
       content: '✦';
       font-size: 0.6rem;
     }
+
+    /* ─── PDF DOWNLOAD BUTTON ───────────────────────────────────── */
+    .download-bar {
+      background: rgba(184,134,58,0.06);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.2rem 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .download-bar-text {
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .download-bar-text strong { color: var(--navy); font-weight: 500; }
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.4rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-download:hover { background: var(--gold); transform: translateY(-1px); }
+    .btn-download svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ─── PHOTO STRIP AUTO-SCROLL ───────────────────────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+      .photo-strip-inner {
+        display: flex;
+        gap: 1rem;
+        animation: stripScroll 32s linear infinite;
+        width: max-content;
+      }
+      .photo-strip-inner:hover { animation-play-state: paused; }
+      @keyframes stripScroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+    }
   </style>
 </head>
 <body>
@@ -1036,27 +1110,36 @@
 
     <div class="photo-strip-wrap fade-in">
       <div class="photo-strip" id="photo-strip">
-        <div class="photo-strip-item">
-          <img src="https://thecapetownguide.com/images/bloubergstrand.jpg" alt="Bloubergstrand" loading="lazy" />
-          <div class="photo-strip-caption">Bloubergstrand</div>
-        </div>
-        <div class="photo-strip-item">
-          <img src="https://thecapetownguide.com/images/table-mountain-sunset.jpg" alt="Table Mountain at Sunset" loading="lazy" />
-          <div class="photo-strip-caption">Table Mountain at Sunset</div>
-        </div>
-        <div class="photo-strip-item">
-          <img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" />
-          <div class="photo-strip-caption">Bo-Kaap</div>
-        </div>
-        <div class="photo-strip-item">
-          <img src="https://thecapetownguide.com/images/waterfront.jpg" alt="V&A Waterfront" loading="lazy" />
-          <div class="photo-strip-caption">V&amp;A Waterfront</div>
-        </div>
-        <div class="photo-strip-item">
-          <img src="https://thecapetownguide.com/images/noordhoek-beach.jpg" alt="Noordhoek Beach" loading="lazy" />
-          <div class="photo-strip-caption">Noordhoek Beach</div>
+        <div class="photo-strip-inner">
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/camps-bay.jpg" alt="Camps Bay" loading="lazy" /><div class="photo-strip-caption">Camps Bay</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/table-mountain-sunset.jpg" alt="Table Mountain Sunset" loading="lazy" /><div class="photo-strip-caption">Table Mountain Sunset</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bloubergstrand.jpg" alt="Bloubergstrand" loading="lazy" /><div class="photo-strip-caption">Bloubergstrand</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" /><div class="photo-strip-caption">Bo-Kaap</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/waterfront.jpg" alt="V&amp;A Waterfront" loading="lazy" /><div class="photo-strip-caption">V&amp;A Waterfront</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/cape-point.jpg" alt="Cape Point" loading="lazy" /><div class="photo-strip-caption">Cape Point</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Chapman's Peak" loading="lazy" /><div class="photo-strip-caption">Chapman's Peak</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/winelands.jpg" alt="Winelands" loading="lazy" /><div class="photo-strip-caption">Winelands</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/noordhoek-beach.jpg" alt="Noordhoek Beach" loading="lazy" /><div class="photo-strip-caption">Noordhoek Beach</div></div>
+          <!-- Duplicate for seamless loop -->
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/camps-bay.jpg" alt="Camps Bay" loading="lazy" /><div class="photo-strip-caption">Camps Bay</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/table-mountain-sunset.jpg" alt="Table Mountain Sunset" loading="lazy" /><div class="photo-strip-caption">Table Mountain Sunset</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bloubergstrand.jpg" alt="Bloubergstrand" loading="lazy" /><div class="photo-strip-caption">Bloubergstrand</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" /><div class="photo-strip-caption">Bo-Kaap</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/waterfront.jpg" alt="V&amp;A Waterfront" loading="lazy" /><div class="photo-strip-caption">V&amp;A Waterfront</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/cape-point.jpg" alt="Cape Point" loading="lazy" /><div class="photo-strip-caption">Cape Point</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Chapman's Peak" loading="lazy" /><div class="photo-strip-caption">Chapman's Peak</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/winelands.jpg" alt="Winelands" loading="lazy" /><div class="photo-strip-caption">Winelands</div></div>
+          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/noordhoek-beach.jpg" alt="Noordhoek Beach" loading="lazy" /><div class="photo-strip-caption">Noordhoek Beach</div></div>
         </div>
       </div>
+    </div>
+
+    <div class="download-bar fade-in">
+      <div class="download-bar-text"><strong>Your full itinerary is also available as a PDF.</strong> Save it offline, print it, or share it.</div>
+      <a href="mailto:?subject=My Cape Town Guide&body=My personalised Cape Town guide: {{GUIDE_URL}}" class="btn-download">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Save PDF
+      </a>
     </div>
   </div>
 </section>
@@ -1560,6 +1643,37 @@
     }, { rootMargin: '200px 0px' });
 
     lazyImgs.forEach(function (img) { imgObserver.observe(img); });
+  }
+
+  /* ── Count-Up Animation for Stats ────────────────────────── */
+  function animateCount(el, target) {
+    var num = parseInt(target, 10);
+    if (isNaN(num)) return;
+    var duration = 1400;
+    var startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(num * eased);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  if ('IntersectionObserver' in window) {
+    var statEls = document.querySelectorAll('.stat-value');
+    var statObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          animateCount(el, el.textContent.trim());
+          statObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.6 });
+    statEls.forEach(function (el) { statObserver.observe(el); });
   }
 
   /* ── Initial call ─────────────────────────────────────────── */

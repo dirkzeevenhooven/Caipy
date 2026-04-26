@@ -120,6 +120,8 @@ function mdToHtml(text) {
   const lines = text.split('\n');
   const out = [];
   let inUl = false;
+  const timeIcons = { morning: '☀️', afternoon: '🌤️', evening: '🌙', night: '🌙', lunch: '🍽️', dinner: '🍽️', breakfast: '☕' };
+
   for (const raw of lines) {
     const safe = raw
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -127,7 +129,11 @@ function mdToHtml(text) {
       .replace(/\*(.+?)\*/g, '<em>$1</em>');
     if (/^#{1,4}\s/.test(raw)) {
       if (inUl) { out.push('</ul>'); inUl = false; }
-      out.push(`<h4>${safe.replace(/^#{1,4}\s+/, '')}</h4>`);
+      const heading = safe.replace(/^#{1,4}\s+/, '');
+      const key = Object.keys(timeIcons).find(k => heading.toLowerCase().startsWith(k));
+      const icon = key ? `<span class="tod-icon">${timeIcons[key]}</span>` : '';
+      const cls = key ? ` class="tod-heading tod-${key}"` : '';
+      out.push(`<h4${cls}>${icon}${heading}</h4>`);
     } else if (/^[-*]\s/.test(raw)) {
       if (!inUl) { out.push('<ul>'); inUl = true; }
       out.push(`<li>${safe.replace(/^[-*]\s/, '')}</li>`);
