@@ -17,6 +17,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ─── Voucher codes (single-use, 100% discount for friends & family testing) ───
 const VOUCHER_CODES = new Map([
+  ['DIRK-MASTER-2026', { used: false, multiUse: true }],  // unlimited use
   ['CAPE-VIP-2026-01', { used: false }],
   ['CAPE-VIP-2026-02', { used: false }],
   ['CAPE-VIP-2026-03', { used: false }],
@@ -622,9 +623,9 @@ app.post('/redeem-voucher', async (req, res) => {
   const voucher = VOUCHER_CODES.get(normalised);
   if (voucher.used) return res.status(400).json({ error: 'This voucher code has already been used' });
 
-  // Mark as used immediately to prevent race conditions
-  voucher.used = true;
-  console.log(`Voucher ${normalised} redeemed by ${email}`);
+  // Mark as used (skip for multi-use codes)
+  if (!voucher.multiUse) voucher.used = true;
+  console.log(`Voucher ${normalised} redeemed by ${email} (multiUse: ${!!voucher.multiUse})`);
 
   // Fire itinerary generation in background
   generateAndEmailItinerary(email, (transcript || '').trim(), conversationId).catch(err => {
