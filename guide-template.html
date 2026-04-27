@@ -128,13 +128,13 @@
       font-weight: 600;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid rgba(184,134,58,0.45);
+      color: #D4A55A;
+      border: 1px solid rgba(212,165,90,0.7);
       padding: 0.42rem 1.1rem;
       border-radius: 100px;
       margin-bottom: 1.6rem;
-      backdrop-filter: blur(4px);
-      background: rgba(184,134,58,0.08);
+      backdrop-filter: blur(8px);
+      background: rgba(20,16,12,0.72);
     }
     #hero h1 {
       font-size: clamp(2.8rem, 8vw, 6rem);
@@ -674,10 +674,10 @@
     #tips { background: var(--white); }
     .tips-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
     }
-    @media (max-width: 1000px) {
+    @media (max-width: 900px) {
       .tips-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 560px) {
@@ -687,26 +687,47 @@
       background: var(--cream);
       border: 1px solid var(--border-light);
       border-radius: 16px;
-      padding: 1.6rem 1.3rem;
+      overflow: hidden;
       transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      display: flex;
+      flex-direction: column;
     }
     .tip-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px);
       box-shadow: var(--shadow-md);
       border-color: var(--border);
     }
+    .tip-img-wrap {
+      height: 160px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .tip-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .tip-card:hover .tip-img-wrap img { transform: scale(1.06); }
+    .tip-content {
+      padding: 1.3rem 1.2rem 1.2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
     .tip-icon {
-      font-size: 1.8rem;
-      margin-bottom: 0.9rem;
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
       display: block;
       line-height: 1;
     }
     .tip-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 500;
       color: var(--navy);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
       line-height: 1.2;
     }
     .tip-body {
@@ -714,7 +735,74 @@
       color: var(--muted);
       line-height: 1.7;
       font-weight: 300;
+      flex: 1;
+      margin-bottom: 1rem;
     }
+    .tip-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      transition: gap 0.2s;
+      margin-top: auto;
+    }
+    .tip-link:hover { gap: 0.7rem; }
+    .tip-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+    /* Safety Guide featured card */
+    .tip-card-featured {
+      background: var(--navy);
+      border: 1px solid rgba(184,134,58,0.3);
+      border-radius: 16px;
+      padding: 1.8rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: transform 0.25s, box-shadow 0.25s;
+      grid-column: span 1;
+    }
+    .tip-card-featured:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(184,134,58,0.2);
+    }
+    .tip-card-featured .tip-icon { color: var(--gold); }
+    .tip-card-featured .tip-title { color: var(--white); margin-bottom: 0.6rem; }
+    .tip-card-featured .tip-body { color: rgba(255,255,255,0.6); }
+    .tip-featured-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(184,134,58,0.4);
+      padding: 0.25rem 0.65rem;
+      border-radius: 100px;
+      margin-bottom: 0.9rem;
+    }
+    .tip-featured-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gold);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 1.2rem;
+      align-self: flex-start;
+    }
+    .tip-featured-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
 
     /* ─── 7. MAP ────────────────────────────────────────────────── */
     #map-section { background: var(--navy); }
@@ -1138,10 +1226,10 @@
 
     <div class="download-bar fade-in">
       <div class="download-bar-text"><strong>Your full itinerary is also available as a PDF.</strong> Save it offline, print it, or share it.</div>
-      <a href="mailto:?subject=My Cape Town Guide&body=My personalised Cape Town guide: {{GUIDE_URL}}" class="btn-download">
+      <button onclick="window.print()" class="btn-download">
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Save PDF
-      </a>
+      </button>
     </div>
   </div>
 </section>
@@ -1289,51 +1377,104 @@
     <div class="tips-grid">
 
       <div class="tip-card fade-in fade-in-delay-1">
-        <span class="tip-icon">💳</span>
-        <div class="tip-title">Money &amp; Cards</div>
-        <div class="tip-body">Use Revolut for great exchange rates. Notify your bank before travel. Some Dutch cards are not accepted in South Africa. Always carry a credit card as backup.</div>
+        <div class="tip-img-wrap">
+          <img src="https://thecapetownguide.com/images/table-mountain.jpg" alt="Safety in Cape Town" loading="lazy" />
+        </div>
+        <div class="tip-content">
+          <span class="tip-icon">🛡️</span>
+          <div class="tip-title">Safety</div>
+          <div class="tip-body">Travel smart — tourist areas are safe by day. Leave flashy jewellery at home, keep your phone in your bag, lock car doors when driving, and use Uber after dark instead of walking alone.</div>
+          <a href="https://thecapetownguide.com/safety.html" target="_blank" rel="noopener" class="tip-link">
+            Full safety guide
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
       </div>
 
       <div class="tip-card fade-in fade-in-delay-2">
-        <span class="tip-icon">📱</span>
-        <div class="tip-title">Stay Connected</div>
-        <div class="tip-body">Get an Airalo eSIM before you depart — cheap and easy. Good 4G coverage throughout the city. Download an offline Maps.ME map of Cape Town for backup navigation.</div>
+        <div class="tip-img-wrap">
+          <img src="https://thecapetownguide.com/images/camps-bay.jpg" alt="Cape Town Beaches" loading="lazy" />
+        </div>
+        <div class="tip-content">
+          <span class="tip-icon">🌊</span>
+          <div class="tip-title">Beaches</div>
+          <div class="tip-body">Camps Bay and Clifton for glamour (cold Atlantic). Muizenberg for surf (warmer False Bay). Noordhoek for wild untouched beauty. Only swim where lifeguards are on duty.</div>
+          <a href="https://thecapetownguide.com/images/camps-bay.jpg" target="_blank" rel="noopener" class="tip-link">
+            Read more
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
       </div>
 
       <div class="tip-card fade-in fade-in-delay-3">
-        <span class="tip-icon">🚗</span>
-        <div class="tip-title">Getting Around</div>
-        <div class="tip-body">Uber is safe, reliable and very affordable. Rent a car for Peninsula day trips and the Winelands. Avoid metered taxis — they are unreliable and often overpriced.</div>
+        <div class="tip-img-wrap">
+          <img src="https://thecapetownguide.com/images/winelands.jpg" alt="Cape Town Winelands" loading="lazy" />
+        </div>
+        <div class="tip-content">
+          <span class="tip-icon">🍷</span>
+          <div class="tip-title">Wine &amp; Winelands</div>
+          <div class="tip-body">Constantia is 20 minutes from the city — South Africa's oldest wine route since 1685. Groot Constantia, Klein Constantia, Beau Constantia. Weekdays are quieter and pours are more generous.</div>
+          <a href="https://www.grootconstantia.co.za" target="_blank" rel="noopener" class="tip-link">
+            Explore Constantia
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
       </div>
 
       <div class="tip-card fade-in fade-in-delay-4">
-        <span class="tip-icon">🛡️</span>
-        <div class="tip-title">Safety</div>
-        <div class="tip-body">Travel smart. Leave flashy jewellery at home. Keep your phone in your bag in busy areas. Lock car doors when driving. Use hotel parking or secured underground parking.</div>
+        <div class="tip-img-wrap">
+          <img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Hiking in Cape Town" loading="lazy" />
+        </div>
+        <div class="tip-content">
+          <span class="tip-icon">🥾</span>
+          <div class="tip-title">Hiking</div>
+          <div class="tip-body">Start Platteklip Gorge at 6:30am before the heat. Never hike alone, always carry water, and be off by noon — Table Mountain's weather turns without warning. Lion's Head full moon hike is legendary.</div>
+          <a href="https://www.tablemountain.net" target="_blank" rel="noopener" class="tip-link">
+            Table Mountain info
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
       </div>
 
       <div class="tip-card fade-in fade-in-delay-1">
-        <span class="tip-icon">💊</span>
-        <div class="tip-title">Health &amp; Packing</div>
-        <div class="tip-body">Bring an international power adapter (Type N or M). Pack a portable charger. Strong sunscreen is essential — the African sun is intense. Bring light layers for cool evenings.</div>
+        <div class="tip-img-wrap">
+          <img src="https://thecapetownguide.com/images/waterfront.jpg" alt="Food in Cape Town" loading="lazy" />
+        </div>
+        <div class="tip-content">
+          <span class="tip-icon">🍽️</span>
+          <div class="tip-title">Food &amp; Restaurants</div>
+          <div class="tip-body">Book The Pot Luck Club 4 weeks ahead. Kalky's fish &amp; chips at Kalk Bay Harbour — cash only. Saturday Neighbourgoods Market in Woodstock. WhatsApp bookings are completely normal here.</div>
+          <a href="https://www.thepotluckclub.co.za" target="_blank" rel="noopener" class="tip-link">
+            Book The Pot Luck Club
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
       </div>
 
       <div class="tip-card fade-in fade-in-delay-2">
-        <span class="tip-icon">🌤️</span>
-        <div class="tip-title">Weather</div>
-        <div class="tip-body">Summer runs November to March with averages of 25–28°C. Table Mountain's iconic cloud "tablecloth" can roll in fast — always check conditions before hiking.</div>
+        <div class="tip-img-wrap">
+          <img src="https://thecapetownguide.com/images/airport-welcome.jpg" alt="Getting Around Cape Town" loading="lazy" style="object-position: center 30%;" />
+        </div>
+        <div class="tip-content">
+          <span class="tip-icon">🚗</span>
+          <div class="tip-title">Getting Around</div>
+          <div class="tip-body">Uber is safe, reliable and very affordable (~R80 city rides). Rent a car for Cape Point day trips and the Winelands — essential beyond the city. Avoid metered taxis from the rank.</div>
+          <a href="https://thecapetownguide.com/safety.html#transport" target="_blank" rel="noopener" class="tip-link">
+            Transport guide
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
       </div>
 
-      <div class="tip-card fade-in fade-in-delay-3">
-        <span class="tip-icon">💰</span>
-        <div class="tip-title">Budget Tips</div>
-        <div class="tip-body">Currency is ZAR (Rand). €1 ≈ R20–22, making Cape Town excellent value for Europeans. Wine from R80/bottle. Uber rides from R50. Excellent restaurants from R180/main.</div>
-      </div>
-
-      <div class="tip-card fade-in fade-in-delay-4">
-        <span class="tip-icon">✈️</span>
-        <div class="tip-title">Before You Fly</div>
-        <div class="tip-body">EU citizens receive 90 days visa-free. Travel insurance is essential. Notify your bank. Make sure your passport has at least 30 days validity beyond your return date.</div>
+      <!-- Safety & Preparation Guide — featured card -->
+      <div class="tip-card-featured fade-in fade-in-delay-3">
+        <span class="tip-featured-badge">✦ Free Resource</span>
+        <span class="tip-icon">📋</span>
+        <div class="tip-title">Safety &amp; Preparation Guide</div>
+        <div class="tip-body">Everything you need to know before you arrive — transport options rated, neighbourhood safety levels, emergency numbers, budget breakdown and practical essentials. Written by someone who's lived here for 10+ years.</div>
+        <a href="https://thecapetownguide.com/safety.html" target="_blank" rel="noopener" class="tip-featured-btn">
+          Read Free Guide →
+        </a>
       </div>
 
     </div>

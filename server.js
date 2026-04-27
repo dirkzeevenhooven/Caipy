@@ -18,6 +18,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 // ─── Voucher codes (single-use, 100% discount for friends & family testing) ───
 const VOUCHER_CODES = new Map([
   ['CAPETOWN-VIP', { used: false, multiUse: true }],  // unlimited use
+  ['KLM2026', { multiUse: true, perPerson: true, usageCount: 0, usedEmails: new Set() }], // one use per email, unlimited people
   ['CAPE-VIP-2026-01', { used: false }],
   ['CAPE-VIP-2026-02', { used: false }],
   ['CAPE-VIP-2026-03', { used: false }],
@@ -623,9 +624,22 @@ app.post('/redeem-voucher', async (req, res) => {
   const voucher = VOUCHER_CODES.get(normalised);
   if (voucher.used) return res.status(400).json({ error: 'This voucher code has already been used' });
 
-  // Mark as used (skip for multi-use codes)
-  if (!voucher.multiUse) voucher.used = true;
-  console.log(`Voucher ${normalised} redeemed by ${email} (multiUse: ${!!voucher.multiUse})`);
+  // Per-person multi-use codes: one redemption per email address
+  if (voucher.perPerson) {
+    const emailKey = email.toLowerCase();
+    if (voucher.usedEmails.has(emailKey)) {
+      return res.status(400).json({ error: 'This voucher code has already been used with your email address' });
+    }
+    voucher.usedEmails.add(emailKey);
+    voucher.usageCount++;
+    console.log(`Voucher ${normalised} redeemed by ${email} (use #${voucher.usageCount})`);
+  } else if (!voucher.multiUse) {
+    // Single-use codes
+    voucher.used = true;
+    console.log(`Voucher ${normalised} redeemed by ${email} (single-use)`);
+  } else {
+    console.log(`Voucher ${normalised} redeemed by ${email} (unlimited multi-use)`);
+  }
 
   // Fire itinerary generation in background
   generateAndEmailItinerary(email, (transcript || '').trim(), conversationId).catch(err => {

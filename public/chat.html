@@ -438,7 +438,7 @@ async function sendMessage() {
     // Save to history and speak
     if (rawText.includes('ITINERARY_READY')) {
       const displayText = rawText.replace('ITINERARY_READY', '').trim();
-      bubble.innerHTML = (displayText ? renderMarkdown(displayText) + '<br>' : '') + `<p style="margin:14px 0 14px">✅ Your personalised Cape Town itinerary is ready — packed with day-by-day plans, restaurant picks, hidden gems, and a personal note from Dirk.</p><button onclick="openEmailModal()" style="background:var(--gold);color:#fff;border:none;padding:13px 24px;border-radius:6px;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.3px;cursor:pointer;width:100%">📩 Receive my itinerary — €49</button>`;
+      bubble.innerHTML = (displayText ? renderMarkdown(displayText) + '<br>' : '') + `<p style="margin:14px 0 14px;font-size:16px;line-height:1.6">Your Personalised Cape Town Itinerary is ready ✦ — Powered by Dirk's 10+ years of Cape Town knowledge. Click below to receive your day-by-day plan.</p><button onclick="openEmailModal()" style="background:var(--gold);color:#fff;border:none;padding:16px 28px;border-radius:6px;font-family:inherit;font-size:15px;font-weight:600;letter-spacing:.5px;cursor:pointer;width:100%;margin-top:4px">Get My Itinerary — €49</button>`;
       conversationHistory.push({ role: 'assistant', content: 'ITINERARY_READY' });
     } else {
       conversationHistory.push({ role: 'assistant', content: rawText });
