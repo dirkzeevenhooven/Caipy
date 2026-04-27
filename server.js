@@ -15,6 +15,20 @@ const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+// ─── Voucher codes (single-use, 100% discount for friends & family testing) ───
+const VOUCHER_CODES = new Map([
+  ['CAPE-VIP-2026-01', { used: false }],
+  ['CAPE-VIP-2026-02', { used: false }],
+  ['CAPE-VIP-2026-03', { used: false }],
+  ['CAPE-VIP-2026-04', { used: false }],
+  ['CAPE-VIP-2026-05', { used: false }],
+  ['CAPE-VIP-2026-06', { used: false }],
+  ['CAPE-VIP-2026-07', { used: false }],
+  ['CAPE-VIP-2026-08', { used: false }],
+  ['CAPE-VIP-2026-09', { used: false }],
+  ['CAPE-VIP-2026-10', { used: false }],
+]);
+
 // ─── Session store (use Redis/DB in production) ───────────────────────────────
 // Maps accessToken → { email, createdAt }
 const sessions = new Map();
@@ -595,6 +609,29 @@ app.post('/verify-payment', async (req, res) => {
     console.error('Verify payment error:', err);
     res.status(500).json({ error: err.message });
   }
+});
+
+// Redeem voucher code — skips Stripe, generates itinerary for free
+app.post('/redeem-voucher', async (req, res) => {
+  const { code, email, conversationId, transcript } = req.body;
+  if (!code || !email) return res.status(400).json({ error: 'Code and email required' });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Invalid email address' });
+
+  const normalised = code.trim().toUpperCase();
+  if (!VOUCHER_CODES.has(normalised)) return res.status(400).json({ error: 'Invalid voucher code' });
+  const voucher = VOUCHER_CODES.get(normalised);
+  if (voucher.used) return res.status(400).json({ error: 'This voucher code has already been used' });
+
+  // Mark as used immediately to prevent race conditions
+  voucher.used = true;
+  console.log(`Voucher ${normalised} redeemed by ${email}`);
+
+  // Fire itinerary generation in background
+  generateAndEmailItinerary(email, (transcript || '').trim(), conversationId).catch(err => {
+    console.error('Voucher itinerary error:', err.message);
+  });
+
+  res.json({ success: true });
 });
 
 // Chat endpoint — streaming SSE (free, no token required)
