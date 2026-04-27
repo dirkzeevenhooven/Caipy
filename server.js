@@ -17,7 +17,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ─── Voucher codes (single-use, 100% discount for friends & family testing) ───
 const VOUCHER_CODES = new Map([
-  ['DIRK-MASTER-2026', { used: false, multiUse: true }],  // unlimited use
+  ['CAPETOWN-VIP', { used: false, multiUse: true }],  // unlimited use
   ['CAPE-VIP-2026-01', { used: false }],
   ['CAPE-VIP-2026-02', { used: false }],
   ['CAPE-VIP-2026-03', { used: false }],
