@@ -768,6 +768,73 @@ app.post('/speak', async (req, res) => {
   }
 });
 
+// ─── MailerLite subscribe + send PDF ─────────────────────────────────────────
+app.post('/subscribe', async (req, res) => {
+  const { name, email } = req.body;
+  if (!email || !name) return res.status(400).json({ error: 'Name and email required' });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Invalid email' });
+
+  const apiKey = process.env.MAILERLITE_API_KEY;
+
+  // Add to MailerLite if API key is configured
+  if (apiKey) {
+    try {
+      await fetch('https://connect.mailerlite.com/api/subscribers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          email,
+          fields: { name },
+          groups: process.env.MAILERLITE_GROUP_ID ? [process.env.MAILERLITE_GROUP_ID] : [],
+        }),
+      });
+      console.log('MailerLite subscriber added:', email);
+    } catch (e) {
+      console.error('MailerLite error:', e.message);
+    }
+  }
+
+  // Send PDF by email
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: false,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    });
+
+    const pdfPath = path.join(__dirname, 'public', 'secret-local-list.pdf');
+    const attachments = fs.existsSync(pdfPath) ? [{
+      filename: 'Dirks-Secret-Local-List-Cape-Town.pdf',
+      path: pdfPath,
+      contentType: 'application/pdf',
+    }] : [];
+
+    await transporter.sendMail({
+      from: `Dirk — The Cape Town Guide <${process.env.SMTP_FROM}>`,
+      to: email,
+      subject: "Dirk's Secret Local List — Cape Town 🌊",
+      html: `<!DOCTYPE html><html><body style="font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:40px 24px;color:#1B3A4B;line-height:1.7">
+        <p style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#C9A96E;margin-bottom:8px">The Cape Town Guide</p>
+        <h1 style="font-size:28px;font-weight:400;margin:0 0 24px">Hi ${name}, here's your list.</h1>
+        <p style="font-size:16px;color:#4A4540;margin-bottom:20px">Attached is Dirk's Secret Local List — 15 Cape Town insider tips that don't show up on TripAdvisor or in any guidebook.</p>
+        <p style="font-size:16px;color:#4A4540;margin-bottom:20px">These are the places I send my friends when they visit. Use them well.</p>
+        <p style="font-size:16px;color:#4A4540;margin-bottom:32px">And when you're ready to plan your full trip — <a href="https://thecapetownguide.com" style="color:#C9A96E">Caipy is here to help</a>.</p>
+        <p style="font-size:15px;color:#4A4540">Warm regards,<br><strong style="color:#1B3A4B">Dirk Zeevenhooven</strong><br>The Cape Town Guide</p>
+      </body></html>`,
+      attachments,
+    });
+    console.log('Secret local list sent to:', email);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Subscribe email error:', err.message);
+    res.status(500).json({ error: 'Failed to send email' });
+  }
+});
+
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
