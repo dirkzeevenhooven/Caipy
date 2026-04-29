@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safety Guide · Planet Uncharted Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --ocean-light: #1e3f52;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --amber: #C09A3A;
+      --amber-light: #e0c060;
+      --amber-dim: rgba(192,154,58,0.2);
+      --safe: #4A7C59;
+      --safe-light: #7ab88a;
+      --danger: #C0553A;
+      --danger-light: #e07a5a;
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.9);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--amber); color: var(--amber-light); background: rgba(192,154,58,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 65vh; min-height: 440px;
+      background: url('../photos/Cape-Towns-Top-Tourist-Attractions-1410x580.jpeg') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.4) 0%, rgba(15,36,48,0.95) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber-light); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 6vw, 72px); font-weight: 300; line-height: 1.05; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--amber-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 560px; }
+
+    /* ── HONEST INTRO ── */
+    .honest-intro {
+      background: linear-gradient(135deg, rgba(192,154,58,0.08), transparent);
+      border-bottom: 1px solid rgba(192,154,58,0.15);
+      padding: 44px 60px; display: flex; gap: 32px; align-items: flex-start;
+    }
+    .hi-icon { font-size: 40px; flex-shrink: 0; }
+    .hi-text { }
+    .hi-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber-light); margin-bottom: 10px; }
+    .hi-quote { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--white); line-height: 1.6; margin-bottom: 12px; }
+    .hi-sub { font-size: 13px; color: var(--white-dim); line-height: 1.8; max-width: 700px; }
+
+    /* ── SAFETY CONTENT ── */
+    .safety-wrap { padding: 52px 60px 80px; }
+
+    /* SAFE vs AVOID MAP STRIP */
+    .safe-map {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 40px;
+    }
+    .safe-card { padding: 36px; border: 1px solid rgba(74,124,89,0.2); background: rgba(74,124,89,0.05); border-radius: 0; }
+    .avoid-card { padding: 36px; border: 1px solid rgba(192,85,58,0.2); background: rgba(192,85,58,0.04); }
+    .map-card-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .map-card-label.safe { color: var(--safe-light); }
+    .map-card-label.danger { color: var(--danger-light); }
+    .area-list { display: flex; flex-direction: column; gap: 10px; }
+    .area-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: var(--white-dim); line-height: 1.5; }
+    .area-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .area-dot.safe { background: var(--safe-light); }
+    .area-dot.danger { background: var(--danger-light); }
+    .area-name { color: var(--white); font-weight: 500; }
+
+    /* RULE CARDS GRID */
+    .rules-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber-light); margin-bottom: 20px; }
+    .rules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-bottom: 40px; }
+
+    .rule-card {
+      background: var(--ocean-mid); padding: 28px;
+      border: 1px solid rgba(201,169,110,0.07);
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .rule-card.visible { opacity: 1; transform: translateY(0); }
+    .rule-card:nth-child(2) { transition-delay: 0.07s; }
+    .rule-card:nth-child(3) { transition-delay: 0.14s; }
+    .rule-card:nth-child(4) { transition-delay: 0.21s; }
+    .rule-card:nth-child(5) { transition-delay: 0.28s; }
+    .rule-card:nth-child(6) { transition-delay: 0.35s; }
+
+    .rule-icon { font-size: 28px; margin-bottom: 12px; }
+    .rule-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--white); margin-bottom: 8px; }
+    .rule-level { display: inline-flex; align-items: center; gap: 6px; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 10px; border-radius: 10px; margin-bottom: 10px; }
+    .rule-level.critical { background: rgba(192,85,58,0.15); color: var(--danger-light); }
+    .rule-level.important { background: rgba(192,154,58,0.15); color: var(--amber-light); }
+    .rule-level.good-to-know { background: rgba(74,124,89,0.15); color: var(--safe-light); }
+    .rule-text { font-size: 12px; color: var(--white-dim); line-height: 1.7; }
+    .rule-text strong { color: var(--white); }
+
+    /* TRANSPORT SECTION */
+    .transport-strip {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 40px;
+    }
+    .transport-card { background: var(--ocean-mid); padding: 32px; border: 1px solid rgba(201,169,110,0.07); }
+    .tc-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+    .tc-label.use { color: var(--safe-light); }
+    .tc-label.avoid { color: var(--danger-light); }
+    .tc-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 14px; }
+    .tc-list { display: flex; flex-direction: column; gap: 10px; }
+    .tc-item { display: flex; gap: 10px; font-size: 13px; color: var(--white-dim); line-height: 1.5; }
+    .tc-icon { flex-shrink: 0; font-size: 14px; }
+
+    /* EMERGENCY NUMBERS */
+    .emergency-strip {
+      background: rgba(192,154,58,0.06); border: 1px solid rgba(192,154,58,0.2);
+      border-radius: 12px; padding: 36px; margin-bottom: 40px;
+    }
+    .em-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber-light); margin-bottom: 20px; }
+    .em-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .em-card { background: var(--ocean-mid); border-radius: 10px; padding: 20px; text-align: center; border: 1px solid rgba(192,154,58,0.1); }
+    .em-icon { font-size: 28px; margin-bottom: 8px; }
+    .em-name { font-size: 11px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: 0.5px; }
+    .em-number { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--amber-light); line-height: 1; margin-bottom: 4px; }
+    .em-note { font-size: 10px; color: var(--white-faint); line-height: 1.4; }
+
+    /* WHAT TO BRING */
+    .bring-strip { margin-bottom: 40px; }
+    .bring-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber-light); margin-bottom: 20px; }
+    .bring-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3px; }
+    .bring-col { background: var(--ocean-mid); padding: 32px; border: 1px solid rgba(201,169,110,0.07); }
+    .bring-col-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 16px; }
+    .bring-col-title.yes { color: var(--safe-light); }
+    .bring-col-title.no { color: var(--danger-light); }
+    .bring-list { display: flex; flex-direction: column; gap: 10px; }
+    .bring-item { display: flex; gap: 10px; font-size: 13px; color: var(--white-dim); line-height: 1.5; }
+    .bring-check { flex-shrink: 0; font-size: 14px; }
+
+    /* SCAM AWARENESS */
+    .scam-strip {
+      background: rgba(192,85,58,0.05); border: 1px solid rgba(192,85,58,0.15);
+      border-radius: 12px; padding: 36px; margin-bottom: 40px;
+    }
+    .scam-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--danger-light); margin-bottom: 16px; }
+    .scam-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; margin-bottom: 14px; }
+    .scam-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .scam-card { background: var(--ocean-mid); border-radius: 8px; padding: 18px; border: 1px solid rgba(192,85,58,0.1); }
+    .scam-name { font-size: 12px; font-weight: 600; color: var(--danger-light); margin-bottom: 6px; }
+    .scam-desc { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+
+    /* FINAL REASSURANCE */
+    .reassurance {
+      background: linear-gradient(135deg, rgba(74,124,89,0.08), transparent);
+      border: 1px solid rgba(74,124,89,0.2); border-radius: 16px; padding: 44px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+    }
+    .re-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; line-height: 1.3; margin-bottom: 14px; }
+    .re-title em { font-style: italic; color: var(--safe-light); }
+    .re-text { font-size: 13px; color: var(--white-dim); line-height: 1.8; }
+    .re-stats { display: flex; flex-direction: column; gap: 14px; }
+    .re-stat { display: flex; align-items: center; gap: 16px; padding: 14px 18px; background: rgba(15,36,48,0.5); border-radius: 8px; border: 1px solid rgba(74,124,89,0.12); }
+    .re-stat-icon { font-size: 20px; flex-shrink: 0; }
+    .re-stat-text { font-size: 13px; color: var(--white-dim); line-height: 1.5; }
+    .re-stat-text strong { color: var(--white); }
+
+    /* ── CTA ── */
+    .cta-strip { margin-top: 60px; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--amber-light); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .honest-intro { padding: 32px 24px; flex-direction: column; gap: 16px; }
+      .safety-wrap { padding: 40px 24px 60px; }
+      .safe-map { grid-template-columns: 1fr; }
+      .rules-grid { grid-template-columns: 1fr; }
+      .transport-strip { grid-template-columns: 1fr; }
+      .em-grid { grid-template-columns: 1fr 1fr; }
+      .bring-grid { grid-template-columns: 1fr; }
+      .scam-grid { grid-template-columns: 1fr; }
+      .reassurance { grid-template-columns: 1fr; gap: 24px; padding: 32px 24px; }
+      .cta-strip { flex-direction: column; padding: 32px 24px; }
+    }
+    @media (max-width: 1100px) {
+      .rules-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item active"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Uncharted · Safety & Preparation</div>
+      <h1 class="hero-title">The Honest<br><em>Safety Guide</em></h1>
+      <p class="hero-sub">Not the sanitised tourist version. The real talk — from someone who has lived in Cape Town for years and wants you to have an extraordinary, safe trip.</p>
+    </div>
+  </div>
+
+  <!-- HONEST INTRO -->
+  <div class="honest-intro">
+    <div class="hi-icon">🗣️</div>
+    <div class="hi-text">
+      <div class="hi-label">Dirk's honest take</div>
+      <div class="hi-quote">"Cape Town is safe for tourists who are switched on. It is not safe for tourists who are careless. The difference between a great trip and a terrible one is almost always awareness — not luck."</div>
+      <p class="hi-sub">Cape Town has real safety challenges, particularly around vehicle crime and petty theft. But the tourist areas — Sea Point, Camps Bay, the Waterfront, the Winelands, the Garden Route — are genuinely safe when you follow basic rules. Millions of tourists visit every year without incident. This guide gives you everything you need to be one of them.</p>
+    </div>
+  </div>
+
+  <!-- SAFETY CONTENT -->
+  <div class="safety-wrap">
+
+    <!-- SAFE vs AVOID -->
+    <div class="safe-map">
+      <div class="safe-card">
+        <div class="map-card-label safe">✅ Safe for tourists</div>
+        <div class="area-list">
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">Sea Point & Green Point</span> — Best base, safe at night, promenade, restaurants</div></div>
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">Camps Bay & Clifton</span> — Tourist area, safe day and night, busy strip</div></div>
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">V&A Waterfront</span> — Fully managed, security everywhere, very safe</div></div>
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">City Bowl (CBD daytime)</span> — Safe during business hours, avoid after dark</div></div>
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">Stellenbosch & Franschhoek</span> — Wine towns, very safe, tourist-friendly</div></div>
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">Simon's Town & Kalk Bay</span> — Coastal villages, safe and relaxed</div></div>
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">Garden Route</span> — Knysna, George, Plettenberg Bay — very safe</div></div>
+          <div class="area-item"><div class="area-dot safe"></div><div><span class="area-name">Constantia & Southern Suburbs</span> — Residential, safe, wine estates</div></div>
+        </div>
+      </div>
+      <div class="avoid-card">
+        <div class="map-card-label danger">⚠️ Avoid as a tourist</div>
+        <div class="area-list">
+          <div class="area-item"><div class="area-dot danger"></div><div><span class="area-name">Cape Flats</span> — Township areas: Khayelitsha, Mitchells Plain — not for tourists without guided tours</div></div>
+          <div class="area-item"><div class="area-dot danger"></div><div><span class="area-name">CBD after dark</span> — Long Street area late at night without a group</div></div>
+          <div class="area-item"><div class="area-dot danger"></div><div><span class="area-name">Salt River & Woodstock (late night)</span> — Fine during the day, avoid after 10pm alone</div></div>
+          <div class="area-item"><div class="area-dot danger"></div><div><span class="area-name">Any isolated area after dark</span> — Mountain paths, beaches, parking areas alone at night</div></div>
+          <div class="area-item"><div class="area-dot danger"></div><div><span class="area-name">Unmarked taxis</span> — Never, under any circumstances. Use Uber exclusively.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RULES GRID -->
+    <div class="rules-label">The non-negotiable rules</div>
+    <div class="rules-grid">
+
+      <div class="rule-card" id="rule-1">
+        <div class="rule-icon">🚗</div>
+        <div class="rule-title">Never leave anything in your car</div>
+        <div class="rule-level critical">🔴 Critical</div>
+        <div class="rule-text">Not on the seat. Not in the footwell. Not "hidden" under a jacket. <strong>Nothing visible in a parked car — ever.</strong> Cape Town has a serious smash-and-grab problem. If it's in your car, put it in the boot before you park — not when you arrive at your destination.</div>
+      </div>
+
+      <div class="rule-card" id="rule-2">
+        <div class="rule-icon">📱</div>
+        <div class="rule-title">Bring your old phone</div>
+        <div class="rule-level critical">🔴 Critical</div>
+        <div class="rule-text">Leave your new iPhone in the hotel safe. Bring an older or cheaper smartphone for daily use. <strong>Never use your phone while walking</strong> — phone snatching is the most common crime against tourists in Cape Town. Keep it in your pocket, not your hand.</div>
+      </div>
+
+      <div class="rule-card" id="rule-3">
+        <div class="rule-icon">🚕</div>
+        <div class="rule-title">Uber only — no exceptions</div>
+        <div class="rule-level critical">🔴 Critical</div>
+        <div class="rule-text">Use <strong>Uber exclusively</strong> for all transport. Never get into an unmarked taxi or a vehicle that approaches you offering a ride. Uber is cheap, safe, and works perfectly everywhere in Cape Town. It's R80–150 for most city trips.</div>
+      </div>
+
+      <div class="rule-card" id="rule-4">
+        <div class="rule-icon">🏧</div>
+        <div class="rule-title">ATM safety</div>
+        <div class="rule-level important">🟡 Important</div>
+        <div class="rule-text">Use ATMs <strong>inside banks or shopping centres</strong> — never freestanding street ATMs. Cover your PIN always. If anyone approaches you while at an ATM, cancel and leave immediately. Withdraw larger amounts less frequently rather than small amounts often.</div>
+      </div>
+
+      <div class="rule-card" id="rule-5">
+        <div class="rule-icon">👜</div>
+        <div class="rule-title">Bag and valuables awareness</div>
+        <div class="rule-level important">🟡 Important</div>
+        <div class="rule-text">Wear bags across your body, not on one shoulder. <strong>Don't flash expensive cameras, watches, or jewellery</strong> in public spaces. At restaurants, loop your bag strap around your chair leg. Leave your passport in the hotel safe — carry a photo of it instead.</div>
+      </div>
+
+      <div class="rule-card" id="rule-6">
+        <div class="rule-icon">🌙</div>
+        <div class="rule-title">After dark awareness</div>
+        <div class="rule-level important">🟡 Important</div>
+        <div class="rule-text">Tourist areas like Sea Point, Camps Bay, and the Waterfront are <strong>safe at night</strong>. The CBD and areas like De Waterkant are fine in groups. <strong>Avoid walking alone late at night</strong> in any area — Uber is always the right call after 10pm.</div>
+      </div>
+
+      <div class="rule-card" id="rule-7">
+        <div class="rule-icon">🏖️</div>
+        <div class="rule-title">Beach and outdoor safety</div>
+        <div class="rule-level good-to-know">🟢 Good to know</div>
+        <div class="rule-text">Don't leave valuables unattended on the beach. Most beaches in tourist areas are safe during the day. <strong>Check rip currents before swimming</strong> — Atlantic beaches have powerful shore breaks. Lifeguards are only present in peak season at main beaches.</div>
+      </div>
+
+      <div class="rule-card" id="rule-8">
+        <div class="rule-icon">🏔️</div>
+        <div class="rule-title">Mountain and hiking safety</div>
+        <div class="rule-level good-to-know">🟢 Good to know</div>
+        <div class="rule-text"><strong>Never hike alone</strong> on Table Mountain or Lion's Head. Tell someone your route and expected return time. Carry water, sunscreen, and a wind layer. Weather changes fast — if the tablecloth forms, descend immediately. Mountain Rescue: <strong>021 937 0300</strong>.</div>
+      </div>
+
+      <div class="rule-card" id="rule-9">
+        <div class="rule-icon">🚘</div>
+        <div class="rule-title">Car guard etiquette</div>
+        <div class="rule-level good-to-know">🟢 Good to know</div>
+        <div class="rule-text">Informal car guards are everywhere in Cape Town. They are not official but they do watch your car. <strong>Give R10–20 when you return</strong> — it's expected and helps prevent problems. If there's no guard, use a secure parking area when possible.</div>
+      </div>
+
+    </div>
+
+    <!-- TRANSPORT -->
+    <div class="transport-strip">
+      <div class="transport-card">
+        <div class="tc-label use">✅ Use these</div>
+        <h3 class="tc-title">Safe transport options</h3>
+        <div class="tc-list">
+          <div class="tc-item"><span class="tc-icon">📱</span><div><strong>Uber</strong> — The gold standard. Safe, metered, driver tracked. Use for everything.</div></div>
+          <div class="tc-item"><span class="tc-icon">🚌</span><div><strong>MyCiTi Bus</strong> — Good for Sea Point to Waterfront route. Safe and air-conditioned.</div></div>
+          <div class="tc-item"><span class="tc-icon">🚗</span><div><strong>Rental car</strong> — Essential for day trips. Book in advance. Lock always.</div></div>
+          <div class="tc-item"><span class="tc-icon">🏨</span><div><strong>Hotel transfers</strong> — Always an option for airport arrival. Worth it for peace of mind.</div></div>
+        </div>
+      </div>
+      <div class="transport-card">
+        <div class="tc-label avoid">⚠️ Avoid these</div>
+        <h3 class="tc-title">Transport to stay away from</h3>
+        <div class="tc-list">
+          <div class="tc-item"><span class="tc-icon">🚕</span><div><strong>Unmarked taxis</strong> — Never. Not negotiable. Stories do not end well.</div></div>
+          <div class="tc-item"><span class="tc-icon">🚐</span><div><strong>Minibus taxis (kombis)</strong> — Local transport, not for tourists. Unsafe and confusing.</div></div>
+          <div class="tc-item"><span class="tc-icon">🚶</span><div><strong>Walking at night alone</strong> — Even in safe areas, take Uber after 10pm.</div></div>
+          <div class="tc-item"><span class="tc-icon">🚗</span><div><strong>Accepting rides from strangers</strong> — Never, regardless of how convincing the story.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMERGENCY NUMBERS -->
+    <div class="emergency-strip">
+      <div class="em-label">⚡ Emergency numbers — save these now</div>
+      <div class="em-grid">
+        <div class="em-card">
+          <div class="em-icon">🚔</div>
+          <div class="em-name">Police</div>
+          <div class="em-number">10111</div>
+          <div class="em-note">National emergency number — works from any phone</div>
+        </div>
+        <div class="em-card">
+          <div class="em-icon">🚑</div>
+          <div class="em-name">Ambulance</div>
+          <div class="em-number">10177</div>
+          <div class="em-note">National ambulance — also 112 from mobile</div>
+        </div>
+        <div class="em-card">
+          <div class="em-icon">🛡️</div>
+          <div class="em-name">Tourist Safety</div>
+          <div class="em-number">082 788 7000</div>
+          <div class="em-note">Cape Town Tourism Safety Line — English speaking</div>
+        </div>
+        <div class="em-card">
+          <div class="em-icon">🏔️</div>
+          <div class="em-name">Mountain Rescue</div>
+          <div class="em-number">021 937 0300</div>
+          <div class="em-note">Table Mountain & Lion's Head rescue team</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT TO BRING / LEAVE -->
+    <div class="bring-strip">
+      <div class="bring-label">What to bring vs what to leave at the hotel</div>
+      <div class="bring-grid">
+        <div class="bring-col">
+          <div class="bring-col-title yes">✅ Bring daily</div>
+          <div class="bring-list">
+            <div class="bring-item"><span class="bring-check">✓</span> Photo of your passport (not the original)</div>
+            <div class="bring-item"><span class="bring-check">✓</span> Older or secondary smartphone</div>
+            <div class="bring-item"><span class="bring-check">✓</span> Small amount of cash (R200–400 max)</div>
+            <div class="bring-item"><span class="bring-check">✓</span> One credit card (not all your cards)</div>
+            <div class="bring-item"><span class="bring-check">✓</span> Travel insurance details and emergency number</div>
+            <div class="bring-item"><span class="bring-check">✓</span> Sunscreen, water, windproof layer for outdoors</div>
+          </div>
+        </div>
+        <div class="bring-col">
+          <div class="bring-col-title no">❌ Leave in hotel safe</div>
+          <div class="bring-list">
+            <div class="bring-item"><span class="bring-check" style="color:var(--danger-light)">✗</span> Your actual passport</div>
+            <div class="bring-item"><span class="bring-check" style="color:var(--danger-light)">✗</span> Your newest, most expensive phone</div>
+            <div class="bring-item"><span class="bring-check" style="color:var(--danger-light)">✗</span> Expensive jewellery and watches</div>
+            <div class="bring-item"><span class="bring-check" style="color:var(--danger-light)">✗</span> Multiple credit cards</div>
+            <div class="bring-item"><span class="bring-check" style="color:var(--danger-light)">✗</span> Large amounts of cash</div>
+            <div class="bring-item"><span class="bring-check" style="color:var(--danger-light)">✗</span> Laptop (unless you need it)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMON SCAMS -->
+    <div class="scam-strip">
+      <div class="scam-label">⚠️ Common tourist scams — know these</div>
+      <div class="scam-title">The scams Dirk sees tourists fall for every season</div>
+      <div class="scam-grid">
+        <div class="scam-card">
+          <div class="scam-name">The "Friendly Local" scam</div>
+          <div class="scam-desc">Someone approaches, is extremely friendly, offers to show you around. Eventually asks for money, a "loan", or leads you somewhere unsafe. Trust your instincts — politely decline and walk away.</div>
+        </div>
+        <div class="scam-card">
+          <div class="scam-name">The ATM "helper"</div>
+          <div class="scam-desc">Someone offers to "help" you at an ATM, often claiming the machine is broken or you need a code. They are watching your PIN or card-swapping. Use ATMs inside banks only, alone.</div>
+        </div>
+        <div class="scam-card">
+          <div class="scam-name">The fake "official" parking</div>
+          <div class="scam-desc">Someone in a vest claims to be official parking and demands upfront payment. Real car guards are informal — pay R10–20 when you return, not before. Never pay upfront.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REASSURANCE -->
+    <div class="reassurance">
+      <div>
+        <div class="rules-label" style="margin-bottom: 12px;">The bottom line</div>
+        <h3 class="re-title">Cape Town is <em>extraordinary</em>.<br>Go. Just go smart.</h3>
+        <p class="re-text">Millions of tourists visit Cape Town every year and have the trip of their lives without any incident. The city is spectacular, the people are warm, and the experiences are world-class. Follow the rules in this guide, stay switched on, and you will have an extraordinary time. Don't let fear stop you from going — let preparation make you confident.</p>
+      </div>
+      <div class="re-stats">
+        <div class="re-stat"><span class="re-stat-icon">🌍</span><div class="re-stat-text"><strong>Millions of tourists</strong> visit Cape Town every year safely</div></div>
+        <div class="re-stat"><span class="re-stat-icon">✅</span><div class="re-stat-text">Tourist areas are <strong>genuinely safe</strong> when you follow basic rules</div></div>
+        <div class="re-stat"><span class="re-stat-icon">📱</span><div class="re-stat-text"><strong>Uber works perfectly</strong> everywhere — use it for all transport</div></div>
+        <div class="re-stat"><span class="re-stat-icon">🏥</span><div class="re-stat-text">Cape Town has <strong>excellent private hospitals</strong> — get good travel insurance</div></div>
+        <div class="re-stat"><span class="re-stat-icon">🛡️</span><div class="re-stat-text"><strong>Tourist Safety Line</strong> available 24/7 — 082 788 7000</div></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-text">
+        <h3>Have a specific safety question?</h3>
+        <p>Ask Caipy anything — which areas to avoid at night, how to get somewhere safely, what to do if something goes wrong. She knows Cape Town inside out.</p>
+      </div>
+      <a href="index.html#caipy" class="btn-cta">Ask Caipy →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="myguide.html" class="bottom-nav-item"><span class="nav-icon">📖</span>My Guide</a>
+  </div>
+</nav>
+
+<script>
+  const cards = document.querySelectorAll('.rule-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  cards.forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>
