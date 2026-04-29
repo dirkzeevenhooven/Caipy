@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Map · Planet Uncharted Cape Town</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean: #1B3A4B;
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1e3f52;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --green: #4A7C59;
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.7);
+      --glass: rgba(15,36,48,0.85);
+      --glass-light: rgba(27,58,75,0.6);
+      --sidebar-w: 200px;
+    }
+
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow: hidden; }
+
+    /* ── SIDEBAR (desktop) ── */
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-w);
+      height: 100vh; background: var(--ocean-dark);
+      border-right: 1px solid rgba(201,169,110,0.15);
+      display: flex; flex-direction: column; z-index: 100;
+      overflow-y: auto;
+    }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.5); text-transform: uppercase; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 16px; font-size: 13px; color: var(--white-dim);
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .sidebar-item:hover, .sidebar-item.active { color: var(--white); background: rgba(201,169,110,0.08); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN LAYOUT ── */
+    .main { margin-left: var(--sidebar-w); height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      height: 56px; background: var(--glass); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+      display: flex; align-items: center; gap: 12px; padding: 0 20px;
+      z-index: 50; flex-shrink: 0;
+    }
+    .topbar h1 { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--white); }
+    .topbar-search {
+      flex: 1; max-width: 380px; margin-left: 16px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 8px; display: flex; align-items: center; gap: 8px; padding: 0 12px;
+    }
+    .topbar-search input {
+      background: none; border: none; outline: none; color: var(--white);
+      font-size: 13px; font-family: 'Inter', sans-serif; padding: 8px 0; flex: 1;
+    }
+    .topbar-search input::placeholder { color: rgba(250,248,244,0.35); }
+    .search-icon { color: var(--gold); font-size: 14px; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+      background: var(--glass); border-bottom: 1px solid rgba(201,169,110,0.1);
+      flex-shrink: 0; overflow-x: auto; scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+      border: 1px solid rgba(201,169,110,0.25); color: var(--white-dim);
+      background: rgba(255,255,255,0.04);
+    }
+    .filter-btn:hover { border-color: var(--gold); color: var(--white); }
+    .filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ocean-dark); font-weight: 600; }
+    .filter-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ── MAP CONTAINER ── */
+    .map-wrap { flex: 1; position: relative; overflow: hidden; }
+    #map { width: 100%; height: 100%; }
+
+    /* ── INFO PANEL (slides in from right on desktop) ── */
+    .info-panel {
+      position: absolute; top: 0; right: -420px; width: 400px; height: 100%;
+      background: var(--ocean-dark); border-left: 1px solid rgba(201,169,110,0.2);
+      transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+      z-index: 40; overflow-y: auto; display: flex; flex-direction: column;
+    }
+    .info-panel.open { right: 0; }
+    .panel-photo {
+      width: 100%; height: 220px; object-fit: cover; position: relative;
+    }
+    .panel-photo-bg {
+      width: 100%; height: 220px;
+      background-size: cover; background-position: center;
+      position: relative;
+    }
+    .panel-photo-bg::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+      background: linear-gradient(transparent, var(--ocean-dark));
+    }
+    .panel-close {
+      position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;
+      background: rgba(15,36,48,0.8); border: none; border-radius: 50%;
+      color: var(--white); font-size: 16px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; z-index: 5;
+    }
+    .panel-body { padding: 20px; flex: 1; }
+    .panel-category {
+      display: inline-block; padding: 3px 10px; border-radius: 12px;
+      font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; line-height: 1.2; margin-bottom: 6px; }
+    .panel-meta { display: flex; gap: 16px; margin-bottom: 14px; font-size: 12px; color: var(--white-dim); }
+    .panel-meta span { display: flex; align-items: center; gap: 4px; }
+    .panel-quote {
+      font-style: italic; color: var(--gold); font-size: 14px; line-height: 1.6;
+      border-left: 2px solid var(--gold); padding-left: 12px; margin-bottom: 16px;
+    }
+    .panel-desc { font-size: 13px; line-height: 1.7; color: var(--white-dim); margin-bottom: 20px; }
+    .panel-tips { margin-bottom: 20px; }
+    .panel-tips h4 { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .panel-tip { display: flex; gap: 8px; font-size: 13px; color: var(--white-dim); margin-bottom: 8px; line-height: 1.5; }
+    .panel-tip::before { content: '→'; color: var(--gold); flex-shrink: 0; }
+    .panel-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-primary {
+      display: block; text-align: center; padding: 12px;
+      background: var(--gold); color: var(--ocean-dark); border-radius: 8px;
+      font-weight: 600; font-size: 13px; cursor: pointer; border: none;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-secondary {
+      display: block; text-align: center; padding: 11px;
+      background: transparent; color: var(--white); border-radius: 8px;
+      font-weight: 500; font-size: 13px; cursor: pointer;
+      border: 1px solid rgba(201,169,110,0.3); text-decoration: none; transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── MAP LEGEND ── */
+    .map-legend {
+      position: absolute; bottom: 24px; left: 20px;
+      background: var(--glass); backdrop-filter: blur(12px);
+      border: 1px solid rgba(201,169,110,0.2); border-radius: 12px;
+      padding: 12px 16px; z-index: 10;
+    }
+    .legend-title { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--white-dim); margin-bottom: 5px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── CUSTOM MAPBOX MARKERS ── */
+    .marker {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid rgba(250,248,244,0.8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .marker:hover, .marker.selected { transform: scale(1.3); box-shadow: 0 4px 16px rgba(0,0,0,0.6); }
+
+    /* ── BOTTOM NAV (mobile) ── */
+    .bottom-nav {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15);
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--gold); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── MOBILE INFO PANEL (slides up) ── */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; height: calc(100vh - 56px); }
+      .bottom-nav { display: block; }
+      .info-panel {
+        top: auto; right: 0; bottom: -100%; left: 0; width: 100%; height: 75vh;
+        border-left: none; border-top: 1px solid rgba(201,169,110,0.2);
+        border-radius: 20px 20px 0 0; transition: bottom 0.35s cubic-bezier(0.4,0,0.2,1);
+      }
+      .info-panel.open { bottom: 56px; right: 0; }
+      .map-legend { bottom: 80px; }
+    }
+
+    /* category colors */
+    .cat-experiences { background: #C9A96E; }
+    .cat-hidden { background: #4A7C59; }
+    .cat-food { background: #C0553A; }
+    .cat-beaches { background: #3A8FC0; }
+    .cat-hikes { background: #7C4A7C; }
+    .cat-wine { background: #8B3A62; }
+    .cat-culture { background: #6E7C4A; }
+    .cat-safety { background: #C09A3A; }
+
+    .tag-experiences { background: rgba(201,169,110,0.15); color: var(--gold); }
+    .tag-hidden { background: rgba(74,124,89,0.15); color: #6db88a; }
+    .tag-food { background: rgba(192,85,58,0.15); color: #e87a5a; }
+    .tag-beaches { background: rgba(58,143,192,0.15); color: #5ab4e8; }
+    .tag-hikes { background: rgba(124,74,124,0.15); color: #c47ac4; }
+    .tag-wine { background: rgba(139,58,98,0.15); color: #e07aaa; }
+    .tag-culture { background: rgba(110,124,74,0.15); color: #b4c87a; }
+
+    .mapboxgl-popup-content {
+      background: var(--ocean-dark) !important;
+      border: 1px solid rgba(201,169,110,0.3) !important;
+      border-radius: 10px !important;
+      padding: 12px 16px !important;
+      color: var(--white) !important;
+      font-family: 'Inter', sans-serif !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+      min-width: 160px;
+    }
+    .mapboxgl-popup-tip { border-top-color: rgba(201,169,110,0.3) !important; }
+    .popup-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; margin-bottom: 3px; }
+    .popup-cat { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); }
+    .mapboxgl-ctrl-bottom-right, .mapboxgl-ctrl-bottom-left { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item active"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="#" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="#" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="#" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="#" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="#" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="#" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="#" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="#" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="#" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="#" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="#" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="#" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <h1>Interactive Map</h1>
+    <div class="topbar-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search locations, e.g. 'sunset spot with kids'…" />
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-cat="all">
+      <span class="filter-dot" style="background:var(--gold)"></span> All
+    </button>
+    <button class="filter-btn" data-cat="experiences">
+      <span class="filter-dot cat-experiences"></span> Experiences
+    </button>
+    <button class="filter-btn" data-cat="hidden">
+      <span class="filter-dot cat-hidden"></span> Hidden Gems
+    </button>
+    <button class="filter-btn" data-cat="food">
+      <span class="filter-dot cat-food"></span> Food
+    </button>
+    <button class="filter-btn" data-cat="beaches">
+      <span class="filter-dot cat-beaches"></span> Beaches
+    </button>
+    <button class="filter-btn" data-cat="hikes">
+      <span class="filter-dot cat-hikes"></span> Hikes
+    </button>
+    <button class="filter-btn" data-cat="wine">
+      <span class="filter-dot cat-wine"></span> Wine
+    </button>
+    <button class="filter-btn" data-cat="culture">
+      <span class="filter-dot cat-culture"></span> Culture
+    </button>
+  </div>
+
+  <!-- MAP WRAP -->
+  <div class="map-wrap">
+    <div id="map"></div>
+
+    <!-- LEGEND -->
+    <div class="map-legend">
+      <div class="legend-title">Categories</div>
+      <div class="legend-item"><div class="legend-dot cat-experiences"></div> Iconic Experiences</div>
+      <div class="legend-item"><div class="legend-dot cat-hidden"></div> Hidden Gems</div>
+      <div class="legend-item"><div class="legend-dot cat-food"></div> Food & Markets</div>
+      <div class="legend-item"><div class="legend-dot cat-beaches"></div> Beaches</div>
+      <div class="legend-item"><div class="legend-dot cat-hikes"></div> Hikes</div>
+      <div class="legend-item"><div class="legend-dot cat-wine"></div> Wine</div>
+      <div class="legend-item"><div class="legend-dot cat-culture"></div> Culture</div>
+    </div>
+
+    <!-- INFO PANEL -->
+    <div class="info-panel" id="infoPanel">
+      <div class="panel-photo-bg" id="panelPhoto">
+        <button class="panel-close" id="panelClose">✕</button>
+      </div>
+      <div class="panel-body">
+        <div class="panel-category" id="panelCat"></div>
+        <div class="panel-title" id="panelTitle"></div>
+        <div class="panel-meta" id="panelMeta"></div>
+        <div class="panel-quote" id="panelQuote"></div>
+        <div class="panel-desc" id="panelDesc"></div>
+        <div class="panel-tips" id="panelTips"></div>
+        <div class="panel-actions" id="panelActions"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item active"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="#" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="#" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="#" class="bottom-nav-item"><span class="nav-icon">📖</span>My Guide</a>
+  </div>
+</nav>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGlya3plZXZlbmhvb3ZlbiIsImEiOiJjbW9qdmY3ejMwMnBpMnNzZTFyY2xoZTlqIn0.GpMNqiftt_5mdmUs-64uCw';
+
+// ── ALL LOCATIONS ──
+const locations = [
+  // ICONIC EXPERIENCES
+  {
+    id: 'table-mountain', cat: 'experiences', emoji: '⭐',
+    name: 'Table Mountain', lat: -33.9628, lng: 18.4098,
+    photo: '../photos/table-mountain.jpeg',
+    tag: 'Iconic Experience',
+    quote: 'Go early morning or late afternoon. Book the cable car online. Check cloud cover first.',
+    desc: 'One of the Seven Natural Wonders of the World. The cable car offers breathtaking 360° views. On a clear day you can see Robben Island, the Cape Peninsula, and as far as the Hottentots Holland mountains.',
+    tips: ['Book cable car online to skip queues — R380 return', 'Go before 9am or after 4pm for best light and fewer crowds', 'Check the cloud cover — a "tablecloth" means the car may stop', 'Platteklip Gorge is the easiest hiking route up — 2 hrs'],
+    duration: '2–3 hrs', price: 'R380', booking: 'https://www.tablemountain.net'
+  },
+  {
+    id: 'robben-island', cat: 'experiences', emoji: '⭐',
+    name: 'Robben Island', lat: -33.8068, lng: 18.3660,
+    photo: '../photos/robben-island.jpeg',
+    tag: 'Iconic Experience',
+    quote: 'Book 2+ weeks ahead in peak season. Deeply moving. Guided by former prisoners.',
+    desc: 'Where Nelson Mandela was imprisoned for 18 of his 27 years. One of the most powerful and moving historical sites in the world. The ferry departs from the V&A Waterfront.',
+    tips: ['Book online weeks ahead — sells out fast in summer', 'Tours are led by former political prisoners — listen carefully', 'The ferry crossing is 30 min each way — can be rough', 'Allow 3.5 hours total including ferry'],
+    duration: '3.5 hrs', price: 'R750', booking: 'https://www.robben-island.org.za'
+  },
+  {
+    id: 'boulders-beach', cat: 'experiences', emoji: '⭐',
+    name: 'Boulders Beach Penguins', lat: -34.1977, lng: 18.4517,
+    photo: '../photos/boulders-beach.jpeg',
+    tag: 'Iconic Experience',
+    quote: 'Combine with the full Peninsula drive. Magical at dusk.',
+    desc: 'Home to a colony of 3,000 African penguins, Boulders Beach is one of the most unique wildlife encounters in the world. The penguins are remarkably unbothered by humans.',
+    tips: ['Go at dusk — penguins returning from the sea is magical', 'Combine with Cape of Good Hope — full Peninsula day', 'The penguins come right up to you — keep respectful distance', 'Simon\'s Town is worth a 30-min walk after'],
+    duration: '1–2 hrs', price: 'R220', booking: 'https://www.sanparks.org'
+  },
+  {
+    id: 'cape-of-good-hope', cat: 'experiences', emoji: '⭐',
+    name: 'Cape of Good Hope', lat: -34.3568, lng: 18.4734,
+    photo: '../photos/Cape-Point.webp',
+    tag: 'Iconic Experience',
+    quote: 'Start at 8am. Chapman\'s Peak both ways. One of the world\'s great road trips.',
+    desc: 'The dramatic southwestern tip of Africa where two oceans meet. The drive down Chapman\'s Peak is one of the most spectacular coastal roads on earth. Start early to have it to yourself.',
+    tips: ['Leave Cape Town by 8am — beat the tour buses', 'Chapman\'s Peak Drive both ways — worth every km', 'The Flying Dutchman funicular saves the climb to the point', 'Baboons are wild — never feed them, lock your car'],
+    duration: 'Full day', price: 'R353', booking: 'https://www.sanparks.org'
+  },
+  {
+    id: 'bo-kaap', cat: 'culture', emoji: '🏛️',
+    name: 'Bo-Kaap', lat: -33.9237, lng: 18.4140,
+    photo: '../photos/bo-kaap.webp',
+    tag: 'Culture',
+    quote: 'Go early morning for photos before the crowds arrive. Incredible Cape Malay history.',
+    desc: 'The colourful heart of Cape Town\'s Cape Malay community. These cobblestone streets tell the story of the slaves brought from Malaysia, Indonesia, and other parts of Africa. The spice shops and mosques are extraordinary.',
+    tips: ['Arrive before 8am for photos without crowds', 'The Bo-Kaap Museum is small but worth 45 minutes', 'Try a koeksister from a local bakery', 'Noon Gun fires daily at 12pm from Signal Hill — watch from here'],
+    duration: '1–2 hrs', price: 'Free', booking: null
+  },
+  {
+    id: 'waterfront', cat: 'experiences', emoji: '⭐',
+    name: 'V&A Waterfront', lat: -33.9049, lng: 18.4204,
+    photo: '../photos/waterfront.jpeg',
+    tag: 'Iconic Experience',
+    quote: 'Come for the atmosphere and a sundowner. But eat on Bree Street instead.',
+    desc: 'Cape Town\'s iconic working harbour, now a world-class mixed-use development. The Table Mountain backdrop from the water is one of the great views on earth. The Two Oceans Aquarium is excellent for families.',
+    tips: ['Best at sunset — grab a drink at one of the harbour bars', 'The Two Oceans Aquarium is world-class', 'Robben Island ferry departs from here — book ahead', 'Eat dinner on Bree Street — better food, half the price'],
+    duration: '2–3 hrs', price: 'Free', booking: null
+  },
+
+  // HIDDEN GEMS
+  {
+    id: 'beta-beach', cat: 'hidden', emoji: '💎',
+    name: 'Beta Beach, Bakoven', lat: -33.9510, lng: 18.3715,
+    photo: '../photos/llandudno-beach.jpg',
+    tag: 'Hidden Gem',
+    quote: 'Secret cove between Camps Bay and Clifton. Almost private. Bring beach shoes.',
+    desc: 'A hidden gem that almost no tourist ever finds. Scramble down the rocks from Bakoven and you\'ll find a crystal-clear tidal pool and secluded cove that feels like your own private beach.',
+    tips: ['Park on Victoria Road and scramble down the rocks', 'Bring beach shoes — rocky path down', 'Goes to shade after 3pm — morning is best', 'Almost no tourists — locals only'],
+    duration: '2–3 hrs', price: 'Free', booking: null
+  },
+  {
+    id: 'llandudno', cat: 'hidden', emoji: '💎',
+    name: 'Llandudno Beach', lat: -34.0027, lng: 18.3430,
+    photo: '../photos/llandudno-beach.jpg',
+    tag: 'Hidden Gem',
+    quote: 'Same mountain backdrop as Camps Bay. A fraction of the people. Dramatic granite boulders.',
+    desc: 'The most beautiful beach in Cape Town that nobody tells you about. Dramatic granite boulders, turquoise water, mountain backdrop — and a fraction of the crowds of Camps Bay just minutes away.',
+    tips: ['No restaurants or facilities — bring your own food and water', 'Strong shore break — not ideal for weak swimmers', 'Sunset here is extraordinary — bring a bottle of wine', 'Baboon sightings are possible — keep food hidden'],
+    duration: '2–4 hrs', price: 'Free', booking: null
+  },
+  {
+    id: 'diemersdal', cat: 'wine', emoji: '🍷',
+    name: 'Diemersdal Wine Estate', lat: -33.8283, lng: 18.6167,
+    photo: '../photos/wine-barrel.jpeg',
+    tag: 'Wine',
+    quote: '20 minutes from the city. Meet the winemaker personally. Zero tourist buses.',
+    desc: 'The best wine estate almost no tourist visits. Just 20 minutes from the city centre, Diemersdal produces exceptional Sauvignon Blanc and Pinotage. The owner Thys Louw is often personally present for tastings.',
+    tips: ['Call ahead — the winemaker sometimes does private tastings', 'Try the MM Louw Sauvignon Blanc — world-class', 'Combine with other Durbanville estates for a full day', 'No tour buses — only locals and those in the know'],
+    duration: '2–3 hrs', price: 'R80–150 tasting', booking: 'https://www.diemersdal.co.za'
+  },
+  {
+    id: 'noordhoek-snorkel', cat: 'hidden', emoji: '💎',
+    name: 'Noordhoek Snorkelling', lat: -34.0855, lng: 18.3680,
+    photo: '../photos/rock-ledge.jpeg',
+    tag: 'Hidden Gem',
+    quote: 'Same kelp forests as My Octopus Teacher. Extraordinary underwater experience.',
+    desc: 'The very same kelp forests that made the Oscar-winning documentary My Octopus Teacher were filmed right here. The marine life is extraordinary — octopus, fish, sea urchins, and on lucky days, seals.',
+    tips: ['Water is cold year-round — wetsuit essential', 'Vis Hoek is the best entry point', 'Go on a calm day — swell makes it dangerous', 'Combine with Noordhoek Farm Village for lunch'],
+    duration: '2–3 hrs', price: 'Free', booking: null
+  },
+
+  // FOOD
+  {
+    id: 'black-sheep', cat: 'food', emoji: '🍽️',
+    name: 'The Black Sheep', lat: -33.9305, lng: 18.4155,
+    photo: '../photos/restaurant.jpeg',
+    tag: 'Restaurant',
+    quote: 'Locals\' favourite. No tourists. Exceptional food. Book ahead.',
+    desc: 'Tamboerskloof\'s best-kept secret. A neighbourhood restaurant that locals protect fiercely. The menu changes regularly, the wine list is brilliant, and Wednesday nights are legendary.',
+    tips: ['Book at least 3 days ahead — always full', 'Wednesday night is their special menu night', 'The wine list is exceptional and fairly priced', 'Small restaurant — intimate, not for large groups'],
+    duration: '2 hrs', price: 'R400–600 pp', booking: 'https://www.theblacksheep.co.za'
+  },
+  {
+    id: 'bree-street', cat: 'food', emoji: '🍽️',
+    name: 'Bree Street', lat: -33.9232, lng: 18.4188,
+    photo: '../photos/bree-street.jpg',
+    tag: 'Food Street',
+    quote: 'Where Cape Town actually eats. Not the Waterfront.',
+    desc: 'The beating heart of Cape Town\'s food scene. From Wren to Superette to Bocca to Tjing Tjing — this one street has more quality restaurants per metre than anywhere else in Africa.',
+    tips: ['Go on a weekday evening — weekends get very busy', 'No single must-do — explore and choose by vibe', 'Superette for breakfast is exceptional', 'Walk the full length before deciding where to eat'],
+    duration: '2–3 hrs', price: 'R200–500 pp', booking: null
+  },
+  {
+    id: 'pot-luck-club', cat: 'food', emoji: '🍽️',
+    name: 'The Pot Luck Club', lat: -33.9275, lng: 18.4447,
+    photo: '../photos/neighbourgoods-market.jpg',
+    tag: 'Restaurant',
+    quote: 'Rooftop Biscuit Mill. Innovative small plates. Incredible wine list.',
+    desc: 'Luke Dale-Roberts\' iconic rooftop restaurant atop the Old Biscuit Mill in Woodstock. Small plates, big flavours, and one of the best views of the city. A Cape Town institution.',
+    tips: ['Book 2+ weeks ahead — one of the hottest tables in the city', 'Rooftop terrace is best on a clear evening', 'Small plates — order 4–5 per person', 'The wine list is extraordinary — ask the sommelier'],
+    duration: '2–3 hrs', price: 'R600–900 pp', booking: 'https://www.thepotluckclub.co.za'
+  },
+  {
+    id: 'neighbourgoods', cat: 'food', emoji: '🛒',
+    name: 'Neighbourgoods Market', lat: -33.9270, lng: 18.4440,
+    photo: '../photos/neighbourgoods-market.jpg',
+    tag: 'Market',
+    quote: 'Cape Town\'s best food market. Every Saturday 9am–2pm. Go early for parking.',
+    desc: 'The Old Biscuit Mill in Woodstock hosts Cape Town\'s finest Saturday market. Local artisan food, coffee roasters, craft beer, vinyl records, and the energy of Cape Town\'s creative class.',
+    tips: ['Saturdays only, 9am–2pm — closes exactly at 2pm', 'Arrive early — parking and popular stalls fill fast', 'The coffee roasters here are world-class', 'Combine with a walk around Woodstock street art'],
+    duration: '2–3 hrs', price: 'Free entry', booking: null
+  },
+
+  // BEACHES
+  {
+    id: 'clifton-4th', cat: 'beaches', emoji: '🏖️',
+    name: 'Clifton 4th Beach', lat: -33.9393, lng: 18.3760,
+    photo: '../photos/camps-bay.webp',
+    tag: 'Beach',
+    quote: 'Most beautiful, protected from wind, fashionable. Cape Town\'s Copacabana.',
+    desc: 'The most glamorous beach in Cape Town. Protected by granite boulders from the infamous Cape Doctor wind, it\'s sheltered, crystal clear, and full of beautiful people. The water is freezing — blame the Benguela Current.',
+    tips: ['Water is cold year-round — 12–16°C even in summer', 'Protected from the SE wind when everywhere else is a sandstorm', 'No parking nearby — walk from Camps Bay or Clifton', 'Busiest on summer weekends — go on weekday mornings'],
+    duration: '2–4 hrs', price: 'Free', booking: null
+  },
+  {
+    id: 'camps-bay-beach', cat: 'beaches', emoji: '🏖️',
+    name: 'Camps Bay Beach', lat: -33.9495, lng: 18.3762,
+    photo: '../photos/camps-bay.webp',
+    tag: 'Beach',
+    quote: 'Most famous, mountain backdrop, crowded weekends. Best for sundowners.',
+    desc: 'Iconic. The Twelve Apostles mountain range as a backdrop, white sand, and the strip of restaurants and bars make this Cape Town\'s most photographed beach. Come for sunset with a cold drink.',
+    tips: ['Comes alive at sunset — the strip bars are perfect', 'Very windy on SE wind days — check forecast', 'The beach itself is free — the bars and restaurants are pricey', 'Park on Victoria Road and walk down'],
+    duration: '2–4 hrs', price: 'Free', booking: null
+  },
+
+  // HIKES
+  {
+    id: 'lions-head', cat: 'hikes', emoji: '🥾',
+    name: "Lion's Head", lat: -33.9386, lng: 18.3979,
+    photo: '../photos/dirk-lions-head.jpeg',
+    tag: 'Hike',
+    quote: 'Before 7am on weekdays. Full moon hike is bucket-list. 2 hrs circular.',
+    desc: 'Cape Town\'s most iconic hike. The circular trail around and over this distinctive peak gives 360° views of the city, ocean, and Table Mountain. The full moon hike is one of the great experiences on earth.',
+    tips: ['Start before 7am on weekdays to have it almost to yourself', 'Full moon hike is free — check dates and book your parking spot', 'Chains and ladders help on the steeper sections — not suitable for vertigo sufferers', 'Signal Hill Road parking — arrive early'],
+    duration: '2 hrs', price: 'Free', booking: null
+  },
+  {
+    id: 'signal-hill', cat: 'hikes', emoji: '🥾',
+    name: 'Signal Hill Sunset Walk', lat: -33.9222, lng: 18.3999,
+    photo: '../photos/Signal-Hill.webp',
+    tag: 'Hike',
+    quote: 'Easy sunset walk. 30 minutes. Spectacular views. Bring a bottle of wine.',
+    desc: 'The easiest and most rewarding sunset spot in Cape Town. Drive or walk to the top, find your spot on the grass, open a bottle of local wine, and watch the sun drop into the Atlantic.',
+    tips: ['Drive or walk — accessible for all fitness levels', 'Noon Gun fires daily at 12pm — spectacular if you time it', 'Bring a picnic — locals gather here every evening in summer', 'Stay for the city lights after dark — stunning'],
+    duration: '30 min–2 hrs', price: 'Free', booking: null
+  },
+  {
+    id: 'chapmans-peak', cat: 'hikes', emoji: '🥾',
+    name: "Chapman's Peak", lat: -34.0542, lng: 18.3618,
+    photo: '../photos/chapmans-peak.jpeg',
+    tag: 'Hike & Drive',
+    quote: 'Drive or hike. Both ways. Leave before 8am.',
+    desc: 'Nine kilometres of pure drama carved into sheer cliffs above the Atlantic. Whether you drive or hike, Chapman\'s Peak is one of the great coastal experiences anywhere in the world.',
+    tips: ['Drive both ways — north to south and back', 'Leave before 8am to beat the tour buses', 'The hiking trail runs parallel to the road — do both', 'Stop at the viewpoint halfway for the best photo'],
+    duration: '1–4 hrs', price: 'R57 toll', booking: null
+  },
+
+  // WINE
+  {
+    id: 'franschhoek', cat: 'wine', emoji: '🍷',
+    name: 'Franschhoek', lat: -33.9100, lng: 19.1208,
+    photo: '../photos/winelands.webp',
+    tag: 'Wine Village',
+    quote: 'Wine tram, best food, most beautiful village in the Cape.',
+    desc: 'The gastronomic capital of South Africa. French Huguenot architecture, the wine tram connecting 20+ estates, and Franschhoek\'s main street packed with world-class restaurants.',
+    tips: ['The wine tram is touristy but genuinely fun — book ahead', 'La Petite Ferme for lunch with a valley view', 'Avoid weekends in peak season — overwhelming', 'Rent a bike and explore the valley independently'],
+    duration: 'Full day', price: 'R250–500 wine tram', booking: 'https://www.winetram.co.za'
+  },
+  {
+    id: 'groot-constantia', cat: 'wine', emoji: '🍷',
+    name: 'Groot Constantia', lat: -34.0271, lng: 18.4310,
+    photo: '../photos/Groot Constantia.jpeg',
+    tag: 'Wine Estate',
+    quote: 'South Africa\'s oldest wine estate. 20 minutes from the city. Stunning Cape Dutch architecture.',
+    desc: 'Founded in 1685, Groot Constantia is South Africa\'s oldest wine-producing estate. The Cape Dutch homestead is one of the finest examples of colonial architecture in the country.',
+    tips: ['The Simon van der Stel Museum inside the manor is worth seeing', 'Jonkershuis restaurant is excellent for lunch', 'Just 20 minutes from the city — easy half-day trip', 'The Gouverneurs Reserve is their flagship wine'],
+    duration: '2–3 hrs', price: 'R120 tasting', booking: 'https://www.grootconstantia.co.za'
+  },
+
+  // CULTURE
+  {
+    id: 'woodstock', cat: 'culture', emoji: '🏛️',
+    name: 'Woodstock Street Art', lat: -33.9297, lng: 18.4502,
+    photo: '../photos/woodstock.webp',
+    tag: 'Culture',
+    quote: 'Street art, Old Biscuit Mill, Cape Town\'s creative heartbeat.',
+    desc: 'Cape Town\'s most creative neighbourhood. Albert Road is a gallery without walls — giant murals by world-class street artists cover every surface. The transformation of this old industrial area is extraordinary.',
+    tips: ['Start at the Old Biscuit Mill and walk Albert Road', 'The Woodstock Exchange is full of independent designers', 'Best explored on foot — 2km stretch', 'Combine with Neighbourgoods Market on Saturdays'],
+    duration: '2–3 hrs', price: 'Free', booking: null
+  },
+  {
+    id: 'kirstenbosch', cat: 'culture', emoji: '🏛️',
+    name: 'Kirstenbosch Gardens', lat: -33.9879, lng: 18.4322,
+    photo: '../photos/kirstenbosch.webp',
+    tag: 'Culture & Nature',
+    quote: 'One of the great botanical gardens of the world. Sunday sunset concerts are legendary.',
+    desc: 'Set on the eastern slopes of Table Mountain, Kirstenbosch is one of the world\'s great botanical gardens. 7,000 plant species, the famous Boomslang canopy walkway, and Sunday summer concerts.',
+    tips: ['Summer sunset concerts (Nov–Apr) — bring a picnic and blanket', 'The Boomslang canopy walkway gives a different perspective', 'Go at opening time for the best light and fewest people', 'The fynbos section is unique — found nowhere else on earth'],
+    duration: '2–4 hrs', price: 'R220', booking: 'https://www.sanbi.org/gardens/kirstenbosch'
+  }
+];
+
+// ── CATEGORY COLOURS ──
+const catColor = {
+  experiences: '#C9A96E',
+  hidden:      '#4A7C59',
+  food:        '#C0553A',
+  beaches:     '#3A8FC0',
+  hikes:       '#7C4A7C',
+  wine:        '#8B3A62',
+  culture:     '#6E7C4A'
+};
+
+// ── INIT MAP ──
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/dark-v11',
+  center: [18.4241, -33.9249],
+  zoom: 11,
+  pitch: 30,
+  bearing: -10
+});
+
+map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+let markers = [];
+let activeMarkerEl = null;
+
+function buildMarkers(filter = 'all') {
+  markers.forEach(m => m.remove());
+  markers = [];
+
+  const filtered = filter === 'all' ? locations : locations.filter(l => l.cat === filter);
+
+  filtered.forEach(loc => {
+    const el = document.createElement('div');
+    el.className = 'marker';
+    el.style.background = catColor[loc.cat] || '#C9A96E';
+    el.innerHTML = loc.emoji;
+    el.title = loc.name;
+
+    el.addEventListener('click', () => {
+      if (activeMarkerEl) activeMarkerEl.classList.remove('selected');
+      el.classList.add('selected');
+      activeMarkerEl = el;
+      openPanel(loc);
+      map.flyTo({ center: [loc.lng, loc.lat], zoom: 13.5, duration: 800 });
+    });
+
+    const marker = new mapboxgl.Marker(el)
+      .setLngLat([loc.lng, loc.lat])
+      .addTo(map);
+
+    markers.push(marker);
+  });
+}
+
+// ── OPEN INFO PANEL ──
+function openPanel(loc) {
+  document.getElementById('panelPhoto').style.backgroundImage = `url('${loc.photo}')`;
+  document.getElementById('panelCat').textContent = loc.tag;
+  document.getElementById('panelCat').className = `panel-category tag-${loc.cat}`;
+  document.getElementById('panelTitle').textContent = loc.name;
+  document.getElementById('panelQuote').textContent = `"${loc.quote}"`;
+  document.getElementById('panelDesc').textContent = loc.desc;
+
+  const meta = document.getElementById('panelMeta');
+  let metaHTML = '';
+  if (loc.duration) metaHTML += `<span>⏱ ${loc.duration}</span>`;
+  if (loc.price) metaHTML += `<span>💰 ${loc.price}</span>`;
+  meta.innerHTML = metaHTML;
+
+  const tipsEl = document.getElementById('panelTips');
+  if (loc.tips && loc.tips.length) {
+    tipsEl.innerHTML = `<h4>Dirk's Insider Tips</h4>` + loc.tips.map(t => `<div class="panel-tip">${t}</div>`).join('');
+    tipsEl.style.display = 'block';
+  } else {
+    tipsEl.style.display = 'none';
+  }
+
+  const actions = document.getElementById('panelActions');
+  let actHTML = '';
+  if (loc.booking) {
+    actHTML += `<a href="${loc.booking}" target="_blank" class="btn-primary">Book This Experience →</a>`;
+  }
+  actHTML += `<button class="btn-secondary" onclick="closePanel()">← Back to Map</button>`;
+  actions.innerHTML = actHTML;
+
+  document.getElementById('infoPanel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('infoPanel').classList.remove('open');
+  if (activeMarkerEl) { activeMarkerEl.classList.remove('selected'); activeMarkerEl = null; }
+}
+
+document.getElementById('panelClose').addEventListener('click', closePanel);
+
+// ── FILTERS ──
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    buildMarkers(cat);
+    closePanel();
+  });
+});
+
+// ── SEARCH ──
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  if (!q) { buildMarkers('all'); return; }
+  const filtered = locations.filter(l =>
+    l.name.toLowerCase().includes(q) ||
+    l.tag.toLowerCase().includes(q) ||
+    l.desc.toLowerCase().includes(q) ||
+    l.quote.toLowerCase().includes(q) ||
+    (l.tips && l.tips.some(t => t.toLowerCase().includes(q)))
+  );
+  markers.forEach(m => m.remove());
+  markers = [];
+  filtered.forEach(loc => {
+    const el = document.createElement('div');
+    el.className = 'marker';
+    el.style.background = catColor[loc.cat] || '#C9A96E';
+    el.innerHTML = loc.emoji;
+    el.addEventListener('click', () => {
+      if (activeMarkerEl) activeMarkerEl.classList.remove('selected');
+      el.classList.add('selected');
+      activeMarkerEl = el;
+      openPanel(loc);
+      map.flyTo({ center: [loc.lng, loc.lat], zoom: 13.5, duration: 800 });
+    });
+    const marker = new mapboxgl.Marker(el).setLngLat([loc.lng, loc.lat]).addTo(map);
+    markers.push(marker);
+  });
+  if (filtered.length === 1) {
+    map.flyTo({ center: [filtered[0].lng, filtered[0].lat], zoom: 13, duration: 800 });
+    openPanel(filtered[0]);
+  }
+});
+
+// ── INIT ──
+map.on('load', () => {
+  buildMarkers('all');
+});
+</script>
+</body>
+</html>
