@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurants & Food · Planet Uncharted Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean: #1B3A4B;
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --rust: #C0553A;
+      --rust-light: #e07a5a;
+      --rust-dim: rgba(192,85,58,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.9);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--rust); color: var(--rust-light); background: rgba(192,85,58,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 70vh; min-height: 480px;
+      background: url('../photos/bree-street.jpg') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.15) 0%, rgba(15,36,48,0.92) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--rust-light); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px, 6vw, 76px); font-weight: 300; line-height: 1.0; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--rust-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 500px; }
+    .hero-rule { position: absolute; bottom: 40px; right: 60px; background: rgba(192,85,58,0.12); border: 1px solid rgba(224,122,90,0.3); backdrop-filter: blur(12px); border-radius: 10px; padding: 14px 20px; max-width: 220px; }
+    .hero-rule-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--rust-light); margin-bottom: 5px; }
+    .hero-rule-text { font-size: 12px; color: var(--white-dim); line-height: 1.5; font-style: italic; }
+
+    /* ── DIRK'S RULE ── */
+    .dirks-rule {
+      background: linear-gradient(135deg, rgba(192,85,58,0.08), transparent);
+      border-bottom: 1px solid rgba(192,85,58,0.12);
+      padding: 40px 60px; display: flex; align-items: center; gap: 32px;
+    }
+    .rule-icon { font-size: 40px; flex-shrink: 0; }
+    .rule-text { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--white); line-height: 1.5; }
+    .rule-text strong { color: var(--rust-light); font-style: normal; }
+
+    /* ── CATEGORY TABS ── */
+    .cat-tabs { display: flex; gap: 4px; padding: 24px 60px 0; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .cat-tab { padding: 10px 20px; font-size: 12px; font-weight: 500; color: var(--white-dim); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .cat-tab:hover { color: var(--white); }
+    .cat-tab.active { color: var(--rust-light); border-bottom-color: var(--rust); }
+
+    /* ── RESTAURANT LIST ── */
+    .restaurants { padding: 40px 60px 80px; }
+
+    /* FEATURED RESTAURANT */
+    .restaurant-featured {
+      display: grid; grid-template-columns: 1.1fr 1fr;
+      min-height: 480px; margin-bottom: 3px;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .restaurant-featured.visible { opacity: 1; transform: translateY(0); }
+
+    .feat-photo { position: relative; overflow: hidden; }
+    .feat-photo-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .restaurant-featured:hover .feat-photo-bg { transform: scale(1.04); }
+    .feat-photo-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,36,48,0.2), transparent 60%); }
+    .feat-badge { position: absolute; top: 20px; left: 20px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(192,85,58,0.4); border-radius: 20px; padding: 5px 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rust-light); }
+    .feat-status { position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 6px; background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 5px 14px; font-size: 11px; font-weight: 500; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .status-open { background: #4CAF50; box-shadow: 0 0 6px rgba(76,175,80,0.5); }
+    .status-closed { background: #f44336; }
+    .status-unknown { background: var(--gold); }
+
+    .feat-content { background: var(--ocean-mid); padding: 44px; display: flex; flex-direction: column; justify-content: center; border: 1px solid rgba(192,85,58,0.1); }
+    .feat-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--rust-light); margin-bottom: 12px; }
+    .feat-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 400; line-height: 1.15; margin-bottom: 8px; }
+    .feat-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; font-size: 12px; color: var(--white-faint); }
+    .feat-meta span { display: flex; align-items: center; gap: 5px; }
+
+    .dirk-quote { padding: 14px 18px; margin-bottom: 18px; background: rgba(192,85,58,0.07); border-left: 2px solid var(--rust); border-radius: 0 8px 8px 0; }
+    .dirk-quote-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--rust-light); margin-bottom: 5px; }
+    .dirk-quote-text { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--white); line-height: 1.5; }
+
+    .feat-desc { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 20px; }
+
+    .tips-list { margin-bottom: 24px; }
+    .tips-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--rust-light); margin-bottom: 8px; }
+    .tip-item { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); margin-bottom: 6px; line-height: 1.5; }
+    .tip-arrow { color: var(--rust-light); flex-shrink: 0; }
+
+    .feat-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-book { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; background: var(--rust); color: var(--white); border-radius: 6px; font-weight: 600; font-size: 12px; text-decoration: none; transition: background 0.2s; border: none; cursor: pointer; }
+    .btn-book:hover { background: var(--rust-light); }
+    .btn-map { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; background: transparent; color: var(--white); border-radius: 6px; font-weight: 500; font-size: 12px; text-decoration: none; border: 1px solid rgba(192,85,58,0.35); transition: all 0.2s; cursor: pointer; }
+    .btn-map:hover { border-color: var(--rust-light); color: var(--rust-light); }
+
+    /* ── RESTAURANT GRID ── */
+    .restaurant-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 3px; }
+
+    .rest-card {
+      background: var(--ocean-mid); padding: 28px;
+      border: 1px solid rgba(201,169,110,0.07);
+      display: flex; flex-direction: column; gap: 12px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.2s;
+    }
+    .rest-card.visible { opacity: 1; transform: translateY(0); }
+    .rest-card:hover { border-color: rgba(192,85,58,0.25); }
+    .rest-card:nth-child(2) { transition-delay: 0.08s; }
+    .rest-card:nth-child(3) { transition-delay: 0.16s; }
+    .rest-card:nth-child(4) { transition-delay: 0.24s; }
+    .rest-card:nth-child(5) { transition-delay: 0.32s; }
+
+    .rest-photo { width: 100%; height: 160px; border-radius: 6px; background-size: cover; background-position: center; position: relative; overflow: hidden; }
+    .rest-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,28,40,0.6), transparent); }
+
+    .rest-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .rest-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; line-height: 1.2; }
+    .rest-tag { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 10px; background: rgba(192,85,58,0.12); color: var(--rust-light); white-space: nowrap; flex-shrink: 0; }
+
+    .rest-quote { font-size: 12px; color: var(--white-dim); font-style: italic; line-height: 1.5; border-left: 1px solid var(--rust-dim); padding-left: 10px; }
+    .rest-meta { display: flex; gap: 12px; font-size: 11px; color: var(--white-faint); flex-wrap: wrap; }
+    .rest-status { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; }
+    .rest-actions { display: flex; gap: 8px; margin-top: auto; }
+    .btn-sm-book { padding: 8px 14px; background: var(--rust); color: var(--white); border-radius: 5px; font-size: 11px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .btn-sm-book:hover { background: var(--rust-light); }
+    .btn-sm-map { padding: 8px 14px; background: transparent; color: var(--white-dim); border-radius: 5px; font-size: 11px; border: 1px solid rgba(201,169,110,0.2); text-decoration: none; transition: all 0.2s; }
+    .btn-sm-map:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── BREE STREET SPECIAL ── */
+    .bree-strip {
+      margin-top: 60px; position: relative; overflow: hidden;
+      border-radius: 16px; min-height: 280px;
+      background: url('../photos/bree-street.jpg') center/cover no-repeat;
+    }
+    .bree-strip::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,36,48,0.92) 50%, rgba(15,36,48,0.5)); }
+    .bree-content { position: relative; z-index: 2; padding: 48px; max-width: 600px; }
+    .bree-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--rust-light); margin-bottom: 12px; }
+    .bree-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
+    .bree-title em { font-style: italic; color: var(--gold); }
+    .bree-text { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 20px; }
+    .bree-spots { display: flex; flex-wrap: wrap; gap: 8px; }
+    .bree-spot { padding: 6px 14px; border-radius: 20px; background: rgba(201,169,110,0.1); border: 1px solid var(--gold-dim); font-size: 12px; color: var(--gold); }
+
+    /* ── MARKETS ROW ── */
+    .markets-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 3px; }
+    .market-card { position: relative; min-height: 280px; overflow: hidden; }
+    .market-photo { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.6s ease; }
+    .market-card:hover .market-photo { transform: scale(1.05); }
+    .market-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,28,40,0.95) 0%, rgba(10,28,40,0.3) 60%, transparent); }
+    .market-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; }
+    .market-tag { display: inline-block; margin-bottom: 8px; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 10px; background: rgba(201,169,110,0.15); color: var(--gold); }
+    .market-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 6px; }
+    .market-quote { font-size: 12px; color: var(--white-dim); font-style: italic; line-height: 1.5; margin-bottom: 10px; }
+    .market-meta { display: flex; gap: 12px; font-size: 11px; color: var(--white-faint); }
+
+    /* ── CTA ── */
+    .cta-strip { margin-top: 60px; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--rust-light); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .hero-rule { display: none; }
+      .dirks-rule { padding: 32px 24px; flex-direction: column; gap: 16px; }
+      .cat-tabs { padding: 16px 24px 0; overflow-x: auto; scrollbar-width: none; }
+      .restaurants { padding: 32px 24px 60px; }
+      .restaurant-featured { grid-template-columns: 1fr; }
+      .feat-photo { min-height: 260px; }
+      .feat-content { padding: 32px 24px; }
+      .restaurant-grid { grid-template-columns: 1fr; }
+      .markets-row { grid-template-columns: 1fr; }
+      .bree-content { padding: 32px 24px; }
+      .cta-strip { flex-direction: column; padding: 32px 24px; }
+    }
+    @media (max-width: 1100px) {
+      .restaurant-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="food.html" class="sidebar-item active"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="#" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="#" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="#" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="#" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="#" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="#" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="#" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="#" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="#" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Uncharted · Eat & Drink</div>
+      <h1 class="hero-title">Where Cape Town<br><em>Actually Eats</em></h1>
+      <p class="hero-sub">Not the tourist traps. Not the Waterfront. The restaurants, streets, and markets where locals go — with Dirk's honest take on every one.</p>
+    </div>
+    <div class="hero-rule">
+      <div class="hero-rule-label">🔑 Dirk's Rule #1</div>
+      <div class="hero-rule-text">"If you can see Table Mountain from the restaurant terrace, the food is probably average and the bill is definitely not."</div>
+    </div>
+  </div>
+
+  <!-- DIRK'S RULE -->
+  <div class="dirks-rule">
+    <div class="rule-icon">🍽️</div>
+    <div class="rule-text">"The best food in Cape Town is on <strong>Bree Street</strong>, not the Waterfront. The best value is in <strong>Woodstock</strong>. The best experience is the <strong>restaurant nobody told you about</strong>. This section is all three."</div>
+  </div>
+
+  <!-- CATEGORY TABS -->
+  <div class="cat-tabs">
+    <div class="cat-tab active">All</div>
+    <div class="cat-tab">Fine Dining</div>
+    <div class="cat-tab">Neighbourhood Gems</div>
+    <div class="cat-tab">Casual & Local</div>
+    <div class="cat-tab">Markets</div>
+    <div class="cat-tab">Seafood</div>
+  </div>
+
+  <!-- RESTAURANTS -->
+  <div class="restaurants">
+
+    <!-- FEATURED: THE BLACK SHEEP -->
+    <div class="restaurant-featured" id="rest-1">
+      <div class="feat-photo">
+        <div class="feat-photo-bg" style="background-image: url('../photos/restaurant.jpeg')"></div>
+        <div class="feat-photo-overlay"></div>
+        <div class="feat-badge">⭐ Dirk's #1 Pick</div>
+        <div class="feat-status">
+          <div class="status-dot status-open"></div>
+          <span>Open now</span>
+        </div>
+      </div>
+      <div class="feat-content">
+        <div class="feat-eyebrow">Neighbourhood Gem · Tamboerskloof</div>
+        <h2 class="feat-title">The Black Sheep</h2>
+        <div class="feat-meta">
+          <span>📍 Tamboerskloof</span>
+          <span>💰 R400–600 pp</span>
+          <span>⏱ Book 3+ days ahead</span>
+          <span>🌟 Locals' favourite</span>
+        </div>
+        <div class="dirk-quote">
+          <div class="dirk-quote-label">Dirk's Take</div>
+          <div class="dirk-quote-text">"Locals' favourite, zero tourists, exceptional food. Wednesday night is their special menu — it's legendary. Book at least three days ahead or you won't get in."</div>
+        </div>
+        <p class="feat-desc">Tucked into a quiet Tamboerskloof street, The Black Sheep is what every neighbourhood restaurant aspires to be. The menu changes regularly, the wine list is brilliant and fairly priced, and the Wednesday night special menu has a genuine cult following among Cape Town food lovers.</p>
+        <div class="tips-list">
+          <div class="tips-label">Insider Tips</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Book Wednesday for their special menu — the best value fine dining in the city</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Small restaurant — intimate atmosphere, not for large groups over 4</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> The wine list is exceptional — ask for the sommelier's recommendation</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> No tourists. You'll be surrounded entirely by locals — that's the point</div>
+        </div>
+        <div class="feat-actions">
+          <a href="https://www.theblacksheep.co.za" target="_blank" class="btn-book">Reserve a Table →</a>
+          <a href="map.html" class="btn-map">🗺 View on Map</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESTAURANT GRID -->
+    <div class="restaurant-grid">
+
+      <!-- KLOOFSTREET HOUSE -->
+      <div class="rest-card" id="rest-2">
+        <div class="rest-photo" style="background-image: url('../photos/restaurant.jpeg')">
+          <div class="rest-photo-overlay"></div>
+        </div>
+        <div class="rest-header">
+          <div class="rest-name">Kloofstreet House</div>
+          <div class="rest-tag">Fine Dining</div>
+        </div>
+        <div class="rest-quote">"Romantic Victorian manor, imaginative menu. One of the most beautiful restaurant settings in the city. Book ahead."</div>
+        <div class="rest-meta">
+          <span>📍 Gardens</span>
+          <span>💰 R500–800 pp</span>
+        </div>
+        <div class="rest-status">
+          <div class="status-dot status-open"></div>
+          <span style="color: #4CAF50; font-size:11px;">Open now</span>
+        </div>
+        <div class="rest-actions">
+          <a href="https://www.kloofstreethouse.com" target="_blank" class="btn-sm-book">Reserve →</a>
+          <a href="map.html" class="btn-sm-map">Map</a>
+        </div>
+      </div>
+
+      <!-- THE POT LUCK CLUB -->
+      <div class="rest-card" id="rest-3">
+        <div class="rest-photo" style="background-image: url('../photos/woodstock.webp')">
+          <div class="rest-photo-overlay"></div>
+        </div>
+        <div class="rest-header">
+          <div class="rest-name">The Pot Luck Club</div>
+          <div class="rest-tag">Small Plates</div>
+        </div>
+        <div class="rest-quote">"Rooftop Biscuit Mill, innovative small plates, incredible wine list. A Cape Town institution. Book 2+ weeks ahead."</div>
+        <div class="rest-meta">
+          <span>📍 Woodstock</span>
+          <span>💰 R600–900 pp</span>
+        </div>
+        <div class="rest-status">
+          <div class="status-dot status-open"></div>
+          <span style="color: #4CAF50; font-size:11px;">Open now</span>
+        </div>
+        <div class="rest-actions">
+          <a href="https://www.thepotluckclub.co.za" target="_blank" class="btn-sm-book">Reserve →</a>
+          <a href="map.html" class="btn-sm-map">Map</a>
+        </div>
+      </div>
+
+      <!-- MELKBOS KITCHEN -->
+      <div class="rest-card" id="rest-4">
+        <div class="rest-photo" style="background-image: url('../photos/restaurant.jpeg')">
+          <div class="rest-photo-overlay"></div>
+        </div>
+        <div class="rest-header">
+          <div class="rest-name">Melkbos Kitchen</div>
+          <div class="rest-tag">Seafood · Local</div>
+        </div>
+        <div class="rest-quote">"30 min north of the city. Freshest seafood in Cape Town. Almost no tourists. Locals only. The kind of place you stumble on and never forget."</div>
+        <div class="rest-meta">
+          <span>📍 Melkbosstrand</span>
+          <span>💰 R300–500 pp</span>
+        </div>
+        <div class="rest-status">
+          <div class="status-dot status-unknown"></div>
+          <span style="color: var(--gold); font-size:11px;">Call ahead</span>
+        </div>
+        <div class="rest-actions">
+          <a href="map.html" class="btn-sm-map">View on Map</a>
+        </div>
+      </div>
+
+      <!-- KALK BAY HARBOUR -->
+      <div class="rest-card" id="rest-5">
+        <div class="rest-photo" style="background-image: url('../photos/waterfront.jpeg')">
+          <div class="rest-photo-overlay"></div>
+        </div>
+        <div class="rest-header">
+          <div class="rest-name">Kalk Bay Harbour</div>
+          <div class="rest-tag">Seafood · Casual</div>
+        </div>
+        <div class="rest-quote">"Fish & chips straight from the boats. No restaurant — just a harbour, a box of food, and the best view you've ever eaten with."</div>
+        <div class="rest-meta">
+          <span>📍 Kalk Bay</span>
+          <span>💰 R80–150 pp</span>
+        </div>
+        <div class="rest-status">
+          <div class="status-dot status-open"></div>
+          <span style="color: #4CAF50; font-size:11px;">Open daily</span>
+        </div>
+        <div class="rest-actions">
+          <a href="map.html" class="btn-sm-map">View on Map</a>
+        </div>
+      </div>
+
+      <!-- SUPERETTE -->
+      <div class="rest-card" id="rest-6">
+        <div class="rest-photo" style="background-image: url('../photos/bree-street.jpg')">
+          <div class="rest-photo-overlay"></div>
+        </div>
+        <div class="rest-header">
+          <div class="rest-name">Superette</div>
+          <div class="rest-tag">Breakfast · Bree St</div>
+        </div>
+        <div class="rest-quote">"The best breakfast in Cape Town. On Bree Street. Arrive early — the queue starts at 8am and it's worth every minute of the wait."</div>
+        <div class="rest-meta">
+          <span>📍 Bree Street</span>
+          <span>💰 R120–200 pp</span>
+        </div>
+        <div class="rest-status">
+          <div class="status-dot status-open"></div>
+          <span style="color: #4CAF50; font-size:11px;">Open now</span>
+        </div>
+        <div class="rest-actions">
+          <a href="map.html" class="btn-sm-map">View on Map</a>
+        </div>
+      </div>
+
+    </div><!-- end restaurant-grid -->
+
+    <!-- BREE STREET STRIP -->
+    <div class="bree-strip">
+      <div class="bree-content">
+        <div class="bree-label">Dirk's Essential Street</div>
+        <h2 class="bree-title">Bree Street —<br><em>where Cape Town actually eats</em></h2>
+        <p class="bree-text">One kilometre of the best food per metre in Africa. This is where locals go on date night, after work, and on lazy Sunday mornings. Not the Waterfront. Not the tourist strip. Bree Street.</p>
+        <div class="bree-spots">
+          <span class="bree-spot">Superette</span>
+          <span class="bree-spot">Wren</span>
+          <span class="bree-spot">Bocca</span>
+          <span class="bree-spot">Tjing Tjing</span>
+          <span class="bree-spot">Publik Wine Bar</span>
+          <span class="bree-spot">Honest Chocolate</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKETS ROW -->
+    <div class="markets-row">
+      <div class="market-card">
+        <div class="market-photo" style="background-image: url('../photos/neighbourgoods-market.jpg')"></div>
+        <div class="market-overlay"></div>
+        <div class="market-content">
+          <div class="market-tag">🛒 Saturday Market</div>
+          <div class="market-name">Neighbourgoods Market</div>
+          <div class="market-quote">"Cape Town's best food market. Every Saturday 9am–2pm at the Old Biscuit Mill. Go early for parking and the best stalls."</div>
+          <div class="market-meta"><span>📅 Saturdays 9am–2pm</span><span>📍 Woodstock</span></div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div class="market-photo" style="background-image: url('../photos/waterfront.jpeg')"></div>
+        <div class="market-overlay"></div>
+        <div class="market-content">
+          <div class="market-tag">🌿 Weekend Market</div>
+          <div class="market-name">Oranjezicht City Farm Market</div>
+          <div class="market-quote">"Granger Bay, weekends. Organic, artisan, local. The most beautiful market setting in the city with the harbour as a backdrop."</div>
+          <div class="market-meta"><span>📅 Sat & Sun mornings</span><span>📍 Granger Bay</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-text">
+        <h3>Not sure where to eat tonight?</h3>
+        <p>Tell Caipy your location, budget, and what you're in the mood for — she'll give you the perfect recommendation in seconds.</p>
+      </div>
+      <a href="index.html#caipy" class="btn-cta">Ask Caipy →</a>
+    </div>
+
+  </div><!-- end restaurants -->
+</div><!-- end main -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="#" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="#" class="bottom-nav-item"><span class="nav-icon">📖</span>My Guide</a>
+  </div>
+</nav>
+
+<script>
+  const items = document.querySelectorAll('.restaurant-featured, .rest-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  items.forEach(item => observer.observe(item));
+</script>
+
+</body>
+</html>
