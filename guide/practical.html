@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Info · Planet Uncharted Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --teal: #2A7C8A;
+      --teal-light: #5ab4c4;
+      --teal-dim: rgba(42,124,138,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.9);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--teal-light); color: var(--teal-light); background: rgba(42,124,138,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 60vh; min-height: 400px;
+      background: url('../photos/airport-welcome.jpg') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.3) 0%, rgba(15,36,48,0.95) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--teal-light); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 5.5vw, 70px); font-weight: 300; line-height: 1.05; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--teal-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 540px; }
+
+    /* ── QUICK FACTS BAR ── */
+    .facts-bar { display: grid; grid-template-columns: repeat(6, 1fr); background: rgba(15,36,48,0.98); border-bottom: 1px solid rgba(42,124,138,0.15); }
+    .fact-item { padding: 16px 14px; text-align: center; border-right: 1px solid rgba(42,124,138,0.1); }
+    .fact-item:last-child { border-right: none; }
+    .fact-val { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; color: var(--teal-light); line-height: 1; margin-bottom: 3px; }
+    .fact-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white-faint); }
+
+    /* ── CONTENT ── */
+    .content-wrap { padding: 52px 60px 80px; }
+
+    /* SECTION BLOCKS */
+    .info-section { margin-bottom: 52px; }
+    .info-section:last-of-type { margin-bottom: 0; }
+    .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(42,124,138,0.12); }
+    .section-icon { font-size: 28px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; }
+    .section-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-light); margin-top: 3px; }
+
+    /* INFO GRID */
+    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+    .info-card { background: var(--ocean-mid); padding: 24px; border: 1px solid rgba(42,124,138,0.07); }
+    .ic-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-light); margin-bottom: 8px; }
+    .ic-value { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--white); margin-bottom: 6px; }
+    .ic-note { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+
+    /* TWO-COL INFO */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+    .col-card { background: var(--ocean-mid); padding: 28px; border: 1px solid rgba(42,124,138,0.07); }
+    .col-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 14px; }
+    .col-list { display: flex; flex-direction: column; gap: 10px; }
+    .col-item { display: flex; gap: 10px; font-size: 13px; color: var(--white-dim); line-height: 1.5; align-items: flex-start; }
+    .col-item-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+    .col-item strong { color: var(--white); }
+
+    /* CURRENCY TABLE */
+    .currency-table { background: var(--ocean-mid); border: 1px solid rgba(42,124,138,0.1); border-radius: 8px; overflow: hidden; }
+    .ct-row { display: grid; grid-template-columns: 1fr 1fr 2fr; padding: 14px 20px; border-bottom: 1px solid rgba(42,124,138,0.08); align-items: center; }
+    .ct-row:last-child { border-bottom: none; }
+    .ct-row.header { background: rgba(42,124,138,0.08); }
+    .ct-head { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-light); }
+    .ct-flag { font-size: 18px; }
+    .ct-rate { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--teal-light); }
+    .ct-note { font-size: 12px; color: var(--white-dim); }
+
+    /* TIPPING GUIDE */
+    .tipping-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .tip-card { background: var(--ocean-mid); border: 1px solid rgba(42,124,138,0.07); border-radius: 8px; padding: 18px; text-align: center; }
+    .tip-who { font-size: 11px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+    .tip-amount { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--teal-light); margin-bottom: 4px; }
+    .tip-note { font-size: 10px; color: var(--white-faint); line-height: 1.5; }
+
+    /* PACKING LIST */
+    .packing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; }
+    .pack-col { background: var(--ocean-mid); padding: 24px; border: 1px solid rgba(42,124,138,0.07); }
+    .pack-col-title { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--teal-light); margin-bottom: 14px; }
+    .pack-list { display: flex; flex-direction: column; gap: 8px; }
+    .pack-item { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); align-items: center; }
+    .pack-check { width: 14px; height: 14px; border: 1px solid rgba(42,124,138,0.4); border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; color: var(--teal-light); }
+
+    /* PHRASE GUIDE */
+    .phrase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+    .phrase-col { background: var(--ocean-mid); padding: 28px; border: 1px solid rgba(42,124,138,0.07); }
+    .phrase-col-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 16px; }
+    .phrase-list { display: flex; flex-direction: column; gap: 10px; }
+    .phrase-item { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; padding-bottom: 8px; border-bottom: 1px solid rgba(42,124,138,0.06); }
+    .phrase-item:last-child { border-bottom: none; }
+    .phrase-en { color: var(--white); font-weight: 500; }
+    .phrase-af { color: var(--teal-light); font-style: italic; }
+    .phrase-meaning { font-size: 11px; color: var(--white-faint); margin-top: 2px; }
+
+    /* BEST TIME STRIP */
+    .seasons-strip { background: linear-gradient(135deg, rgba(42,124,138,0.08), transparent); border: 1px solid rgba(42,124,138,0.15); border-radius: 12px; padding: 36px; }
+    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
+    .season-card { background: var(--ocean-mid); border-radius: 8px; padding: 20px; border: 1px solid rgba(42,124,138,0.08); }
+    .season-name { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--teal-light); margin-bottom: 8px; }
+    .season-months { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--white); margin-bottom: 8px; }
+    .season-rating { display: flex; gap: 3px; margin-bottom: 8px; }
+    .star { color: var(--gold); font-size: 12px; }
+    .star.empty { color: rgba(201,169,110,0.2); }
+    .season-desc { font-size: 11px; color: var(--white-dim); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-strip { margin-top: 60px; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--teal-light); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .facts-bar { grid-template-columns: repeat(3, 1fr); }
+      .content-wrap { padding: 40px 24px 60px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .tipping-grid { grid-template-columns: 1fr 1fr; }
+      .packing-grid { grid-template-columns: 1fr; }
+      .phrase-grid { grid-template-columns: 1fr; }
+      .seasons-grid { grid-template-columns: 1fr 1fr; }
+      .cta-strip { flex-direction: column; padding: 32px 24px; }
+    }
+    @media (max-width: 1100px) {
+      .info-grid { grid-template-columns: 1fr 1fr; }
+      .facts-bar { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item active"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Uncharted · Before You Go</div>
+      <h1 class="hero-title">Everything<br><em>Practical</em></h1>
+      <p class="hero-sub">Currency, climate, flights, SIM cards, tipping, Afrikaans phrases, and the Cape Town packing list. Everything you need to know before you land.</p>
+    </div>
+  </div>
+
+  <!-- QUICK FACTS BAR -->
+  <div class="facts-bar">
+    <div class="fact-item"><div class="fact-val">ZAR</div><div class="fact-label">Currency</div></div>
+    <div class="fact-item"><div class="fact-val">UTC+2</div><div class="fact-label">Time zone</div></div>
+    <div class="fact-item"><div class="fact-val">230V</div><div class="fact-label">Electricity</div></div>
+    <div class="fact-item"><div class="fact-val">English</div><div class="fact-label">Main language</div></div>
+    <div class="fact-item"><div class="fact-val">Oct–Apr</div><div class="fact-label">Best season</div></div>
+    <div class="fact-item"><div class="fact-val">11 hrs</div><div class="fact-label">From Amsterdam</div></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-wrap">
+
+    <!-- BEST TIME TO VISIT -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">📅</div>
+        <div>
+          <div class="section-title">Best Time to Visit</div>
+          <div class="section-label">When to go — and when to avoid</div>
+        </div>
+      </div>
+      <div class="seasons-strip">
+        <div style="font-size:13px; color:var(--white-dim); line-height:1.8; max-width:660px;">Cape Town has a Mediterranean climate — hot, dry summers and mild, wet winters. The best time to visit is October to April, with December and January being peak season. Avoid January and February if you can — it's extremely crowded and expensive. The shoulder months of October–November and March–April are often the best combination of good weather and manageable crowds.</div>
+        <div class="seasons-grid">
+          <div class="season-card">
+            <div class="season-name">Summer</div>
+            <div class="season-months">Dec · Jan · Feb</div>
+            <div class="season-rating">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
+            </div>
+            <div class="season-desc">Hot and sunny. Peak crowds and prices. Book everything 3+ months ahead. SE wind can be strong.</div>
+          </div>
+          <div class="season-card">
+            <div class="season-name">Shoulder ✨</div>
+            <div class="season-months">Oct · Nov · Mar · Apr</div>
+            <div class="season-rating">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+            <div class="season-desc">Dirk's recommendation. Perfect weather, fewer crowds, reasonable prices. Best wildflowers in Sep–Oct.</div>
+          </div>
+          <div class="season-card">
+            <div class="season-name">Winter</div>
+            <div class="season-months">Jun · Jul · Aug</div>
+            <div class="season-rating">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span><span class="star empty">★</span>
+            </div>
+            <div class="season-desc">Cool and wet. Great for wine country, whale watching starts Aug. Half the price of peak season.</div>
+          </div>
+          <div class="season-card">
+            <div class="season-name">Whale Season 🐋</div>
+            <div class="season-months">Aug · Sep · Oct · Nov</div>
+            <div class="season-rating">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+            <div class="season-desc">Southern Right Whales in Walker Bay. Best wildlife experience in Cape Town. Combine with Hermanus.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GETTING THERE -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">✈️</div>
+        <div>
+          <div class="section-title">Getting There</div>
+          <div class="section-label">Flights, airport, and arrival</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="col-card">
+          <div class="col-title">Direct flights to Cape Town</div>
+          <div class="col-list">
+            <div class="col-item"><span class="col-item-icon">🇳🇱</span><div><strong>Amsterdam (AMS)</strong> — KLM direct, ~11 hrs, daily</div></div>
+            <div class="col-item"><span class="col-item-icon">🇬🇧</span><div><strong>London Heathrow (LHR)</strong> — British Airways direct, ~11.5 hrs, daily</div></div>
+            <div class="col-item"><span class="col-item-icon">🇩🇪</span><div><strong>Frankfurt (FRA)</strong> — Lufthansa direct, ~11 hrs, daily</div></div>
+            <div class="col-item"><span class="col-item-icon">🇦🇪</span><div><strong>Dubai (DXB)</strong> — Emirates connection, great option from Asia</div></div>
+            <div class="col-item"><span class="col-item-icon">🇶🇦</span><div><strong>Doha (DOH)</strong> — Qatar Airways, excellent value from Europe</div></div>
+          </div>
+        </div>
+        <div class="col-card">
+          <div class="col-title">Cape Town International Airport (CPT)</div>
+          <div class="col-list">
+            <div class="col-item"><span class="col-item-icon">📍</span><div>20 minutes from the city centre — straightforward to navigate</div></div>
+            <div class="col-item"><span class="col-item-icon">📱</span><div><strong>Get a SIM card immediately on arrival</strong> — Vodacom and MTN both have desks in arrivals</div></div>
+            <div class="col-item"><span class="col-item-icon">🚕</span><div><strong>Use Uber from the airport</strong> — never unmarked taxis. R250–350 to city centre.</div></div>
+            <div class="col-item"><span class="col-item-icon">💰</span><div>ATMs available in arrivals — withdraw ZAR before leaving the airport</div></div>
+            <div class="col-item"><span class="col-item-icon">🚗</span><div>Car rental desks in arrivals — book ahead, collect on arrival</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURRENCY -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">💰</div>
+        <div>
+          <div class="section-title">Currency & Money</div>
+          <div class="section-label">ZAR — South African Rand</div>
+        </div>
+      </div>
+      <div class="currency-table">
+        <div class="ct-row header">
+          <div class="ct-head">Currency</div>
+          <div class="ct-head">Rate (approx)</div>
+          <div class="ct-head">What R500 buys you</div>
+        </div>
+        <div class="ct-row">
+          <div style="display:flex;align-items:center;gap:10px;"><span class="ct-flag">🇪🇺</span><span style="font-size:13px;color:var(--white)">EUR → ZAR</span></div>
+          <div class="ct-rate">1 € ≈ R20</div>
+          <div class="ct-note">A good dinner for two, or 2 wine tastings, or 3 Uber trips across the city</div>
+        </div>
+        <div class="ct-row">
+          <div style="display:flex;align-items:center;gap:10px;"><span class="ct-flag">🇬🇧</span><span style="font-size:13px;color:var(--white)">GBP → ZAR</span></div>
+          <div class="ct-rate">1 £ ≈ R24</div>
+          <div class="ct-note">Cable car tickets, or a full day of eating and drinking at Boulders Beach</div>
+        </div>
+        <div class="ct-row">
+          <div style="display:flex;align-items:center;gap:10px;"><span class="ct-flag">🇺🇸</span><span style="font-size:13px;color:var(--white)">USD → ZAR</span></div>
+          <div class="ct-rate">1 $ ≈ R18</div>
+          <div class="ct-note">A craft beer at a Bree Street bar, or a fresh fish lunch at Kalk Bay harbour</div>
+        </div>
+        <div class="ct-row">
+          <div style="display:flex;align-items:center;gap:10px;"><span class="ct-flag">🇳🇱</span><span style="font-size:13px;color:var(--white)">NL visitor note</span></div>
+          <div class="ct-rate">R20 = €1</div>
+          <div class="ct-note">Cape Town is extraordinary value for Dutch visitors — everything feels very affordable</div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:16px 20px; background:rgba(42,124,138,0.06); border:1px solid rgba(42,124,138,0.15); border-radius:8px; font-size:13px; color:var(--white-dim); line-height:1.7;">
+        💡 <strong style="color:var(--white)">Dirk's money tips:</strong> Carry R500–800 cash daily for markets, car guards, and small purchases. Use credit card for restaurants and shops. Withdraw larger amounts less frequently. FNB and Standard Bank ATMs are most reliable. Dynamic currency conversion at ATMs — always choose to pay in ZAR.
+      </div>
+    </div>
+
+    <!-- TIPPING -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">🤝</div>
+        <div>
+          <div class="section-title">Tipping Guide</div>
+          <div class="section-label">What's expected, what's generous</div>
+        </div>
+      </div>
+      <div class="tipping-grid">
+        <div class="tip-card">
+          <div class="tip-who">Restaurants</div>
+          <div class="tip-amount">10–15%</div>
+          <div class="tip-note">Expected. 15% for excellent service. Always in cash if possible.</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-who">Car Guards</div>
+          <div class="tip-amount">R10–20</div>
+          <div class="tip-note">When you return to your car. R20 if they were particularly helpful.</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-who">Tour Guides</div>
+          <div class="tip-amount">R50–150</div>
+          <div class="tip-note">Per person for a half-day tour. R100–200 for full day.</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-who">Hotel Porters</div>
+          <div class="tip-amount">R20–50</div>
+          <div class="tip-note">Per bag. R50 for helpful service above and beyond.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIM & CONNECTIVITY -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">📱</div>
+        <div>
+          <div class="section-title">SIM Cards & Connectivity</div>
+          <div class="section-label">Stay connected from day one</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="col-card">
+          <div class="col-title">Best networks for tourists</div>
+          <div class="col-list">
+            <div class="col-item"><span class="col-item-icon">📶</span><div><strong>Vodacom</strong> — Best coverage across the Western Cape. Buy at the airport on arrival.</div></div>
+            <div class="col-item"><span class="col-item-icon">📶</span><div><strong>MTN</strong> — Good alternative, slightly cheaper data packages.</div></div>
+            <div class="col-item"><span class="col-item-icon">💳</span><div>Starter SIM with R50 data: about R50–80. Top up at any shop or via app.</div></div>
+            <div class="col-item"><span class="col-item-icon">📍</span><div>Available at the airport, Checkers, Pick n Pay, and all phone shops.</div></div>
+          </div>
+        </div>
+        <div class="col-card">
+          <div class="col-title">What you need it for</div>
+          <div class="col-list">
+            <div class="col-item"><span class="col-item-icon">📱</span><div><strong>Uber</strong> — Essential for safe transport everywhere. Works perfectly on local SIM.</div></div>
+            <div class="col-item"><span class="col-item-icon">🗺️</span><div><strong>Google Maps</strong> — Download Cape Town offline before leaving the city.</div></div>
+            <div class="col-item"><span class="col-item-icon">🌤️</span><div><strong>Windguru / Windy</strong> — Essential for beach and hiking days. Check wind forecast.</div></div>
+            <div class="col-item"><span class="col-item-icon">📞</span><div><strong>WhatsApp</strong> — How South Africans communicate. Most restaurants take bookings via WhatsApp.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ELECTRICITY & PLUGS -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">🔌</div>
+        <div>
+          <div class="section-title">Electricity & Adapters</div>
+          <div class="section-label">South Africa uses Type M plugs</div>
+        </div>
+      </div>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="ic-label">Voltage</div>
+          <div class="ic-value">230V / 50Hz</div>
+          <div class="ic-note">Same as Europe. US devices (110V) need a voltage converter, not just an adapter.</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-label">Plug Type</div>
+          <div class="ic-value">Type M (3 round pins)</div>
+          <div class="ic-note">Buy a universal travel adapter before you leave. Available at CPT airport but overpriced.</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-label">Load Shedding</div>
+          <div class="ic-value">Eskom schedules</div>
+          <div class="ic-note">Power outages are less frequent now but still possible. Download the EskomSePush app to check your area's schedule.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFRIKAANS PHRASES -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">🗣️</div>
+        <div>
+          <div class="section-title">Useful Afrikaans Phrases</div>
+          <div class="section-label">A few words go a very long way</div>
+        </div>
+      </div>
+      <div class="phrase-grid">
+        <div class="phrase-col">
+          <div class="phrase-col-title">Essential phrases</div>
+          <div class="phrase-list">
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Hello / Hi</span><span class="phrase-af">Hallo / Haai</span></div>
+              <div class="phrase-meaning">Works everywhere — locals love it when tourists try</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">How are you?</span><span class="phrase-af">Hoe gaan dit?</span></div>
+              <div class="phrase-meaning">Pronounced "who kahn dit" — always gets a smile</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Thank you</span><span class="phrase-af">Dankie</span></div>
+              <div class="phrase-meaning">"Dunk-ee" — use constantly, locals appreciate it</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Please</span><span class="phrase-af">Asseblief</span></div>
+              <div class="phrase-meaning">"Assa-bleef" — ordering at a restaurant or café</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Cheers!</span><span class="phrase-af">Gesondheid!</span></div>
+              <div class="phrase-meaning">"Khe-sont-haid" — say it at every wine tasting</div>
+            </div>
+          </div>
+        </div>
+        <div class="phrase-col">
+          <div class="phrase-col-title">Cape Town slang</div>
+          <div class="phrase-list">
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Lekker</span><span class="phrase-af">Great / Nice / Delicious</span></div>
+              <div class="phrase-meaning">"That wine is lekker" — the most useful word in SA</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Braai</span><span class="phrase-af">BBQ / Barbecue</span></div>
+              <div class="phrase-meaning">South Africa's sacred ritual. Never call it a BBQ.</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Eish</span><span class="phrase-af">Wow / Oh no / Really?</span></div>
+              <div class="phrase-meaning">Universal expression of surprise or mild dismay</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Howzit</span><span class="phrase-af">How are you / Hi</span></div>
+              <div class="phrase-meaning">The quintessential South African greeting</div>
+            </div>
+            <div>
+              <div class="phrase-item"><span class="phrase-en">Just now</span><span class="phrase-af">Later (not right now)</span></div>
+              <div class="phrase-meaning">"I'll do it just now" means sometime in the near future — be patient</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PACKING LIST -->
+    <div class="info-section">
+      <div class="section-header">
+        <div class="section-icon">🎒</div>
+        <div>
+          <div class="section-title">Cape Town Packing List</div>
+          <div class="section-label">What Dirk always tells first-timers to bring</div>
+        </div>
+      </div>
+      <div class="packing-grid">
+        <div class="pack-col">
+          <div class="pack-col-title">🌞 Sun & Outdoors</div>
+          <div class="pack-list">
+            <div class="pack-item"><div class="pack-check">✓</div> SPF 50+ sunscreen (buy extra in SA)</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Sunglasses — UV is intense</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Wide-brim hat or cap</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Trail shoes or hiking boots</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Windproof light jacket</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Reusable water bottle</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Beach shoes for rocky coves</div>
+          </div>
+        </div>
+        <div class="pack-col">
+          <div class="pack-col-title">🏙️ City & Practical</div>
+          <div class="pack-list">
+            <div class="pack-item"><div class="pack-check">✓</div> Universal travel adapter (Type M)</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Secondary or older smartphone</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Crossbody bag (not shoulder bag)</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Copies of passport and insurance</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Travel insurance documents</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Small day pack for excursions</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Lightweight layers for evenings</div>
+          </div>
+        </div>
+        <div class="pack-col">
+          <div class="pack-col-title">🍷 Wine & Outdoors</div>
+          <div class="pack-list">
+            <div class="pack-item"><div class="pack-check">✓</div> Picnic blanket for Signal Hill</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Wetsuit if snorkelling (Noordhoek)</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Binoculars for whale watching</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Headtorch for full moon hike</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Warm fleece for Cederberg nights</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Camera with extra battery</div>
+            <div class="pack-item"><div class="pack-check">✓</div> Wine key / corkscrew</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-text">
+        <h3>Still have questions?</h3>
+        <p>Ask Caipy anything — from "what should I pack for a hike?" to "what's the best way to get from the airport?" She knows Cape Town inside out.</p>
+      </div>
+      <a href="index.html#caipy" class="btn-cta">Ask Caipy →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="practical.html" class="bottom-nav-item active"><span class="nav-icon">ℹ️</span>Info</a>
+  </div>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day Trips · Planet Uncharted Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --terra: #7C5C3A;
+      --terra-light: #C49A6A;
+      --terra-dim: rgba(124,92,58,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.88);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--terra-light); color: var(--terra-light); background: rgba(124,92,58,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 78vh; min-height: 500px;
+      background: url('../photos/chapmans-peak.jpeg') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.1) 0%, rgba(15,36,48,0.92) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 52px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 14px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 6.5vw, 82px); font-weight: 300; line-height: 1.0; margin-bottom: 18px; }
+    .hero-title em { font-style: italic; color: var(--terra-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 520px; }
+
+    /* ── DISTANCE STRIP ── */
+    .distance-strip { display: grid; grid-template-columns: repeat(5, 1fr); background: rgba(15,36,48,0.95); border-bottom: 1px solid rgba(124,92,58,0.15); }
+    .dist-item { padding: 18px 20px; text-align: center; border-right: 1px solid rgba(124,92,58,0.1); }
+    .dist-item:last-child { border-right: none; }
+    .dist-val { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--terra-light); line-height: 1; margin-bottom: 4px; }
+    .dist-label { font-size: 9px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--white-faint); }
+
+    /* ── INTRO ── */
+    .intro { padding: 52px 60px; border-bottom: 1px solid rgba(124,92,58,0.1); }
+    .intro-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 12px; }
+    .intro-heading { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; line-height: 1.3; max-width: 700px; margin-bottom: 14px; }
+    .intro-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; max-width: 660px; }
+
+    /* ── DAY TRIPS ── */
+    .trips-wrap { padding: 52px 60px 80px; }
+
+    /* FEATURED TRIP */
+    .trip-featured {
+      display: grid; grid-template-columns: 1.1fr 1fr;
+      min-height: 520px; margin-bottom: 3px;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .trip-featured.visible { opacity: 1; transform: translateY(0); }
+    .trip-featured:nth-child(even) { direction: rtl; }
+    .trip-featured:nth-child(even) > * { direction: ltr; }
+
+    .trip-photo { position: relative; overflow: hidden; min-height: 460px; }
+    .trip-photo-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .trip-featured:hover .trip-photo-bg { transform: scale(1.04); }
+    .trip-photo-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,36,48,0.15), transparent 60%); }
+    .trip-num { position: absolute; top: 20px; left: 20px; font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; color: rgba(196,154,106,0.2); line-height: 1; }
+    .trip-badge { position: absolute; bottom: 20px; left: 20px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(196,154,106,0.4); border-radius: 20px; padding: 5px 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--terra-light); }
+
+    .trip-content { background: var(--ocean-mid); padding: 44px; display: flex; flex-direction: column; justify-content: center; border: 1px solid rgba(124,92,58,0.1); }
+    .trip-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 12px; }
+    .trip-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 40px); font-weight: 400; line-height: 1.15; margin-bottom: 10px; }
+
+    .trip-specs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .trip-spec { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(124,92,58,0.1); border: 1px solid rgba(196,154,106,0.2); border-radius: 20px; font-size: 11px; color: var(--white-dim); }
+
+    .dirk-quote { padding: 14px 18px; margin-bottom: 18px; background: rgba(124,92,58,0.08); border-left: 2px solid var(--terra-light); border-radius: 0 8px 8px 0; }
+    .dirk-quote-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 5px; }
+    .dirk-quote-text { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--white); line-height: 1.5; }
+
+    .trip-desc { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 20px; }
+
+    .tips-list { margin-bottom: 22px; }
+    .tips-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 8px; }
+    .tip-item { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); margin-bottom: 6px; line-height: 1.5; }
+    .tip-arrow { color: var(--terra-light); flex-shrink: 0; }
+
+    .what-to-do { margin-bottom: 22px; }
+    .wtd-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 10px; }
+    .wtd-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .wtd-tag { padding: 5px 12px; border-radius: 12px; font-size: 11px; background: rgba(124,92,58,0.1); border: 1px solid rgba(196,154,106,0.2); color: var(--terra-light); }
+
+    .btn-map { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; background: transparent; color: var(--white); border-radius: 6px; font-weight: 500; font-size: 12px; text-decoration: none; border: 1px solid rgba(124,92,58,0.4); transition: all 0.2s; width: fit-content; }
+    .btn-map:hover { border-color: var(--terra-light); color: var(--terra-light); }
+
+    /* TRIP DIVIDER */
+    .trip-divider { display: flex; align-items: center; gap: 20px; margin: 36px 0; }
+    .divider-line { flex: 1; height: 1px; background: rgba(124,92,58,0.15); }
+    .divider-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(196,154,106,0.3); }
+
+    /* ── MINI TRIPS GRID ── */
+    .mini-trips { margin-top: 60px; }
+    .mini-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 20px; }
+    .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+
+    .mini-card {
+      background: var(--ocean-mid); padding: 28px;
+      border: 1px solid rgba(124,92,58,0.08);
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .mini-card.visible { opacity: 1; transform: translateY(0); }
+    .mini-card:nth-child(2) { transition-delay: 0.1s; }
+    .mini-card:nth-child(3) { transition-delay: 0.2s; }
+    .mini-card:nth-child(4) { transition-delay: 0.3s; }
+    .mini-card:nth-child(5) { transition-delay: 0.4s; }
+    .mini-card:nth-child(6) { transition-delay: 0.5s; }
+    .mini-card:hover { border-color: rgba(196,154,106,0.2); }
+
+    .mc-icon { font-size: 28px; margin-bottom: 12px; }
+    .mc-distance { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 8px; }
+    .mc-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 10px; }
+    .mc-quote { font-size: 12px; color: var(--white-dim); font-style: italic; line-height: 1.6; margin-bottom: 12px; border-left: 1px solid rgba(196,154,106,0.2); padding-left: 10px; }
+    .mc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .mc-tag { padding: 3px 10px; border-radius: 10px; font-size: 10px; background: rgba(124,92,58,0.1); border: 1px solid rgba(196,154,106,0.15); color: var(--terra-light); }
+
+    /* ── PLANNING STRIP ── */
+    .planning-strip {
+      margin-top: 60px;
+      background: linear-gradient(135deg, rgba(124,92,58,0.08), transparent);
+      border: 1px solid rgba(124,92,58,0.15); border-radius: 16px; padding: 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+    }
+    .ps-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--terra-light); margin-bottom: 14px; }
+    .ps-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; line-height: 1.3; margin-bottom: 14px; }
+    .ps-text { font-size: 13px; color: var(--white-dim); line-height: 1.8; }
+    .ps-checklist { display: flex; flex-direction: column; gap: 12px; }
+    .ps-check { display: flex; gap: 12px; font-size: 13px; color: var(--white-dim); line-height: 1.5; align-items: flex-start; }
+    .ps-check-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── CTA ── */
+    .cta-strip { margin-top: 60px; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--terra-light); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .distance-strip { grid-template-columns: repeat(3, 1fr); }
+      .intro { padding: 40px 24px; }
+      .trips-wrap { padding: 40px 24px 60px; }
+      .trip-featured { grid-template-columns: 1fr; direction: ltr !important; }
+      .trip-featured:nth-child(even) { direction: ltr; }
+      .trip-photo { min-height: 280px; }
+      .trip-content { padding: 32px 24px; }
+      .mini-grid { grid-template-columns: 1fr; }
+      .planning-strip { grid-template-columns: 1fr; gap: 28px; padding: 32px 24px; }
+      .cta-strip { flex-direction: column; padding: 32px 24px; }
+    }
+    @media (max-width: 1100px) {
+      .mini-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="daytrips.html" class="sidebar-item active"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Uncharted · Beyond Cape Town</div>
+      <h1 class="hero-title">Day Trips<br><em>Worth Taking</em></h1>
+      <p class="hero-sub">Cape Town is extraordinary. But what surrounds it is equally extraordinary. Five day trips — from whale watching to whitewashed fishing villages — each within 2 hours of the city.</p>
+    </div>
+  </div>
+
+  <!-- DISTANCE STRIP -->
+  <div class="distance-strip">
+    <div class="dist-item"><div class="dist-val">5</div><div class="dist-label">Day trips ranked</div></div>
+    <div class="dist-item"><div class="dist-val">1.5 hrs</div><div class="dist-label">Furthest featured trip</div></div>
+    <div class="dist-item"><div class="dist-val">Rent a car</div><div class="dist-label">Essential for all trips</div></div>
+    <div class="dist-item"><div class="dist-val">Weekdays</div><div class="dist-label">Always better than weekends</div></div>
+    <div class="dist-item"><div class="dist-val">Early start</div><div class="dist-label">Leave by 8am for all trips</div></div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div class="intro-label">Beyond the city</div>
+    <h2 class="intro-heading">Within 2 hours of Cape Town: whale watching, fishing villages, turquoise lagoons, ancient wilderness, and world-class wine.</h2>
+    <p class="intro-text">Cape Town sits at the tip of one of the most diverse and spectacular regions on earth. You don't need more than a day to experience any of these — but you'll wish you had more time once you arrive. Rent a car, leave early, and go.</p>
+  </div>
+
+  <!-- DAY TRIPS -->
+  <div class="trips-wrap">
+
+    <!-- HERMANUS -->
+    <div class="trip-featured" id="trip-1">
+      <div class="trip-photo">
+        <div class="trip-photo-bg" style="background-image: url('../photos/Chapmans-Peak-Drive.jpeg')"></div>
+        <div class="trip-photo-overlay"></div>
+        <div class="trip-num">01</div>
+        <div class="trip-badge">🐋 Dirk's #1 Day Trip</div>
+      </div>
+      <div class="trip-content">
+        <div class="trip-eyebrow">Day Trip · 1.5 hrs from Cape Town</div>
+        <h2 class="trip-title">Hermanus & Hemel-en-Aarde</h2>
+        <div class="trip-specs">
+          <div class="trip-spec">🚗 1.5 hrs drive</div>
+          <div class="trip-spec">🐋 Whales Aug–Nov</div>
+          <div class="trip-spec">🍷 World-class wine</div>
+          <div class="trip-spec">📅 Best Aug–Nov</div>
+        </div>
+        <div class="dirk-quote">
+          <div class="dirk-quote-label">Dirk's Take</div>
+          <div class="dirk-quote-text">"The whale watching from the cliff path in Hermanus is the best land-based whale watching on earth. Combine with Hemel-en-Aarde for Hamilton Russell's Pinot Noir and you have the perfect day."</div>
+        </div>
+        <p class="trip-desc">Hermanus is famous as the world capital of land-based whale watching — Southern Right Whales come to Walker Bay between August and November to calf. The cliff path gives extraordinary close-up views. Just 10 minutes inland, the Hemel-en-Aarde Valley produces some of South Africa's most exciting wines.</p>
+        <div class="tips-list">
+          <div class="tips-label">Insider Tips</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> August to November for whales — September and October are peak season</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Walk the entire cliff path — 12km, 3–4 hours, extraordinary whale views</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Hamilton Russell for Pinot Noir — one of Africa's greatest wine estates</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Eat at Harbour Rock restaurant — fresh seafood, harbour views</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Leave Cape Town by 8am — back by sunset</div>
+        </div>
+        <div class="what-to-do">
+          <div class="wtd-label">What to do</div>
+          <div class="wtd-tags">
+            <span class="wtd-tag">Whale watching</span>
+            <span class="wtd-tag">Cliff path walk</span>
+            <span class="wtd-tag">Hamilton Russell wines</span>
+            <span class="wtd-tag">Fresh seafood</span>
+            <span class="wtd-tag">Hemel-en-Aarde Valley</span>
+          </div>
+        </div>
+        <a href="map.html" class="btn-map">🗺 View on Map</a>
+      </div>
+    </div>
+
+    <div class="trip-divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+    <!-- PATERNOSTER -->
+    <div class="trip-featured" id="trip-2">
+      <div class="trip-photo">
+        <div class="trip-photo-bg" style="background-image: url('../photos/muizenberg-huts.jpeg')"></div>
+        <div class="trip-photo-overlay"></div>
+        <div class="trip-num">02</div>
+        <div class="trip-badge">🤫 Hidden Village</div>
+      </div>
+      <div class="trip-content">
+        <div class="trip-eyebrow">Day Trip · 2 hrs from Cape Town</div>
+        <h2 class="trip-title">Paternoster</h2>
+        <div class="trip-specs">
+          <div class="trip-spec">🚗 2 hrs drive</div>
+          <div class="trip-spec">🦞 Best seafood</div>
+          <div class="trip-spec">🏘️ Whitewashed village</div>
+          <div class="trip-spec">📅 Year-round</div>
+        </div>
+        <div class="dirk-quote">
+          <div class="dirk-quote-label">Dirk's Take</div>
+          <div class="dirk-quote-text">"The most beautiful fishing village in South Africa. Whitewashed cottages on the West Coast. The freshest crayfish you'll ever eat. Almost no tourists know it exists."</div>
+        </div>
+        <p class="trip-desc">A whitewashed West Coast fishing village that feels like it was frozen in time. Paternoster is famous for its fresh West Coast rock lobster (crayfish), its pristine beach, and the extraordinary Strandveld fynbos that surrounds it. The Colourful village is one of South Africa's most photogenic places.</p>
+        <div class="tips-list">
+          <div class="tips-label">Insider Tips</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Eat at Voorstrandt or Noisy Oyster — both are exceptional for West Coast seafood</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Book a cottage for the night if you can — Paternoster is even better at sunrise</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Cape Columbine Nature Reserve is 10 min away — spectacular coastal fynbos</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> The West Coast National Park (Langebaan) is on the way — combine both</div>
+        </div>
+        <div class="what-to-do">
+          <div class="wtd-label">What to do</div>
+          <div class="wtd-tags">
+            <span class="wtd-tag">Fresh crayfish</span>
+            <span class="wtd-tag">Village walk</span>
+            <span class="wtd-tag">Cape Columbine</span>
+            <span class="wtd-tag">Beach</span>
+            <span class="wtd-tag">Photography</span>
+          </div>
+        </div>
+        <a href="map.html" class="btn-map">🗺 View on Map</a>
+      </div>
+    </div>
+
+    <div class="trip-divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+    <!-- LANGEBAAN -->
+    <div class="trip-featured" id="trip-3">
+      <div class="trip-photo">
+        <div class="trip-photo-bg" style="background-image: url('../photos/hero-aerial.jpg')"></div>
+        <div class="trip-photo-overlay"></div>
+        <div class="trip-num">03</div>
+        <div class="trip-badge">🏄 Turquoise Lagoon</div>
+      </div>
+      <div class="trip-content">
+        <div class="trip-eyebrow">Day Trip · 1.5 hrs from Cape Town</div>
+        <h2 class="trip-title">Langebaan & West Coast</h2>
+        <div class="trip-specs">
+          <div class="trip-spec">🚗 1.5 hrs drive</div>
+          <div class="trip-spec">🏄 Kitesurfing</div>
+          <div class="trip-spec">🦩 Flamingos</div>
+          <div class="trip-spec">📅 Year-round</div>
+        </div>
+        <div class="dirk-quote">
+          <div class="dirk-quote-label">Dirk's Take</div>
+          <div class="dirk-quote-text">"A turquoise lagoon that looks like it belongs in the Maldives but is 90 minutes from Cape Town. The West Coast National Park wildflowers in August and September are extraordinary."</div>
+        </div>
+        <p class="trip-desc">Langebaan Lagoon is one of South Africa's most beautiful natural features — a vast, sheltered lagoon of turquoise water ideal for kitesurfing, kayaking, and swimming. The West Coast National Park surrounds it, famous for its wildflower display in August–September and its large flamingo population year-round.</p>
+        <div class="tips-list">
+          <div class="tips-label">Insider Tips</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> August–September for wildflowers — carpets of namaqualand daisies and fynbos</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Langebaan is South Africa's kitesurfing capital — spectacular to watch even if you don't surf</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Die Strandloper restaurant on the beach — legendary West Coast seafood buffet, book ahead</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Combine with Paternoster — both are on the West Coast, 45 min apart</div>
+        </div>
+        <div class="what-to-do">
+          <div class="wtd-label">What to do</div>
+          <div class="wtd-tags">
+            <span class="wtd-tag">Lagoon swimming</span>
+            <span class="wtd-tag">Kitesurfing</span>
+            <span class="wtd-tag">Wildflowers</span>
+            <span class="wtd-tag">Flamingos</span>
+            <span class="wtd-tag">Die Strandloper lunch</span>
+          </div>
+        </div>
+        <a href="map.html" class="btn-map">🗺 View on Map</a>
+      </div>
+    </div>
+
+    <!-- MINI TRIPS -->
+    <div class="mini-trips">
+      <div class="mini-label">More day trips worth knowing</div>
+      <div class="mini-grid">
+
+        <div class="mini-card" id="mini-1">
+          <div class="mc-icon">🏔️</div>
+          <div class="mc-distance">2 hrs north</div>
+          <div class="mc-name">Cederberg Wilderness</div>
+          <div class="mc-quote">"Ancient sandstone arches, San Bushman paintings thousands of years old, and the darkest skies in South Africa. A minimum of two nights — but one extraordinary day is better than nothing."</div>
+          <div class="mc-tags">
+            <span class="mc-tag">Hiking</span>
+            <span class="mc-tag">Rock art</span>
+            <span class="mc-tag">Dark skies</span>
+            <span class="mc-tag">Wilderness</span>
+          </div>
+        </div>
+
+        <div class="mini-card" id="mini-2">
+          <div class="mc-icon">🐘</div>
+          <div class="mc-distance">4 hrs east</div>
+          <div class="mc-name">Garden Route</div>
+          <div class="mc-quote">"Knysna, Plettenberg Bay, the Tsitsikamma Forest. South Africa's most famous coastal drive. Too far for a day trip — do 3 nights minimum — but unmissable if you have the time."</div>
+          <div class="mc-tags">
+            <span class="mc-tag">Coastal drive</span>
+            <span class="mc-tag">Knysna</span>
+            <span class="mc-tag">Bungee jumping</span>
+            <span class="mc-tag">Elephants</span>
+          </div>
+        </div>
+
+        <div class="mini-card" id="mini-3">
+          <div class="mc-icon">🌸</div>
+          <div class="mc-distance">1.5 hrs north</div>
+          <div class="mc-name">Tulbagh & Hex River Valley</div>
+          <div class="mc-quote">"One of the Cape's best-kept wine secrets. A valley of dramatic mountains, historic Cape Dutch architecture, and Tulbagh's extraordinary Church Street — the best-preserved in South Africa."</div>
+          <div class="mc-tags">
+            <span class="mc-tag">Wine</span>
+            <span class="mc-tag">History</span>
+            <span class="mc-tag">Mountains</span>
+            <span class="mc-tag">Cape Dutch</span>
+          </div>
+        </div>
+
+        <div class="mini-card" id="mini-4">
+          <div class="mc-icon">🦩</div>
+          <div class="mc-distance">1.5 hrs north</div>
+          <div class="mc-name">West Coast National Park</div>
+          <div class="mc-quote">"August and September wildflower season is one of the great natural spectacles of southern Africa. The rest of the year it's a tranquil world of lagoons, wading birds, and fynbos."</div>
+          <div class="mc-tags">
+            <span class="mc-tag">Wildflowers</span>
+            <span class="mc-tag">Birding</span>
+            <span class="mc-tag">Lagoon</span>
+            <span class="mc-tag">Fynbos</span>
+          </div>
+        </div>
+
+        <div class="mini-card" id="mini-5">
+          <div class="mc-icon">🎨</div>
+          <div class="mc-distance">45 min</div>
+          <div class="mc-name">Stellenbosch Town</div>
+          <div class="mc-quote">"South Africa's second-oldest town and its wine capital. Oak-lined streets, Cape Dutch architecture, world-class restaurants, and more great wine than you can reasonably drink in a day."</div>
+          <div class="mc-tags">
+            <span class="mc-tag">Wine</span>
+            <span class="mc-tag">Architecture</span>
+            <span class="mc-tag">Restaurants</span>
+            <span class="mc-tag">Walking</span>
+          </div>
+        </div>
+
+        <div class="mini-card" id="mini-6">
+          <div class="mc-icon">🌊</div>
+          <div class="mc-distance">30 min</div>
+          <div class="mc-name">Muizenberg & False Bay</div>
+          <div class="mc-quote">"Cape Town's surf beach, famous colourful beach huts, and the warmest swimming water on the peninsula. Great Whites patrol False Bay — but Muizenberg is perfectly safe for surfing."</div>
+          <div class="mc-tags">
+            <span class="mc-tag">Surfing</span>
+            <span class="mc-tag">Warm water</span>
+            <span class="mc-tag">Beach huts</span>
+            <span class="mc-tag">Learner-friendly</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PLANNING STRIP -->
+    <div class="planning-strip">
+      <div>
+        <div class="ps-label">Before you go</div>
+        <h3 class="ps-title">Day trip essentials — what Dirk always does</h3>
+        <p class="ps-text">Every successful day trip from Cape Town follows the same formula: early start, car booked in advance, a plan that isn't too ambitious, and flexibility to linger when something is extraordinary. Here's Dirk's checklist.</p>
+      </div>
+      <div class="ps-checklist">
+        <div class="ps-check"><span class="ps-check-icon">🚗</span> Book your rental car at least 3 days ahead — demand is high in peak season</div>
+        <div class="ps-check"><span class="ps-check-icon">⏰</span> Leave Cape Town by 7:30–8am — beat the traffic and arrive before the crowds</div>
+        <div class="ps-check"><span class="ps-check-icon">🍽️</span> Book lunch ahead at your destination — the best places fill up by 11am</div>
+        <div class="ps-check"><span class="ps-check-icon">⛽</span> Fill up petrol in Cape Town — rural stations can be unreliable</div>
+        <div class="ps-check"><span class="ps-check-icon">📵</span> Download Google Maps offline for your route — signal can be patchy</div>
+        <div class="ps-check"><span class="ps-check-icon">🧴</span> Sunscreen, water, and a wind layer — weather changes fast outside the city</div>
+        <div class="ps-check"><span class="ps-check-icon">💰</span> Carry some cash — many rural restaurants and markets are cash-only</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-text">
+        <h3>Want Caipy to plan your perfect day trip?</h3>
+        <p>Tell her your travel dates, interests, and how far you're willing to drive — she'll build a complete day trip itinerary including timing, stops, lunch, and what to see.</p>
+      </div>
+      <a href="index.html#caipy" class="btn-cta">Plan My Day Trip →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="myguide.html" class="bottom-nav-item"><span class="nav-icon">📖</span>My Guide</a>
+  </div>
+</nav>
+
+<script>
+  const items = document.querySelectorAll('.trip-featured, .mini-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  items.forEach(item => observer.observe(item));
+</script>
+
+</body>
+</html>

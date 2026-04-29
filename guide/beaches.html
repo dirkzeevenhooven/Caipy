@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beaches · Planet Uncharted Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean: #1B3A4B;
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --blue: #3A8FC0;
+      --blue-light: #5ab4e8;
+      --blue-dim: rgba(58,143,192,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.88);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--blue); color: var(--blue-light); background: rgba(58,143,192,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 80vh; min-height: 520px;
+      background: url('../photos/camps-bay.webp') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.05) 0%, rgba(15,36,48,0.88) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 82px); font-weight: 300; line-height: 1.0; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--blue-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 500px; }
+
+    /* ── WATER TEMP STRIP ── */
+    .water-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      background: var(--glass); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(58,143,192,0.15);
+    }
+    .water-stat { padding: 20px 24px; text-align: center; border-right: 1px solid rgba(58,143,192,0.1); }
+    .water-stat:last-child { border-right: none; }
+    .water-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--blue-light); line-height: 1; margin-bottom: 4px; }
+    .water-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--white-faint); }
+
+    /* ── INTRO ── */
+    .section-intro { padding: 52px 60px; border-bottom: 1px solid rgba(58,143,192,0.1); }
+    .intro-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 12px; }
+    .intro-heading { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; line-height: 1.3; max-width: 680px; margin-bottom: 14px; }
+    .intro-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; max-width: 640px; }
+
+    /* ── BEACH RANKING ── */
+    .beaches-wrap { padding: 52px 60px 80px; }
+
+    /* HERO BEACH — full width */
+    .beach-hero {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 500px; margin-bottom: 3px;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .beach-hero.visible { opacity: 1; transform: translateY(0); }
+
+    .beach-photo { position: relative; overflow: hidden; min-height: 460px; }
+    .beach-photo-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .beach-hero:hover .beach-photo-bg { transform: scale(1.04); }
+    .beach-photo-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,36,48,0.15), transparent 60%); }
+
+    .beach-rank { position: absolute; top: 20px; left: 20px; font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 300; color: rgba(90,180,232,0.2); line-height: 1; }
+    .beach-badge { position: absolute; bottom: 20px; left: 20px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(90,180,232,0.35); border-radius: 20px; padding: 5px 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue-light); }
+
+    .beach-content { background: var(--ocean-mid); padding: 44px; display: flex; flex-direction: column; justify-content: center; border: 1px solid rgba(58,143,192,0.1); }
+    .beach-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 12px; }
+    .beach-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 400; line-height: 1.15; margin-bottom: 8px; }
+    .beach-ratings { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .rating-item { display: flex; flex-direction: column; gap: 4px; }
+    .rating-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white-faint); }
+    .rating-bar { display: flex; gap: 3px; }
+    .rating-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(90,180,232,0.2); }
+    .rating-dot.filled { background: var(--blue-light); }
+
+    .dirk-quote { padding: 14px 18px; margin-bottom: 18px; background: rgba(58,143,192,0.07); border-left: 2px solid var(--blue); border-radius: 0 8px 8px 0; }
+    .dirk-quote-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 5px; }
+    .dirk-quote-text { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--white); line-height: 1.5; }
+
+    .beach-desc { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 20px; }
+
+    .tips-list { margin-bottom: 22px; }
+    .tips-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 8px; }
+    .tip-item { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); margin-bottom: 6px; line-height: 1.5; }
+    .tip-arrow { color: var(--blue-light); flex-shrink: 0; }
+
+    .beach-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .beach-tag { padding: 5px 12px; border-radius: 12px; font-size: 11px; background: rgba(58,143,192,0.1); border: 1px solid rgba(90,180,232,0.2); color: var(--blue-light); }
+
+    /* ── BEACH GRID ── */
+    .beach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 3px; }
+
+    .beach-card {
+      position: relative; overflow: hidden; min-height: 380px;
+      cursor: pointer;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .beach-card.visible { opacity: 1; transform: translateY(0); }
+    .beach-card:nth-child(2) { transition-delay: 0.1s; }
+    .beach-card:nth-child(3) { transition-delay: 0.2s; }
+    .beach-card:nth-child(4) { transition-delay: 0.3s; }
+    .beach-card:nth-child(5) { transition-delay: 0.4s; }
+
+    .bc-photo { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.7s ease; }
+    .beach-card:hover .bc-photo { transform: scale(1.06); }
+    .bc-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,28,40,0.96) 0%, rgba(10,28,40,0.2) 55%, transparent); }
+    .bc-rank { position: absolute; top: 16px; right: 16px; font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: rgba(90,180,232,0.25); line-height: 1; }
+    .bc-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; }
+    .bc-tag { display: inline-block; margin-bottom: 8px; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 10px; background: rgba(58,143,192,0.15); border: 1px solid rgba(90,180,232,0.3); color: var(--blue-light); }
+    .bc-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 6px; line-height: 1.2; }
+    .bc-quote { font-size: 12px; color: var(--white-dim); font-style: italic; line-height: 1.5; margin-bottom: 10px; }
+    .bc-meta { display: flex; gap: 12px; font-size: 11px; color: var(--white-faint); flex-wrap: wrap; }
+
+    /* ── WATER TEMP GUIDE ── */
+    .temp-guide {
+      margin-top: 60px;
+      background: linear-gradient(135deg, rgba(58,143,192,0.08), transparent);
+      border: 1px solid rgba(58,143,192,0.15); border-radius: 16px; padding: 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    }
+    .temp-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; line-height: 1.3; margin-bottom: 12px; }
+    .temp-title em { font-style: italic; color: var(--blue-light); }
+    .temp-text { font-size: 13px; color: var(--white-dim); line-height: 1.8; }
+    .temp-seasons { display: flex; flex-direction: column; gap: 12px; }
+    .temp-season { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: rgba(15,36,48,0.5); border-radius: 8px; border: 1px solid rgba(58,143,192,0.1); }
+    .temp-season-name { font-size: 12px; font-weight: 600; color: var(--white); width: 80px; flex-shrink: 0; }
+    .temp-season-bar { flex: 1; height: 6px; border-radius: 3px; background: rgba(58,143,192,0.15); overflow: hidden; }
+    .temp-season-fill { height: 100%; border-radius: 3px; background: var(--blue-light); }
+    .temp-season-val { font-size: 12px; color: var(--blue-light); font-weight: 600; width: 40px; text-align: right; }
+
+    /* ── SAFETY STRIP ── */
+    .safety-strip {
+      margin-top: 3px;
+      background: rgba(201,169,110,0.05); border: 1px solid var(--gold-dim);
+      border-radius: 12px; padding: 28px 32px;
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .safety-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+    .safety-title { font-size: 13px; font-weight: 600; color: var(--gold); margin-bottom: 6px; }
+    .safety-text { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-strip { margin-top: 60px; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--blue-light); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .water-strip { grid-template-columns: repeat(2, 1fr); }
+      .section-intro { padding: 40px 24px; }
+      .beaches-wrap { padding: 40px 24px 60px; }
+      .beach-hero { grid-template-columns: 1fr; }
+      .beach-photo { min-height: 280px; }
+      .beach-content { padding: 32px 24px; }
+      .beach-grid { grid-template-columns: 1fr; }
+      .beach-card { min-height: 300px; }
+      .temp-guide { grid-template-columns: 1fr; gap: 28px; padding: 32px 24px; }
+      .cta-strip { flex-direction: column; padding: 32px 24px; }
+    }
+    @media (max-width: 1100px) {
+      .beach-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item active"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Uncharted · Outdoors</div>
+      <h1 class="hero-title">Cape Town's<br><em>Beaches</em></h1>
+      <p class="hero-sub">Ranked by vibe, crowd, drama, and the honest truth about the water temperature. Six beaches — from secret coves to iconic strips — with everything you need to know before you go.</p>
+    </div>
+  </div>
+
+  <!-- WATER STATS -->
+  <div class="water-strip">
+    <div class="water-stat">
+      <div class="water-val">12–16°C</div>
+      <div class="water-label">Atlantic water temp (year-round)</div>
+    </div>
+    <div class="water-stat">
+      <div class="water-val">Oct–Apr</div>
+      <div class="water-label">Best beach season</div>
+    </div>
+    <div class="water-stat">
+      <div class="water-val">SE Wind</div>
+      <div class="water-label">The Cape Doctor — check forecast</div>
+    </div>
+    <div class="water-stat">
+      <div class="water-val">6</div>
+      <div class="water-label">Beaches ranked by Dirk</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section-intro">
+    <div class="intro-label">The honest beach guide</div>
+    <h2 class="intro-heading">The water is always cold. The views are always extraordinary. Here's where to go.</h2>
+    <p class="intro-text">Cape Town's beaches are some of the most beautiful in the world — and some of the most misunderstood. The Atlantic side is cold, dramatic, and gorgeous. The False Bay side is warmer and wilder. The SE wind (Cape Doctor) can ruin a beach day instantly — always check the forecast before you go. With that said: these six beaches are extraordinary.</p>
+  </div>
+
+  <!-- BEACHES -->
+  <div class="beaches-wrap">
+
+    <!-- #1 BETA BEACH — FEATURED -->
+    <div class="beach-hero" id="beach-1">
+      <div class="beach-photo">
+        <div class="beach-photo-bg" style="background-image: url('../photos/llandudno-beach.jpg')"></div>
+        <div class="beach-photo-overlay"></div>
+        <div class="beach-rank">01</div>
+        <div class="beach-badge">🏖️ Most Secret</div>
+      </div>
+      <div class="beach-content">
+        <div class="beach-eyebrow">Rank #1 · Most Secret · Bakoven</div>
+        <h2 class="beach-title">Beta Beach, Bakoven</h2>
+        <div class="beach-ratings">
+          <div class="rating-item">
+            <div class="rating-label">Secrecy</div>
+            <div class="rating-bar">
+              <div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot filled"></div>
+            </div>
+          </div>
+          <div class="rating-item">
+            <div class="rating-label">Beauty</div>
+            <div class="rating-bar">
+              <div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot filled"></div>
+            </div>
+          </div>
+          <div class="rating-item">
+            <div class="rating-label">Crowds</div>
+            <div class="rating-bar">
+              <div class="rating-dot filled"></div><div class="rating-dot"></div><div class="rating-dot"></div><div class="rating-dot"></div><div class="rating-dot"></div>
+            </div>
+          </div>
+          <div class="rating-item">
+            <div class="rating-label">Swimming</div>
+            <div class="rating-bar">
+              <div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot filled"></div><div class="rating-dot"></div><div class="rating-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dirk-quote">
+          <div class="dirk-quote-label">Dirk's Take</div>
+          <div class="dirk-quote-text">"The most secret beach in Cape Town. Scramble down the rocks from Bakoven and you have your own private cove. Crystal clear tidal pool. Almost nobody knows it's there."</div>
+        </div>
+        <p class="beach-desc">Hidden between Camps Bay and Clifton, Beta Beach is Cape Town's best-kept secret. Park on Victoria Road in Bakoven, scramble down the rocks, and discover a sheltered tidal pool and cove that feels completely private. This is what Clifton felt like 30 years ago.</p>
+        <div class="tips-list">
+          <div class="tips-label">Insider Tips</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Park on Victoria Road, Bakoven — look for the path down the rocks</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Bring beach shoes — the scramble down is rocky</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Morning is best — goes into shade after 3pm</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Protected from the SE wind — when Camps Bay is a sandstorm, this is perfect</div>
+        </div>
+        <div class="beach-tags">
+          <span class="beach-tag">Secret</span>
+          <span class="beach-tag">Tidal Pool</span>
+          <span class="beach-tag">Wind-protected</span>
+          <span class="beach-tag">Free</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEACH GRID: #2–6 -->
+    <div class="beach-grid">
+
+      <!-- #2 LLANDUDNO -->
+      <div class="beach-card" id="beach-2">
+        <div class="bc-photo" style="background-image: url('../photos/llandudno-beach.jpg')"></div>
+        <div class="bc-overlay"></div>
+        <div class="bc-rank">02</div>
+        <div class="bc-content">
+          <div class="bc-tag">🏆 Most Dramatic</div>
+          <div class="bc-name">Llandudno Beach</div>
+          <div class="bc-quote">"Same mountain backdrop as Camps Bay. A fraction of the people. Massive granite boulders make every angle look like a painting."</div>
+          <div class="bc-meta"><span>📍 Llandudno</span><span>🌊 Strong shore break</span><span>💰 Free</span></div>
+        </div>
+      </div>
+
+      <!-- #3 CLIFTON 4TH -->
+      <div class="beach-card" id="beach-3">
+        <div class="bc-photo" style="background-image: url('../photos/camps-bay.webp')"></div>
+        <div class="bc-overlay"></div>
+        <div class="bc-rank">03</div>
+        <div class="bc-content">
+          <div class="bc-tag">✨ Most Beautiful</div>
+          <div class="bc-name">Clifton 4th Beach</div>
+          <div class="bc-quote">"Cape Town's Copacabana. Protected from the wind by granite boulders. The water is 12°C. You go to be seen, not to swim."</div>
+          <div class="bc-meta"><span>📍 Clifton</span><span>🌊 Calm, sheltered</span><span>💰 Free</span></div>
+        </div>
+      </div>
+
+      <!-- #4 CAMPS BAY -->
+      <div class="beach-card" id="beach-4">
+        <div class="bc-photo" style="background-image: url('../photos/camps-bay.webp')"></div>
+        <div class="bc-overlay"></div>
+        <div class="bc-rank">04</div>
+        <div class="bc-content">
+          <div class="bc-tag">🌅 Most Famous</div>
+          <div class="bc-name">Camps Bay Beach</div>
+          <div class="bc-quote">"Twelve Apostles backdrop, white sand, the strip of bars. Best at sunset with a cold drink. Very windy on SE days — check the forecast."</div>
+          <div class="bc-meta"><span>📍 Camps Bay</span><span>🌊 Moderate shore break</span><span>💰 Free</span></div>
+        </div>
+      </div>
+
+      <!-- #5 BOULDERS -->
+      <div class="beach-card" id="beach-5">
+        <div class="bc-photo" style="background-image: url('../photos/boulders-beach.jpeg')"></div>
+        <div class="bc-overlay"></div>
+        <div class="bc-rank">05</div>
+        <div class="bc-content">
+          <div class="bc-tag">🐧 Most Unique</div>
+          <div class="bc-name">Boulders Beach</div>
+          <div class="bc-quote">"3,000 African penguins live here. They come right up to you. The most unique beach experience in South Africa — maybe the world."</div>
+          <div class="bc-meta"><span>📍 Simon's Town</span><span>🌊 Sheltered</span><span>💰 R220</span></div>
+        </div>
+      </div>
+
+      <!-- #6 NOORDHOEK -->
+      <div class="beach-card" id="beach-6">
+        <div class="bc-photo" style="background-image: url('../photos/Chapmans-Peak-Drive.jpeg')"></div>
+        <div class="bc-overlay"></div>
+        <div class="bc-rank">06</div>
+        <div class="bc-content">
+          <div class="bc-tag">🌊 Most Wild</div>
+          <div class="bc-name">Noordhoek Beach</div>
+          <div class="bc-quote">"8km of wild white sand. Horses, kite surfers, and almost nobody else. The My Octopus Teacher kelp forests are just offshore. Bring a wetsuit."</div>
+          <div class="bc-meta"><span>📍 Noordhoek</span><span>🌊 Strong surf</span><span>💰 Free</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WATER TEMP GUIDE -->
+    <div class="temp-guide">
+      <div>
+        <div class="intro-label">The honest truth</div>
+        <h3 class="temp-title">The water is <em>always cold.</em><br>Here's how cold.</h3>
+        <p class="temp-text">The Benguela Current brings icy Antarctic water up the Atlantic coast year-round. Even in the height of summer (January–February), Atlantic-side water temperatures rarely exceed 16°C. False Bay (Muizenberg, Fish Hoek) is warmer — sometimes reaching 22°C in summer. Plan accordingly.</p>
+      </div>
+      <div class="temp-seasons">
+        <div class="temp-season">
+          <div class="temp-season-name">Summer (Jan–Mar)</div>
+          <div class="temp-season-bar"><div class="temp-season-fill" style="width: 65%"></div></div>
+          <div class="temp-season-val">14–16°C</div>
+        </div>
+        <div class="temp-season">
+          <div class="temp-season-name">Autumn (Apr–Jun)</div>
+          <div class="temp-season-bar"><div class="temp-season-fill" style="width: 45%"></div></div>
+          <div class="temp-season-val">13–15°C</div>
+        </div>
+        <div class="temp-season">
+          <div class="temp-season-name">Winter (Jul–Sep)</div>
+          <div class="temp-season-bar"><div class="temp-season-fill" style="width: 30%"></div></div>
+          <div class="temp-season-val">11–13°C</div>
+        </div>
+        <div class="temp-season">
+          <div class="temp-season-name">Spring (Oct–Dec)</div>
+          <div class="temp-season-bar"><div class="temp-season-fill" style="width: 55%"></div></div>
+          <div class="temp-season-val">13–15°C</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAFETY STRIP -->
+    <div class="safety-strip">
+      <div class="safety-icon">⚠️</div>
+      <div>
+        <div class="safety-title">Beach Safety — Read This</div>
+        <div class="safety-text">Cape Town's Atlantic beaches have no lifeguards outside peak season. The shore break at Llandudno and Noordhoek is powerful — not suitable for weak swimmers. The SE wind (Cape Doctor) creates dangerous conditions instantly — if the flags are up, don't swim. Always check Windguru or Windy before heading to the beach. Muizenberg and Fish Hoek (False Bay) are the safest beaches for families and weak swimmers.</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-text">
+        <h3>Not sure which beach fits your day?</h3>
+        <p>Tell Caipy the weather, your vibe, and who you're with — she'll pick the perfect beach for you in seconds.</p>
+      </div>
+      <a href="index.html#caipy" class="btn-cta">Ask Caipy →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="myguide.html" class="bottom-nav-item"><span class="nav-icon">📖</span>My Guide</a>
+  </div>
+</nav>
+
+<script>
+  const items = document.querySelectorAll('.beach-hero, .beach-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  items.forEach(item => observer.observe(item));
+</script>
+
+</body>
+</html>
