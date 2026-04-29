@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hikes & Outdoors · Planet Uncharted Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --fern: #4A7C59;
+      --fern-light: #7ab88a;
+      --fern-dim: rgba(74,124,89,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.88);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--fern); color: var(--fern-light); background: rgba(74,124,89,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 85vh; min-height: 540px;
+      background: url('../photos/dirk-lions-head.jpeg') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.1) 0%, rgba(15,36,48,0.9) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 52px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 14px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 7vw, 86px); font-weight: 300; line-height: 1.0; margin-bottom: 18px; }
+    .hero-title em { font-style: italic; color: var(--fern-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 520px; }
+    .hero-dirk { position: absolute; top: 24px; left: 60px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(122,184,138,0.3); border-radius: 10px; padding: 10px 16px; font-size: 11px; color: var(--fern-light); letter-spacing: 1px; }
+
+    /* ── QUICK STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); background: rgba(15,36,48,0.95); border-bottom: 1px solid rgba(74,124,89,0.15); }
+    .stat-item { padding: 18px 20px; text-align: center; border-right: 1px solid rgba(74,124,89,0.1); }
+    .stat-item:last-child { border-right: none; }
+    .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--fern-light); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 9px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--white-faint); }
+
+    /* ── INTRO ── */
+    .intro { padding: 52px 60px; border-bottom: 1px solid rgba(74,124,89,0.1); }
+    .intro-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 12px; }
+    .intro-heading { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; line-height: 1.3; max-width: 700px; margin-bottom: 14px; }
+    .intro-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; max-width: 660px; }
+
+    /* ── HIKES ── */
+    .hikes-wrap { padding: 52px 60px 80px; }
+
+    /* FEATURED HIKE */
+    .hike-featured {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 520px; margin-bottom: 3px;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .hike-featured.visible { opacity: 1; transform: translateY(0); }
+
+    .hike-photo { position: relative; overflow: hidden; min-height: 460px; }
+    .hike-photo-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .hike-featured:hover .hike-photo-bg { transform: scale(1.04); }
+    .hike-photo-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,36,48,0.15), transparent 60%); }
+    .hike-rank { position: absolute; top: 20px; left: 20px; font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; color: rgba(122,184,138,0.2); line-height: 1; }
+    .hike-badge { position: absolute; bottom: 20px; left: 20px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(122,184,138,0.4); border-radius: 20px; padding: 5px 14px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--fern-light); }
+
+    .hike-content { background: var(--ocean-mid); padding: 44px; display: flex; flex-direction: column; justify-content: center; border: 1px solid rgba(74,124,89,0.1); }
+    .hike-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 12px; }
+    .hike-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 40px); font-weight: 400; line-height: 1.15; margin-bottom: 10px; }
+
+    .hike-specs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .hike-spec { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(74,124,89,0.1); border: 1px solid rgba(122,184,138,0.2); border-radius: 20px; font-size: 11px; color: var(--white-dim); }
+
+    .difficulty { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+    .diff-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white-faint); }
+    .diff-bars { display: flex; gap: 3px; }
+    .diff-bar { width: 20px; height: 5px; border-radius: 3px; background: rgba(122,184,138,0.15); }
+    .diff-bar.filled { background: var(--fern-light); }
+
+    .dirk-quote { padding: 14px 18px; margin-bottom: 18px; background: rgba(74,124,89,0.08); border-left: 2px solid var(--fern); border-radius: 0 8px 8px 0; }
+    .dirk-quote-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 5px; }
+    .dirk-quote-text { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--white); line-height: 1.5; }
+
+    .hike-desc { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 20px; }
+
+    .tips-list { margin-bottom: 22px; }
+    .tips-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 8px; }
+    .tip-item { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); margin-bottom: 6px; line-height: 1.5; }
+    .tip-arrow { color: var(--fern-light); flex-shrink: 0; }
+
+    .btn-map { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; background: transparent; color: var(--white); border-radius: 6px; font-weight: 500; font-size: 12px; text-decoration: none; border: 1px solid rgba(74,124,89,0.4); transition: all 0.2s; width: fit-content; }
+    .btn-map:hover { border-color: var(--fern-light); color: var(--fern-light); }
+
+    /* ── HIKE GRID ── */
+    .hike-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 3px; }
+
+    .hike-card {
+      position: relative; overflow: hidden; min-height: 380px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .hike-card.visible { opacity: 1; transform: translateY(0); }
+    .hike-card:nth-child(2) { transition-delay: 0.1s; }
+    .hike-card:nth-child(3) { transition-delay: 0.2s; }
+    .hike-card:nth-child(4) { transition-delay: 0.3s; }
+    .hike-card:nth-child(5) { transition-delay: 0.4s; }
+
+    .hc-photo { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.7s ease; }
+    .hike-card:hover .hc-photo { transform: scale(1.06); }
+    .hc-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,28,40,0.97) 0%, rgba(10,28,40,0.2) 55%, transparent); }
+    .hc-diff { position: absolute; top: 16px; right: 16px; display: flex; gap: 2px; }
+    .hc-diff-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(122,184,138,0.2); }
+    .hc-diff-dot.filled { background: var(--fern-light); }
+    .hc-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; }
+    .hc-tag { display: inline-block; margin-bottom: 8px; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 10px; background: rgba(74,124,89,0.15); border: 1px solid rgba(122,184,138,0.3); color: var(--fern-light); }
+    .hc-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 6px; line-height: 1.2; }
+    .hc-quote { font-size: 12px; color: var(--white-dim); font-style: italic; line-height: 1.5; margin-bottom: 10px; }
+    .hc-meta { display: flex; gap: 10px; font-size: 11px; color: var(--white-faint); flex-wrap: wrap; }
+
+    /* ── FULL MOON STRIP ── */
+    .fullmoon-strip {
+      margin-top: 60px; position: relative; overflow: hidden;
+      border-radius: 16px; min-height: 260px;
+      background: url('../photos/Signal-Hill.webp') center/cover no-repeat;
+    }
+    .fullmoon-strip::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,36,48,0.94) 55%, rgba(15,36,48,0.5)); }
+    .fullmoon-content { position: relative; z-index: 2; padding: 48px; max-width: 580px; }
+    .fm-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 12px; }
+    .fm-title { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
+    .fm-title em { font-style: italic; color: var(--gold); }
+    .fm-text { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 20px; }
+    .fm-tips { display: flex; flex-direction: column; gap: 8px; }
+    .fm-tip { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); }
+    .fm-tip-arrow { color: var(--gold); flex-shrink: 0; }
+
+    /* ── ESSENTIALS GRID ── */
+    .essentials { margin-top: 60px; }
+    .essentials-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 20px; }
+    .essentials-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .essential-card { background: var(--ocean-mid); border: 1px solid rgba(74,124,89,0.12); border-radius: 10px; padding: 20px; }
+    .essential-icon { font-size: 24px; margin-bottom: 10px; }
+    .essential-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+    .essential-text { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+
+    /* ── SAFETY ── */
+    .safety-strip { margin-top: 16px; background: rgba(201,169,110,0.05); border: 1px solid var(--gold-dim); border-radius: 12px; padding: 24px 28px; display: flex; gap: 16px; align-items: flex-start; }
+    .safety-icon { font-size: 22px; flex-shrink: 0; }
+    .safety-title { font-size: 13px; font-weight: 600; color: var(--gold); margin-bottom: 6px; }
+    .safety-text { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-strip { margin-top: 60px; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--fern-light); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .hero-dirk { left: 24px; }
+      .stats-bar { grid-template-columns: repeat(3, 1fr); }
+      .intro { padding: 40px 24px; }
+      .hikes-wrap { padding: 40px 24px 60px; }
+      .hike-featured { grid-template-columns: 1fr; }
+      .hike-photo { min-height: 280px; }
+      .hike-content { padding: 32px 24px; }
+      .hike-grid { grid-template-columns: 1fr; }
+      .hike-card { min-height: 300px; }
+      .fullmoon-content { padding: 32px 24px; }
+      .essentials-grid { grid-template-columns: 1fr 1fr; }
+      .cta-strip { flex-direction: column; padding: 32px 24px; }
+    }
+    @media (max-width: 1100px) {
+      .hike-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item active"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO — Dirk on Lion's Head -->
+  <div class="hero">
+    <div class="hero-dirk">📸 Dirk on Lion's Head, 6:15am</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Uncharted · Outdoors</div>
+      <h1 class="hero-title">Hikes &<br><em>Outdoors</em></h1>
+      <p class="hero-sub">Six hikes from a man who does them before most people wake up. When to go, what to bring, where to park — and why the full moon hike on Lion's Head is one of the greatest experiences on earth.</p>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val">6</div><div class="stat-label">Hikes ranked</div></div>
+    <div class="stat-item"><div class="stat-val">Before 7am</div><div class="stat-label">Dirk's start time</div></div>
+    <div class="stat-item"><div class="stat-val">1,086m</div><div class="stat-label">Table Mountain summit</div></div>
+    <div class="stat-item"><div class="stat-val">669m</div><div class="stat-label">Lion's Head summit</div></div>
+    <div class="stat-item"><div class="stat-val">Free</div><div class="stat-label">Most hikes cost nothing</div></div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div class="intro-label">The hiking guide</div>
+    <h2 class="intro-heading">Cape Town is one of the world's great hiking cities. Most people only do Table Mountain. Here's what they're missing.</h2>
+    <p class="intro-text">Within 30 minutes of the city centre you can be on a mountain summit with 360° views of two oceans. The key is timing — go early, before the heat and the crowds. Dirk hikes before 7am most mornings. These six routes are the ones he comes back to again and again.</p>
+  </div>
+
+  <!-- HIKES -->
+  <div class="hikes-wrap">
+
+    <!-- FEATURED: LION'S HEAD -->
+    <div class="hike-featured" id="hike-1">
+      <div class="hike-photo">
+        <div class="hike-photo-bg" style="background-image: url('../photos/dirk-lions-head.jpeg')"></div>
+        <div class="hike-photo-overlay"></div>
+        <div class="hike-rank">01</div>
+        <div class="hike-badge">🥾 Dirk's Favourite</div>
+      </div>
+      <div class="hike-content">
+        <div class="hike-eyebrow">Iconic Hike · Signal Hill Road</div>
+        <h2 class="hike-title">Lion's Head</h2>
+        <div class="hike-specs">
+          <div class="hike-spec">⏱ 2 hrs circular</div>
+          <div class="hike-spec">📏 5km loop</div>
+          <div class="hike-spec">⬆️ 669m summit</div>
+          <div class="hike-spec">💰 Free</div>
+          <div class="hike-spec">🅿️ Signal Hill Rd</div>
+        </div>
+        <div class="difficulty">
+          <div class="diff-label">Difficulty</div>
+          <div class="diff-bars">
+            <div class="diff-bar filled"></div>
+            <div class="diff-bar filled"></div>
+            <div class="diff-bar filled"></div>
+            <div class="diff-bar"></div>
+            <div class="diff-bar"></div>
+          </div>
+          <span style="font-size:11px; color:var(--white-faint)">Moderate</span>
+        </div>
+        <div class="dirk-quote">
+          <div class="dirk-quote-label">Dirk's Take</div>
+          <div class="dirk-quote-text">"Before 7am on a weekday you'll almost have it to yourself. The full moon hike is bucket-list. I've done it dozens of times and it never gets old."</div>
+        </div>
+        <p class="hike-desc">Cape Town's most iconic hike — a circular trail around and over a distinctive 669m peak that sits between Table Mountain and the Atlantic. The 360° views take in the city, Camps Bay, the Twelve Apostles, and on clear days, the Cape Peninsula stretching to the horizon. Chains and ladders help on the steeper summit sections.</p>
+        <div class="tips-list">
+          <div class="tips-label">Insider Tips</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Start before 7am on weekdays — almost to yourself, perfect light for photos</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Full moon hike is free — check dates at SA Astronomical Observatory, book parking early</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Chains and ladders on the summit — not suitable for severe vertigo</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Signal Hill Road parking — arrive by 6:30am to guarantee a spot</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Go clockwise — easier approach, more dramatic summit arrival</div>
+        </div>
+        <a href="map.html" class="btn-map">🗺 View on Map</a>
+      </div>
+    </div>
+
+    <!-- HIKE GRID -->
+    <div class="hike-grid">
+
+      <!-- TABLE MOUNTAIN -->
+      <div class="hike-card" id="hike-2">
+        <div class="hc-photo" style="background-image: url('../photos/table-mountain.jpeg')"></div>
+        <div class="hc-overlay"></div>
+        <div class="hc-diff">
+          <div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot"></div><div class="hc-diff-dot"></div>
+        </div>
+        <div class="hc-content">
+          <div class="hc-tag">🏔 Iconic</div>
+          <div class="hc-name">Table Mountain — Platteklip Gorge</div>
+          <div class="hc-quote">"The classic route — clearly marked, 2 hrs up, extraordinary views from the top. Go early or take the cable car down. Never hike down Platteklip in the afternoon heat."</div>
+          <div class="hc-meta"><span>⏱ 2 hrs up</span><span>📏 4.5km</span><span>⬆️ 1,086m</span><span>💰 Free to hike</span></div>
+        </div>
+      </div>
+
+      <!-- SIGNAL HILL -->
+      <div class="hike-card" id="hike-3">
+        <div class="hc-photo" style="background-image: url('../photos/Signal-Hill.webp')"></div>
+        <div class="hc-overlay"></div>
+        <div class="hc-diff">
+          <div class="hc-diff-dot filled"></div><div class="hc-diff-dot"></div><div class="hc-diff-dot"></div><div class="hc-diff-dot"></div><div class="hc-diff-dot"></div>
+        </div>
+        <div class="hc-content">
+          <div class="hc-tag">🌅 Easy · Sunset</div>
+          <div class="hc-name">Signal Hill Sunset Walk</div>
+          <div class="hc-quote">"Drive or walk to the top. 30 minutes. Bring a bottle of wine and watch the sun drop into the Atlantic. The easiest and most rewarding sunset in Cape Town."</div>
+          <div class="hc-meta"><span>⏱ 30 min</span><span>📏 2km</span><span>⬆️ 350m</span><span>💰 Free</span></div>
+        </div>
+      </div>
+
+      <!-- CHAPMAN'S PEAK -->
+      <div class="hike-card" id="hike-4">
+        <div class="hc-photo" style="background-image: url('../photos/chapmans-peak.jpeg')"></div>
+        <div class="hc-overlay"></div>
+        <div class="hc-diff">
+          <div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot"></div><div class="hc-diff-dot"></div><div class="hc-diff-dot"></div>
+        </div>
+        <div class="hc-content">
+          <div class="hc-tag">🌊 Coastal</div>
+          <div class="hc-name">Chapman's Peak Trail</div>
+          <div class="hc-quote">"The hiking trail runs parallel to the famous drive — clifftop views of the Atlantic the entire way. Leave before 8am to beat the heat and the tour buses."</div>
+          <div class="hc-meta"><span>⏱ 2–4 hrs</span><span>📏 8km</span><span>⬆️ 593m</span><span>💰 R57 toll</span></div>
+        </div>
+      </div>
+
+      <!-- KIRSTENBOSCH HIKE -->
+      <div class="hike-card" id="hike-5">
+        <div class="hc-photo" style="background-image: url('../photos/kirstenbosch.webp')"></div>
+        <div class="hc-overlay"></div>
+        <div class="hc-diff">
+          <div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot"></div>
+        </div>
+        <div class="hc-content">
+          <div class="hc-tag">🌿 Mountain · Challenging</div>
+          <div class="hc-name">Skeleton Gorge via Kirstenbosch</div>
+          <div class="hc-quote">"Up through the botanical gardens, into the gorge, up ladders and wooden steps to the Table Mountain plateau. One of the most beautiful and challenging routes on the mountain."</div>
+          <div class="hc-meta"><span>⏱ 3–4 hrs</span><span>📏 7km</span><span>⬆️ 900m</span><span>💰 R220 entry</span></div>
+        </div>
+      </div>
+
+      <!-- CEDERBERG -->
+      <div class="hike-card" id="hike-6">
+        <div class="hc-photo" style="background-image: url('../photos/cederberg-arch.jpeg')"></div>
+        <div class="hc-overlay"></div>
+        <div class="hc-diff">
+          <div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div><div class="hc-diff-dot filled"></div>
+        </div>
+        <div class="hc-content">
+          <div class="hc-tag">🏔 Wilderness · Epic</div>
+          <div class="hc-name">Cederberg Wilderness</div>
+          <div class="hc-quote">"2 hours north. Ancient sandstone rock arches, San Bushman paintings, and the darkest skies in South Africa. A minimum of two nights. This is the wilderness."</div>
+          <div class="hc-meta"><span>⏱ Multi-day</span><span>📏 Various</span><span>⬆️ 2,028m peak</span><span>💰 R200/night</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FULL MOON STRIP -->
+    <div class="fullmoon-strip">
+      <div class="fullmoon-content">
+        <div class="fm-label">Bucket List Experience</div>
+        <h2 class="fm-title">The Full Moon Hike<br>on <em>Lion's Head</em></h2>
+        <p class="fm-text">Once a month, hundreds of Cape Town locals hike Lion's Head by moonlight. No torches needed — the full moon lights the entire mountain. The views of the city at night from the summit are extraordinary. This is one of the great free experiences anywhere on earth.</p>
+        <div class="fm-tips">
+          <div class="fm-tip"><span class="fm-tip-arrow">→</span> Free — no booking required, just show up at Signal Hill Road parking</div>
+          <div class="fm-tip"><span class="fm-tip-arrow">→</span> Start at sunset — reach the summit as the moon rises</div>
+          <div class="fm-tip"><span class="fm-tip-arrow">→</span> Bring a headtorch as backup and wear warm layers — it gets cold at the top</div>
+          <div class="fm-tip"><span class="fm-tip-arrow">→</span> Check full moon dates: next ones are always listed on the City of Cape Town website</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESSENTIALS -->
+    <div class="essentials">
+      <div class="essentials-label">What to bring on every hike</div>
+      <div class="essentials-grid">
+        <div class="essential-card">
+          <div class="essential-icon">💧</div>
+          <div class="essential-title">Water</div>
+          <div class="essential-text">Minimum 1.5L per person. Table Mountain dehydrates fast in summer. There is no water on the mountain.</div>
+        </div>
+        <div class="essential-card">
+          <div class="essential-icon">🧴</div>
+          <div class="essential-title">Sunscreen</div>
+          <div class="essential-text">SPF 50 minimum. The UV index in Cape Town summer regularly hits 10+. You will burn faster than you think.</div>
+        </div>
+        <div class="essential-card">
+          <div class="essential-icon">👟</div>
+          <div class="essential-title">Proper Shoes</div>
+          <div class="essential-text">Trail shoes or hiking boots for Lion's Head and Table Mountain. Flip flops have caused serious accidents on the mountain.</div>
+        </div>
+        <div class="essential-card">
+          <div class="essential-icon">🧥</div>
+          <div class="essential-title">Wind Layer</div>
+          <div class="essential-text">Even in summer, the summit can be 10–15°C colder than the city. A light windproof jacket is essential.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAFETY -->
+    <div class="safety-strip">
+      <div class="safety-icon">⚠️</div>
+      <div>
+        <div class="safety-title">Mountain Safety — Non-Negotiable</div>
+        <div class="safety-text">Table Mountain claims lives every year from unprepared hikers. Never hike alone. Always tell someone your route and expected return time. Check the weather forecast — the mountain creates its own weather and conditions change fast. If you see the tablecloth forming, descend immediately. Emergency: Cape Town Mountain Rescue — 021 937 0300.</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-text">
+        <h3>Want Dirk to plan your perfect hiking day?</h3>
+        <p>Tell Caipy your fitness level, how much time you have, and what kind of views you want — she'll build the perfect hiking itinerary.</p>
+      </div>
+      <a href="index.html#caipy" class="btn-cta">Talk to Caipy →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="myguide.html" class="bottom-nav-item"><span class="nav-icon">📖</span>My Guide</a>
+  </div>
+</nav>
+
+<script>
+  const items = document.querySelectorAll('.hike-featured, .hike-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  items.forEach(item => observer.observe(item));
+</script>
+
+</body>
+</html>
