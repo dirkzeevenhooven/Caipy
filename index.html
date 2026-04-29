@@ -302,6 +302,15 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 .mo-tip{margin-top:1.4rem;padding:1rem 1.25rem;background:var(--gold-dim);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0}
 .mo-tip strong{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.3rem}
 .mo-tip p{font-size:13.5px;color:var(--muted);line-height:1.65}
+/* CAIPY SECTION */
+.caipy-sec{position:relative;overflow:hidden;padding:7rem 5vw;text-align:center}
+.caipy-sec .ctabg::after{content:'';position:absolute;inset:0;background:rgba(12,10,7,.85)}
+/* CAIPY OVERLAY */
+.caipy-ol{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:20px}
+.caipy-ol.open{display:flex}
+.caipy-ol-x{position:absolute;top:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:none;cursor:pointer;font-size:20px;color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
+.caipy-ol-x:hover{background:rgba(255,255,255,.25)}
+#tavus-embed{width:100%;max-width:900px;aspect-ratio:16/9;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:var(--rl);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35);font-size:13px;letter-spacing:2px;text-transform:uppercase}
 /* FOOTER */
 footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .frbr{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:rgba(255,255,255,.85)}
@@ -330,6 +339,11 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
 </style>
 </head>
 <body>
+
+<div class="caipy-ol" id="caipy-ol">
+  <button class="caipy-ol-x" onclick="closeCaipy()">✕</button>
+  <div id="tavus-embed">Tavus loads here</div>
+</div>
 
 <div class="mo" id="mo">
   <div class="mo-box">
@@ -551,6 +565,15 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
       <h3>From the summit of Table Mountain — Lion's Head, Camps Bay, the Atlantic, and all of Cape Town below you.</h3>
       <p>This view cannot be described. It has to be experienced.</p>
       <button class="fbl" onclick="openMo('mountain')">How to get here</button>
+    </div>
+  </div>
+  <div class="caipy-sec">
+    <div class="ctabg" style="background-image:url('photos/rock-ledge.jpeg')"></div>
+    <div class="ctac">
+      <p class="ctaey">AI Travel Agent</p>
+      <h2 class="ctah">Ask Caipy anything.</h2>
+      <p class="ctap">Your personal AI guide to Cape Town — ask about the best beaches, hidden restaurants, what to pack, or build your entire itinerary in seconds.</p>
+      <button class="btn bg" onclick="openCaipy()">Talk to Caipy</button>
     </div>
   </div>
   <div class="cta">
@@ -1601,6 +1624,11 @@ function toggleMob() {
 window.addEventListener('scroll',()=>{
   document.getElementById('topnav').classList.toggle('sc', window.scrollY>20);
 });
+
+// ── CAIPY OVERLAY ─────────────────────────────────────────────────────────
+function openCaipy(){document.getElementById('caipy-ol').classList.add('open');document.body.style.overflow='hidden'}
+function closeCaipy(){document.getElementById('caipy-ol').classList.remove('open');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCaipy()});
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 showDay(1, document.querySelector('.db'));
