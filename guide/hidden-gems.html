@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hidden Gems · Planet Uncharted Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean: #1B3A4B;
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --green: #4A7C59;
+      --green-light: #6db88a;
+      --green-dim: rgba(74,124,89,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.88);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--green); color: var(--green-light); background: rgba(74,124,89,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 75vh; min-height: 500px;
+      background: url('../photos/llandudno-beach.jpg') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(15,36,48,0.1) 0%, rgba(15,36,48,0.9) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; max-width: 700px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--green-light); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px, 6vw, 76px); font-weight: 300; line-height: 1.0; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--green-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 480px; }
+    .hero-warning {
+      position: absolute; bottom: 40px; right: 60px;
+      background: rgba(74,124,89,0.15); border: 1px solid rgba(74,124,89,0.4);
+      backdrop-filter: blur(12px); border-radius: 10px;
+      padding: 12px 18px; max-width: 240px;
+    }
+    .hero-warning-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 5px; }
+    .hero-warning-text { font-size: 12px; color: var(--white-dim); line-height: 1.5; }
+
+    /* ── INTRO ── */
+    .section-intro { padding: 60px; border-bottom: 1px solid rgba(74,124,89,0.15); background: linear-gradient(to bottom, rgba(74,124,89,0.04), transparent); }
+    .intro-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--green-light); margin-bottom: 12px; }
+    .intro-heading { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; line-height: 1.3; max-width: 600px; margin-bottom: 16px; }
+    .intro-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; max-width: 620px; }
+
+    /* ── GEMS GRID ── */
+    .gems-container { padding: 60px; }
+    .gems-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 2px; }
+
+    /* FEATURED GEM (full width) */
+    .gem-featured {
+      grid-column: 1 / -1; display: grid; grid-template-columns: 1.2fr 1fr;
+      min-height: 500px; margin-bottom: 2px;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .gem-featured.visible { opacity: 1; transform: translateY(0); }
+
+    /* STANDARD GEM CARD */
+    .gem-card {
+      position: relative; overflow: hidden; min-height: 420px;
+      cursor: pointer;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .gem-card.visible { opacity: 1; transform: translateY(0); }
+    .gem-card:nth-child(2) { transition-delay: 0.1s; }
+    .gem-card:nth-child(3) { transition-delay: 0.2s; }
+
+    .gem-photo {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+    .gem-card:hover .gem-photo,
+    .gem-featured:hover .featured-photo-bg { transform: scale(1.05); }
+
+    .gem-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,28,40,0.95) 0%, rgba(10,28,40,0.3) 60%, transparent 100%);
+    }
+    .gem-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 28px;
+    }
+    .gem-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 12px;
+      font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+      background: rgba(74,124,89,0.25); border: 1px solid rgba(110,184,138,0.4);
+      color: var(--green-light); margin-bottom: 10px;
+    }
+    .gem-name { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+    .gem-quote { font-size: 12px; color: var(--white-dim); line-height: 1.5; font-style: italic; margin-bottom: 12px; }
+    .gem-meta { display: flex; gap: 12px; font-size: 11px; color: var(--white-faint); }
+
+    /* FEATURED CARD SPECIFIC */
+    .featured-photo {
+      position: relative; overflow: hidden; min-height: 500px;
+    }
+    .featured-photo-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+    .featured-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,28,40,0.2), transparent); }
+    .featured-badge {
+      position: absolute; top: 24px; left: 24px;
+      background: rgba(74,124,89,0.2); border: 1px solid rgba(110,184,138,0.5);
+      backdrop-filter: blur(12px); border-radius: 20px;
+      padding: 6px 16px; font-size: 10px; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--green-light);
+    }
+    .featured-num {
+      position: absolute; bottom: 24px; right: 24px;
+      font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300;
+      color: rgba(110,184,138,0.2); line-height: 1;
+    }
+
+    .featured-content {
+      background: var(--ocean-mid); padding: 48px;
+      display: flex; flex-direction: column; justify-content: center;
+      border: 1px solid rgba(74,124,89,0.1);
+    }
+    .featured-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--green-light); margin-bottom: 14px; }
+    .featured-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 400; line-height: 1.15; margin-bottom: 8px; }
+    .featured-meta { display: flex; gap: 16px; margin-bottom: 20px; font-size: 12px; color: var(--white-faint); }
+    .featured-meta span { display: flex; align-items: center; gap: 5px; }
+
+    .dirk-quote {
+      padding: 16px 20px; margin-bottom: 20px;
+      background: rgba(74,124,89,0.08); border-left: 2px solid var(--green);
+      border-radius: 0 8px 8px 0;
+    }
+    .dirk-quote-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 6px; }
+    .dirk-quote-text { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; color: var(--white); line-height: 1.5; }
+
+    .featured-desc { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 22px; }
+
+    .tips-list { margin-bottom: 26px; }
+    .tips-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 10px; }
+    .tip-item { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); margin-bottom: 7px; line-height: 1.5; }
+    .tip-arrow { color: var(--green-light); flex-shrink: 0; }
+
+    .btn-map {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 22px; background: transparent; color: var(--white);
+      border-radius: 6px; font-weight: 500; font-size: 12px;
+      text-decoration: none; transition: all 0.2s;
+      border: 1px solid rgba(74,124,89,0.4); cursor: pointer; width: fit-content;
+    }
+    .btn-map:hover { border-color: var(--green-light); color: var(--green-light); }
+
+    /* ── SECOND ROW — 2 col ── */
+    .gems-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 2px; }
+
+    /* ── SECRET STRIP ── */
+    .secret-strip {
+      margin: 60px 0 0;
+      background: linear-gradient(135deg, rgba(74,124,89,0.08), rgba(15,36,48,0.8));
+      border: 1px solid rgba(74,124,89,0.2); border-radius: 16px;
+      padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+    }
+    .secret-strip h3 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; line-height: 1.3; margin-bottom: 12px; }
+    .secret-strip h3 em { font-style: italic; color: var(--green-light); }
+    .secret-strip p { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+    .secret-list { list-style: none; }
+    .secret-list li { display: flex; gap: 12px; font-size: 13px; color: var(--white-dim); padding: 10px 0; border-bottom: 1px solid rgba(74,124,89,0.1); line-height: 1.5; }
+    .secret-list li:last-child { border-bottom: none; }
+    .secret-list .s-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* ── CTA ── */
+    .cta-strip {
+      margin-top: 60px;
+      background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark));
+      border: 1px solid var(--gold-dim); border-radius: 16px;
+      padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px;
+    }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--green-light); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .gems-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .hero-warning { display: none; }
+      .section-intro { padding: 40px 24px; }
+      .gems-container { padding: 32px 24px; }
+      .gems-grid { grid-template-columns: 1fr; }
+      .gem-featured { grid-template-columns: 1fr; }
+      .featured-photo { min-height: 300px; }
+      .featured-content { padding: 32px 24px; }
+      .gems-row2 { grid-template-columns: 1fr; }
+      .gem-card { min-height: 320px; }
+      .secret-strip { grid-template-columns: 1fr; gap: 24px; padding: 32px 24px; }
+      .cta-strip { flex-direction: column; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Uncharted</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item active"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="#" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
+  <a href="#" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="#" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="#" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="#" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="#" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="#" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="#" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="#" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="#" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Uncharted · Exclusive</div>
+      <h1 class="hero-title">Hidden<br><em>Gems</em></h1>
+      <p class="hero-sub">Six places that aren't in any other guide. Not because they're hard to find — because nobody who knows them wants to share them. Until now.</p>
+    </div>
+    <div class="hero-warning">
+      <div class="hero-warning-label">⚠ Please note</div>
+      <div class="hero-warning-text">These places are special because they're uncrowded. Please keep them that way — don't share their exact locations on social media.</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section-intro">
+    <div class="intro-label">What makes a hidden gem</div>
+    <h2 class="intro-heading">The places locals go when they want to escape the places tourists go</h2>
+    <p class="intro-text">After 10+ years in Cape Town, these are the places Dirk still goes when he wants to feel like he has the city to himself. A secret beach between Clifton and Camps Bay. A wine estate where the winemaker pours your tasting personally. Kelp forests from a documentary that won an Oscar. These aren't tips from a blog — they're from someone who lives here.</p>
+  </div>
+
+  <!-- GEMS -->
+  <div class="gems-container">
+
+    <!-- FEATURED: BETA BEACH -->
+    <div class="gem-featured" id="gem-1">
+      <div class="featured-photo">
+        <div class="featured-photo-bg" style="background-image: url('../photos/llandudno-beach.jpg')"></div>
+        <div class="featured-overlay"></div>
+        <div class="featured-badge">💎 Most Secret</div>
+        <div class="featured-num">01</div>
+      </div>
+      <div class="featured-content">
+        <div class="featured-eyebrow">Hidden Gem · Bakoven, Atlantic Seaboard</div>
+        <h2 class="featured-title">Beta Beach & Bali Beach</h2>
+        <div class="featured-meta">
+          <span>⏱ 2–3 hrs</span>
+          <span>💰 Free</span>
+          <span>📍 Between Camps Bay & Clifton</span>
+        </div>
+        <div class="dirk-quote">
+          <div class="dirk-quote-label">Dirk's Take</div>
+          <div class="dirk-quote-text">"Secret coves between Camps Bay and Clifton. Almost completely private. You scramble down the rocks and suddenly you have your own beach. Bring beach shoes."</div>
+        </div>
+        <p class="featured-desc">Park on Victoria Road in Bakoven and scramble down the rocks to find two hidden tidal pools and coves that almost no tourist ever discovers. Crystal clear water, dramatic boulders, and on a good day — complete solitude. This is what Clifton felt like 30 years ago.</p>
+        <div class="tips-list">
+          <div class="tips-label">How to find it</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Park on Victoria Road, Bakoven — look for the rock scramble path down</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Bring beach shoes — the rocks are uneven on the way down</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Morning is best — goes into shade after 3pm</div>
+          <div class="tip-item"><span class="tip-arrow">→</span> Do not post the exact location on Instagram — keep this one secret</div>
+        </div>
+        <a href="map.html" class="btn-map">🗺 View on Map</a>
+      </div>
+    </div>
+
+    <!-- 3-COL GRID -->
+    <div class="gems-grid">
+
+      <!-- LLANDUDNO -->
+      <div class="gem-card" id="gem-2">
+        <div class="gem-photo" style="background-image: url('../photos/llandudno-beach.jpg')"></div>
+        <div class="gem-overlay"></div>
+        <div class="gem-content">
+          <div class="gem-tag">💎 Hidden Beach</div>
+          <div class="gem-name">Llandudno Beach</div>
+          <div class="gem-quote">"Same mountain backdrop as Camps Bay. A fraction of the people. Dramatic granite boulders that make every photo look like a painting."</div>
+          <div class="gem-meta"><span>⏱ 2–4 hrs</span><span>💰 Free</span><span>📍 Llandudno</span></div>
+        </div>
+      </div>
+
+      <!-- NOORDHOEK SNORKELLING -->
+      <div class="gem-card" id="gem-3">
+        <div class="gem-photo" style="background-image: url('../photos/rock-ledge.jpeg')"></div>
+        <div class="gem-overlay"></div>
+        <div class="gem-content">
+          <div class="gem-tag">🐠 Underwater</div>
+          <div class="gem-name">Noordhoek Snorkelling</div>
+          <div class="gem-quote">"The same kelp forests as My Octopus Teacher. Filmed right here. The underwater experience is extraordinary — octopus, fish, seals on lucky days."</div>
+          <div class="gem-meta"><span>⏱ 2–3 hrs</span><span>💰 Free</span><span>📍 Noordhoek</span></div>
+        </div>
+      </div>
+
+      <!-- DIEMERSDAL -->
+      <div class="gem-card" id="gem-4">
+        <div class="gem-photo" style="background-image: url('../photos/wine-barrel.jpeg')"></div>
+        <div class="gem-overlay"></div>
+        <div class="gem-content">
+          <div class="gem-tag">🍷 Secret Wine</div>
+          <div class="gem-name">Diemersdal Wine Estate</div>
+          <div class="gem-quote">"20 minutes from the city. The winemaker pours your tasting personally. Zero tourist buses. This is how wine should always be."</div>
+          <div class="gem-meta"><span>⏱ 2–3 hrs</span><span>💰 R80–150</span><span>📍 Durbanville</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2-COL ROW -->
+    <div class="gems-row2">
+
+      <!-- MELKBOS KITCHEN -->
+      <div class="gem-card" id="gem-5" style="min-height: 380px;">
+        <div class="gem-photo" style="background-image: url('../photos/restaurant.jpeg')"></div>
+        <div class="gem-overlay"></div>
+        <div class="gem-content">
+          <div class="gem-tag">🦞 Secret Restaurant</div>
+          <div class="gem-name">Melkbos Kitchen, Melkbosstrand</div>
+          <div class="gem-quote">"30 minutes north of the city. Freshest seafood. Almost no tourists — locals only. The kind of place you stumble on and never forget."</div>
+          <div class="gem-meta"><span>⏱ 2 hrs</span><span>💰 R300–500 pp</span><span>📍 Melkbosstrand</span></div>
+        </div>
+      </div>
+
+      <!-- CEDERBERG -->
+      <div class="gem-card" id="gem-6" style="min-height: 380px;">
+        <div class="gem-photo" style="background-image: url('../photos/cederberg-arch.jpeg')"></div>
+        <div class="gem-overlay"></div>
+        <div class="gem-content">
+          <div class="gem-tag">🏔 Wilderness</div>
+          <div class="gem-name">Cederberg Wilderness Area</div>
+          <div class="gem-quote">"Two hours north. Ancient rock formations. San Bushman paintings thousands of years old. The darkest skies in South Africa. Minimum two nights."</div>
+          <div class="gem-meta"><span>⏱ 2+ nights</span><span>💰 R200–400/night</span><span>📍 2 hrs north</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECRET STRIP -->
+    <div class="secret-strip">
+      <div>
+        <div class="intro-label">Why these places stay secret</div>
+        <h3>"The best places in Cape Town<br>are <em>never</em> on TripAdvisor"</h3>
+        <p>These six locations have one thing in common — the locals who know them don't talk about them online. The moment a place goes viral, it stops being special. These tips come from 10+ years of living in and loving Cape Town.</p>
+      </div>
+      <ul class="secret-list">
+        <li><span class="s-icon">🏖️</span><div><strong>Beta Beach</strong> — Secret cove, almost private, crystal clear tidal pool</div></li>
+        <li><span class="s-icon">🌊</span><div><strong>Llandudno</strong> — Most dramatic beach, fraction of Camps Bay crowds</div></li>
+        <li><span class="s-icon">🐠</span><div><strong>Noordhoek Snorkelling</strong> — My Octopus Teacher kelp forests</div></li>
+        <li><span class="s-icon">🍷</span><div><strong>Diemersdal</strong> — Meet the winemaker, zero tourist buses</div></li>
+        <li><span class="s-icon">🦞</span><div><strong>Melkbos Kitchen</strong> — Freshest seafood, locals only</div></li>
+        <li><span class="s-icon">🏔️</span><div><strong>Cederberg</strong> — Ancient wilderness, darkest skies in SA</div></li>
+      </ul>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-strip">
+      <div class="cta-text">
+        <h3>Want Dirk to plan your hidden gems day?</h3>
+        <p>Tell Caipy how many days you have and what you're into — she'll build a complete itinerary around the places nobody else knows about.</p>
+      </div>
+      <a href="index.html#caipy" class="btn-cta">Talk to Caipy →</a>
+    </div>
+
+  </div><!-- end gems-container -->
+</div><!-- end main -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="#" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
+    <a href="#" class="bottom-nav-item"><span class="nav-icon">📖</span>My Guide</a>
+  </div>
+</nav>
+
+<script>
+  const items = document.querySelectorAll('.gem-featured, .gem-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  items.forEach(item => observer.observe(item));
+</script>
+
+</body>
+</html>
