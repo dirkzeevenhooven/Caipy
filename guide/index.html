@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cape Town">
+<meta name="theme-color" content="#1B3A4B">
+<title>Planet Uncharted — Cape Town Guide</title>
+<meta name="description" content="The world's most revolutionary interactive travel guide for Cape Town. Built on 15+ years of local knowledge by Dirk.">
+<meta property="og:title" content="Planet Uncharted — Cape Town Guide">
+<meta property="og:description" content="The world's most revolutionary interactive travel guide. 15+ years of local Cape Town knowledge.">
+<meta property="og:image" content="/photos/hero-aerial.jpg">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="/photos/caipy-avatar.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ocean:#1B3A4B;
+  --ocean-deep:#0D1F2D;
+  --ocean-darker:#07131A;
+  --gold:#C9A96E;
+  --gold-l:#E2C48E;
+  --gold-dim:rgba(201,169,110,0.12);
+  --gold-border:rgba(201,169,110,0.28);
+  --green:#4A7C59;
+  --cream:#FAF8F4;
+  --cream-d:rgba(250,248,244,0.65);
+  --cream-f:rgba(250,248,244,0.35);
+  --border:rgba(255,255,255,0.08);
+  --card:rgba(255,255,255,0.04);
+  --card-h:rgba(255,255,255,0.08);
+  --sidebar:260px;
+  --bnav:68px;
+  --topbar:58px;
+}
+
+html{height:100%;overflow:hidden}
+body{
+  height:100%;font-family:'Jost',sans-serif;font-weight:300;
+  background:var(--ocean-darker);color:var(--cream);
+  overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+
+/* ── APP SHELL ── */
+#app{height:100vh;height:100dvh;display:flex;overflow:hidden}
+
+/* ── SIDEBAR (desktop) ── */
+#sidebar{
+  width:var(--sidebar);background:var(--ocean-deep);
+  border-right:1px solid var(--border);
+  display:none;flex-direction:column;flex-shrink:0;overflow-y:auto;
+}
+@media(min-width:768px){#sidebar{display:flex}}
+
+.s-brand{
+  padding:28px 20px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.s-brand-globe{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--gold-dim);border:1px solid var(--gold-border);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.s-brand-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--cream)}
+.s-brand-sub{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-top:1px}
+
+.s-nav{padding:12px 10px;flex:1}
+.s-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--cream-f);padding:14px 10px 6px}
+.s-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 10px;border-radius:8px;cursor:pointer;
+  transition:all .2s;margin-bottom:1px;
+  color:var(--cream-d);font-size:13px;font-weight:400;
+}
+.s-item:hover{background:var(--card-h);color:var(--cream)}
+.s-item.active{background:var(--gold-dim);color:var(--gold-l);border:1px solid var(--gold-border)}
+.s-item-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.s-footer{
+  padding:16px 20px;border-top:1px solid var(--border);
+  font-size:10px;color:var(--cream-f);letter-spacing:.5px;line-height:1.6;
+}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+/* ── TOP BAR ── */
+#top-bar{
+  height:var(--topbar);
+  background:rgba(7,19,26,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;flex-shrink:0;
+  padding-top:env(safe-area-inset-top);
+  z-index:100;
+}
+@media(min-width:768px){#top-bar .tb-brand{display:none}}
+
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-logo{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--cream)}
+.tb-logo small{display:block;font-family:'Jost',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-top:-2px}
+.tb-actions{display:flex;gap:8px}
+.icon-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:15px;transition:all .2s;color:var(--cream-d);
+}
+.icon-btn:hover{background:var(--card-h);color:var(--cream)}
+
+/* ── SECTIONS ── */
+#sections-wrap{flex:1;overflow:hidden;position:relative}
+.section{
+  position:absolute;inset:0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  opacity:0;pointer-events:none;
+  transition:opacity .28s ease;
+  padding-bottom:calc(var(--bnav) + env(safe-area-inset-bottom) + 24px);
+}
+@media(min-width:768px){.section{padding-bottom:40px}}
+.section.active{opacity:1;pointer-events:all}
+
+/* ── HOME SECTION ── */
+.home-hero{
+  position:relative;height:46vh;min-height:260px;
+  display:flex;align-items:flex-end;overflow:hidden;
+}
+.home-hero-bg{
+  position:absolute;inset:0;
+  background:url('/photos/hero-aerial.jpg') center 35%/cover no-repeat;
+}
+.home-hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,var(--ocean-darker) 0%,rgba(7,19,26,.55) 45%,rgba(7,19,26,.15) 100%);
+}
+.home-hero-content{
+  position:relative;z-index:2;padding:0 20px 22px;width:100%;
+}
+.home-eyebrow{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.home-eyebrow::before{content:'✦';font-size:8px}
+.home-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.4rem,9vw,4.2rem);
+  font-weight:300;color:var(--cream);line-height:.95;
+}
+.home-title em{font-style:italic;color:var(--gold-l)}
+
+/* ── STATUS STRIP ── */
+.status-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  margin:-22px 14px 18px;position:relative;z-index:10;
+}
+.s-card{
+  background:rgba(7,19,26,.92);backdrop-filter:blur(16px);
+  border:1px solid var(--border);border-radius:12px;
+  padding:11px 8px;text-align:center;
+}
+.s-card-icon{font-size:17px;margin-bottom:3px}
+.s-card-value{font-size:13px;font-weight:500;color:var(--cream);line-height:1}
+.s-card-value.ok{color:#4ADE80}
+.s-card-value.warn{color:#FBBF24}
+.s-card-value.bad{color:#F87171}
+.s-card-label{font-size:9px;letter-spacing:.8px;color:var(--cream-f);text-transform:uppercase;margin-top:2px}
+
+/* ── HOME CONTENT ── */
+.home-content{padding:0 14px}
+
+/* ── SUGGESTION CARD ── */
+.suggestion-card{
+  display:flex;align-items:center;gap:13px;
+  background:var(--gold-dim);border:1px solid var(--gold-border);
+  border-radius:14px;padding:15px;margin-bottom:20px;
+  cursor:pointer;transition:all .2s;
+}
+.suggestion-card:hover{background:rgba(201,169,110,.18)}
+.suggestion-emoji{font-size:28px;flex-shrink:0}
+.suggestion-body{flex:1}
+.suggestion-title{font-size:13px;font-weight:500;color:var(--gold-l);margin-bottom:2px}
+.suggestion-text{font-size:12px;color:var(--cream-d);line-height:1.5}
+.suggestion-arrow{color:var(--gold);font-size:20px;flex-shrink:0}
+
+/* ── LABEL ── */
+.sec-label{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;display:block;
+}
+
+/* ── PICK CARD ── */
+.pick-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.pick-day{font-size:12px;color:var(--cream-d)}
+.pick-card{
+  position:relative;height:228px;border-radius:18px;
+  overflow:hidden;cursor:pointer;margin-bottom:24px;
+}
+.pick-bg{
+  position:absolute;inset:0;background-size:cover;
+  background-position:center;transition:transform .5s ease;
+}
+.pick-card:hover .pick-bg{transform:scale(1.04)}
+.pick-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(7,19,26,.94) 0%,rgba(7,19,26,.35) 65%,transparent 100%);
+}
+.pick-content{position:absolute;bottom:0;left:0;right:0;padding:18px}
+.pick-tag{
+  display:inline-block;
+  background:var(--gold-dim);border:1px solid var(--gold-border);
+  color:var(--gold);font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;margin-bottom:7px;
+}
+.pick-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.75rem;
+  font-weight:400;color:var(--cream);line-height:1.05;margin-bottom:5px;
+}
+.pick-quote{font-size:12px;color:var(--cream-d);font-style:italic;line-height:1.5;margin-bottom:10px}
+.pick-cta{color:var(--gold);font-size:12px;font-weight:500;letter-spacing:.5px}
+
+/* ── NAV GRID ── */
+.nav-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:24px}
+.nav-tile{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:16px 6px;text-align:center;
+  cursor:pointer;transition:all .2s;
+}
+.nav-tile:hover,.nav-tile:active{background:var(--card-h);border-color:var(--gold-border);transform:translateY(-2px)}
+.nav-tile-icon{font-size:22px;margin-bottom:5px}
+.nav-tile-label{font-size:10px;color:var(--cream-d);letter-spacing:.3px;line-height:1.2}
+
+/* ── CAIPY HOME CTA ── */
+.caipy-home-cta{
+  display:flex;align-items:center;gap:14px;
+  background:var(--ocean-deep);border:1px solid var(--border);
+  border-radius:16px;padding:18px;margin-bottom:20px;cursor:pointer;
+  transition:all .2s;
+}
+.caipy-home-cta:hover{border-color:var(--gold-border)}
+.caipy-home-avatar{
+  width:48px;height:48px;border-radius:50%;overflow:hidden;
+  border:2px solid var(--gold);flex-shrink:0;
+}
+.caipy-home-avatar img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.caipy-home-body{flex:1}
+.caipy-home-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.caipy-home-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--cream)}
+.caipy-home-sub{font-size:12px;color:var(--cream-d);margin-top:1px}
+.caipy-home-btn{
+  background:var(--gold);color:#fff;border:none;
+  padding:8px 16px;border-radius:8px;font-family:'Jost',sans-serif;
+  font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.caipy-home-btn:hover{background:var(--gold-l)}
+
+/* ── HOME FOOTER ── */
+.home-footer{
+  text-align:center;padding:16px 0 4px;
+  font-size:10px;color:var(--cream-f);letter-spacing:.5px;line-height:1.7;
+}
+
+/* ── PLACEHOLDER SECTIONS ── */
+.placeholder{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:70vh;text-align:center;padding:40px 24px;
+}
+.placeholder-icon{font-size:52px;margin-bottom:18px;opacity:.8}
+.placeholder-title{
+  font-family:'Cormorant Garamond',serif;font-size:2rem;
+  font-weight:300;color:var(--cream);margin-bottom:10px;
+}
+.placeholder-sub{font-size:14px;color:var(--cream-d);max-width:300px;line-height:1.7;margin-bottom:24px}
+.placeholder-badge{
+  display:inline-block;background:var(--gold-dim);
+  border:1px solid var(--gold-border);color:var(--gold);
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  padding:6px 18px;border-radius:20px;
+}
+
+/* ── EXPLORE GRID (Explore tab) ── */
+.explore-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+  padding:16px;
+}
+.explore-card{
+  position:relative;height:140px;border-radius:16px;overflow:hidden;
+  cursor:pointer;transition:transform .25s;
+}
+.explore-card:hover{transform:scale(1.02)}
+.explore-card-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.explore-card-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(7,19,26,.9) 0%,rgba(7,19,26,.3) 100%);
+}
+.explore-card-content{
+  position:absolute;bottom:0;left:0;right:0;padding:14px;z-index:2;
+}
+.explore-card-icon{font-size:18px;margin-bottom:3px}
+.explore-card-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--cream)}
+.explore-card-sub{font-size:10px;color:rgba(250,248,244,.6);letter-spacing:.5px}
+
+/* ── BOTTOM NAV ── */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(7,19,26,.96);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:flex;padding-bottom:env(safe-area-inset-bottom);
+}
+@media(min-width:768px){#bottom-nav{display:none}}
+.bn-item{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:10px 0;cursor:pointer;gap:3px;
+  color:var(--cream-f);transition:color .2s;
+}
+.bn-item.active{color:var(--gold)}
+.bn-item:hover{color:var(--cream-d)}
+.bn-icon{font-size:21px}
+.bn-label{font-size:9px;letter-spacing:1px;text-transform:uppercase}
+
+/* ── CAIPY FLOATING WIDGET ── */
+#caipyWidget{
+  position:fixed;z-index:300;
+  bottom:calc(var(--bnav) + env(safe-area-inset-bottom) + 14px);right:16px;
+  display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+}
+@media(min-width:768px){
+  #caipyWidget{bottom:28px;right:28px}
+}
+
+#caipyBtn{
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;
+  filter:drop-shadow(0 8px 24px rgba(201,169,110,.45));transition:transform .25s;
+  position:relative;
+}
+#caipyBtn:hover{transform:scale(1.05)}
+.caipy-orb{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--gold-dim);
+  border:3px solid var(--gold);
+  box-shadow:0 0 0 4px rgba(201,169,110,.18),0 0 28px 6px rgba(201,169,110,.3);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.caipy-orb img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.caipy-name-tag{
+  background:var(--gold);color:#fff;
+  font-family:'Jost',sans-serif;font-size:10px;font-weight:500;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 14px;border-radius:20px;
+  box-shadow:0 4px 14px rgba(201,169,110,.4);
+}
+.caipy-pulse{
+  position:absolute;top:2px;right:2px;
+  width:14px;height:14px;background:#22c55e;
+  border-radius:50%;border:2px solid var(--ocean-darker);
+  animation:cpulse 2s ease infinite;
+}
+@keyframes cpulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.7)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+.caipy-bubble{
+  background:var(--cream);border-radius:14px 14px 4px 14px;
+  padding:9px 13px;font-size:12px;font-weight:400;color:var(--ocean-deeper);
+  box-shadow:0 4px 20px rgba(0,0,0,.2);max-width:200px;line-height:1.45;
+  animation:bubblePop .4s cubic-bezier(.175,.885,.32,1.275);position:relative;
+}
+.caipy-bubble::after{
+  content:'';position:absolute;bottom:-7px;right:22px;
+  border-left:7px solid transparent;border-top:7px solid var(--cream);
+}
+@keyframes bubblePop{0%{opacity:0;transform:scale(.7) translateY(8px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+
+/* ── CAIPY PANEL ── */
+#caipyPanel{
+  width:360px;border-radius:20px;
+  box-shadow:0 24px 80px rgba(0,0,0,.4);
+  animation:panelOpen .3s cubic-bezier(.175,.885,.32,1.275);
+  overflow:hidden;background:#FAF8F4;
+}
+#caipyPanel.hidden{display:none}
+@keyframes panelOpen{0%{opacity:0;transform:scale(.85) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@media(max-width:400px){#caipyPanel{width:calc(100vw - 32px)}}
+
+#caipyCloseBtn{
+  position:absolute;top:12px;right:12px;z-index:10;
+  width:26px;height:26px;background:rgba(0,0,0,.1);
+  border:none;border-radius:50%;color:rgba(0,0,0,.5);
+  font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+#voicePanel{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:48px 36px 44px;text-align:center;position:relative;
+}
+.voice-avatar{width:100px;height:100px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);margin-bottom:20px;box-shadow:0 0 0 8px rgba(201,169,110,.1)}
+.voice-avatar img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.voice-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:#1C1C1A;margin-bottom:3px}
+.voice-sub{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#A09990;margin-bottom:22px}
+#voiceStatus{font-size:13px;color:#6B6560;margin-bottom:28px;min-height:18px}
+.voice-pulse{width:56px;height:56px;border-radius:50%;background:rgba(201,169,110,.1);display:flex;align-items:center;justify-content:center;margin-bottom:28px}
+.voice-pulse.active{animation:pulsate 1.5s ease-in-out infinite}
+@keyframes pulsate{0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,.4)}50%{box-shadow:0 0 0 16px rgba(201,169,110,0)}}
+.btn-end{background:#1C1C1A;color:#fff;border:none;padding:11px 28px;border-radius:4px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-end:hover{background:#333}
+
+/* ── SCROLLBAR ── */
+.section::-webkit-scrollbar{width:3px}
+.section::-webkit-scrollbar-track{background:transparent}
+.section::-webkit-scrollbar-thumb{background:var(--gold-border);border-radius:3px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- SIDEBAR (desktop) -->
+<aside id="sidebar">
+  <div class="s-brand">
+    <div class="s-brand-globe">🌍</div>
+    <div>
+      <div class="s-brand-name">Planet Uncharted</div>
+      <div class="s-brand-sub">Cape Town Guide</div>
+    </div>
+  </div>
+  <nav class="s-nav">
+    <div class="s-label">Dashboard</div>
+    <div class="s-item active" data-section="home" onclick="nav('home')"><span class="s-item-icon">🏠</span>Home</div>
+    <div class="s-item" data-section="map" onclick="nav('map')"><span class="s-item-icon">🗺️</span>Interactive Map</div>
+
+    <div class="s-label">Discover</div>
+    <div class="s-item" data-section="experiences" onclick="nav('experiences')"><span class="s-item-icon">⭐</span>Iconic Experiences</div>
+    <div class="s-item" data-section="hidden-gems" onclick="nav('hidden-gems')"><span class="s-item-icon">💎</span>Hidden Gems</div>
+    <div class="s-item" data-section="neighbourhoods" onclick="nav('neighbourhoods')"><span class="s-item-icon">🏘️</span>Neighbourhoods</div>
+
+    <div class="s-label">Eat & Drink</div>
+    <div class="s-item" data-section="food" onclick="nav('food')"><span class="s-item-icon">🍽️</span>Restaurants & Food</div>
+    <div class="s-item" data-section="markets" onclick="nav('markets')"><span class="s-item-icon">🛒</span>Markets</div>
+    <div class="s-item" data-section="wine" onclick="nav('wine')"><span class="s-item-icon">🍷</span>Wine & Winelands</div>
+
+    <div class="s-label">Outdoors</div>
+    <div class="s-item" data-section="beaches" onclick="nav('beaches')"><span class="s-item-icon">🏖️</span>Beaches</div>
+    <div class="s-item" data-section="hikes" onclick="nav('hikes')"><span class="s-item-icon">🥾</span>Hikes & Outdoors</div>
+    <div class="s-item" data-section="day-trips" onclick="nav('day-trips')"><span class="s-item-icon">🚗</span>Day Trips</div>
+
+    <div class="s-label">Plan Your Trip</div>
+    <div class="s-item" data-section="safety" onclick="nav('safety')"><span class="s-item-icon">🛡️</span>Safety Guide</div>
+    <div class="s-item" data-section="practical" onclick="nav('practical')"><span class="s-item-icon">ℹ️</span>Practical Info</div>
+    <div class="s-item" data-section="itinerary" onclick="nav('itinerary')"><span class="s-item-icon">✈️</span>Itinerary Builder</div>
+    <div class="s-item" data-section="my-guide" onclick="nav('my-guide')"><span class="s-item-icon">💾</span>My Guide</div>
+  </nav>
+  <div class="s-footer">
+    Planet Uncharted · thecapetownguide.com<br>
+    Built on Dirk's 15+ years of Cape Town knowledge
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- TOP BAR (mobile) -->
+  <div id="top-bar">
+    <div class="tb-brand">
+      <div class="tb-logo">Planet Uncharted<small>Cape Town Guide</small></div>
+    </div>
+    <div class="tb-actions">
+      <div class="icon-btn" onclick="nav('my-guide')" title="My Guide">💾</div>
+    </div>
+  </div>
+
+  <!-- SECTIONS -->
+  <div id="sections-wrap">
+
+    <!-- ① HOME -->
+    <section id="sec-home" class="section active">
+      <div class="home-hero">
+        <div class="home-hero-bg"></div>
+        <div class="home-hero-content">
+          <div class="home-eyebrow" id="greetingTime">Good morning, Cape Town awaits.</div>
+          <h1 class="home-title">Discover<br><em>Cape Town.</em></h1>
+        </div>
+      </div>
+
+      <!-- Status Strip -->
+      <div class="status-strip">
+        <div class="s-card">
+          <div class="s-card-icon" id="weatherIcon">🌤️</div>
+          <div class="s-card-value" id="tempDisplay">--°</div>
+          <div class="s-card-label" id="weatherDesc">Weather</div>
+        </div>
+        <div class="s-card">
+          <div class="s-card-icon">🚡</div>
+          <div class="s-card-value ok" id="cableCarStatus">Check</div>
+          <div class="s-card-label">Cable Car</div>
+        </div>
+        <div class="s-card">
+          <div class="s-card-icon">💨</div>
+          <div class="s-card-value" id="windDisplay">--</div>
+          <div class="s-card-label">km/h wind</div>
+        </div>
+        <div class="s-card">
+          <div class="s-card-icon">💱</div>
+          <div class="s-card-value" id="currencyDisplay">R20</div>
+          <div class="s-card-label">per €1</div>
+        </div>
+      </div>
+
+      <div class="home-content">
+
+        <!-- Suggestion -->
+        <div class="suggestion-card" id="suggestionCard">
+          <div class="suggestion-emoji" id="suggestionEmoji">☀️</div>
+          <div class="suggestion-body">
+            <div class="suggestion-title" id="suggestionTitle">Perfect beach day</div>
+            <div class="suggestion-text" id="suggestionText">Head to Llandudno — same mountain backdrop as Camps Bay, a fraction of the people.</div>
+          </div>
+          <div class="suggestion-arrow">→</div>
+        </div>
+
+        <!-- Dirk's Pick -->
+        <div class="pick-header">
+          <span class="sec-label">Dirk's Pick Today</span>
+          <span class="pick-day" id="pickDay"></span>
+        </div>
+        <div class="pick-card" id="pickCard">
+          <div class="pick-bg" id="pickBg"></div>
+          <div class="pick-overlay"></div>
+          <div class="pick-content">
+            <div class="pick-tag" id="pickTag">Hidden Gem</div>
+            <h2 class="pick-title" id="pickTitle">Lion's Head Sunrise</h2>
+            <p class="pick-quote" id="pickQuote">"Go before 7am on a weekday — you'll have the summit almost to yourself."</p>
+            <div class="pick-cta">Explore →</div>
+          </div>
+        </div>
+
+        <!-- Nav Grid -->
+        <span class="sec-label">Explore the Guide</span>
+        <div class="nav-grid">
+          <div class="nav-tile" onclick="nav('experiences')">
+            <div class="nav-tile-icon">⭐</div>
+            <div class="nav-tile-label">Experiences</div>
+          </div>
+          <div class="nav-tile" onclick="nav('hidden-gems')">
+            <div class="nav-tile-icon">💎</div>
+            <div class="nav-tile-label">Hidden Gems</div>
+          </div>
+          <div class="nav-tile" onclick="nav('food')">
+            <div class="nav-tile-icon">🍽️</div>
+            <div class="nav-tile-label">Food</div>
+          </div>
+          <div class="nav-tile" onclick="nav('beaches')">
+            <div class="nav-tile-icon">🏖️</div>
+            <div class="nav-tile-label">Beaches</div>
+          </div>
+          <div class="nav-tile" onclick="nav('hikes')">
+            <div class="nav-tile-icon">🥾</div>
+            <div class="nav-tile-label">Hikes</div>
+          </div>
+          <div class="nav-tile" onclick="nav('wine')">
+            <div class="nav-tile-icon">🍷</div>
+            <div class="nav-tile-label">Wine</div>
+          </div>
+          <div class="nav-tile" onclick="nav('day-trips')">
+            <div class="nav-tile-icon">🚗</div>
+            <div class="nav-tile-label">Day Trips</div>
+          </div>
+          <div class="nav-tile" onclick="nav('safety')">
+            <div class="nav-tile-icon">🛡️</div>
+            <div class="nav-tile-label">Safety</div>
+          </div>
+        </div>
+
+        <!-- Caipy CTA -->
+        <div class="caipy-home-cta" onclick="openCaipy()">
+          <div class="caipy-home-avatar">
+            <img src="/photos/caipy-avatar.png" alt="Caipy">
+          </div>
+          <div class="caipy-home-body">
+            <div class="caipy-home-label">AI Travel Agent</div>
+            <div class="caipy-home-title">Ask Caipy anything</div>
+            <div class="caipy-home-sub">Voice · Real-time · Cape Town expert</div>
+          </div>
+          <button class="caipy-home-btn">Talk →</button>
+        </div>
+
+        <div class="home-footer">
+          Planet Uncharted · thecapetownguide.com<br>
+          Built on Dirk's 15+ years of Cape Town knowledge
+        </div>
+      </div>
+    </section>
+
+    <!-- ② MAP -->
+    <section id="sec-map" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🗺️</div>
+        <div class="placeholder-title">Interactive Map</div>
+        <div class="placeholder-sub">Full Mapbox map with every location pinned, categorised, and filterable by type. Tap any pin to open the full info panel.</div>
+        <div class="placeholder-badge">Building in Step 2</div>
+      </div>
+    </section>
+
+    <!-- ③ EXPERIENCES -->
+    <section id="sec-experiences" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">⭐</div>
+        <div class="placeholder-title">Iconic Experiences</div>
+        <div class="placeholder-sub">Table Mountain, Robben Island, Boulders Beach, Cape of Good Hope, Bo-Kaap, V&A Waterfront — with Dirk's insider tips on each.</div>
+        <div class="placeholder-badge">Building in Step 3</div>
+      </div>
+    </section>
+
+    <!-- ④ HIDDEN GEMS -->
+    <section id="sec-hidden-gems" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">💎</div>
+        <div class="placeholder-title">Hidden Gems</div>
+        <div class="placeholder-sub">Beta Beach, Llandudno, Durbanville Hills, Noordhoek snorkelling, Melkbos Kitchen, Cederberg — places no other guide will tell you about.</div>
+        <div class="placeholder-badge">Building in Step 4</div>
+      </div>
+    </section>
+
+    <!-- ⑤ NEIGHBOURHOODS -->
+    <section id="sec-neighbourhoods" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🏘️</div>
+        <div class="placeholder-title">Neighbourhoods</div>
+        <div class="placeholder-sub">Sea Point, Camps Bay, Woodstock, Hout Bay, Bo-Kaap, Constantia — where to stay, what to explore, how each area feels.</div>
+        <div class="placeholder-badge">Building in Step 5</div>
+      </div>
+    </section>
+
+    <!-- ⑥ FOOD -->
+    <section id="sec-food" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🍽️</div>
+        <div class="placeholder-title">Restaurants & Food</div>
+        <div class="placeholder-sub">The Black Sheep, Kloofstreet House, The Pot Luck Club, Bree Street, Kalk Bay harbour — where locals actually eat.</div>
+        <div class="placeholder-badge">Building in Step 6</div>
+      </div>
+    </section>
+
+    <!-- ⑦ BEACHES -->
+    <section id="sec-beaches" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🏖️</div>
+        <div class="placeholder-title">Beaches</div>
+        <div class="placeholder-sub">Beta Beach, Llandudno, Clifton 4th, Camps Bay, Boulders, Noordhoek — ranked by vibe, crowd level, safety and best time to visit.</div>
+        <div class="placeholder-badge">Building in Step 7</div>
+      </div>
+    </section>
+
+    <!-- ⑧ HIKES -->
+    <section id="sec-hikes" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🥾</div>
+        <div class="placeholder-title">Hikes & Outdoors</div>
+        <div class="placeholder-sub">Lion's Head, Table Mountain, Chapman's Peak, Signal Hill, Cederberg — with difficulty, best time, what to bring, and parking tips.</div>
+        <div class="placeholder-badge">Building in Step 8</div>
+      </div>
+    </section>
+
+    <!-- ⑨ WINE -->
+    <section id="sec-wine" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🍷</div>
+        <div class="placeholder-title">Wine & Winelands</div>
+        <div class="placeholder-sub">Durbanville Hills, Stellenbosch, Franschhoek, Constantia, Hemel-en-Aarde — the insider's guide to Cape wine without the tourist buses.</div>
+        <div class="placeholder-badge">Building in Step 9</div>
+      </div>
+    </section>
+
+    <!-- ⑩ MARKETS -->
+    <section id="sec-markets" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🛒</div>
+        <div class="placeholder-title">Markets</div>
+        <div class="placeholder-sub">Neighbourgoods Market, Oranjezicht City Farm, Hout Bay Harbour Market, Kindred — days, times, best stalls, what to buy.</div>
+        <div class="placeholder-badge">Building in Step 10</div>
+      </div>
+    </section>
+
+    <!-- ⑪ DAY TRIPS -->
+    <section id="sec-day-trips" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🚗</div>
+        <div class="placeholder-title">Day Trips</div>
+        <div class="placeholder-sub">Hermanus, Paternoster, Langebaan, Cederberg — distance, drive time, best time of year, what to do, where to eat.</div>
+        <div class="placeholder-badge">Building in Step 11</div>
+      </div>
+    </section>
+
+    <!-- ⑫ SAFETY -->
+    <section id="sec-safety" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">🛡️</div>
+        <div class="placeholder-title">Safety Guide</div>
+        <div class="placeholder-sub">Dirk's real talk — not the sanitised tourist version. Uber rules, car safety, ATM tips, emergency numbers, honest area guide.</div>
+        <div class="placeholder-badge">Building in Step 12</div>
+      </div>
+    </section>
+
+    <!-- ⑬ PRACTICAL -->
+    <section id="sec-practical" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">ℹ️</div>
+        <div class="placeholder-title">Practical Information</div>
+        <div class="placeholder-sub">Best time to visit, flights, car rental, SIM cards, currency, tipping, language, electricity, transport — everything you actually need.</div>
+        <div class="placeholder-badge">Building in Step 13</div>
+      </div>
+    </section>
+
+    <!-- ⑭ ITINERARY -->
+    <section id="sec-itinerary" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">✈️</div>
+        <div class="placeholder-title">Itinerary Builder</div>
+        <div class="placeholder-sub">Talk to Caipy, enter your dates and interests, get a complete day-by-day Cape Town itinerary. Save it. Export it as PDF. €49,-</div>
+        <div class="placeholder-badge">Building in Step 14</div>
+      </div>
+    </section>
+
+    <!-- ⑮ MY GUIDE -->
+    <section id="sec-my-guide" class="section">
+      <div class="placeholder">
+        <div class="placeholder-icon">💾</div>
+        <div class="placeholder-title">My Guide</div>
+        <div class="placeholder-sub">Your saved favourites, personal notes, downloaded offline content, your itinerary, trip countdown, and Cape Town packing checklist.</div>
+        <div class="placeholder-badge">Building in Step 15</div>
+      </div>
+    </section>
+
+    <!-- EXPLORE TAB (mobile bottom nav: Explore) -->
+    <section id="sec-explore" class="section">
+      <div style="padding:20px 0 8px">
+        <div style="padding:0 14px;font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--cream);margin-bottom:4px">Everything.<br><em style="color:var(--gold-l)">In one guide.</em></div>
+        <div style="padding:0 14px;font-size:13px;color:var(--cream-d);margin-bottom:20px">Tap any category to dive in.</div>
+      </div>
+      <div class="explore-grid">
+        <div class="explore-card" onclick="nav('experiences')">
+          <div class="explore-card-bg" style="background-image:url('/photos/table-mountain.jpeg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">⭐</div><div class="explore-card-title">Experiences</div><div class="explore-card-sub">6 iconic stops</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('hidden-gems')">
+          <div class="explore-card-bg" style="background-image:url('/photos/llandudno-beach.jpg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">💎</div><div class="explore-card-title">Hidden Gems</div><div class="explore-card-sub">6 secret spots</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('food')">
+          <div class="explore-card-bg" style="background-image:url('/photos/bree-street.jpg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">🍽️</div><div class="explore-card-title">Food</div><div class="explore-card-sub">Where locals eat</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('beaches')">
+          <div class="explore-card-bg" style="background-image:url('/photos/boulders-beach.jpeg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">🏖️</div><div class="explore-card-title">Beaches</div><div class="explore-card-sub">Ranked by vibe</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('hikes')">
+          <div class="explore-card-bg" style="background-image:url('/photos/dirk-lions-head.jpeg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">🥾</div><div class="explore-card-title">Hikes</div><div class="explore-card-sub">With insider tips</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('wine')">
+          <div class="explore-card-bg" style="background-image:url('/photos/winelands.webp')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">🍷</div><div class="explore-card-title">Wine</div><div class="explore-card-sub">No tourist buses</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('markets')">
+          <div class="explore-card-bg" style="background-image:url('/photos/neighbourgoods-market.jpg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">🛒</div><div class="explore-card-title">Markets</div><div class="explore-card-sub">Days & best stalls</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('day-trips')">
+          <div class="explore-card-bg" style="background-image:url('/photos/chapmans-peak.jpeg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">🚗</div><div class="explore-card-title">Day Trips</div><div class="explore-card-sub">Beyond the city</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('safety')">
+          <div class="explore-card-bg" style="background-image:url('/photos/hero-aerial.jpg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">🛡️</div><div class="explore-card-title">Safety</div><div class="explore-card-sub">Real talk</div></div>
+        </div>
+        <div class="explore-card" onclick="nav('practical')">
+          <div class="explore-card-bg" style="background-image:url('/photos/airport-welcome.jpg')"></div>
+          <div class="explore-card-content"><div class="explore-card-icon">ℹ️</div><div class="explore-card-title">Practical</div><div class="explore-card-sub">Everything you need</div></div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /sections-wrap -->
+</main><!-- /main -->
+
+<!-- BOTTOM NAV (mobile) -->
+<nav id="bottom-nav">
+  <div class="bn-item active" data-section="home" onclick="nav('home')">
+    <div class="bn-icon">🏠</div>
+    <div class="bn-label">Home</div>
+  </div>
+  <div class="bn-item" data-section="map" onclick="nav('map')">
+    <div class="bn-icon">🗺️</div>
+    <div class="bn-label">Map</div>
+  </div>
+  <div class="bn-item" data-section="explore" onclick="nav('explore')">
+    <div class="bn-icon">🔍</div>
+    <div class="bn-label">Explore</div>
+  </div>
+  <div class="bn-item" data-section="my-guide" onclick="nav('my-guide')">
+    <div class="bn-icon">💾</div>
+    <div class="bn-label">My Guide</div>
+  </div>
+</nav>
+
+<!-- CAIPY FLOATING WIDGET -->
+<div id="caipyWidget">
+  <div id="caipyPanel" class="hidden">
+    <button id="caipyCloseBtn" onclick="endCall()">✕</button>
+    <div id="voicePanel">
+      <div class="voice-avatar"><img src="/photos/caipy-avatar.png" alt="Caipy"></div>
+      <div class="voice-name">Caipy</div>
+      <div class="voice-sub">Your Cape Town Travel Agent</div>
+      <div id="voiceStatus">Connecting…</div>
+      <div class="voice-pulse" id="voicePulse">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </div>
+      <button class="btn-end" onclick="endCall()">End call</button>
+    </div>
+  </div>
+  <div id="caipyBtn" onclick="openCaipy()">
+    <div class="caipy-bubble" id="caipyBubble">Hi! Ask me anything about Cape Town 🌍</div>
+    <div class="caipy-orb"><img src="/photos/caipy-avatar.png" alt="Caipy"></div>
+    <div class="caipy-pulse"></div>
+    <div class="caipy-name-tag">Talk to Caipy</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@11labs/client" defer type="text/javascript"></script>
+
+<script>
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/guide/sw.js', { scope: '/guide/' })
+    .then(() => console.log('[PU] SW registered'))
+    .catch(e => console.log('[PU] SW error:', e));
+}
+
+// ── GREETING ──
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 5) return 'Late night';
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  if (h < 21) return 'Good evening';
+  return 'Good night';
+}
+document.getElementById('greetingTime').textContent = getGreeting() + ', Cape Town awaits.';
+
+// ── DATE ──
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const now = new Date();
+document.getElementById('pickDay').textContent = DAYS[now.getDay()];
+
+// ── DAILY PICKS ──
+const picks = [
+  { title:"Signal Hill Sundowner", tag:"Dirk's Favourite", quote:'"Drive up 30 minutes before sunset. Bring a bottle. Watch the city go golden."', photo:'/photos/Signal-Hill.webp', section:'hikes' },
+  { title:"Bree Street for Dinner", tag:"Food & Wine", quote:'"This is where Cape Town actually eats — not the Waterfront. Bree Street."', photo:'/photos/bree-street.jpg', section:'food' },
+  { title:"Llandudno Beach", tag:"Hidden Gem", quote:'"Same mountain backdrop as Camps Bay. A fraction of the people. Dramatic granite boulders."', photo:'/photos/llandudno-beach.jpg', section:'beaches' },
+  { title:"Diemersdal Wine Estate", tag:"Wine", quote:'"20 minutes from the city. Meet the winemaker personally. Zero tourist buses."', photo:'/photos/wine-barrel.jpeg', section:'wine' },
+  { title:"Lion's Head Sunrise", tag:"Hike", quote:'"Before 7am on a weekday — you\'ll have the summit almost to yourself."', photo:'/photos/dirk-lions-head.jpeg', section:'hikes' },
+  { title:"Woodstock Art Walk", tag:"Culture", quote:'"Street art, independent coffee, the creative soul of Cape Town. Start on Albert Road."', photo:'/photos/woodstock.webp', section:'neighbourhoods' },
+  { title:"Neighbourgoods Market", tag:"Market", quote:'"Every Saturday, 9am–2pm. Cape Town\'s best food market. Go early for parking."', photo:'/photos/neighbourgoods-market.jpg', section:'markets' },
+];
+const p = picks[now.getDay()];
+document.getElementById('pickBg').style.backgroundImage = `url('${p.photo}')`;
+document.getElementById('pickTag').textContent = p.tag;
+document.getElementById('pickTitle').textContent = p.title;
+document.getElementById('pickQuote').textContent = p.quote;
+document.getElementById('pickCard').onclick = () => nav(p.section);
+
+// ── WEATHER ──
+async function fetchWeather() {
+  try {
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.9249&longitude=18.4241&current=temperature_2m,weathercode,windspeed_10m&timezone=Africa/Johannesburg');
+    const d = await r.json();
+    const temp = Math.round(d.current.temperature_2m);
+    const code = d.current.weathercode;
+    const wind = Math.round(d.current.windspeed_10m);
+
+    document.getElementById('tempDisplay').textContent = temp + '°C';
+    document.getElementById('weatherDesc').textContent = wmoDesc(code);
+    document.getElementById('weatherIcon').textContent = wmoIcon(code);
+    document.getElementById('windDisplay').textContent = wind;
+
+    // Cable car heuristic
+    const cableOk = wind < 60 && code < 80;
+    const ccEl = document.getElementById('cableCarStatus');
+    ccEl.textContent = cableOk ? 'Open' : 'Check';
+    ccEl.className = 's-card-value ' + (cableOk ? 'ok' : 'warn');
+
+    // Suggestion
+    updateSuggestion(code, temp, wind);
+  } catch(e) {
+    document.getElementById('tempDisplay').textContent = '--°C';
+    document.getElementById('weatherDesc').textContent = 'Cape Town';
+  }
+}
+
+function wmoDesc(c) {
+  if (c===0) return 'Clear skies';
+  if (c<=3) return 'Partly cloudy';
+  if (c<=48) return 'Foggy';
+  if (c<=67) return 'Rainy';
+  if (c<=82) return 'Showers';
+  return 'Stormy';
+}
+function wmoIcon(c) {
+  if (c===0) return '☀️';
+  if (c<=3) return '⛅';
+  if (c<=48) return '🌫️';
+  if (c<=67) return '🌧️';
+  if (c<=82) return '🌦️';
+  return '⛈️';
+}
+
+function updateSuggestion(code, temp, wind) {
+  let s;
+  if (code===0 && temp>24)
+    s={e:'🏖️',t:'Perfect beach day',d:'Head to Llandudno — same mountain backdrop as Camps Bay, a fraction of the crowds.',sec:'beaches'};
+  else if (code<=3 && temp>=18 && wind<28)
+    s={e:'🥾',t:'Ideal hiking weather',d:"Lion's Head is calling. Leave before 9am for the best light and fewer people.",sec:'hikes'};
+  else if (wind>=35)
+    s={e:'🍷',t:'Cape Doctor is blowing',d:'The winelands are sheltered. Diemersdal is 20 min from the city — perfect day for it.',sec:'wine'};
+  else if (code>=61 && code<=82)
+    s={e:'🍽️',t:'Perfect indoor day',d:"Explore Bree Street's incredible restaurants. The Test Kitchen is 10 minutes away.",sec:'food'};
+  else
+    s={e:'💎',t:'Discover a hidden gem',d:'Beta Beach in Bakoven — a secret cove between Camps Bay and Clifton. Almost private.',sec:'hidden-gems'};
+
+  document.getElementById('suggestionEmoji').textContent = s.e;
+  document.getElementById('suggestionTitle').textContent = s.t;
+  document.getElementById('suggestionText').textContent = s.d;
+  document.getElementById('suggestionCard').onclick = () => nav(s.sec);
+}
+
+// ── CURRENCY ──
+async function fetchCurrency() {
+  try {
+    const r = await fetch('https://api.frankfurter.app/latest?from=EUR&to=ZAR');
+    const d = await r.json();
+    document.getElementById('currencyDisplay').textContent = 'R' + Math.round(d.rates.ZAR);
+  } catch(e) { /* keep default R20 */ }
+}
+
+// ── NAVIGATION ──
+let currentSection = 'home';
+function nav(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('sec-' + id);
+  if (target) { target.classList.add('active'); target.scrollTop = 0; }
+
+  document.querySelectorAll('.bn-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.section === id || (id==='explore' && el.dataset.section==='explore'));
+  });
+  if (id === 'home') {
+    document.querySelectorAll('.bn-item').forEach(el => el.classList.toggle('active', el.dataset.section==='home'));
+  }
+  document.querySelectorAll('.s-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.section === id);
+  });
+
+  currentSection = id;
+}
+
+// ── CAIPY WIDGET ──
+let caipyOpen = false, activeConv = null;
+
+function setVoiceStatus(msg) {
+  const el = document.getElementById('voiceStatus');
+  if (el) el.textContent = msg;
+}
+
+async function endCall() {
+  if (activeConv) { try { await activeConv.endSession(); } catch(e){} activeConv = null; }
+  caipyOpen = false;
+  document.getElementById('caipyPanel').classList.add('hidden');
+  document.getElementById('caipyBtn').style.display = 'flex';
+  document.getElementById('voicePulse').classList.remove('active');
+  setVoiceStatus('Connecting…');
+}
+
+setTimeout(() => {
+  const b = document.getElementById('caipyBubble');
+  if (b) { b.style.opacity='0'; b.style.transition='opacity .5s'; b.style.pointerEvents='none'; }
+}, 6000);
+
+async function openCaipy() {
+  if (caipyOpen) return;
+  caipyOpen = true;
+  document.getElementById('caipyPanel').classList.remove('hidden');
+  document.getElementById('caipyBtn').style.display = 'none';
+  document.getElementById('caipyBubble').style.display = 'none';
+
+  setVoiceStatus('Connecting…');
+  try {
+    const Conversation = window.client && window.client.Conversation;
+    if (!Conversation) throw new Error('Loading… try again in a moment.');
+    activeConv = await Conversation.startSession({
+      agentId: 'agent_0501kpzmqy56e3saj586hkn7kanq',
+      onConnect: () => {
+        setVoiceStatus('🎙️ Listening…');
+        document.getElementById('voicePulse').classList.add('active');
+      },
+      onDisconnect: () => {
+        document.getElementById('voicePulse').classList.remove('active');
+        activeConv = null;
+        setTimeout(() => endCall(), 800);
+      },
+      onError: msg => setVoiceStatus('Error: ' + msg),
+      onModeChange: ({mode}) => setVoiceStatus(mode==='speaking' ? '🔊 Caipy is speaking…' : '🎙️ Listening…'),
+    });
+  } catch(err) {
+    setVoiceStatus('Could not connect: ' + err.message);
+  }
+}
+
+// ── INIT ──
+fetchWeather();
+fetchCurrency();
+nav('home');
+</script>
+</body>
+</html>

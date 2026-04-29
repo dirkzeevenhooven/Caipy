@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — The Cape Town Guide · Planet Uncharted</title>
+<meta name="description" content="Meet Dirk Zeevenhooven — Dutch-born, Cape Town local for 10+ years, and the person behind The Cape Town Guide and Caipy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF7F2;--warm:#F3EDE3;--parchment:#EDE5D8;
+  --gold:#B8863A;--gold-l:#D4A85A;--gold-dim:#f5e8d0;
+  --text:#1C1C1A;--muted:#4A4540;--faint:#A09990;
+  --white:#fff;--border:rgba(0,0,0,0.08);
+  --sh1:0 2px 16px rgba(0,0,0,0.07);--sh2:0 8px 40px rgba(0,0,0,0.13);
+  --r:12px;--rl:20px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color:var(--text);line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:68px;background:rgba(250,247,242,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nb{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);text-decoration:none}
+.nb small{display:block;font-family:'Jost',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--faint);margin-top:-3px}
+.nav-links{display:flex;gap:8px;list-style:none}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:6px;transition:all .2s}
+.nav-links a:hover{color:var(--text);background:var(--warm)}
+
+/* HERO */
+.hero{height:90vh;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('table-mountain.webp');background-size:cover;background-position:center 35%}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,5,.85) 0%,rgba(10,8,5,.3) 55%,rgba(10,8,5,.1) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 8vw 8vh;max-width:780px}
+.hero-eyebrow{display:inline-block;color:var(--gold-l);font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.25rem;border:1px solid rgba(212,165,90,.5);padding:5px 14px;border-radius:20px;background:rgba(20,16,12,.6);backdrop-filter:blur(8px)}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:300;line-height:.95;letter-spacing:-1px;color:#fff;margin-bottom:1.5rem}
+.hero-title em{font-style:italic;color:var(--gold-l);display:block}
+.hero-sub{font-size:17px;color:rgba(255,255,255,.72);font-weight:300;max-width:500px;line-height:1.8}
+
+/* INTRO */
+.intro{display:grid;grid-template-columns:1fr 1fr;min-height:560px}
+.intro-txt{background:var(--warm);padding:6rem 6vw;display:flex;flex-direction:column;justify-content:center}
+.intro-img{overflow:hidden;position:relative;min-height:460px}
+.intro-img-bg{position:absolute;inset:0;background-image:url('bo-kaap.webp');background-size:cover;background-position:center;transition:transform 6s}
+.intro:hover .intro-img-bg{transform:scale(1.04)}
+.eyebrow{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--text);line-height:1.1;margin-bottom:1.25rem}
+.section-title em{font-style:italic;color:var(--gold)}
+.body-text{font-size:16px;color:var(--muted);line-height:1.85;margin-bottom:1.25rem}
+
+/* STORY */
+.story{padding:6rem 5vw;max-width:800px;margin:0 auto}
+.story-lead{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:300;font-style:italic;color:var(--text);line-height:1.5;margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--parchment)}
+.story p{font-size:16px;color:var(--muted);line-height:1.9;margin-bottom:1.5rem}
+
+/* FACTS */
+.facts{background:var(--text);padding:5rem 5vw}
+.facts-inner{max-width:1000px;margin:0 auto}
+.facts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:3rem}
+.fact{background:rgba(255,255,255,.04);padding:2.5rem 2rem;text-align:center;border:1px solid rgba(255,255,255,.07)}
+.fact-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--gold-l);line-height:1;margin-bottom:.5rem}
+.fact-label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+
+/* WHY */
+.why{padding:6rem 5vw;background:var(--cream)}
+.why-inner{max-width:1000px;margin:0 auto}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:3rem}
+.why-card{background:var(--white);border-radius:var(--rl);padding:2.25rem;border:1px solid var(--border);box-shadow:var(--sh1)}
+.why-icon{font-size:1.75rem;margin-bottom:1rem}
+.why-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text);margin-bottom:.6rem}
+.why-text{font-size:15px;color:var(--muted);line-height:1.75}
+
+/* FULL BLEED */
+.full-bleed{height:65vh;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.full-bleed-bg{position:absolute;inset:0;background-image:url('chapmans-peak.jpeg');background-size:cover;background-position:center 40%}
+.full-bleed-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%)}
+.full-bleed-content{position:relative;z-index:2;padding:0 8vw 3.5rem}
+.full-bleed-content h3{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:300;color:#fff;line-height:1.1;margin-bottom:.5rem}
+.full-bleed-content p{font-size:15px;color:rgba(255,255,255,.65);max-width:500px;line-height:1.7}
+
+/* CTA */
+.cta{padding:7rem 5vw;text-align:center;background:var(--warm)}
+.cta h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:300;color:var(--text);margin-bottom:1rem;line-height:1.1}
+.cta p{font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 2.5rem;line-height:1.8}
+.btn-gold{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:16px 36px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;transition:all .25s}
+.btn-gold:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:var(--sh2)}
+
+/* FOOTER */
+footer{background:var(--text);color:rgba(255,255,255,.45);padding:2.5rem 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(255,255,255,.8)}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.footer-links a{font-size:11px;color:rgba(255,255,255,.45);text-decoration:none;letter-spacing:1px;transition:color .2s}
+.footer-links a:hover{color:var(--gold-l)}
+
+@media(max-width:768px){
+  .intro,.facts-grid,.why-grid{grid-template-columns:1fr}
+  .intro-img{min-height:320px}
+  .hero-content{padding:0 5vw 6vh}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nb">The Cape Town Guide<small>Planet Uncharted</small></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Experiences</a></li>
+    <li><a href="index.html">Itinerary</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">About · Planet Uncharted</div>
+    <h1 class="hero-title">Not a travel<br><em>algorithm.</em><br>A person.</h1>
+    <p class="hero-sub">The Cape Town Guide is built on 10+ years of living here — not scraped from the internet, not generated by a model that's never left a data centre.</p>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="intro">
+  <div class="intro-txt">
+    <p class="eyebrow">The person behind it</p>
+    <h2 class="section-title">Hi, I'm Dirk.<br><em>Cape Town is home.</em></h2>
+    <p class="body-text">I moved from the Netherlands to Cape Town over ten years ago. What was supposed to be a year turned into a decade — because once this city gets under your skin, leaving stops making sense.</p>
+    <p class="body-text">I've hiked every trail on Table Mountain, eaten at every restaurant worth going to, and watched the Atlantic from Clifton more sunsets than I can count. This guide is what I tell every friend who asks: "What should I do in Cape Town?"</p>
+  </div>
+  <div class="intro-img"><div class="intro-img-bg"></div></div>
+</div>
+
+<!-- STORY -->
+<div class="story">
+  <p class="story-lead">"Most travel guides are written by people who visited for a week, or by algorithms that have never visited at all. I wanted to build something different — something that feels like getting advice from a friend who actually lives there."</p>
+  <p>The Cape Town Guide started as notes I kept for friends visiting from Europe. Over the years those notes grew into something more — a proper guide that covered not just the obvious sights, but the specific restaurants worth booking weeks ahead, the beaches that only locals go to, and the safety knowledge that makes the difference between a great trip and a stressful one.</p>
+  <p>In 2026 I built Caipy — an AI travel guide trained on everything I know about Cape Town. The idea is simple: you get the same personalised advice I'd give a close friend, instantly, in a conversation. Not a generic itinerary, not a list of sponsored hotels. A real plan, built around you.</p>
+  <p>Planet Uncharted is the brand — a name that reflects how I think about travel. The best places are always slightly off the map. The best experiences are never in the guidebook. That's what I'm here to help you find.</p>
+</div>
+
+<!-- FACTS -->
+<div class="facts">
+  <div class="facts-inner">
+    <p class="eyebrow" style="color:var(--gold);text-align:center">By the numbers</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:#fff;text-align:center;line-height:1.1">A decade of Cape Town knowledge.</h2>
+    <div class="facts-grid">
+      <div class="fact"><div class="fact-num">10+</div><div class="fact-label">Years living in Cape Town</div></div>
+      <div class="fact"><div class="fact-num">15</div><div class="fact-label">Essential experiences curated</div></div>
+      <div class="fact"><div class="fact-num">20+</div><div class="fact-label">Restaurants personally vetted</div></div>
+      <div class="fact"><div class="fact-num">1</div><div class="fact-label">City. Obsessively documented.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY -->
+<div class="why">
+  <div class="why-inner">
+    <p class="eyebrow">Why this guide is different</p>
+    <h2 class="section-title">What you won't find<br><em>anywhere else.</em></h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🏠</div>
+        <div class="why-title">Local, not tourist</div>
+        <div class="why-text">I live here. I shop here. I eat here on Tuesdays when there's no special occasion. My recommendations come from that, not from press trips or affiliate deals.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🚫</div>
+        <div class="why-title">No paid placements</div>
+        <div class="why-text">Every restaurant, every beach, every activity in this guide is here because it's genuinely good. Not because someone paid to be included. Not one exception.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🤖</div>
+        <div class="why-title">AI built on real knowledge</div>
+        <div class="why-text">Caipy is an AI trained on my personal knowledge of Cape Town — not scraped from the internet. When Caipy recommends something, it's because Dirk would recommend it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULL BLEED -->
+<div class="full-bleed">
+  <div class="full-bleed-bg"></div>
+  <div class="full-bleed-content">
+    <h3>Signal Hill at golden hour — Cape Town at its most honest.</h3>
+    <p>This is what I look at and think: yes, this is worth building something for.</p>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Ready to plan your trip?</h2>
+  <p>Chat with Caipy and get a personalised Cape Town itinerary in minutes — built on everything I know about this city.</p>
+  <a href="public/chat.html" class="btn-gold">Chat with Caipy — free</a>
+</div>
+
+<footer>
+  <div class="footer-brand">Planet Uncharted</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="safety.html">Safety Guide</a>
+    <a href="mailto:info@capetownguide.com">info@capetownguide.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

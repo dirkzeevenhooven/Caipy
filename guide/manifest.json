@@ -1,0 +1,20 @@
+{
+  "name": "Planet Uncharted — Cape Town",
+  "short_name": "Cape Town",
+  "description": "The world's most revolutionary interactive travel guide. 15+ years of local knowledge by Dirk.",
+  "start_url": "/guide/",
+  "display": "standalone",
+  "background_color": "#07131A",
+  "theme_color": "#1B3A4B",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["travel", "lifestyle"],
+  "icons": [
+    { "src": "/photos/caipy-avatar.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/photos/caipy-avatar.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Interactive Map", "short_name": "Map", "url": "/guide/#map", "description": "Open the Cape Town map" },
+    { "name": "Talk to Caipy", "short_name": "Caipy", "url": "/guide/", "description": "Get instant travel advice from Caipy" }
+  ]
+}

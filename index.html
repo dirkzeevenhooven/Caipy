@@ -65,10 +65,10 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 /* TYPOGRAPHY */
 .ey{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
 .ph{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.5rem);font-weight:300;color:var(--text);line-height:1.05;margin-bottom:.5rem}
-.pi{font-size:15px;color:var(--muted);line-height:1.8;max-width:600px;margin-bottom:3rem}
+.pi{font-size:16px;color:#4A4540;line-height:1.85;max-width:600px;margin-bottom:3rem}
 .bh{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;line-height:1.1;color:var(--text);margin-bottom:1.2rem}
 .bh em{font-style:italic;color:var(--gold)}
-.bp{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:1.2rem}
+.bp{font-size:16px;color:#4A4540;line-height:1.85;margin-bottom:1.2rem}
 .btxt{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;padding:0;display:inline-flex;align-items:center;gap:8px;transition:gap .2s}
 .btxt:hover{gap:14px}
 .btxt::after{content:'→'}
@@ -101,7 +101,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 .mc:hover .mc-n{color:rgba(212,168,90,.7)}
 .mc-nm{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:#fff;line-height:1.15;margin-bottom:.2rem}
 .mc-ar{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.4rem}
-.mc-ds{font-size:11.5px;color:rgba(255,255,255,.75);line-height:1.5;max-height:0;overflow:hidden;opacity:0;transition:all .35s}
+.mc-ds{font-size:13px;color:rgba(255,255,255,.82);line-height:1.5;max-height:0;overflow:hidden;opacity:0;transition:all .35s}
 .mc:hover .mc-ds{max-height:70px;opacity:1;margin-bottom:.5rem}
 .mc-ps{display:flex;gap:5px;flex-wrap:wrap}
 .mp{font-size:9px;font-weight:500;padding:2px 8px;border-radius:20px;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.8)}
@@ -131,7 +131,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 .fn{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;line-height:1;color:var(--parchment);margin-bottom:-.5rem}
 .ftit{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.3rem);font-weight:400;line-height:1.15;color:var(--text);margin-bottom:.5rem}
 .floc{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
-.fd{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:1.5rem}
+.fd{font-size:16px;color:#4A4540;line-height:1.85;margin-bottom:1.5rem}
 .fps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
 .fp{font-size:10px;font-weight:500;letter-spacing:.5px;padding:5px 14px;border-radius:20px;background:var(--parchment);color:var(--muted);border:1px solid var(--border)}
 .fm{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;padding:0;display:inline-flex;align-items:center;gap:8px;transition:gap .2s}
@@ -224,8 +224,31 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 .sp-map{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#2563a8;border:1px solid rgba(37,99,168,.3);padding:3px 10px;border-radius:20px;text-decoration:none}
 .sp-map:hover{background:rgba(37,99,168,.08)}
 .sp-info{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(184,134,58,.4);padding:3px 10px;border-radius:20px;cursor:pointer}
-/* PRACTICAL */
+/* PRACTICAL / TIPS */
 .prs{padding:5rem 5vw;background:var(--warm)}
+/* TIP PHOTO CARDS */
+.tip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:2.5rem;margin-bottom:2rem}
+.tip-card-photo{background:#fff;border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh1);transition:transform .2s,box-shadow .2s}
+.tip-card-photo:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.tip-card-img{height:155px;overflow:hidden}
+.tip-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s;display:block}
+.tip-card-photo:hover .tip-card-img img{transform:scale(1.06)}
+.tip-card-body{padding:1.25rem}
+.tip-card-icon{font-size:1.25rem;margin-bottom:.45rem}
+.tip-card-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--text);margin-bottom:.35rem}
+.tip-card-text{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:.7rem}
+.tip-card-link{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.tip-card-link:hover{gap:10px}
+.tip-card-link::after{content:'→'}
+.tip-card-featured{background:var(--text);border-radius:var(--rl);padding:2rem 2.5rem;box-shadow:var(--sh2);grid-column:span 3;display:flex;align-items:center;gap:2.5rem;flex-wrap:wrap}
+.tip-card-featured .tip-feat-left{flex:1;min-width:220px}
+.tip-featured-badge{display:inline-block;background:rgba(184,134,58,.18);border:1px solid rgba(184,134,58,.5);color:var(--gold-l);font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:.85rem}
+.tip-card-featured .tip-card-title{color:#fff;font-size:1.35rem;margin-bottom:.4rem}
+.tip-card-featured .tip-card-text{color:rgba(250,247,242,.6);margin-bottom:0}
+.tip-featured-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:13px 26px;border-radius:8px;text-decoration:none;transition:background .2s;flex-shrink:0}
+.tip-featured-btn:hover{background:var(--gold-l)}
+@media(max-width:960px){.tip-grid{grid-template-columns:1fr 1fr}.tip-card-featured{grid-column:span 2}}
+@media(max-width:640px){.tip-grid{grid-template-columns:1fr}.tip-card-featured{grid-column:span 1;flex-direction:column;gap:1.25rem}}
 .prg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:3rem}
 .prf{background:#fff;border-radius:var(--r);padding:1.5rem;border:1px solid var(--border);border-top:3px solid var(--gold);box-shadow:var(--sh1)}
 .prf-i{font-size:1.75rem;margin-bottom:.7rem}
@@ -235,7 +258,7 @@ body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color
 .tips2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .tip{background:#fff;border-radius:var(--r);padding:1.4rem;border:1px solid var(--border);border-left:3px solid var(--gold)}
 .tiplbl{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
-.tiptxt{font-size:13.5px;color:var(--muted);line-height:1.7}
+.tiptxt{font-size:15px;color:#4A4540;line-height:1.75}
 /* CTA */
 .cta{position:relative;overflow:hidden;padding:7rem 5vw;text-align:center}
 .ctabg{position:absolute;inset:0;background-size:cover;background-position:center}
@@ -332,9 +355,9 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
   <div class="nl">
     <a href="#" onclick="show('experiences');return false" id="nl-exp" class="act">Experiences</a>
     <a href="#" onclick="show('neighbourhoods');return false" id="nl-neigh">Neighbourhoods</a>
-    <a href="#" onclick="show('itinerary');return false" id="nl-itin">3-Day Plan</a>
+    <a href="#" onclick="show('itinerary');return false" id="nl-itin">Itinerary</a>
     <a href="#" onclick="show('food');return false" id="nl-food">Eat &amp; Drink</a>
-    <a href="#" onclick="show('practical');return false" id="nl-prac">Practical</a>
+    <a href="#" onclick="show('practical');return false" id="nl-prac">Tips</a>
     <a href="#" onclick="show('gems');return false" id="nl-gems">Hidden Gems 🔒</a>
     <a href="#" onclick="scrollCta();return false" class="ncta">Get Full Guide</a>
   </div>
@@ -343,9 +366,9 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
 <div class="mob" id="mob">
   <a href="#" onclick="show('experiences');toggleMob();return false">Experiences</a>
   <a href="#" onclick="show('neighbourhoods');toggleMob();return false">Neighbourhoods</a>
-  <a href="#" onclick="show('itinerary');toggleMob();return false">3-Day Plan</a>
+  <a href="#" onclick="show('itinerary');toggleMob();return false">Itinerary</a>
   <a href="#" onclick="show('food');toggleMob();return false">Eat &amp; Drink</a>
-  <a href="#" onclick="show('practical');toggleMob();return false">Practical</a>
+  <a href="#" onclick="show('practical');toggleMob();return false">Tips</a>
   <a href="#" onclick="show('gems');toggleMob();return false" style="color:var(--gold)">🔒 Hidden Gems</a>
   <a href="#" onclick="scrollCta();toggleMob();return false" style="color:var(--gold);border-bottom:none;font-weight:500">Get Full Guide — €9 →</a>
 </div>
@@ -536,7 +559,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
       <p class="ctaey">Get the Full Guide</p>
       <h2 class="ctah">15 experiences.<br>One unforgettable city.</h2>
       <p class="ctap">The complete Planet Uncharted Cape Town guide — every experience fully detailed, 3-day itinerary, 20 restaurants, neighbourhood guides and all 2026 practical info. One purchase, yours forever.</p>
-      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9,-</button></div>
       <p class="ctanote">Or share with 3 friends who sign up and get it completely free →</p>
     </div>
   </div>
@@ -603,7 +626,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
       <p class="ctaey">Full Neighbourhood Guide</p>
       <h2 class="ctah">Where to stay, eat and explore.</h2>
       <p class="ctap">The complete guide includes detailed neighbourhood breakdowns with the best streets, restaurants, accommodation picks by budget and insider advice for every area of Cape Town.</p>
-      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9,-</button></div>
     </div>
   </div>
 </div>
@@ -636,7 +659,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
       <p class="ctaey">Complete Itinerary</p>
       <h2 class="ctah">Get the full 3-day plan.</h2>
       <p class="ctap">Full timings, restaurant booking links, insider tips and backup plans for bad weather. Everything you need to make these 3 days the best of the year.</p>
-      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9,-</button></div>
     </div>
   </div>
 </div>
@@ -770,7 +793,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
       <p class="ctaey">11 More Restaurants</p>
       <h2 class="ctah">Get the full food guide.</h2>
       <p class="ctap">20 restaurants, cafés and bars in total — including the places that don't show up on TripAdvisor and the spots only locals know about, from hidden sunset bars to the best Sunday braai in the Cape Flats.</p>
-      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9</button></div>
+      <div class="ctafrm"><input class="ctain" type="email" placeholder="your@email.com"><button class="ctasub">Unlock — €9,-</button></div>
     </div>
   </div>
 </div>
@@ -788,6 +811,72 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
       <div class="prf"><div class="prf-i">📱</div><div class="prf-l">SIM Card</div><div class="prf-v">Vodacom / MTN</div><div class="prf-s">Buy at the airport. R50 covers a full week. WhatsApp is how restaurants, guides and everything here works.</div></div>
       <div class="prf"><div class="prf-i">🔌</div><div class="prf-l">Power</div><div class="prf-v">Type M plug</div><div class="prf-s">3 large round pins. Universal adapter essential. Good hotels have generators for load shedding.</div></div>
     </div>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;color:var(--text);margin-bottom:0">Essential topics</h3>
+    <div class="tip-grid">
+      <div class="tip-card-photo">
+        <div class="tip-card-img"><img src="images/img_11.jpg" alt="Safety in Cape Town" loading="lazy"></div>
+        <div class="tip-card-body">
+          <div class="tip-card-icon">🛡️</div>
+          <div class="tip-card-title">Safety</div>
+          <div class="tip-card-text">Tourist areas are safe by day. Use Uber at night, keep phones out of sight, never leave anything visible in parked cars.</div>
+          <a href="safety.html" class="tip-card-link">Full safety guide</a>
+        </div>
+      </div>
+      <div class="tip-card-photo">
+        <div class="tip-card-img"><img src="images/img_20.jpg" alt="Cape Town Beaches" loading="lazy"></div>
+        <div class="tip-card-body">
+          <div class="tip-card-icon">🏖️</div>
+          <div class="tip-card-title">Beaches</div>
+          <div class="tip-card-text">Camps Bay for the scene, Clifton 4th for calm water, Noordhoek for wild empty sand. Beta Beach in Bakoven is the local secret.</div>
+          <a href="#" onclick="show('experiences');return false" class="tip-card-link">See experiences</a>
+        </div>
+      </div>
+      <div class="tip-card-photo">
+        <div class="tip-card-img"><img src="images/img_06.jpg" alt="Cape Town Wine" loading="lazy"></div>
+        <div class="tip-card-body">
+          <div class="tip-card-icon">🍷</div>
+          <div class="tip-card-title">Wine</div>
+          <div class="tip-card-text">Constantia is 20 minutes from the city. Stellenbosch and Franschhoek for a full day. Durbanville Hills for fewer tourists and better value.</div>
+          <a href="#" onclick="openMo('wine');return false" class="tip-card-link">Wine guide</a>
+        </div>
+      </div>
+      <div class="tip-card-photo">
+        <div class="tip-card-img"><img src="images/img_08.jpg" alt="Hiking Table Mountain" loading="lazy"></div>
+        <div class="tip-card-body">
+          <div class="tip-card-icon">🥾</div>
+          <div class="tip-card-title">Hiking</div>
+          <div class="tip-card-text">Platteklip Gorge is the classic route up Table Mountain. Lions Head for sunrise. Signal Hill for a casual stroll with big views.</div>
+          <a href="#" onclick="openMo('mountain');return false" class="tip-card-link">Table Mountain guide</a>
+        </div>
+      </div>
+      <div class="tip-card-photo">
+        <div class="tip-card-img"><img src="images/img_12.jpg" alt="Cape Town Food" loading="lazy"></div>
+        <div class="tip-card-body">
+          <div class="tip-card-icon">🍽️</div>
+          <div class="tip-card-title">Food</div>
+          <div class="tip-card-text">The Black Sheep, Kloofstreet House, The Pot Luck Club. Saturday mornings at Oranjezicht City Farm Market. Book 48–72hrs ahead for anything good.</div>
+          <a href="#" onclick="show('food');return false" class="tip-card-link">Restaurant guide</a>
+        </div>
+      </div>
+      <div class="tip-card-photo">
+        <div class="tip-card-img"><img src="images/img_05.jpg" alt="Getting Around Cape Town" loading="lazy"></div>
+        <div class="tip-card-body">
+          <div class="tip-card-icon">🚗</div>
+          <div class="tip-card-title">Getting Around</div>
+          <div class="tip-card-text">Uber is cheap (~R80 city rides) and reliable. Rent a car for Cape Point and Winelands day trips — essential. MyCiti bus for Sea Point–Waterfront.</div>
+          <a href="#" onclick="show('practical');return false" class="tip-card-link">Practical info</a>
+        </div>
+      </div>
+      <div class="tip-card-featured">
+        <div class="tip-feat-left">
+          <div class="tip-featured-badge">✦ Free Resource</div>
+          <div class="tip-card-title">Safety &amp; Preparation Guide</div>
+          <div class="tip-card-text">Everything you need to know before you arrive — what to wear, which areas to avoid, how to use ATMs safely, and how to travel Cape Town like a local.</div>
+        </div>
+        <a href="safety.html" class="tip-featured-btn">Read Free Guide →</a>
+      </div>
+    </div>
+
     <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;color:var(--text);margin-bottom:1.5rem">Things no other guidebook tells you</h3>
     <div class="tips2">
       <div class="tip"><div class="tiplbl">The Cape Doctor</div><div class="tiptxt">The SE gale blows hardest November–March afternoons. Plan mountain hikes for early morning, beach days for late afternoon when it drops. If you kitesurf, Table Bay is world-class. If you don't, an exposed beach at 2pm in January is miserable.</div></div>
@@ -1086,6 +1175,12 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem 5vw;displa
   <div>
     <div class="frbr">Planet Uncharted</div>
     <div class="frurl">travelguide.capetown</div>
+  </div>
+  <div style="display:flex;gap:2rem;flex-wrap:wrap;align-items:center">
+    <a href="about.html" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none;letter-spacing:1px;transition:color .2s" onmouseover="this.style.color='#D4A85A'" onmouseout="this.style.color='rgba(255,255,255,.5)'">About</a>
+    <a href="contact.html" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none;letter-spacing:1px;transition:color .2s" onmouseover="this.style.color='#D4A85A'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Contact</a>
+    <a href="safety.html" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none;letter-spacing:1px;transition:color .2s" onmouseover="this.style.color='#D4A85A'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Safety Guide</a>
+    <a href="mailto:info@capetownguide.com" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none;letter-spacing:1px;transition:color .2s" onmouseover="this.style.color='#D4A85A'" onmouseout="this.style.color='rgba(255,255,255,.5)'">info@capetownguide.com</a>
   </div>
   <div class="frnote">
     All information verified April 2026 · Prices in ZAR unless stated<br>

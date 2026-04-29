@@ -2,7 +2,32 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(brew install:*)"
+      "Bash(brew install:*)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(zip -r /Users/dirkzeevenhooven/Downloads/caipy-photos.zip photos/)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:unpkg.com)",
+      "WebFetch(domain:elevenlabs.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(render logs:*)",
+      "Bash(gh auth:*)",
+      "Bash(git config:*)",
+      "Bash(security find-internet-password:*)",
+      "Bash(/usr/local/bin/node --version)",
+      "Bash(/opt/homebrew/bin/node --version)",
+      "Bash(/opt/homebrew/bin/npm install:*)",
+      "Bash(/opt/homebrew/bin/node -e \"console.log\\(''ok''\\)\")",
+      "Bash(/opt/homebrew/bin/node /opt/homebrew/lib/node_modules/npm/bin/npm-cli.js install)",
+      "WebFetch(domain:materials.klm.com)",
+      "mcp__Claude_in_Chrome__computer",
+      "Bash(git -C /Users/dirkzeevenhooven/theguidecapetownguide log --oneline origin/main..HEAD)",
+      "mcp__Claude_in_Chrome__navigate",
+      "Bash(git -C /Users/dirkzeevenhooven/theguidecapetownguide add server.js)",
+      "Bash(git -C:*)",
+      "Bash(git remote:*)"
     ]
   }
 }
