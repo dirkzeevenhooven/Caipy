@@ -3,11 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — The Cape Town Guide · Planet Uncharted</title>
+<title>Contact — The Cape Town Guide</title>
 <meta name="description" content="Get in touch with Dirk and the Cape Town Guide team. Questions about Caipy, your itinerary, or Cape Town travel — we read every message.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw; height: 68px;
+      background: rgba(28,28,26,.95); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo-text { font-family: 'Cormorant Garamond', serif; color: #fff; font-size: 20px; font-weight: 600; }
+    .logo-sub { color: rgba(255,255,255,.4); font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; display: block; margin-top: -3px; }
+    .nav-links { display: flex; gap: 8px; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,.6); text-decoration: none; font-size: 12px; font-weight: 400; letter-spacing: .5px; padding: 7px 14px; border-radius: 4px; transition: all .2s; }
+    .nav-links a:hover { color: #fff; }
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --cream:#FAF7F2;--warm:#F3EDE3;--parchment:#EDE5D8;
@@ -21,12 +35,12 @@ html{scroll-behavior:smooth}
 body{font-family:'Jost',sans-serif;font-weight:300;background:var(--cream);color:var(--text);line-height:1.7;overflow-x:hidden}
 
 /* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:68px;background:rgba(250,247,242,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.nb{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);text-decoration:none}
-.nb small{display:block;font-family:'Jost',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--faint);margin-top:-3px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:68px;background:rgba(28,28,26,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nb{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#fff;text-decoration:none}
+.nb small{display:block;font-family:'Jost',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:-3px}
 .nav-links{display:flex;gap:8px;list-style:none}
-.nav-links a{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:6px;transition:all .2s}
-.nav-links a:hover{color:var(--text);background:var(--warm)}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6);text-decoration:none;padding:8px 12px;border-radius:6px;transition:all .2s}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
 
 /* HERO */
 .hero{padding:140px 5vw 80px;background:linear-gradient(160deg,var(--cream) 60%,var(--warm));text-align:center}
@@ -87,13 +101,22 @@ footer{background:var(--text);color:rgba(255,255,255,.45);padding:2.5rem 5vw;dis
 </head>
 <body>
 
-<nav class="nav">
-  <a href="index.html" class="nb">The Cape Town Guide<small>Planet Uncharted</small></a>
-  <ul class="nav-links">
-    <li><a href="index.html">Experiences</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="safety.html">Safety Guide</a></li>
-  </ul>
+<nav>
+  <a class="logo" href="index.html">
+    <div>
+      <div class="logo-text">The Cape Town Guide</div>
+      <div class="logo-sub">Cape Town Insider Guide</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#attractions">Attractions</a>
+    <a href="index.html#neighborhoods">Neighbourhoods</a>
+    <a href="index.html#itinerary">Itinerary</a>
+    <a href="index.html#tips">Tips</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -109,7 +132,7 @@ footer{background:var(--text);color:rgba(255,255,255,.45);padding:2.5rem 5vw;dis
     <div class="contact-icon">✉️</div>
     <div class="contact-title">Email us</div>
     <div class="contact-sub">For questions about your itinerary, payments, or anything else. We respond within 24 hours.</div>
-    <a href="mailto:info@capetownguide.com" class="btn-gold">info@capetownguide.com</a>
+    <a href="mailto:info@thecapetownguide.com" class="btn-gold">info@thecapetownguide.com</a>
   </div>
   <div class="contact-card">
     <div class="contact-icon">💬</div>
@@ -139,7 +162,7 @@ footer{background:var(--text);color:rgba(255,255,255,.45);padding:2.5rem 5vw;dis
 
   <div class="faq-item" onclick="toggleFaq(this)">
     <div class="faq-q">Can I get changes made to my itinerary after I receive it? <span class="faq-toggle">+</span></div>
-    <div class="faq-a">Yes — just email us at info@capetownguide.com with what you'd like adjusted. We'll update it for you. We want your trip to be perfect, not just the itinerary to be delivered.</div>
+    <div class="faq-a">Yes — just email us at info@thecapetownguide.com with what you'd like adjusted. We'll update it for you. We want your trip to be perfect, not just the itinerary to be delivered.</div>
   </div>
 
   <div class="faq-item" onclick="toggleFaq(this)">
@@ -162,17 +185,19 @@ footer{background:var(--text);color:rgba(255,255,255,.45);padding:2.5rem 5vw;dis
 <div class="cta">
   <h2>Still have questions?</h2>
   <p>Just start a chat with Caipy — free, no commitment. Or email us directly and we'll get back to you within 24 hours.</p>
-  <a href="mailto:info@capetownguide.com" class="btn-cta">Email Dirk directly →</a>
+  <a href="mailto:info@thecapetownguide.com" class="btn-cta">Email Dirk directly →</a>
 </div>
 
 <footer>
-  <div class="footer-brand">Planet Uncharted</div>
+  <div class="footer-brand">The Cape Town Guide</div>
   <div class="footer-links">
     <a href="index.html">Home</a>
+    <a href="index.html#attractions">Attractions</a>
+    <a href="index.html#neighborhoods">Neighbourhoods</a>
+    <a href="index.html#itinerary">Itinerary</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
-    <a href="safety.html">Safety Guide</a>
-    <a href="mailto:info@capetownguide.com">info@capetownguide.com</a>
+    <a href="mailto:info@thecapetownguide.com">info@thecapetownguide.com</a>
   </div>
 </footer>
 
