@@ -835,6 +835,52 @@ app.post('/subscribe', async (req, res) => {
   }
 });
 
+// ─── Brevo gate subscribe (top-10-secrets.html email gate) ───────────────────
+app.post('/gate-subscribe', async (req, res) => {
+  const { firstname, lastname, email } = req.body;
+  if (!firstname || !lastname || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'First name, last name and valid email required' });
+  }
+
+  const name = `${firstname} ${lastname}`.trim();
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'Email service not configured' });
+
+  try {
+    // Add to Brevo list 2
+    await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': apiKey },
+      body: JSON.stringify({
+        email,
+        firstName: firstname,
+        lastName: lastname,
+        listIds: [2],
+        updateEnabled: true,
+        attributes: { SOURCE: 'Top 10 Secrets Gate', SITE: 'thecapetownguide.com' },
+      }),
+    });
+
+    // Send confirmation email
+    await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': apiKey },
+      body: JSON.stringify({
+        sender: { name: 'Dirk — The Cape Town Guide', email: 'hello@thecapetownguide.com' },
+        to: [{ email, name }],
+        subject: 'Your 10 Cape Town Insider Secrets 🇿🇦',
+        htmlContent: `<div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:40px 32px;background:#f9f5ef;"><h1 style="font-size:26px;color:#0d1b2a;font-weight:700;margin-bottom:8px;">Hi ${firstname}, enjoy the secrets.</h1><p style="font-family:Arial,sans-serif;font-size:14px;color:#5a4a3a;line-height:1.8;margin:16px 0 24px;">You now have full access to all 10 Cape Town insider secrets. Bookmark the page to come back anytime.</p><a href="https://thecapetownguide.com/top-10-secrets.html" style="display:inline-block;background:#B8863A;color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;border-radius:100px;text-decoration:none;margin-bottom:32px;">View All 10 Secrets →</a><hr style="border:none;border-top:1px solid #e0ddd8;margin:8px 0 28px;"><p style="font-family:Arial,sans-serif;font-size:13px;color:#5a4a3a;line-height:1.8;margin-bottom:20px;">Ready for the complete experience? Get your personalised Cape Town itinerary — built by AI around your dates, group, and interests.</p><a href="https://buy.stripe.com/4gMeVe7Bs4opdpO2ky5kk00" style="display:inline-block;background:#0d1b2a;color:#B8863A;font-family:Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 24px;border-radius:100px;text-decoration:none;">Get Your Guide for €49 →</a><p style="font-family:Arial,sans-serif;font-size:11px;color:#9a8a7a;margin-top:32px;">— Dirk · thecapetownguide.com</p></div>`,
+      }),
+    });
+
+    console.log('Gate subscriber added (Brevo):', email);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Gate subscribe error:', err.message);
+    res.status(500).json({ error: 'Failed to subscribe' });
+  }
+});
+
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
