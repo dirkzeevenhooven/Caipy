@@ -223,13 +223,27 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
   const esc = s => (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
+  // Extract TRIP_STYLE from itinerary text
+  const styleKeywords = ['luxury', 'budget', 'adventure', 'family', 'romantic', 'honeymoon', 'solo'];
+  const itineraryLower = itinerary.toLowerCase();
+  const matchedStyle = styleKeywords.find(k => itineraryLower.includes(k));
+  const tripStyle = matchedStyle
+    ? matchedStyle.charAt(0).toUpperCase() + matchedStyle.slice(1)
+    : 'Tailor-Made';
+
+  // Extract TRIP_MONTH from itinerary text (fallback if not in tripData)
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const matchedMonth = monthNames.find(m => itinerary.includes(m));
+  const tripMonth = tripData.tripMonth || matchedMonth || '';
+
   const html = template
     .replace(/\{\{CUSTOMER_NAME\}\}/g, esc(tripData.customerName || 'Traveller'))
     .replace(/\{\{TRIP_DAYS\}\}/g, esc(tripData.tripDays || ''))
-    .replace(/\{\{TRIP_MONTH\}\}/g, esc(tripData.tripMonth || ''))
+    .replace(/\{\{TRIP_MONTH\}\}/g, esc(tripMonth))
     .replace(/\{\{TRIP_GROUP\}\}/g, esc(tripData.tripGroup || ''))
     .replace(/\{\{TRIP_BUDGET\}\}/g, esc(tripData.tripBudget || ''))
     .replace(/\{\{TRIP_INTERESTS\}\}/g, esc(tripData.tripInterests || ''))
+    .replace(/\{\{TRIP_STYLE\}\}/g, esc(tripStyle))
     .replace('{{ITINERARY_DAYS_HTML}}', itineraryToDayCards(itinerary))
     .replace(/\{\{GUIDE_ID\}\}/g, guideId.toUpperCase())
     .replace(/\{\{GENERATED_DATE\}\}/g, date);
@@ -441,7 +455,7 @@ app.post('/create-checkout-session', async (req, res) => {
             name: 'Caipy — Personal Cape Town Interactive Travel Guide',
             description: 'A stunning personalised interactive travel guide with day-by-day itinerary, photos, local tips, booking links and more — curated from 10+ years of Cape Town local knowledge.',
           },
-          unit_amount: 4900,
+          unit_amount: 9900,
         },
         quantity: 1,
       }],
