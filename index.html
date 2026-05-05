@@ -844,64 +844,107 @@
 </div>
 
 <!-- GUIDE PREVIEW MODAL -->
-<div id="preview-modal" style="display:none;position:fixed;inset:0;background:rgba(13,27,42,.85);backdrop-filter:blur(8px);z-index:30000;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#FAF7F2;border-radius:16px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.5);">
-    <button onclick="closePreviewModal()" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,.08);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;color:#1C1C1A;display:flex;align-items:center;justify-content:center;">×</button>
-    <!-- Header -->
-    <div style="background:#0d1b2a;border-radius:16px 16px 0 0;padding:36px 40px 32px;">
-      <div style="font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#B8863A;margin-bottom:12px;">Your Personal Cape Town Itinerary</div>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:#fff;line-height:1.15;margin-bottom:8px;">Everything you need.<br><em style="color:#D4A55A;font-style:italic;">Built around your trip.</em></h2>
-      <p style="font-size:13px;color:rgba(255,255,255,.55);font-weight:300;line-height:1.7;">A fully interactive, personalised Cape Town guide — created by Caipy based on your conversation, powered by Dirk's 10+ years of local knowledge.</p>
+<div id="preview-modal" style="display:none;position:fixed;inset:0;background:rgba(13,27,42,.9);backdrop-filter:blur(10px);z-index:30000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#FAF7F2;border-radius:20px;max-width:680px;width:100%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.6);">
+    <button onclick="closePreviewModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.12);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;z-index:2;">×</button>
+
+    <!-- Hero header -->
+    <div style="background:linear-gradient(135deg,#0d1b2a 0%,#1a2f45 100%);border-radius:20px 20px 0 0;padding:40px 40px 36px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(184,134,58,.18),transparent 70%);pointer-events:none;"></div>
+      <div style="font-size:9px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:#B8863A;margin-bottom:14px;">The Cape Town Guide · Interactive Edition</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;color:#fff;line-height:1.1;margin-bottom:12px;">Not a guide.<br><em style="color:#D4A55A;font-style:italic;">A local who never sleeps.</em></h2>
+      <p style="font-size:13px;color:rgba(255,255,255,.6);font-weight:300;line-height:1.75;max-width:480px;">Every guidebook was already outdated the day it was printed. Every PDF is the same for everyone. This is something different — alive, personal, and built entirely around you.</p>
     </div>
-    <!-- What's included -->
-    <div style="padding:32px 40px;">
-      <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B8863A;margin-bottom:18px;">What's included</div>
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
-        <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1C1C1A;line-height:1.5;">
-          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
-          <span><strong>Day-by-day personalised itinerary</strong> — built around your exact dates, group, and interests</span>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1C1C1A;line-height:1.5;">
-          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
-          <span><strong>Google Maps link for every activity</strong> — tap and go, no searching needed</span>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1C1C1A;line-height:1.5;">
-          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
-          <span><strong>Restaurant & hotel picks</strong> — matched to your budget and style</span>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1C1C1A;line-height:1.5;">
-          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
-          <span><strong>Plan B for every day</strong> — weather, wind, or changed plans covered</span>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1C1C1A;line-height:1.5;">
-          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
-          <span><strong>Caipy on-call throughout your trip</strong> — ask anything, adjust plans in real time</span>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:#1C1C1A;line-height:1.5;">
-          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
-          <span><strong>A personal note from Dirk</strong> — insider tips you won't find anywhere online</span>
+
+    <div style="padding:36px 40px;">
+
+      <!-- The problem -->
+      <div style="background:#fff;border-radius:12px;padding:22px 24px;margin-bottom:24px;border-left:3px solid #B8863A;">
+        <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B8863A;margin-bottom:12px;">What every other guide gets wrong</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:13px;color:#6B6560;line-height:1.6;display:flex;gap:10px;"><span style="color:#c0392b;flex-shrink:0;">✗</span> Outdated the moment it's published — closed restaurants, wrong prices, changed hours</div>
+          <div style="font-size:13px;color:#6B6560;line-height:1.6;display:flex;gap:10px;"><span style="color:#c0392b;flex-shrink:0;">✗</span> Same recommendations for everyone — solo adventurer or family with kids, same list</div>
+          <div style="font-size:13px;color:#6B6560;line-height:1.6;display:flex;gap:10px;"><span style="color:#c0392b;flex-shrink:0;">✗</span> Tourist traps disguised as highlights — 89% of travelers fall for them, 70% regret it</div>
+          <div style="font-size:13px;color:#6B6560;line-height:1.6;display:flex;gap:10px;"><span style="color:#c0392b;flex-shrink:0;">✗</span> Lists places, not experiences — no sequencing, no timing, no logic</div>
+          <div style="font-size:13px;color:#6B6560;line-height:1.6;display:flex;gap:10px;"><span style="color:#c0392b;flex-shrink:0;">✗</span> Can't answer a single follow-up question</div>
         </div>
       </div>
+
+      <!-- What this is -->
+      <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B8863A;margin-bottom:16px;">What you get instead</div>
+      <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:28px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>A personalised day-by-day itinerary</strong> — built around your dates, your travel style, and who you're going with. Not a template. Yours.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>Always current, never outdated</strong> — live information, real opening hours, current prices. Updated continuously, not annually.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>Google Maps tap-and-go for every activity</strong> — no searching, no typing. One tap and you're navigating.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>Plan B baked into every day</strong> — Cape Town's wind picked up, it's raining, a spot is closed. Caipy adapts your plan in real time.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>Caipy on-call throughout your entire trip</strong> — ask anything from the table, the beach, or the trail. She knows your itinerary and your preferences.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>Insider restaurant, hotel & experience picks</strong> — matched to your budget and style. The places I actually send my friends to, not the ones that paid for placement.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>10 insider secrets most tourists never find</strong> — the hidden beach, the R30 train with whale views, the sunset spot that's never crowded.</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:#1C1C1A;line-height:1.55;">
+          <span style="color:#B8863A;font-size:10px;margin-top:4px;flex-shrink:0;">✦</span>
+          <span><strong>A personal note from Dirk</strong> — 10 years of living here distilled into the one page I wish existed when I arrived.</span>
+        </div>
+      </div>
+
       <!-- Sample preview -->
-      <div style="background:#0d1b2a;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
-        <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B8863A;margin-bottom:12px;">Sample — Day 1</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.8;font-weight:300;">
-          <strong style="color:#D4A55A;">Morning:</strong> Table Mountain cable car (pre-booked) — arrive 8am before clouds roll in.<br>
-          <strong style="color:#D4A55A;">Afternoon:</strong> V&A Waterfront → seal jetty → Truth Coffee for the best flat white in the city.<br>
-          <strong style="color:#D4A55A;">Evening:</strong> Bree Street for dinner — La Mouette if you want to splash out, Superette if you want local.
+      <div style="background:#0d1b2a;border-radius:12px;padding:22px 26px;margin-bottom:28px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B8863A;">Sample — Day 1 of your guide</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.5px;">Personalised for: Couple · 7 days · December</div>
         </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.9;font-weight:300;">
+          <strong style="color:#D4A55A;">08:00 Morning</strong> — Table Mountain cable car. Pre-booked for 8am — arrive early, beat the clouds and the crowds. 90 min on top.<br>
+          <span style="font-size:11px;color:rgba(255,255,255,.35);">📍 <u>Get directions</u> · ⏱ 2.5 hrs · 💳 R380pp</span><br><br>
+          <strong style="color:#D4A55A;">13:00 Afternoon</strong> — V&A Waterfront → watch the seals at the jetty → Truth Coffee (best flat white in the city, full stop).<br>
+          <span style="font-size:11px;color:rgba(255,255,255,.35);">📍 <u>Get directions</u> · ⏱ 2–3 hrs · Free</span><br><br>
+          <strong style="color:#D4A55A;">19:30 Evening</strong> — Dinner on Bree Street. La Mouette for your anniversary dinner, or Superette if you want proper local energy.<br>
+          <span style="font-size:11px;color:rgba(255,255,255,.35);">📍 <u>Get directions</u> · 🎯 Book ahead for December</span>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:rgba(255,255,255,.3);font-style:italic;">+ Plan B: If Table Mountain is clouded over, Caipy reroutes your morning to Lion's Head and reschedules the cable car for Day 3.</div>
       </div>
-      <!-- CTA -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid rgba(184,134,58,.18);flex-wrap:wrap;gap:16px;">
+
+      <!-- Social proof / urgency -->
+      <div style="background:#F5F0E8;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="font-size:22px;flex-shrink:0;">💬</div>
         <div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:400;color:#0d1b2a;line-height:1;">€99</div>
-          <div style="font-size:9px;color:#6B6560;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;">One-time · Delivered within minutes</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
-          <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;text-decoration:none;display:inline-block;">Buy now — €99 →</a>
-          <button onclick="closePreviewModal();openCaipy();" style="background:none;border:none;font-family:'Jost',sans-serif;font-size:11px;color:#B8863A;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Speak with Caipy first — it's free</button>
+          <div style="font-size:13px;color:#1C1C1A;line-height:1.6;font-style:italic;">"I've used Lonely Planet, Rick Steves, and three different travel apps. This is the first thing that actually felt like a friend was planning my trip."</div>
+          <div style="font-size:11px;color:#B8863A;margin-top:6px;font-weight:500;">— Early access traveller, Amsterdam</div>
         </div>
       </div>
+
+      <!-- CTA -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid rgba(184,134,58,.18);flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:400;color:#0d1b2a;line-height:1;">€99</div>
+          <div style="font-size:9px;color:#6B6560;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;">One-time · No subscription · Yours forever</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
+          <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 32px;border-radius:4px;text-decoration:none;display:inline-block;box-shadow:0 6px 20px rgba(184,134,58,.4);">Get your Guide — €99 →</a>
+          <button onclick="closePreviewModal();openCaipy();" style="background:none;border:none;font-family:'Jost',sans-serif;font-size:11px;color:#B8863A;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;">Not sure yet? Speak with Caipy first — it's free</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
