@@ -858,10 +858,13 @@
 // Show sticky bar after scrolling past hero
 window.addEventListener('scroll', function() {
   var bar = document.getElementById('sticky-pay');
+  var widget = document.getElementById('caipyWidget');
   if (window.scrollY > 100) {
     bar.style.transform = 'translateY(0)';
+    if (widget) widget.style.bottom = (bar.offsetHeight + 16) + 'px';
   } else {
     bar.style.transform = 'translateY(100%)';
+    if (widget) widget.style.bottom = '28px';
   }
 }, {passive: true});
 
