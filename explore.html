@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explore Cape Town — The Cape Town Guide</title>
+  <meta name="description" content="Hi, I'm Dirk. I've lived in Cape Town for 10+ years. Let me show you my city the way locals do." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; font-weight: 300; color: #1C1C1A; background: #FAF7F2; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; width: 100%; }
+
+    :root {
+      --navy: #1C1C1A;
+      --gold: #B8863A;
+      --gold-l: #D4A55A;
+      --cream: #FAF7F2;
+      --white: #fff;
+      --muted: #6B6560;
+      --border: rgba(184,134,58,.18);
+    }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; height: 68px; background: rgba(28,28,26,.96); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; color: #fff; font-size: 20px; font-weight: 500; }
+    .nav-logo small { display: block; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.4); font-family: 'Jost', sans-serif; }
+    .nav-links { display: flex; gap: 0; list-style: none; align-items: center; }
+    .nav-links a { color: rgba(255,255,255,.65); font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 14px; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-cta { background: var(--gold) !important; color: #fff !important; border-radius: 4px; padding: 10px 20px !important; }
+    .nav-cta:hover { background: var(--gold-l) !important; }
+    @media (max-width: 768px) { .nav-links { display: none; } }
+
+    /* HERO */
+    .hero { height: 100vh; position: relative; overflow: hidden; }
+    .hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.15) 0%, rgba(0,0,0,.0) 30%, rgba(28,28,26,.75) 100%); }
+    .hero-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 0 8vw 64px; }
+    .hero-label { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 14px; display: block; }
+    .hero-content h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 400; color: #fff; line-height: 1.0; margin-bottom: 20px; }
+    .hero-content h1 em { font-style: italic; color: var(--gold-l); }
+    .hero-intro { font-size: 17px; color: rgba(255,255,255,.8); max-width: 540px; line-height: 1.85; font-weight: 300; margin-bottom: 36px; }
+    .hero-scroll { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.4); animation: bounce 2.5s infinite; display: inline-block; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
+
+    /* DIRK INTRO — split */
+    .split { display: grid; grid-template-columns: 1fr 1fr; min-height: 90vh; }
+    @media (max-width: 768px) { .split { grid-template-columns: 1fr; } }
+    .split-photo { position: relative; overflow: hidden; min-height: 480px; }
+    .split-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 1s ease; }
+    .split-photo:hover img { transform: scale(1.03); }
+    .split-text { background: var(--navy); padding: 80px 64px; display: flex; flex-direction: column; justify-content: center; }
+    @media (max-width: 900px) { .split-text { padding: 48px 32px; } }
+    .split-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 22px; display: block; }
+    .split-text h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 400; color: #fff; line-height: 1.15; margin-bottom: 28px; }
+    .split-text h2 em { font-style: italic; color: var(--gold-l); }
+    .split-text p { font-size: 15px; color: rgba(255,255,255,.65); line-height: 1.95; font-weight: 300; margin-bottom: 18px; }
+    .split-text p strong { color: rgba(255,255,255,.9); font-weight: 500; }
+    .split-sig { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--gold-l); font-style: italic; margin-top: 12px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.1); }
+
+    /* PHOTO MOSAIC */
+    .mosaic { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 320px 320px; gap: 3px; }
+    @media (max-width: 768px) { .mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 200px 200px; } }
+    .mosaic-item { overflow: hidden; position: relative; }
+    .mosaic-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease; }
+    .mosaic-item:hover img { transform: scale(1.06); }
+    .mosaic-item.tall { grid-row: span 2; }
+    .mosaic-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: linear-gradient(to top, rgba(28,28,26,.7), transparent); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.7); font-weight: 500; }
+
+    /* PRODUCTS */
+    .products { background: var(--cream); }
+    .products-header { padding: 80px 8vw 60px; }
+    .products-label { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+    .products-header h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 400; color: var(--navy); line-height: 1.1; }
+    .products-header h2 em { font-style: italic; color: var(--gold); }
+
+    /* PRODUCT ROWS */
+    .product-row { display: grid; grid-template-columns: 1fr 1fr; min-height: 620px; }
+    @media (max-width: 768px) { .product-row { grid-template-columns: 1fr; min-height: auto; } }
+    .product-row + .product-row { border-top: 1px solid var(--border); }
+    .product-photo { overflow: hidden; position: relative; min-height: 400px; }
+    .product-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s ease; }
+    .product-photo:hover img { transform: scale(1.04); }
+    .product-number { position: absolute; bottom: 24px; right: 24px; font-family: 'Cormorant Garamond', serif; font-size: 6rem; font-weight: 300; color: rgba(255,255,255,.15); line-height: 1; }
+    .product-body { background: var(--white); padding: 64px 56px; display: flex; flex-direction: column; justify-content: center; }
+    @media (max-width: 900px) { .product-body { padding: 40px 28px; } }
+    .product-type { font-size: 9px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+    .product-body h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 400; color: var(--navy); line-height: 1.15; margin-bottom: 18px; }
+    .product-body h3 em { font-style: italic; color: var(--gold); }
+    .product-body > p { font-size: 15px; color: var(--muted); line-height: 1.9; font-weight: 300; margin-bottom: 28px; }
+    .includes { margin-bottom: 36px; }
+    .include { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--muted); margin-bottom: 9px; font-weight: 300; line-height: 1.5; }
+    .include::before { content: '✦'; color: var(--gold); font-size: 9px; flex-shrink: 0; margin-top: 4px; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1px solid var(--border); gap: 16px; flex-wrap: wrap; }
+    .price { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 400; color: var(--navy); line-height: 1; }
+    .price-note { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+    .btn-gold { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 16px 28px; border-radius: 4px; transition: all .25s; border: none; cursor: pointer; white-space: nowrap; }
+    .btn-gold:hover { background: var(--gold-l); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,134,58,.4); }
+
+    /* CTA BAND */
+    .cta-band { background: var(--navy); padding: 80px 8vw; display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+    @media (max-width: 768px) { .cta-band { grid-template-columns: 1fr; } }
+    .cta-band h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 400; color: #fff; line-height: 1.2; margin-bottom: 10px; }
+    .cta-band h2 em { font-style: italic; color: var(--gold-l); }
+    .cta-band p { font-size: 14px; color: rgba(255,255,255,.5); font-weight: 300; line-height: 1.75; }
+
+    /* FOOTER */
+    footer { background: var(--navy); padding: 40px 8vw 28px; border-top: 1px solid rgba(255,255,255,.06); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #fff; font-weight: 500; }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: rgba(255,255,255,.4); transition: color .2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bottom { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.07); text-align: center; font-size: 11px; color: rgba(255,255,255,.2); }
+
+    #prog { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(to right, var(--gold), var(--gold-l)); z-index: 9999; width: 0%; }
+  </style>
+</head>
+<body>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">The Cape Town Guide<small>Cape Town Insider Guide</small></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="explore.html" class="active">Explore</a></li>
+    <li><a href="top-10-secrets.html" style="color:var(--gold-l)">✦ Secrets</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="index.html#ai-chat" class="nav-cta">Get My Guide</a></li>
+  </ul>
+</nav>
+
+<!-- HERO — Dirk on Table Mountain ledge above Camps Bay -->
+<section class="hero">
+  <img src="dirk-table-mountain-ledge.jpeg" alt="Dirk on Table Mountain above Camps Bay" />
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-label">Cape Town · Through the eyes of a local</span>
+    <h1>I know this city<br><em>like my backyard.</em></h1>
+    <p class="hero-intro">10 years of hiking, kitesurfing, riding the Winelands, and living every corner of this extraordinary city. Now I'm sharing everything — so your trip is the one you'll talk about forever.</p>
+    <div class="hero-scroll">Scroll to explore ↓</div>
+  </div>
+</section>
+
+<!-- DIRK INTRO -->
+<div class="split">
+  <div class="split-photo">
+    <img src="dirk-lions-head-sea.jpeg" alt="Dirk on Lion's Head summit above the Atlantic" />
+  </div>
+  <div class="split-text">
+    <span class="split-eyebrow">Hi, I'm Dirk</span>
+    <h2>Not a travel writer.<br><em>A local who loves visitors.</em></h2>
+    <p>I moved to Cape Town and never really left. I've hiked Lion's Head in the dark to catch sunrise. I've ridden the Cape Argus. I know the waterfall gorge you can only reach on foot, and the wine estate where the winemaker still pours himself.</p>
+    <p>Most travel guides tell you the same 10 things. <strong>I tell you what I tell my friends</strong> — the hidden beach, the R30 train that shows you whales, the sunset spot where you'll have the whole city to yourself.</p>
+    <p>I built The Cape Town Guide because I was tired of watching visitors miss the best parts of a city I love deeply. This is my attempt to fix that.</p>
+    <div class="split-sig">— Dirk Zeevenhooven, Cape Town</div>
+  </div>
+</div>
+
+<!-- PHOTO MOSAIC -->
+<div class="mosaic">
+  <div class="mosaic-item tall">
+    <img src="dirk-jumping-seapoint.jpeg" alt="Dirk jumping above Sea Point" />
+    <div class="mosaic-caption">Lion's Head · Sea Point below</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="blouberg-table-mountain.jpeg" alt="Table Mountain from Blouberg" />
+    <div class="mosaic-caption">Blouberg · Table Mountain</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="dirk-waterfall-gorge.jpeg" alt="Hidden waterfall gorge" />
+    <div class="mosaic-caption">Hidden Gorge · Insider secret</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="dirk-blouberg-beach.jpeg" alt="Dirk at Blouberg" />
+    <div class="mosaic-caption">Blouberg Beach · Kite spot</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="dirk-cape-argus.jpeg" alt="Cape Argus cycle tour" />
+    <div class="mosaic-caption">Cape Argus · 109km around the Peninsula</div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products">
+  <div class="products-header">
+    <span class="products-label">What I've built for you</span>
+    <h2>Two ways to experience<br><em>Cape Town properly.</em></h2>
+  </div>
+
+  <!-- PRODUCT 1 -->
+  <div class="product-row">
+    <div class="product-photo">
+      <img src="blouberg-table-mountain.jpeg" alt="Cape Town from Blouberg" />
+      <div class="product-number">01</div>
+    </div>
+    <div class="product-body">
+      <span class="product-type">Interactive Travel Guide</span>
+      <h3>The Cape Town<br><em>Insider Guide</em></h3>
+      <p>Not a PDF. A fully interactive guide you browse like a website — with honest insider tips, neighbourhood guides, restaurant picks, and 10 secrets that 90% of tourists never find. Everything I know, in one place.</p>
+      <div class="includes">
+        <div class="include">15 attractions — honest tips, not tourist fluff</div>
+        <div class="include">Neighbourhood guide — where to actually stay & why</div>
+        <div class="include">Best restaurants, coffee & markets (local picks only)</div>
+        <div class="include">5 road trip itineraries with exact stops</div>
+        <div class="include">Car rental guide — who to trust, who to avoid</div>
+        <div class="include">10 insider secrets most tourists never discover</div>
+        <div class="include">Safety guide — honest, practical, not paranoid</div>
+      </div>
+      <div class="product-footer">
+        <div>
+          <div class="price">€29</div>
+          <div class="price-note">One-time · Instant access</div>
+        </div>
+        <a href="index.html#ai-chat" class="btn-gold">Get the Guide →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT 2 -->
+  <div class="product-row">
+    <div class="product-body">
+      <span class="product-type">✦ AI-Powered · Premium</span>
+      <h3>Your Personal<br><em>Cape Town Itinerary</em></h3>
+      <p>Tell Caipy — my AI travel agent — your dates, who you're travelling with, and what you love. Get a personalised day-by-day plan built around your exact trip. Adjust it in real time while you're in Cape Town. Wind picked up? Caipy changes your day instantly.</p>
+      <div class="includes">
+        <div class="include">Completely personalised — built around your trip & style</div>
+        <div class="include">Day-by-day interactive plan — not a static PDF</div>
+        <div class="include">Google Maps link for every single activity</div>
+        <div class="include">Plan B built in for rain, wind, or changed plans</div>
+        <div class="include">Caipy available throughout your entire trip</div>
+        <div class="include">Restaurant & hotel picks matched to your budget</div>
+        <div class="include">A personal note from me with tips you won't find online</div>
+      </div>
+      <div class="product-footer">
+        <div>
+          <div class="price">€99</div>
+          <div class="price-note">One-time · Personalised to you</div>
+        </div>
+        <a href="index.html#ai-chat" class="btn-gold">Start with Caipy →</a>
+      </div>
+    </div>
+    <div class="product-photo">
+      <img src="dirk-lions-head-city.jpeg" alt="Cape Town from Lion's Head" />
+      <div class="product-number">02</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div>
+    <h2>Not sure which one is right<br><em>for your trip?</em></h2>
+    <p>Speak with Caipy — free, no commitment. Tell him about your trip and he'll point you in the right direction. Most people know within 3 minutes.</p>
+  </div>
+  <a href="index.html#ai-chat" class="btn-gold">Speak with Caipy — free →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">The Cape Town Guide</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="explore.html">Explore</a>
+      <a href="top-10-secrets.html">Secrets</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 The Cape Town Guide · Built with local love ❤️ · Dirk Zeevenhooven, Cape Town</div>
+</footer>
+
+<script>
+var p = document.getElementById('prog');
+window.addEventListener('scroll', function(){
+  var s = window.scrollY, d = document.documentElement.scrollHeight - window.innerHeight;
+  p.style.width = (d > 0 ? (s/d)*100 : 0) + '%';
+}, {passive:true});
+</script>
+</body>
+</html>
