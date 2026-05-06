@@ -344,26 +344,24 @@
 </section>
 
 <!-- PRE-STRIPE MODAL -->
-<div id="ready-modal" style="display:none;position:fixed;inset:0;background:rgba(13,27,42,.85);backdrop-filter:blur(8px);z-index:30000;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#FAF7F2;border-radius:20px;max-width:480px;width:100%;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.5);overflow:hidden;">
-    <div style="background:#0d1b2a;padding:40px 40px 36px;text-align:center;">
-      <div style="font-size:32px;margin-bottom:16px;">✦</div>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:#fff;line-height:1.15;margin-bottom:10px;">Your Cape Town Guide<br>is ready.</h2>
-      <p style="font-size:14px;color:rgba(255,255,255,.5);font-weight:300;line-height:1.7;">One secure payment and your personalised interactive guide lands in your inbox within minutes.</p>
+<div id="ready-modal" style="display:none;position:fixed;inset:0;background:rgba(28,28,26,.6);backdrop-filter:blur(4px);z-index:30000;align-items:center;justify-content:center;">
+  <div style="background:#FAF7F2;border-radius:20px;padding:40px 36px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35);">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin-bottom:8px;color:#1C1C1A;line-height:1.2;">Your Cape Town guide<br>is ready ✦</div>
+    <p style="font-size:13px;color:#6B6560;line-height:1.7;margin-bottom:20px;">Enter your email below to receive it.</p>
+    <input type="email" id="guide-email" placeholder="your@email.com" style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,0,0,.12);border-radius:10px;font-family:'Jost',sans-serif;font-size:14px;outline:none;margin-bottom:14px;background:#fff;box-sizing:border-box;transition:border-color .2s;" onfocus="this.style.borderColor='#B8863A'" onblur="this.style.borderColor='rgba(0,0,0,.12)'">
+    <button id="guide-pay-btn" onclick="startGuidePayment()" style="width:100%;background:linear-gradient(135deg,#B8863A,#D4A85A);color:#fff;border:none;padding:18px 28px;border-radius:10px;font-family:'Jost',sans-serif;font-size:16px;font-weight:600;letter-spacing:.5px;cursor:pointer;margin-bottom:10px;box-shadow:0 6px 24px rgba(184,134,58,.45);">Get My Guide — €99 →</button>
+    <p style="font-size:11.5px;color:#9B9491;line-height:1.6;margin-bottom:16px;font-style:italic;">Personalised day-by-day plan built by Caipy,<br>powered by Dirk's 10+ years of Cape Town knowledge</p>
+    <div style="margin-bottom:16px;">
+      <button id="guide-voucher-toggle" onclick="toggleGuideVoucher()" style="background:none;border:none;color:#B8863A;font-size:12px;cursor:pointer;font-family:'Jost',sans-serif;letter-spacing:.3px;text-decoration:underline;text-underline-offset:3px;">Have a voucher code?</button>
     </div>
-    <div style="padding:32px 40px;">
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
-        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> Personalised day-by-day itinerary</div>
-        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> Google Maps for every activity</div>
-        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> Caipy on call throughout your trip</div>
-        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> 10 insider secrets + a note from Dirk</div>
+    <div id="guide-voucher-section" style="display:none;margin-bottom:16px;">
+      <div style="display:flex;gap:8px;">
+        <input id="guide-voucher-input" placeholder="CAPE-VIP-2026-XX" style="flex:1;padding:11px 14px;border:1.5px solid rgba(184,134,58,0.4);border-radius:8px;font-family:'Jost',sans-serif;font-size:13px;outline:none;background:#fff;letter-spacing:.5px;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()" onfocus="this.style.borderColor='#B8863A'" onblur="this.style.borderColor='rgba(184,134,58,0.4)'">
+        <button onclick="redeemGuideVoucher()" style="background:#1C1C1A;color:#fff;border:none;padding:11px 18px;border-radius:8px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:.5px;cursor:pointer;white-space:nowrap;">Redeem</button>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:400;color:#0d1b2a;line-height:1;">€99<span style="font-size:1rem;color:#6B6560;font-family:'Jost',sans-serif;font-weight:300;margin-left:8px;">one-time</span></div>
-        <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" onclick="closeReadyModal()" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;text-decoration:none;box-shadow:0 6px 20px rgba(184,134,58,.4);">Continue to payment →</a>
-      </div>
-      <button onclick="closeReadyModal()" style="background:none;border:none;font-family:'Jost',sans-serif;font-size:12px;color:#6B6560;cursor:pointer;width:100%;text-align:center;padding:4px 0;">← Go back</button>
+      <div id="guide-voucher-msg" style="font-size:12px;margin-top:8px;min-height:18px;"></div>
     </div>
+    <button onclick="closeReadyModal()" style="background:none;border:none;color:#B0A89F;font-size:12px;cursor:pointer;font-family:'Jost',sans-serif;letter-spacing:.3px;">Close</button>
   </div>
 </div>
 
@@ -380,6 +378,58 @@ function closeReadyModal() {
 document.getElementById('ready-modal').addEventListener('click', function(e) {
   if (e.target === this) closeReadyModal();
 });
+function toggleGuideVoucher() {
+  var s = document.getElementById('guide-voucher-section');
+  var btn = document.getElementById('guide-voucher-toggle');
+  var visible = s.style.display === 'none';
+  s.style.display = visible ? 'block' : 'none';
+  btn.textContent = visible ? 'Pay instead →' : 'Have a voucher code?';
+}
+async function startGuidePayment() {
+  var email = document.getElementById('guide-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('guide-email').focus();
+    document.getElementById('guide-email').style.borderColor = '#B8863A';
+    return;
+  }
+  window.open('https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01', '_blank');
+  closeReadyModal();
+}
+async function redeemGuideVoucher() {
+  var code = document.getElementById('guide-voucher-input').value.trim();
+  var email = document.getElementById('guide-email').value.trim();
+  var msg = document.getElementById('guide-voucher-msg');
+  if (!email || !email.includes('@')) {
+    msg.style.color = '#c0392b';
+    msg.textContent = 'Please enter your email address first.';
+    document.getElementById('guide-email').focus();
+    return;
+  }
+  if (!code) { document.getElementById('guide-voucher-input').focus(); return; }
+  msg.style.color = '#6B6560';
+  msg.textContent = 'Checking code…';
+  try {
+    var res = await fetch('https://caipy-sfau.onrender.com/redeem-voucher', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, email, transcript: '', conversationId: '' })
+    });
+    var data = await res.json();
+    if (data.success) {
+      msg.style.color = '#2e7d32';
+      msg.textContent = 'Code accepted! Your guide is on its way to ' + email;
+      document.getElementById('guide-voucher-section').style.display = 'none';
+      document.getElementById('guide-voucher-toggle').style.display = 'none';
+      document.getElementById('guide-pay-btn').style.display = 'none';
+    } else {
+      msg.style.color = '#c0392b';
+      msg.textContent = data.error || 'Invalid code.';
+    }
+  } catch(e) {
+    msg.style.color = '#c0392b';
+    msg.textContent = 'Connection error. Please try again.';
+  }
+}
 </script>
 
 <!-- FOOTER -->
