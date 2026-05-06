@@ -140,7 +140,7 @@
 <!-- NAV -->
 <nav>
   <a href="index.html" class="nav-logo">The Cape Town Guide<small>Cape Town Insider Guide</small></a>
-  <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" class="nav-cta">Get your Guide — €99</a>
+  <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" class="nav-cta">Get your Guide — €99</a>
 </nav>
 
 <!-- HERO -->
@@ -150,7 +150,7 @@
     <h1>The world's first<br><em>interactive travel guide.</em></h1>
     <p style="font-family:'Jost',sans-serif;font-size:13px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:20px;">Always live. Always personal. A local who never sleeps.</p>
     <p class="hero-sub">Most travel guides are written once, printed, and forgotten. Yours is different — interactive, always current, and built entirely around your trip. Not a template. Not a PDF. A living guide that knows who you are, where you're going, and exactly what you'll love.</p>
-    <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" class="btn-primary">Get your Guide — €99 →</a>
+    <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" class="btn-primary">Get your Guide — €99 →</a>
     <p class="hero-note">One-time · No subscription · Delivered within minutes</p>
   </div>
 </section>
@@ -294,7 +294,7 @@
         </div>
       </div>
     </div>
-    <div class="unlock-hint">Days 3–7 personalised to your trip. <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01">Unlock your guide →</a></div>
+    <div class="unlock-hint">Days 3–7 personalised to your trip. <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener">Unlock your guide →</a></div>
   </div>
 </section>
 
@@ -338,10 +338,55 @@
       <div class="inc">10 insider secrets most tourists never discover</div>
       <div class="inc">A personal note from Dirk with tips you won't find online</div>
     </div>
-    <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" class="btn-primary" style="width:100%;text-align:center;display:block;font-size:13px;padding:22px;">Get your Guide — €99 →</a>
+    <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" class="btn-primary" style="width:100%;text-align:center;display:block;font-size:13px;padding:22px;">Get your Guide — €99 →</a>
     <button onclick="window.location.href='index.html'" class="btn-ghost-dark">Speak with Caipy first — it's free</button>
   </div>
 </section>
+
+<!-- PRE-STRIPE MODAL -->
+<div id="ready-modal" style="display:none;position:fixed;inset:0;background:rgba(13,27,42,.85);backdrop-filter:blur(8px);z-index:30000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#FAF7F2;border-radius:20px;max-width:480px;width:100%;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.5);overflow:hidden;">
+    <div style="background:#0d1b2a;padding:40px 40px 36px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:16px;">✦</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:#fff;line-height:1.15;margin-bottom:10px;">Your Cape Town Guide<br>is ready.</h2>
+      <p style="font-size:14px;color:rgba(255,255,255,.5);font-weight:300;line-height:1.7;">One secure payment and your personalised interactive guide lands in your inbox within minutes.</p>
+    </div>
+    <div style="padding:32px 40px;">
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> Personalised day-by-day itinerary</div>
+        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> Google Maps for every activity</div>
+        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> Caipy on call throughout your trip</div>
+        <div style="display:flex;gap:12px;align-items:center;font-size:14px;color:#1C1C1A;"><span style="color:#B8863A;">✦</span> 10 insider secrets + a note from Dirk</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:400;color:#0d1b2a;line-height:1;">€99<span style="font-size:1rem;color:#6B6560;font-family:'Jost',sans-serif;font-weight:300;margin-left:8px;">one-time</span></div>
+        <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" onclick="closeReadyModal()" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;text-decoration:none;box-shadow:0 6px 20px rgba(184,134,58,.4);">Continue to payment →</a>
+      </div>
+      <button onclick="closeReadyModal()" style="background:none;border:none;font-family:'Jost',sans-serif;font-size:12px;color:#6B6560;cursor:pointer;width:100%;text-align:center;padding:4px 0;">← Go back</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showReadyModal(e) {
+  if (e) e.preventDefault();
+  document.getElementById('ready-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeReadyModal() {
+  document.getElementById('ready-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.getElementById('ready-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeReadyModal();
+});
+// Wire all buy buttons to show modal first
+document.querySelectorAll('a[href*="buy.stripe.com"]').forEach(function(a) {
+  if (!a.closest('#ready-modal')) {
+    a.addEventListener('click', showReadyModal);
+  }
+});
+</script>
 
 <!-- FOOTER -->
 <footer>
