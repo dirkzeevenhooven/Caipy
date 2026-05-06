@@ -140,7 +140,7 @@
 <!-- NAV -->
 <nav>
   <a href="index.html" class="nav-logo">The Cape Town Guide<small>Cape Town Insider Guide</small></a>
-  <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" class="nav-cta">Get your Guide — €99</a>
+  <button onclick="showReadyModal(event)" class="nav-cta">Get your Guide — €99</button>
 </nav>
 
 <!-- HERO -->
@@ -150,7 +150,7 @@
     <h1>The world's first<br><em>interactive travel guide.</em></h1>
     <p style="font-family:'Jost',sans-serif;font-size:13px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:20px;">Always live. Always personal. A local who never sleeps.</p>
     <p class="hero-sub">Most travel guides are written once, printed, and forgotten. Yours is different — interactive, always current, and built entirely around your trip. Not a template. Not a PDF. A living guide that knows who you are, where you're going, and exactly what you'll love.</p>
-    <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" class="btn-primary">Get your Guide — €99 →</a>
+    <button onclick="showReadyModal(event)" class="btn-primary">Get your Guide — €99 →</button>
     <p class="hero-note">One-time · No subscription · Delivered within minutes</p>
   </div>
 </section>
@@ -294,7 +294,7 @@
         </div>
       </div>
     </div>
-    <div class="unlock-hint">Days 3–7 personalised to your trip. <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener">Unlock your guide →</a></div>
+    <div class="unlock-hint">Days 3–7 personalised to your trip. <a href="#" onclick="showReadyModal(event)">Unlock your guide →</a></div>
   </div>
 </section>
 
@@ -338,7 +338,7 @@
       <div class="inc">10 insider secrets most tourists never discover</div>
       <div class="inc">A personal note from Dirk with tips you won't find online</div>
     </div>
-    <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" class="btn-primary" style="width:100%;text-align:center;display:block;font-size:13px;padding:22px;">Get your Guide — €99 →</a>
+    <button onclick="showReadyModal(event)" class="btn-primary" style="width:100%;text-align:center;display:block;font-size:13px;padding:22px;">Get your Guide — €99 →</button>
     <button onclick="window.location.href='index.html'" class="btn-ghost-dark">Speak with Caipy first — it's free</button>
   </div>
 </section>
@@ -379,12 +379,6 @@ function closeReadyModal() {
 }
 document.getElementById('ready-modal').addEventListener('click', function(e) {
   if (e.target === this) closeReadyModal();
-});
-// Wire all buy buttons to show modal first
-document.querySelectorAll('a[href*="buy.stripe.com"]').forEach(function(a) {
-  if (!a.closest('#ready-modal')) {
-    a.addEventListener('click', showReadyModal);
-  }
 });
 </script>
 
