@@ -629,7 +629,15 @@
     window._caipyMessages = [];
     setVoiceStatus('Connecting…');
     try {
-      const Conversation = window.client && window.client.Conversation;
+      // Wait up to 5s for SDK to load
+      let Conversation = window.client && window.client.Conversation;
+      if (!Conversation) {
+        for (let i = 0; i < 10; i++) {
+          await new Promise(r => setTimeout(r, 500));
+          Conversation = window.client && window.client.Conversation;
+          if (Conversation) break;
+        }
+      }
       if (!Conversation) throw new Error('SDK not loaded yet — please try again in a moment.');
       activeConversation = await Conversation.startSession({
         agentId: 'agent_0501kpzmqy56e3saj586hkn7kanq',
