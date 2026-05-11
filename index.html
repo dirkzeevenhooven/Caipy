@@ -494,7 +494,7 @@
       const data = await res.json();
       if (data.success) {
         localStorage.setItem('guide_access', '1');
-        window.location.href = 'guide/guide.html';
+        window.location.href = 'guide.html';
       }
     } catch(e) { console.error('Verify payment error:', e); }
   })();
