@@ -257,9 +257,9 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
 
 // ─── Email helper (Postmark HTTP API — avoids SMTP port blocks on Render) ─────
 async function sendItineraryEmail(email, itinerary, guideUrl) {
-  const token = process.env.SMTP_PASS; // Postmark server API token
-  const from = process.env.SMTP_FROM;
-  if (!token || !from) throw new Error('Postmark credentials not configured');
+  const token = process.env.RESEND_API_KEY;
+  const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
+  if (!token) throw new Error('RESEND_API_KEY not configured');
 
   const pdfBuffer = await generateItineraryPDF(itinerary);
   const pdfBase64 = pdfBuffer.toString('base64');
@@ -291,34 +291,28 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
 
     </body></html>`;
 
-  const res = await fetch('https://api.postmarkapp.com/email', {
+  const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'X-Postmark-Server-Token': token,
     },
     body: JSON.stringify({
-      From: `Caipy — Cape Town Guide <${from}>`,
-      To: email,
-      Subject: 'Your Cape Town Guide is ready ✈️',
-      TextBody: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nYour full itinerary is also attached as a PDF.\n\n— Dirk`,
-      HtmlBody: htmlBody,
-      Attachments: [{
-        Name: 'Cape-Town-Itinerary-Caipy.pdf',
-        Content: pdfBase64,
-        ContentType: 'application/pdf',
+      from: `Caipy — Cape Town Guide <${from}>`,
+      to: [email],
+      subject: 'Your Cape Town Guide is ready ✈️',
+      text: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nYour full itinerary is also attached as a PDF.\n\n— Dirk`,
+      html: htmlBody,
+      attachments: [{
+        filename: 'Cape-Town-Itinerary-Caipy.pdf',
+        content: pdfBase64,
       }],
     }),
   });
 
   if (!res.ok) {
     const body = await res.text();
-    throw new Error(`Postmark API error ${res.status}: ${body}`);
-  }
-  const result = await res.json();
-  if (result.ErrorCode && result.ErrorCode !== 0) {
-    throw new Error(`Postmark error ${result.ErrorCode}: ${result.Message}`);
+    throw new Error(`Resend API error ${res.status}: ${body}`);
   }
 }
 
@@ -829,31 +823,29 @@ app.post('/subscribe', async (req, res) => {
     }
   }
 
-  // Send PDF by email via Postmark HTTP API
+  // Send PDF by email via Resend
   try {
-    const smtpToken = process.env.SMTP_PASS;
-    const smtpFrom = process.env.SMTP_FROM;
-    if (!smtpToken || !smtpFrom) throw new Error('Postmark credentials not configured');
+    const resendToken = process.env.RESEND_API_KEY;
+    const smtpFrom = process.env.SMTP_FROM || 'onboarding@resend.dev';
+    if (!resendToken) throw new Error('RESEND_API_KEY not configured');
 
     const pdfPath = path.join(__dirname, 'public', 'secret-local-list.pdf');
     const attachments = fs.existsSync(pdfPath) ? [{
-      Name: 'Dirks-Secret-Local-List-Cape-Town.pdf',
-      Content: fs.readFileSync(pdfPath).toString('base64'),
-      ContentType: 'application/pdf',
+      filename: 'Dirks-Secret-Local-List-Cape-Town.pdf',
+      content: fs.readFileSync(pdfPath).toString('base64'),
     }] : [];
 
-    const mailRes = await fetch('https://api.postmarkapp.com/email', {
+    const mailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        'Authorization': `Bearer ${resendToken}`,
         'Content-Type': 'application/json',
-        'X-Postmark-Server-Token': smtpToken,
       },
       body: JSON.stringify({
-        From: `Dirk — The Cape Town Guide <${smtpFrom}>`,
-        To: email,
-        Subject: "Dirk's Secret Local List — Cape Town 🌊",
-        HtmlBody: `<!DOCTYPE html><html><body style="font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:40px 24px;color:#1B3A4B;line-height:1.7">
+        from: `Dirk — The Cape Town Guide <${smtpFrom}>`,
+        to: [email],
+        subject: "Dirk's Secret Local List — Cape Town 🌊",
+        html: `<!DOCTYPE html><html><body style="font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:40px 24px;color:#1B3A4B;line-height:1.7">
           <p style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#C9A96E;margin-bottom:8px">The Cape Town Guide</p>
           <h1 style="font-size:28px;font-weight:400;margin:0 0 24px">Hi ${name}, here's your list.</h1>
           <p style="font-size:16px;color:#4A4540;margin-bottom:20px">Attached is Dirk's Secret Local List — 15 Cape Town insider tips that don't show up on TripAdvisor or in any guidebook.</p>
@@ -861,13 +853,13 @@ app.post('/subscribe', async (req, res) => {
           <p style="font-size:16px;color:#4A4540;margin-bottom:32px">And when you're ready to plan your full trip — <a href="https://thecapetownguide.com" style="color:#C9A96E">Caipy is here to help</a>.</p>
           <p style="font-size:15px;color:#4A4540">Warm regards,<br><strong style="color:#1B3A4B">Dirk Zeevenhooven</strong><br>The Cape Town Guide</p>
         </body></html>`,
-        Attachments: attachments,
+        attachments,
       }),
     });
 
     if (!mailRes.ok) {
       const body = await mailRes.text();
-      throw new Error(`Postmark API error ${mailRes.status}: ${body}`);
+      throw new Error(`Resend API error ${mailRes.status}: ${body}`);
     }
     console.log('Secret local list sent to:', email);
     res.json({ success: true });
