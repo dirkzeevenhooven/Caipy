@@ -412,6 +412,8 @@ const allowedOrigins = [
   'https://thecapetownguide.com',
   'https://www.thecapetownguide.com',
   'https://caipy-sfau.onrender.com',
+  'http://localhost:3456',
+  'http://localhost:3000',
 ];
 app.use((req, res, next) => {
   const origin = req.headers.origin;

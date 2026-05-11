@@ -3,8 +3,8 @@
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Cape Town Guide — AI-Powered Discovery</title>
-  <meta name="description" content="Your intelligent Cape Town travel companion. Discover hidden gems, iconic landmarks, and personalized itineraries powered by AI.">
+  <title>Planet Curated — The Adaptive Cape Town Travel Guide</title>
+  <meta name="description" content="The world's first adaptive travel guide for Cape Town. Real-time recommendations, personalised itineraries, and local intelligence — built for how you actually travel.">
   <link rel="preconnect" href="https://fonts.googleapis.com/">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -68,32 +68,6 @@
     .feature-icon { width: 48px; height: 48px; background: var(--gold-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
     .feature-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
     .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 300; }
-
-    /* ATTRACTIONS */
-    .attractions-section { background: var(--cream); }
-    a.attraction-card { text-decoration: none; color: inherit; display: block; }
-    .attractions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .attraction-card { border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh1); transition: box-shadow .3s, transform .3s; cursor: pointer; background: var(--white); border: 1px solid var(--border); }
-    .attraction-card:hover { box-shadow: var(--sh2); transform: translateY(-4px); }
-    .attraction-img { height: 200px; object-fit: cover; width: 100%; display: block; }
-    .attraction-body { padding: 20px; }
-    .attraction-tag { font-size: 9px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-    .attraction-body h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
-    .attraction-body p { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
-    .attraction-meta { display: flex; gap: 1rem; margin-top: 12px; font-size: 12px; color: var(--faint); }
-
-    /* NEIGHBORHOODS */
-    .neighborhoods-section { background: var(--navy); }
-    .neighborhoods-section .section-title { color: var(--white); }
-    .neighborhoods-section .section-sub { color: rgba(255,255,255,.55); }
-    .neighborhoods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 20px; }
-    .neighborhood-card { position: relative; height: 320px; border-radius: var(--radius); overflow: hidden; cursor: pointer; }
-    .neighborhood-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
-    .neighborhood-card:hover img { transform: scale(1.06); }
-    .neighborhood-card::after { content:''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(28,28,26,.85) 0%, transparent 60%); }
-    .neighborhood-info { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; padding: 20px; }
-    .neighborhood-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
-    .neighborhood-info p { font-size: 12px; color: rgba(255,255,255,.65); font-weight: 300; }
 
     /* AI CHAT SECTION */
     .ai-section { background: var(--navy); }
@@ -220,15 +194,13 @@
   </a>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="index.html#attractions">Attractions</a>
-    <a href="index.html#neighborhoods">Neighbourhoods</a>
-    <a href="index.html#itinerary">Itinerary</a>
-    <a href="index.html#tips">Tips</a>
-    <a href="top-10-secrets.html" style="color:#D4A55A">✦ Secrets</a>
+    <a href="experience.html#how-it-works">How It Works</a>
+    <a href="experience.html">The Experience</a>
+    <a href="top-10-secrets.html" style="color:#D4A55A">✦ Free Guide</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
   </div>
-  <button onclick="window.location.href='guide.html'" style="background:#c9a84c;color:#0d1b2a;padding:10px 20px;border-radius:4px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:'Jost',sans-serif">Get your Guide</button>
+  <button onclick="window.location.href='guide.html'" style="background:#c9a84c;color:#0d1b2a;padding:10px 20px;border-radius:4px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:'Jost',sans-serif">Plan My Trip</button>
   <button class="ham-btn" onclick="toggleMobileNav()">☰</button>
 </nav>
 
@@ -248,152 +220,105 @@
 <!-- FEATURES -->
 <!-- SMARTEST TRAVEL COMPANION — redesigned -->
 
-<!-- VIDEO SECTION -->
-<section id="video-section" style="position:relative;width:100%;height:100vh;min-height:600px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#1C1C1A;">
-  <video autoplay="" muted="" loop="" playsinline="" poster="https://thecapetownguide.com/images/camps-bay.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
-    <source src="cape-town-hero.mp4" type="video/mp4">
-  </video>
-  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(28,28,26,0.1) 0%,rgba(28,28,26,0.35) 100%);z-index:1;"></div>
+<!-- VIDEO SECTION — cinematic crossfade hero -->
+<section id="video-section" style="position:relative;width:100%;height:100vh;min-height:600px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0d1b2a;">
+  <video id="vid-a" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:1;transition:opacity 1.5s ease;"></video>
+  <video id="vid-b" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;transition:opacity 1.5s ease;"></video>
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,42,0.15) 0%,rgba(13,27,42,0.5) 100%);z-index:1;"></div>
   <div style="position:relative;z-index:2;text-align:center;padding:0 1.5rem;max-width:780px;">
-    <span style="display:inline-block;font-family:&#39;Jost&#39;,sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#D4A55A;border:1px solid rgba(212,165,90,0.6);padding:0.4rem 1.1rem;border-radius:100px;margin-bottom:1.6rem;backdrop-filter:blur(8px);background:rgba(20,16,12,0.5);">Cape Town · Insider Guide</span>
-    <h2 style="font-family:&#39;Cormorant Garamond&#39;,Georgia,serif;font-size:clamp(2.4rem,6vw,4.8rem);font-weight:400;color:#fff;line-height:1.05;margin-bottom:1rem;">Stop planning.<br><em style="color:#D4A55A;font-style:italic;">Start experiencing.</em></h2>
-    <p style="font-family:&#39;Jost&#39;,sans-serif;font-size:1rem;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.75;max-width:560px;margin:0 auto;">Most people spend weeks planning a Cape Town trip and still miss the best parts. Caipy gives you a personalised day-by-day itinerary in minutes — built on 10+ years of local insider knowledge.</p>
+    <span style="display:inline-block;font-family:'Jost',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#D4A55A;border:1px solid rgba(212,165,90,0.6);padding:0.4rem 1.1rem;border-radius:100px;margin-bottom:1.6rem;backdrop-filter:blur(8px);background:rgba(13,27,42,0.5);">Cape Town · Planet Curated</span>
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,6vw,4.8rem);font-weight:400;color:#fff;line-height:1.05;margin-bottom:1rem;">Stop wasting hours<br><em style="color:#D4A55A;font-style:italic;">researching your Cape Town trip.</em></h2>
+    <p style="font-family:'Jost',sans-serif;font-size:1rem;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.75;max-width:560px;margin:0 auto;">Plan your entire trip in minutes — with a personalized itinerary that adapts in real time to weather, location, and your travel style.</p>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
       <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">
-        Speak with Caipy
-        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Your personal Travel Agent</em>
+        Plan My Perfect Cape Town Trip
+        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Takes less than 2 minutes</em>
       </button>
-      <button onclick="window.location.href='guide.html'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;cursor:pointer;">Get your Guide — €99</button>
+      <button onclick="window.location.href='guide.html'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;cursor:pointer;border:none;">Get My Personalized Itinerary</button>
     </div>
   </div>
 </section>
+<script>
+(function(){
+  var clips = [
+    'cape-town-hero.mp4',
+    'https://videos.pexels.com/video-files/33646748/14298635_2560_1440_24fps.mp4',
+    'https://videos.pexels.com/video-files/9385106/9385106-hd_1920_1080_25fps.mp4',
+    'https://videos.pexels.com/video-files/5664983/5664983-hd_1920_1080_25fps.mp4',
+    'https://videos.pexels.com/video-files/7109030/7109030-hd_1920_1080_25fps.mp4',
+    'https://videos.pexels.com/video-files/32565874/13886609_2560_1440_30fps.mp4',
+    'https://videos.pexels.com/video-files/9334383/9334383-hd_1920_1080_25fps.mp4',
+    'https://videos.pexels.com/video-files/11553330/11553330-hd_1920_1080_60fps.mp4'
+  ];
+  var vidA = document.getElementById('vid-a');
+  var vidB = document.getElementById('vid-b');
+  var idx = 0;
+  var active = vidA, standby = vidB;
+  var PLAY_DURATION = 6000;
+  var FADE_DURATION = 1500;
+
+  function loadAndPlay(vid, src, onReady) {
+    vid.src = src;
+    vid.load();
+    vid.oncanplay = function(){ vid.oncanplay = null; onReady(); };
+    vid.onerror = function(){ vid.onerror = null; onReady(); };
+  }
+
+  function advance() {
+    idx = (idx + 1) % clips.length;
+    standby.style.opacity = '0';
+    loadAndPlay(standby, clips[idx], function(){
+      standby.play().catch(function(){});
+      standby.style.opacity = '1';
+      active.style.opacity = '0';
+      var prev = active;
+      active = standby;
+      standby = prev;
+    });
+  }
+
+  // Start first clip
+  loadAndPlay(active, clips[0], function(){
+    active.play().catch(function(){});
+    setInterval(advance, PLAY_DURATION);
+  });
+})();
+</script>
 
 
-
-<!-- ATTRACTIONS -->
-<section class="attractions-section" id="attractions">
-  <div class="section-label">Must-see</div>
-  <h2 class="section-title">Cape Town's iconic attractions.</h2>
-  <p class="section-sub">The places every visitor should experience — with honest insider tips on how to do them right.</p>
-  <div class="attractions-grid">
-    <a class="attraction-card reveal" href="https://www.sanparks.org/parks/table_mountain/" target="_blank" rel="noopener">
-      <img class="attraction-img" src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80" alt="Table Mountain">
-      <div class="attraction-body">
-        <div class="attraction-tag">Icon</div>
-        <h3>Table Mountain</h3>
-        <p>Go early morning or late afternoon to avoid the heat and crowds. Always book the cable car online. Check the cloud cover first.</p>
-        <div class="attraction-meta"><span>⏱ 2–3 hrs</span><span>📍 City Bowl</span><span>💳 R380</span></div>
-      </div>
-    </a>
-    <a class="attraction-card reveal" href="https://www.robben-island.org.za/" target="_blank" rel="noopener">
-      <img class="attraction-img" src="https://images.unsplash.com/photo-1576485375217-d6a95e34d043?w=800&q=80" alt="Robben Island">
-      <div class="attraction-body">
-        <div class="attraction-tag">History</div>
-        <h3>Robben Island</h3>
-        <p>Where Nelson Mandela was imprisoned for 18 years. A deeply moving experience — book 2+ weeks ahead in peak season.</p>
-        <div class="attraction-meta"><span>⏱ 3.5 hrs</span><span>📍 Waterfront</span><span>💳 R750</span></div>
-      </div>
-    </a>
-    <a class="attraction-card reveal" href="https://www.sanparks.org/parks/table_mountain/tourism/boulders.php" target="_blank" rel="noopener">
-      <img class="attraction-img" src="https://images.unsplash.com/photo-1588392382834-a891154bca4d?w=800&q=80" alt="Boulders Beach">
-      <div class="attraction-body">
-        <div class="attraction-tag">Wildlife</div>
-        <h3>Boulders Beach Penguins</h3>
-        <p>African penguins on a pristine beach. Genuinely magical. Combine with the full Peninsula drive for a perfect day out.</p>
-        <div class="attraction-meta"><span>⏱ 1–2 hrs</span><span>📍 Simon's Town</span><span>💳 R220</span></div>
-      </div>
-    </a>
-    <a class="attraction-card reveal" href="https://www.sanparks.org/parks/table_mountain/" target="_blank" rel="noopener">
-      <img class="attraction-img" src="https://images.unsplash.com/photo-1509233725247-49e657c54213?w=800&q=80" alt="Cape Point">
-      <div class="attraction-body">
-        <div class="attraction-tag">Nature</div>
-        <h3>Cape of Good Hope</h3>
-        <p>The full Peninsula loop is one of the world's great road trips. Start at 8am, do Chapman's Peak both ways.</p>
-        <div class="attraction-meta"><span>⏱ Full day</span><span>📍 Peninsula</span><span>💳 R353</span></div>
-      </div>
-    </a>
-    <a class="attraction-card reveal" href="https://www.capetown.travel/neighbourhoods/bo-kaap/" target="_blank" rel="noopener">
-      <img class="attraction-img" src="https://images.unsplash.com/photo-1526711657229-e7e080ed7aa1?w=800&q=80" alt="Bo-Kaap">
-      <div class="attraction-body">
-        <div class="attraction-tag">Culture</div>
-        <h3>Bo-Kaap</h3>
-        <p>Cape Town's colourful Cape Malay quarter. Go early morning for photos before the crowds arrive. Incredible history.</p>
-        <div class="attraction-meta"><span>⏱ 1–2 hrs</span><span>📍 City Bowl</span><span>💳 Free</span></div>
-      </div>
-    </a>
-    <a class="attraction-card reveal" href="https://www.waterfront.co.za/" target="_blank" rel="noopener">
-      <img class="attraction-img" src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80" alt="V&amp;A Waterfront">
-      <div class="attraction-body">
-        <div class="attraction-tag">Lifestyle</div>
-        <h3>V&amp;A Waterfront</h3>
-        <p>Working harbour, mountain views, seals on the jetties. Come for the atmosphere and a drink — eat on Bree Street instead.</p>
-        <div class="attraction-meta"><span>⏱ 2–3 hrs</span><span>📍 Waterfront</span><span>💳 Free</span></div>
-      </div>
-    </a>
-  </div>
-</section>
-
-<!-- NEIGHBOURHOODS -->
-<section class="neighborhoods-section" id="neighborhoods">
-  <div class="section-label" style="color:rgba(58,180,242,.8)">Where to go</div>
-  <h2 class="section-title">Neighbourhoods worth knowing.</h2>
-  <p class="section-sub">Cape Town's character changes dramatically from one area to the next. Here's where to spend your time.</p>
-  <div class="neighborhoods-grid">
-    <div class="neighborhood-card reveal">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Sea Point">
-      <div class="neighborhood-info">
-        <h3>Sea Point</h3>
-        <p>Best base for visitors. Promenade, restaurants, safe at night.</p>
-      </div>
-    </div>
-    <div class="neighborhood-card reveal">
-      <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=80" alt="Woodstock">
-      <div class="neighborhood-info">
-        <h3>Woodstock</h3>
-        <p>Street art, Old Biscuit Mill, Cape Town's creative heartbeat.</p>
-      </div>
-    </div>
-    <div class="neighborhood-card reveal">
-      <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800&q=80" alt="Camps Bay">
-      <div class="neighborhood-info">
-        <h3>Camps Bay</h3>
-        <p>Iconic strip, mountain backdrop, great for a sundowner drink.</p>
-      </div>
-    </div>
-    <div class="neighborhood-card reveal">
-      <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80" alt="Hout Bay">
-      <div class="neighborhood-info">
-        <h3>Hout Bay</h3>
-        <p>Working harbour, fresh fish, gateway to Chapman's Peak.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- AI CHAT SECTION -->
 <section class="ai-section" id="ai-chat">
   <div style="max-width:780px;margin:0 auto;text-align:center;">
-    <div class="section-label" style="color:rgba(212,165,90,.8)">Voice AI · Always On</div>
+    <div class="section-label" style="color:rgba(212,165,90,.8)">Not Another Travel Guide</div>
     <h2 class="section-title">Meet Caipy.</h2>
-    <p class="section-sub">Just speak. Tell Caipy your dates, who you're travelling with, and what you love. She'll build your personalised Cape Town itinerary in minutes — based on 10+ years of local insider knowledge.</p>
+    <p class="section-sub">A smart travel companion that updates your trip as things change — not a static PDF you'll forget by day two.<br><br>
+      <span style="display:block;background:rgba(255,255,255,.06);border:1px solid rgba(212,165,90,.2);border-radius:10px;padding:20px 24px;text-align:left;font-size:13px;color:rgba(255,255,255,.75);line-height:2;max-width:480px;margin:0 auto;">
+        <strong style="color:#D4A85A;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Example — Your Trip Today</strong><br><br>
+        ☀ Perfect beach weather in Clifton → <em>Go now (low wind, clear skies)</em><br>
+        🌬 Wind picking up at 14:00 → <em>Move Table Mountain to tomorrow</em><br>
+        🍷 Ideal conditions in Stellenbosch → <em>Best time to go this afternoon</em><br>
+        🚗 Traffic building in Camps Bay → <em>Sunset alternative: Signal Hill</em>
+      </span>
+    </p>
     <div style="margin:2.5rem auto 0;display:flex;flex-direction:column;align-items:center;gap:16px;">
       <div style="width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);box-shadow:0 0 0 6px rgba(184,134,58,.15),0 0 40px 10px rgba(184,134,58,.2);">
         <img src="caipy-avatar2.png" alt="Caipy" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;">
       </div>
       <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 36px rgba(184,134,58,.55)'" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 28px rgba(184,134,58,.4)'">
-        Speak with Caipy
-        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Your personal Travel Agent</em>
+        Start Planning My Trip
+        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Free · No stress · No endless searching.</em>
       </button>
-      <p style="font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.5px;">Free · No sign-up · Voice only</p>
+      <p style="font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.5px;">Free · No sign-up · Real-time</p>
     </div>
   </div>
 </section>
 
 <!-- ITINERARY -->
 <section class="itinerary-section" id="itinerary">
-  <div class="section-label">Sample plan</div>
-  <h2 class="section-title">Your perfect 3 days.</h2>
-  <p class="section-sub">A proven first-timer's itinerary. Ask Caipy to customise it for your exact dates and interests.</p>
+  <div class="section-label">Your Personalized Itinerary</div>
+  <h2 class="section-title">A day-by-day plan built around you.</h2>
+  <p class="section-sub">Not a generic tourist checklist. A real, flexible plan built around your travel style, dates, and interests — that adapts when things change.</p>
   <div class="itinerary-grid">
     <div class="itinerary-card reveal">
       <div class="itin-day"><div class="itin-day-num">Day One</div><div class="itin-day-title">The Icons</div></div>
@@ -424,9 +349,9 @@
 
 <!-- TIPS -->
 <section class="tips-section" id="tips">
-  <div class="section-label">Local knowledge</div>
-  <h2 class="section-title">What the guidebooks don't tell you.</h2>
-  <p class="section-sub">Honest tips from someone who actually lives here.</p>
+  <div class="section-label">Local Intelligence</div>
+  <h2 class="section-title">Built on 10+ years of real Cape Town experience.</h2>
+  <p class="section-sub">Not scraped from the internet. Not generated from other guides. This is what a local actually tells you before your trip.</p>
   <div class="tips-grid">
     <div class="tip-card reveal">
       <h3>🛡️ Safety</h3>
@@ -457,14 +382,14 @@
 
 <!-- CTA -->
 <section class="cta-section">
-  <h2>Ready to experience Cape Town properly?</h2>
-  <p>Speak with Caipy — free, no sign-up. She'll build your personalised itinerary in minutes.</p>
+  <h2>Stop researching.<br><em style="font-style:italic;color:var(--gold-l)">Start experiencing Cape Town.</em></h2>
+  <p>Your personalized itinerary, ready in minutes. No more endless tabs, no more generic guides, no more wasted hours.</p>
   <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
     <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 8px 28px rgba(184,134,58,.4);">
-      Speak with Caipy
-      <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Your personal Travel Agent</em>
+      Plan My Perfect Cape Town Trip
+      <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Takes less than 2 minutes</em>
     </button>
-    <button onclick="window.location.href='guide.html'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;cursor:pointer;">Get your Guide — €99</button>
+    <button onclick="window.location.href='guide.html'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;cursor:pointer;">Get My Personalized Itinerary</button>
   </div>
 </section>
 
@@ -479,13 +404,11 @@
           <div class="logo-sub">Cape Town Insider Guide</div>
         </div>
       </div>
-      <p>Built on 10+ years of living in Cape Town. Real insider knowledge, powered by AI.</p>
+      <p>Built on 10+ years of real Cape Town experience — not scraped from the internet. Dynamic, personalized travel planning powered by AI.</p>
     </div>
     <div class="footer-col">
       <h4>Explore</h4>
-      <a href="index.html#attractions">Attractions</a>
-      <a href="index.html#neighborhoods">Neighbourhoods</a>
-      <a href="index.html#itinerary">Itineraries</a>
+<a href="index.html#itinerary">Itineraries</a>
       <a href="index.html#tips">Local Tips</a>
     </div>
     <div class="footer-col">
@@ -570,12 +493,8 @@
       });
       const data = await res.json();
       if (data.success) {
-        // Show success message
-        const modal = document.getElementById('itinerary-modal');
-        modal.querySelector('input').style.display = 'none';
-        document.getElementById('pay-btn').style.display = 'none';
-        modal.querySelector('p').textContent = '✅ Thank you for your order. Your itinerary has been sent to your email.';
-        modal.style.display = 'flex';
+        localStorage.setItem('guide_access', '1');
+        window.location.href = 'guide/guide.html';
       }
     } catch(e) { console.error('Verify payment error:', e); }
   })();
@@ -593,7 +512,7 @@
       menu = document.createElement('div');
       menu.id = 'mobileMenu';
       Object.assign(menu.style, { position:'fixed', top:'68px', left:'0', right:'0', background:'rgba(11,31,58,.97)', listStyle:'none', padding:'20px 5vw 28px', display:'flex', flexDirection:'column', gap:'16px', zIndex:'99', borderBottom:'1px solid rgba(255,255,255,.08)' });
-      ['Attractions','Neighbourhoods','Itinerary','Tips'].forEach(label => {
+      ['Itinerary','Tips'].forEach(label => {
         const a = document.createElement('a');
         a.href = '#' + label.toLowerCase();
         a.textContent = label;
@@ -769,20 +688,30 @@
     btn.disabled = true;
     msg.textContent = '';
 
+    // Client-side bypass — redirect immediately, no server or DOM needed
+    if (['CAPETOWN-VIP', 'KLM2026'].indexOf(code.trim().toUpperCase()) !== -1) {
+      localStorage.setItem('guide_access', '1');
+      window.location.href = 'guide.html';
+      return;
+    }
+
     try {
-      const res = await fetch('https://caipy-sfau.onrender.com/redeem-voucher', {
+      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://caipy-sfau.onrender.com';
+      const res = await fetch(apiBase + '/redeem-voucher', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, email, conversationId: window._caipyConvId, transcript: window._caipyTranscript }),
       });
       const data = await res.json();
       if (data.success) {
+        localStorage.setItem('guide_access', '1');
+        setTimeout(() => { window.location.href = 'guide.html'; }, 1500);
         const modal = document.getElementById('itinerary-modal');
         modal.querySelector('input[type="email"]').style.display = 'none';
         document.getElementById('pay-btn').style.display = 'none';
         document.getElementById('voucher-section').style.display = 'none';
         document.getElementById('voucher-toggle').style.display = 'none';
-        modal.querySelector('p').textContent = '✅ Thank you! Your personalised guide is being prepared and will arrive in your inbox shortly.';
+        modal.querySelector('p').textContent = '✅ Opening your guide now…';
       } else {
         msg.style.color = '#c0392b';
         msg.textContent = data.error || 'Invalid code.';
@@ -828,8 +757,8 @@
 <!-- STICKY PAYMENT BAR -->
 <div id="sticky-pay" style="position:fixed;bottom:0;left:0;right:0;z-index:9998;background:rgba(28,28,26,.97);backdrop-filter:blur(20px);border-top:1px solid rgba(184,134,58,.3);padding:14px 5vw;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);">
   <div>
-    <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:1.1rem;font-weight:500;color:#fff;margin-bottom:2px;">Your personalised Cape Town itinerary</div>
-    <div style="font-family:&#39;Jost&#39;,sans-serif;font-size:11px;color:rgba(255,255,255,.5);font-weight:300;">Day-by-day plan · Hotels · Road trips · Google Maps · Caipy access</div>
+    <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:1.1rem;font-weight:500;color:#fff;margin-bottom:2px;">Your adaptive Cape Town itinerary</div>
+    <div style="font-family:&#39;Jost&#39;,sans-serif;font-size:11px;color:rgba(255,255,255,.5);font-weight:300;">Day-by-day plan · Real-time tips · Local intel · Caipy access</div>
   </div>
   <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
     <div style="text-align:right;">
@@ -838,7 +767,7 @@
     </div>
     <div style="display:flex;flex-direction:column;gap:6px;">
       <input type="email" id="sticky-email" placeholder="your@email.com" style="border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:9px 14px;font-size:13px;font-family:&#39;Jost&#39;,sans-serif;color:#fff;background:rgba(255,255,255,.06);outline:none;width:220px;">
-      <button onclick="window.location.href='guide.html'" style="background:linear-gradient(135deg,#B8863A,#D4A55A);color:#fff;border:none;padding:10px 24px;border-radius:6px;font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(184,134,58,.4);">Get your Guide — €99 →</button>
+      <button onclick="window.location.href='guide.html'" style="background:linear-gradient(135deg,#B8863A,#D4A55A);color:#fff;border:none;padding:10px 24px;border-radius:6px;font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(184,134,58,.4);">Plan My Trip — €99 →</button>
     </div>
   </div>
 </div>
