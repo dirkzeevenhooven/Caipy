@@ -5,7 +5,6 @@ require('dotenv').config();
 const express = require('express');
 const Stripe = require('stripe');
 const Anthropic = require('@anthropic-ai/sdk');
-const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const crypto = require('crypto');
 const path = require('path');
@@ -256,54 +255,71 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
   return `${baseUrl}/guides/${guideId}.html`;
 }
 
-// ─── Email helper ─────────────────────────────────────────────────────────────
+// ─── Email helper (Postmark HTTP API — avoids SMTP port blocks on Render) ─────
 async function sendItineraryEmail(email, itinerary, guideUrl) {
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: false,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  });
+  const token = process.env.SMTP_PASS; // Postmark server API token
+  const from = process.env.SMTP_FROM;
+  if (!token || !from) throw new Error('Postmark credentials not configured');
 
   const pdfBuffer = await generateItineraryPDF(itinerary);
+  const pdfBase64 = pdfBuffer.toString('base64');
 
-  await transporter.sendMail({
-    from: `Caipy — Cape Town Guide <${process.env.SMTP_FROM}>`,
-    to: email,
-    subject: 'Your Cape Town Guide is ready ✈️',
-    text: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nYour full itinerary is also attached as a PDF.\n\n— Dirk`,
-    attachments: [{
-      filename: 'Cape-Town-Itinerary-Caipy.pdf',
-      content: pdfBuffer,
-      contentType: 'application/pdf',
-    }],
-    html: `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
-      <body style="font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 24px;color:#1C1C1A;line-height:1.7;">
+  const htmlBody = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+    <body style="font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 24px;color:#1C1C1A;line-height:1.7;">
 
-        <div style="border-bottom:2px solid #B8863A;padding-bottom:20px;margin-bottom:36px;">
-          <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#B8863A;margin:0 0 8px 0;">The Cape Town Guide</p>
-          <h1 style="font-size:30px;font-weight:400;margin:0;line-height:1.2;">Your guide is ready.</h1>
-        </div>
+      <div style="border-bottom:2px solid #B8863A;padding-bottom:20px;margin-bottom:36px;">
+        <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#B8863A;margin:0 0 8px 0;">The Cape Town Guide</p>
+        <h1 style="font-size:30px;font-weight:400;margin:0;line-height:1.2;">Your guide is ready.</h1>
+      </div>
 
-        <p style="font-size:17px;margin:0 0 28px 0;">Thank you for your order — your personalised Cape Town guide has been crafted just for you, based on everything you shared with Caipy.</p>
+      <p style="font-size:17px;margin:0 0 28px 0;">Thank you for your order — your personalised Cape Town guide has been crafted just for you, based on everything you shared with Caipy.</p>
 
-        ${guideUrl ? `<div style="background:#FAF7F2;border:1px solid rgba(184,134,58,0.3);border-radius:12px;padding:28px;margin-bottom:32px;text-align:center;">
-          <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#B8863A;margin:0 0 10px 0;">Your Interactive Guide</p>
-          <p style="font-size:16px;color:#1C1C1A;margin:0 0 20px 0;">Photos, day-by-day itinerary, maps and local tips — all in one beautiful guide.</p>
-          <a href="${guideUrl}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:14px 32px;border-radius:100px;text-decoration:none;">Open My Guide →</a>
-        </div>` : ''}
+      ${guideUrl ? `<div style="background:#FAF7F2;border:1px solid rgba(184,134,58,0.3);border-radius:12px;padding:28px;margin-bottom:32px;text-align:center;">
+        <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#B8863A;margin:0 0 10px 0;">Your Interactive Guide</p>
+        <p style="font-size:16px;color:#1C1C1A;margin:0 0 20px 0;">Photos, day-by-day itinerary, maps and local tips — all in one beautiful guide.</p>
+        <a href="${guideUrl}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:14px 32px;border-radius:100px;text-decoration:none;">Open My Guide →</a>
+      </div>` : ''}
 
-        <p style="font-size:15px;margin:0 0 8px 0;">Your full itinerary is also attached as a <strong>PDF</strong> — great for saving offline or printing.</p>
+      <p style="font-size:15px;margin:0 0 8px 0;">Your full itinerary is also attached as a <strong>PDF</strong> — great for saving offline or printing.</p>
 
-        <p style="font-size:15px;margin:0 0 36px 0;">Enjoy every moment. Cape Town is going to blow your mind.</p>
+      <p style="font-size:15px;margin:0 0 36px 0;">Enjoy every moment. Cape Town is going to blow your mind.</p>
 
-        <div style="border-top:1px solid #EDE5D8;padding-top:24px;color:#6B6560;font-size:13px;font-family:sans-serif;">
-          <p style="margin:0;">With warmth,<br><strong style="color:#1C1C1A;">Dirk Zeevenhooven</strong><br>The Cape Town Guide · thecapetownguide.com</p>
-          ${guideUrl ? `<p style="margin:16px 0 0;font-size:11px;">Guide link: <a href="${guideUrl}" style="color:#B8863A;">${guideUrl}</a></p>` : ''}
-        </div>
+      <div style="border-top:1px solid #EDE5D8;padding-top:24px;color:#6B6560;font-size:13px;font-family:sans-serif;">
+        <p style="margin:0;">With warmth,<br><strong style="color:#1C1C1A;">Dirk Zeevenhooven</strong><br>The Cape Town Guide · thecapetownguide.com</p>
+        ${guideUrl ? `<p style="margin:16px 0 0;font-size:11px;">Guide link: <a href="${guideUrl}" style="color:#B8863A;">${guideUrl}</a></p>` : ''}
+      </div>
 
-      </body></html>`,
+    </body></html>`;
+
+  const res = await fetch('https://api.postmarkapp.com/email', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'X-Postmark-Server-Token': token,
+    },
+    body: JSON.stringify({
+      From: `Caipy — Cape Town Guide <${from}>`,
+      To: email,
+      Subject: 'Your Cape Town Guide is ready ✈️',
+      TextBody: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nYour full itinerary is also attached as a PDF.\n\n— Dirk`,
+      HtmlBody: htmlBody,
+      Attachments: [{
+        Name: 'Cape-Town-Itinerary-Caipy.pdf',
+        Content: pdfBase64,
+        ContentType: 'application/pdf',
+      }],
+    }),
   });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Postmark API error ${res.status}: ${body}`);
+  }
+  const result = await res.json();
+  if (result.ErrorCode && result.ErrorCode !== 0) {
+    throw new Error(`Postmark error ${result.ErrorCode}: ${result.Message}`);
+  }
 }
 
 // ─── Caipy System Prompt ──────────────────────────────────────────────────────
@@ -813,36 +829,46 @@ app.post('/subscribe', async (req, res) => {
     }
   }
 
-  // Send PDF by email
+  // Send PDF by email via Postmark HTTP API
   try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-    });
+    const smtpToken = process.env.SMTP_PASS;
+    const smtpFrom = process.env.SMTP_FROM;
+    if (!smtpToken || !smtpFrom) throw new Error('Postmark credentials not configured');
 
     const pdfPath = path.join(__dirname, 'public', 'secret-local-list.pdf');
     const attachments = fs.existsSync(pdfPath) ? [{
-      filename: 'Dirks-Secret-Local-List-Cape-Town.pdf',
-      path: pdfPath,
-      contentType: 'application/pdf',
+      Name: 'Dirks-Secret-Local-List-Cape-Town.pdf',
+      Content: fs.readFileSync(pdfPath).toString('base64'),
+      ContentType: 'application/pdf',
     }] : [];
 
-    await transporter.sendMail({
-      from: `Dirk — The Cape Town Guide <${process.env.SMTP_FROM}>`,
-      to: email,
-      subject: "Dirk's Secret Local List — Cape Town 🌊",
-      html: `<!DOCTYPE html><html><body style="font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:40px 24px;color:#1B3A4B;line-height:1.7">
-        <p style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#C9A96E;margin-bottom:8px">The Cape Town Guide</p>
-        <h1 style="font-size:28px;font-weight:400;margin:0 0 24px">Hi ${name}, here's your list.</h1>
-        <p style="font-size:16px;color:#4A4540;margin-bottom:20px">Attached is Dirk's Secret Local List — 15 Cape Town insider tips that don't show up on TripAdvisor or in any guidebook.</p>
-        <p style="font-size:16px;color:#4A4540;margin-bottom:20px">These are the places I send my friends when they visit. Use them well.</p>
-        <p style="font-size:16px;color:#4A4540;margin-bottom:32px">And when you're ready to plan your full trip — <a href="https://thecapetownguide.com" style="color:#C9A96E">Caipy is here to help</a>.</p>
-        <p style="font-size:15px;color:#4A4540">Warm regards,<br><strong style="color:#1B3A4B">Dirk Zeevenhooven</strong><br>The Cape Town Guide</p>
-      </body></html>`,
-      attachments,
+    const mailRes = await fetch('https://api.postmarkapp.com/email', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Postmark-Server-Token': smtpToken,
+      },
+      body: JSON.stringify({
+        From: `Dirk — The Cape Town Guide <${smtpFrom}>`,
+        To: email,
+        Subject: "Dirk's Secret Local List — Cape Town 🌊",
+        HtmlBody: `<!DOCTYPE html><html><body style="font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:40px 24px;color:#1B3A4B;line-height:1.7">
+          <p style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#C9A96E;margin-bottom:8px">The Cape Town Guide</p>
+          <h1 style="font-size:28px;font-weight:400;margin:0 0 24px">Hi ${name}, here's your list.</h1>
+          <p style="font-size:16px;color:#4A4540;margin-bottom:20px">Attached is Dirk's Secret Local List — 15 Cape Town insider tips that don't show up on TripAdvisor or in any guidebook.</p>
+          <p style="font-size:16px;color:#4A4540;margin-bottom:20px">These are the places I send my friends when they visit. Use them well.</p>
+          <p style="font-size:16px;color:#4A4540;margin-bottom:32px">And when you're ready to plan your full trip — <a href="https://thecapetownguide.com" style="color:#C9A96E">Caipy is here to help</a>.</p>
+          <p style="font-size:15px;color:#4A4540">Warm regards,<br><strong style="color:#1B3A4B">Dirk Zeevenhooven</strong><br>The Cape Town Guide</p>
+        </body></html>`,
+        Attachments: attachments,
+      }),
     });
+
+    if (!mailRes.ok) {
+      const body = await mailRes.text();
+      throw new Error(`Postmark API error ${mailRes.status}: ${body}`);
+    }
     console.log('Secret local list sent to:', email);
     res.json({ success: true });
   } catch (err) {
