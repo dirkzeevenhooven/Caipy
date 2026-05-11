@@ -688,8 +688,8 @@
     btn.disabled = true;
     msg.textContent = '';
 
-    // Client-side bypass — redirect immediately, no server or DOM needed
-    if (['CAPETOWN-VIP', 'KLM2026'].indexOf(code.trim().toUpperCase()) !== -1) {
+    // Localhost-only bypass — no server needed when testing locally
+    if (window.location.hostname === 'localhost' && ['CAPETOWN-VIP', 'KLM2026'].indexOf(code.trim().toUpperCase()) !== -1) {
       localStorage.setItem('guide_access', '1');
       window.location.href = 'guide.html';
       return;
