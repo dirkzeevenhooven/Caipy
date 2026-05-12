@@ -939,8 +939,10 @@ app.get('/tavus-patch-persona', async (req, res) => {
     const response = await fetch('https://tavusapi.com/v2/personas/pb550e577673', {
       method: 'PATCH',
       headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tools: [{
+      body: JSON.stringify([{
+        op: 'add',
+        path: '/llm/tools/-',
+        value: {
           type: 'function',
           function: {
             name: 'send_itinerary',
@@ -958,8 +960,8 @@ app.get('/tavus-patch-persona', async (req, res) => {
               required: ['email'],
             },
           },
-        }],
-      }),
+        },
+      }]),
     });
     const text = await response.text();
     try { res.json(JSON.parse(text)); } catch(e) { res.json({ status: response.status, raw: text.substring(0, 500) }); }
