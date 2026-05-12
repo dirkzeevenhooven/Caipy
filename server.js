@@ -37,6 +37,9 @@ const sessions = new Map();
 // Maps pendingId → { itinerary, createdAt } — temporary pre-payment itinerary store
 const pendingItineraries = new Map();
 
+// Maps Tavus conversation_id → { email, name, createdAt }
+const tavusConversations = new Map();
+
 // Clean up pending itineraries older than 2 hours
 setInterval(() => {
   const cutoff = Date.now() - 2 * 60 * 60 * 1000;
@@ -925,6 +928,10 @@ app.post('/create-tavus-conversation', async (req, res) => {
 
     const data = await response.json();
     console.log('Tavus conversation created:', data.conversation_id);
+    // Store email + name so we can use them when conversation ends
+    if (data.conversation_id && email) {
+      tavusConversations.set(data.conversation_id, { email, name: name || '', createdAt: Date.now() });
+    }
     res.json({ url: data.conversation_url });
   } catch (err) {
     console.error('Tavus error:', err.message);
@@ -970,11 +977,29 @@ app.get('/tavus-patch-persona', async (req, res) => {
   }
 });
 
-// ─── Tavus tool webhook — called by Caipy when itinerary is ready to send ────
+// ─── Tavus webhook — handles tool calls AND conversation events ───────────────
 app.post('/tavus-tool', async (req, res) => {
-  const { tool_name, parameters } = req.body;
-  console.log('Tavus tool call:', tool_name, parameters);
+  const body = req.body;
+  console.log('Tavus webhook:', JSON.stringify(body).substring(0, 300));
 
+  // ── Conversation-end event ───────────────────────────────────────────────────
+  const eventType = body.event_type || body.type;
+  if (eventType === 'conversation.ended' || eventType === 'application.transcription_ready') {
+    const conversationId = body.conversation_id;
+    const lead = tavusConversations.get(conversationId);
+    if (lead && lead.email) {
+      const transcript = body.transcript || body.transcription || JSON.stringify(body.data || {});
+      console.log(`Conversation ended for ${lead.email}, generating itinerary...`);
+      generateAndEmailItinerary(lead.email, transcript, null).catch(err =>
+        console.error('Itinerary generation error:', err.message)
+      );
+      tavusConversations.delete(conversationId);
+    }
+    return res.json({ ok: true });
+  }
+
+  // ── Tool call ────────────────────────────────────────────────────────────────
+  const { tool_name, parameters } = body;
   if (tool_name === 'send_itinerary') {
     const { email, travel_dates, duration, group_type, interests, budget } = parameters || {};
 
@@ -982,7 +1007,6 @@ app.post('/tavus-tool', async (req, res) => {
       return res.json({ result: 'I need your email address to send the itinerary. Could you share it with me?' });
     }
 
-    // Build a structured transcript from the collected parameters
     const transcript = `Visitor is planning a Cape Town trip.
 Travel dates / timing: ${travel_dates || 'not specified'}
 Duration: ${duration || 'not specified'}
@@ -990,7 +1014,6 @@ Travelling with: ${group_type || 'not specified'}
 Interests: ${interests || 'not specified'}
 Budget: ${budget || 'not specified'}`;
 
-    // Fire and forget — generate and email the itinerary
     generateAndEmailItinerary(email, transcript, null).catch(err =>
       console.error('Itinerary generation error:', err.message)
     );
@@ -998,7 +1021,7 @@ Budget: ${budget || 'not specified'}`;
     return res.json({ result: `Perfect! I'm creating your personalised Cape Town itinerary now and sending it to ${email}. It will arrive within a minute. Enjoy your trip!` });
   }
 
-  res.json({ result: 'Tool not recognised.' });
+  res.json({ result: 'ok' });
 });
 
 // ─── Tavus debug — list available personas ───────────────────────────────────
