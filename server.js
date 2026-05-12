@@ -235,8 +235,9 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
 
   // Upload via PHP endpoint on Plesk (avoids FTP port blocking)
   const uploadToken = process.env.GUIDE_UPLOAD_TOKEN || 'ctg-upload-2026-secret';
+  const uploadUrl = process.env.GUIDE_UPLOAD_URL || 'https://thecapetownguide.com/upload-guide.php';
   try {
-    const res = await fetch('https://thecapetownguide.com/upload-guide.php', {
+    const res = await fetch(uploadUrl, {
       method: 'POST',
       headers: {
         'X-Upload-Token': uploadToken,
@@ -261,14 +262,11 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
   }
 }
 
-// ─── Email helper (Postmark HTTP API — avoids SMTP port blocks on Render) ─────
+// ─── Email helper ─────────────────────────────────────────────────────────────
 async function sendItineraryEmail(email, itinerary, guideUrl) {
   const token = process.env.RESEND_API_KEY;
   const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
   if (!token) throw new Error('RESEND_API_KEY not configured');
-
-  const pdfBuffer = await generateItineraryPDF(itinerary);
-  const pdfBase64 = pdfBuffer.toString('base64');
 
   const htmlBody = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
     <body style="font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 24px;color:#1C1C1A;line-height:1.7;">
@@ -278,21 +276,20 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
         <h1 style="font-size:30px;font-weight:400;margin:0;line-height:1.2;">Your guide is ready.</h1>
       </div>
 
-      <p style="font-size:17px;margin:0 0 28px 0;">Thank you for your order — your personalised Cape Town guide has been crafted just for you, based on everything you shared with Caipy.</p>
+      <p style="font-size:17px;margin:0 0 28px 0;">Your personalised Cape Town guide has been crafted just for you, based on everything you shared with Caipy.</p>
 
-      ${guideUrl ? `<div style="background:#FAF7F2;border:1px solid rgba(184,134,58,0.3);border-radius:12px;padding:28px;margin-bottom:32px;text-align:center;">
-        <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#B8863A;margin:0 0 10px 0;">Your Interactive Guide</p>
-        <p style="font-size:16px;color:#1C1C1A;margin:0 0 20px 0;">Photos, day-by-day itinerary, maps and local tips — all in one beautiful guide.</p>
-        <a href="${guideUrl}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:14px 32px;border-radius:100px;text-decoration:none;">Open My Guide →</a>
+      ${guideUrl ? `<div style="background:#FAF7F2;border:1px solid rgba(184,134,58,0.3);border-radius:12px;padding:36px;margin-bottom:32px;text-align:center;">
+        <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#B8863A;margin:0 0 12px 0;">Your Interactive Cape Town Guide</p>
+        <p style="font-size:16px;color:#1C1C1A;margin:0 0 8px 0;">Day-by-day itinerary · Photos · Local tips · Maps</p>
+        <p style="font-size:13px;color:#6B6560;margin:0 0 24px 0;">Bookmark this link — it's yours to keep.</p>
+        <a href="${guideUrl}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:16px 40px;border-radius:100px;text-decoration:none;">Open My Guide →</a>
+        <p style="margin:20px 0 0;font-size:11px;color:#9B9491;">Or copy this link: <a href="${guideUrl}" style="color:#B8863A;">${guideUrl}</a></p>
       </div>` : ''}
-
-      <p style="font-size:15px;margin:0 0 8px 0;">Your full itinerary is also attached as a <strong>PDF</strong> — great for saving offline or printing.</p>
 
       <p style="font-size:15px;margin:0 0 36px 0;">Enjoy every moment. Cape Town is going to blow your mind.</p>
 
       <div style="border-top:1px solid #EDE5D8;padding-top:24px;color:#6B6560;font-size:13px;font-family:sans-serif;">
         <p style="margin:0;">With warmth,<br><strong style="color:#1C1C1A;">Dirk Zeevenhooven</strong><br>The Cape Town Guide · thecapetownguide.com</p>
-        ${guideUrl ? `<p style="margin:16px 0 0;font-size:11px;">Guide link: <a href="${guideUrl}" style="color:#B8863A;">${guideUrl}</a></p>` : ''}
       </div>
 
     </body></html>`;
@@ -307,12 +304,8 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
       from: `Caipy — Cape Town Guide <${from}>`,
       to: [email],
       subject: 'Your Cape Town Guide is ready ✈️',
-      text: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nYour full itinerary is also attached as a PDF.\n\n— Dirk`,
+      text: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nBookmark this link — it's yours to keep.\n\n— Dirk`,
       html: htmlBody,
-      attachments: [{
-        filename: 'Cape-Town-Itinerary-Caipy.pdf',
-        content: pdfBase64,
-      }],
     }),
   });
 
