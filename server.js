@@ -246,7 +246,8 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
       user: process.env.FTP_USER,
       password: process.env.FTP_PASS,
       port: 21,
-      secure: false,
+      secure: true,
+      secureOptions: { rejectUnauthorized: false },
     });
     // Ensure guides directory exists
     try { await client.ensureDir('httpdocs/guides'); } catch(e) {}
