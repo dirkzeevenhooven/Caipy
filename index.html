@@ -631,15 +631,36 @@
     const modal = document.getElementById('tavus-modal');
     modal.style.display = 'none';
     if (_dailyCall) { _dailyCall.destroy(); _dailyCall = null; }
-    // Trigger itinerary generation when call ends
     if (_tavusEmail) {
-      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://caipy-sfau.onrender.com';
-      fetch(apiBase + '/end-tavus-call', {
+      const email = _tavusEmail, name = _tavusName, convId = _tavusConvId;
+      _tavusEmail = null; _tavusName = null; _tavusConvId = null;
+      showItineraryLoader(email, name, convId);
+    }
+  }
+
+  async function showItineraryLoader(email, name, convId) {
+    const overlay = document.getElementById('itinerary-loader');
+    overlay.style.display = 'flex';
+    document.getElementById('itinerary-loader-name').textContent = name ? `${name}'s` : 'Your';
+    const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://caipy-sfau.onrender.com';
+    try {
+      const res = await fetch(apiBase + '/end-tavus-call', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: _tavusEmail, name: _tavusName, conversation_id: _tavusConvId }),
-      }).catch(() => {});
-      _tavusEmail = null; _tavusName = null; _tavusConvId = null;
+        body: JSON.stringify({ email, name, conversation_id: convId }),
+      });
+      const data = await res.json();
+      if (data.guideUrl) {
+        window.location.href = data.guideUrl;
+      } else {
+        document.getElementById('itinerary-loader-msg').innerHTML = `Your itinerary is on its way to <strong>${email}</strong>! Check your inbox in a moment.`;
+        document.getElementById('itinerary-loader-spinner').style.display = 'none';
+        document.getElementById('itinerary-loader-close').style.display = 'inline-block';
+      }
+    } catch(e) {
+      document.getElementById('itinerary-loader-msg').innerHTML = `Something went wrong. Check your inbox at <strong>${email}</strong> shortly.`;
+      document.getElementById('itinerary-loader-spinner').style.display = 'none';
+      document.getElementById('itinerary-loader-close').style.display = 'inline-block';
     }
   }
 
@@ -1003,6 +1024,33 @@ async function stickyPay() {
   }
 }
 </script>
+
+<!-- Itinerary loading overlay — shown after call ends while itinerary generates -->
+<div id="itinerary-loader" style="display:none; position:fixed; inset:0; z-index:10000; flex-direction:column; align-items:center; justify-content:center; text-align:center; overflow:hidden;">
+  <!-- Background photo with overlay -->
+  <div style="position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;"></div>
+  <div style="position:absolute; inset:0; background:linear-gradient(160deg,rgba(13,27,42,0.88) 0%,rgba(13,27,42,0.72) 50%,rgba(13,27,42,0.92) 100%);"></div>
+  <!-- Content -->
+  <div style="position:relative; z-index:2; padding:2rem; max-width:560px;">
+    <!-- Logo badge -->
+    <div style="display:inline-block; font-family:'Jost',sans-serif; font-size:0.62rem; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:#D4A55A; border:1px solid rgba(212,165,90,0.6); padding:0.4rem 1.1rem; border-radius:100px; backdrop-filter:blur(8px); background:rgba(13,27,42,0.5); margin-bottom:2rem;">The Cape Town Guide</div>
+    <!-- Headline -->
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2rem,6vw,3.4rem); font-weight:400; color:#fff; line-height:1.1; margin-bottom:0.5rem;"><span id="itinerary-loader-name">Your</span> personalised</h2>
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2rem,6vw,3.4rem); font-weight:400; font-style:italic; color:#D4A55A; line-height:1.1; margin-bottom:1.8rem;">Cape Town adventure</h2>
+    <!-- Spinner -->
+    <div id="itinerary-loader-spinner" style="margin-bottom:1.6rem;">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="animation:spin 1.4s linear infinite;">
+        <circle cx="24" cy="24" r="20" stroke="rgba(212,165,90,0.2)" stroke-width="3"/>
+        <path d="M24 4 A20 20 0 0 1 44 24" stroke="#D4A55A" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <!-- Status text -->
+    <p id="itinerary-loader-msg" style="font-family:'Jost',sans-serif; font-size:1rem; font-weight:300; color:rgba(255,255,255,0.75); line-height:1.7; margin-bottom:2rem;">Caipy is crafting your day-by-day itinerary,<br>complete with restaurants, activities & insider tips…</p>
+    <!-- Close button (shown on error) -->
+    <button id="itinerary-loader-close" onclick="document.getElementById('itinerary-loader').style.display='none'" style="display:none; background:#B8863A; color:#fff; border:none; padding:14px 32px; border-radius:8px; font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer;">Back to Site</button>
+  </div>
+  <style>@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>
+</div>
 
 <!-- Lead capture form before video call -->
 <div id="tavus-lead-modal" style="display:none; position:fixed; inset:0; z-index:9998; background:rgba(0,0,0,.88); align-items:center; justify-content:center;">
