@@ -941,7 +941,7 @@ app.get('/tavus-patch-persona', async (req, res) => {
       headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify([{
         op: 'add',
-        path: '/llm/tools/-',
+        path: '/tools/-',
         value: {
           type: 'function',
           function: {
