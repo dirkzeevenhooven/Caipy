@@ -324,20 +324,24 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
 
     </body></html>`;
 
-  const res = await fetch('https://api.resend.com/emails', {
+  const sendEmail = async (fromAddr) => fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: `Caipy — Cape Town Guide <${from}>`,
+      from: `Caipy — Cape Town Guide <${fromAddr}>`,
       to: [email],
       subject: 'Your Cape Town Guide is ready ✈️',
       text: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nBookmark this link — it's yours to keep.\n\n— Dirk`,
       html: htmlBody,
     }),
   });
+
+  let res = await sendEmail(from);
+  // Fallback to onboarding@resend.dev if custom domain not yet verified
+  if (!res.ok && from !== 'onboarding@resend.dev') {
+    console.log('Custom domain not verified — falling back to onboarding@resend.dev');
+    res = await sendEmail('onboarding@resend.dev');
+  }
 
   if (!res.ok) {
     const body = await res.text();
@@ -912,16 +916,26 @@ app.post('/create-tavus-conversation', async (req, res) => {
     try {
       const token = process.env.RESEND_API_KEY;
       const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
-      // Notification email
-      await fetch('https://api.resend.com/emails', {
+      // Notification email — with fallback if custom domain not yet verified
+      const notifyFrom = process.env.SMTP_FROM || 'onboarding@resend.dev';
+      const notifyPayload = {
+        to: ['dirkzeevenhooven@gmail.com'],
+        subject: `New lead: ${name || 'Unknown'} <${email}>`,
+        html: `<p><strong>${name || 'Someone'}</strong> (${email}) just started a video call with Caipy.</p>`,
+      };
+      let notifyRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from, to: ['info@thecapetownguide.com', 'dirkzeevenhooven@gmail.com'],
-          subject: `New video call lead: ${name || 'Unknown'} <${email}>`,
-          html: `<p><strong>${name || 'Someone'}</strong> (${email}) just started a video call with Caipy.</p>`,
-        }),
+        body: JSON.stringify({ from: notifyFrom, ...notifyPayload }),
       });
+      if (!notifyRes.ok && notifyFrom !== 'onboarding@resend.dev') {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from: 'onboarding@resend.dev', ...notifyPayload }),
+        });
+      }
+      console.log('Lead notification sent for:', email);
       // Add to Resend Audience
       const audienceId = process.env.RESEND_AUDIENCE_ID;
       if (audienceId) {
