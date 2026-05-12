@@ -100,7 +100,9 @@
     #hero-bg {
       position: absolute;
       inset: 0;
-      background: url('https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=800&q=80') center center / cover no-repeat;
+      background:
+        url('https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1400&q=75') center center / cover no-repeat,
+        linear-gradient(135deg, #0d1b2a 0%, #1a3a4a 100%);
       transform: scale(1.06);
       transition: transform 8s ease-out;
     }
@@ -1347,9 +1349,9 @@
   <div id="hero-bg"></div>
   <div id="hero-overlay"></div>
   <div id="hero-content">
-    <span class="hero-eyebrow">The Cape Town Guide · Premium Edition</span>
+    <span class="hero-eyebrow">✦ Your itinerary is ready, {{CUSTOMER_NAME}}</span>
     <h1>Your Cape Town<br>Adventure</h1>
-    <span class="hero-crafted">Crafted for {{CUSTOMER_NAME}}</span>
+    <span class="hero-crafted">Tailor-made for you — day by day</span>
     <div class="hero-pills">
       <div class="hero-pill"><span class="pill-icon">📅</span> {{TRIP_DAYS}} Days</div>
       <div class="hero-pill"><span class="pill-icon">👥</span> {{TRIP_GROUP}}</div>
