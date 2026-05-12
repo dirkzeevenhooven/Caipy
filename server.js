@@ -871,6 +871,28 @@ app.post('/create-tavus-conversation', async (req, res) => {
   const apiKey = process.env.TAVUS_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'Tavus not configured' });
 
+  const { name, email } = req.body || {};
+  const greeting = name
+    ? `Hi ${name}! Welcome to The Cape Town Guide. My name is Caipy and I am your personal AI travel agent for Cape Town. I am going to help you plan your perfect Cape Town trip — I just need to ask you a few quick questions. When are you planning to travel to Cape Town and how many days are you staying?`
+    : `Hi there! Welcome to The Cape Town Guide. My name is Caipy and I am your personal AI travel agent for Cape Town. I am going to help you plan your perfect Cape Town trip — I just need to ask you a few quick questions. When are you planning to travel to Cape Town and how many days are you staying?`;
+
+  // Save lead to email list
+  if (email) {
+    try {
+      const token = process.env.RESEND_API_KEY;
+      const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from, to: ['dirk@planetcurated.com'],
+          subject: `New video call lead: ${name || 'Unknown'} <${email}>`,
+          html: `<p><strong>${name || 'Someone'}</strong> (${email}) just started a video call with Caipy.</p>`,
+        }),
+      });
+    } catch(e) { console.error('Lead notification error:', e.message); }
+  }
+
   try {
     const response = await fetch('https://tavusapi.com/v2/conversations', {
       method: 'POST',
@@ -882,7 +904,8 @@ app.post('/create-tavus-conversation', async (req, res) => {
         replica_id: 'rf4e9d9790f0',
         persona_id: 'pb550e577673',
         conversation_name: 'Cape Town Guide — Caipy',
-        custom_greeting: 'Hi there! Welcome to The Cape Town Guide. My name is Caipy and I am your personal AI travel agent for Cape Town. I am going to help you plan your perfect Cape Town trip — I just need to ask you a few quick questions. When are you planning to travel to Cape Town and how many days are you staying?',
+        custom_greeting: greeting,
+        conversational_context: email ? `The visitor's name is ${name || 'the visitor'} and their email address is ${email}. You already have their email — do NOT ask for it again. After collecting all trip details, call the send_itinerary tool immediately using ${email} as the email parameter.` : '',
         properties: {
           max_call_duration: 1800,
           enable_recording: false,
