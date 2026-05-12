@@ -40,6 +40,9 @@ const pendingItineraries = new Map();
 // Maps Tavus conversation_id → { email, name, createdAt }
 const tavusConversations = new Map();
 
+// Tracks conversation_ids already processed for itinerary — prevents double generation
+const processedConversations = new Set();
+
 // Clean up pending itineraries older than 2 hours
 setInterval(() => {
   const cutoff = Date.now() - 2 * 60 * 60 * 1000;
@@ -1016,6 +1019,12 @@ app.post('/tavus-tool', async (req, res) => {
     || eventType === 'application.transcription_ready';
 
   if (isEndEvent && conversationId) {
+    // Deduplicate — only process each conversation once
+    if (processedConversations.has(conversationId)) {
+      console.log('Already processed conversation:', conversationId, '— skipping');
+      return res.json({ ok: true });
+    }
+
     // Try in-memory first, then fetch from Tavus API to get email from context
     let lead = tavusConversations.get(conversationId);
     if (!lead || !lead.email) {
@@ -1025,7 +1034,6 @@ app.post('/tavus-tool', async (req, res) => {
           headers: { 'x-api-key': apiKey },
         });
         const conv = await r.json();
-        console.log('Fetched conversation context:', conv.conversational_context?.substring(0, 100));
         // Extract email from conversational_context: "their email address is X"
         const match = conv.conversational_context?.match(/email address is ([^\s.]+@[^\s.]+\.[^\s]+)/);
         if (match) lead = { email: match[1], name: conv.conversational_context?.match(/name is ([^ ]+)/)?.[1] || '' };
@@ -1033,12 +1041,14 @@ app.post('/tavus-tool', async (req, res) => {
     }
 
     if (lead && lead.email) {
-      const transcript = body.transcript || body.transcription || body.data?.transcript || '';
-      console.log(`Conversation ended — generating itinerary for ${lead.email}`);
-      generateAndEmailItinerary(lead.email, transcript || `Cape Town trip conversation ended. Please generate a personalised Cape Town itinerary.`, null).catch(err =>
+      const transcript = body.properties?.transcript || body.transcript || body.transcription || body.data?.transcript || '';
+      console.log(`Webhook: generating itinerary for ${lead.email}, transcript length: ${transcript.length}`);
+      processedConversations.add(conversationId);
+      setTimeout(() => processedConversations.delete(conversationId), 60 * 60 * 1000);
+      tavusConversations.delete(conversationId);
+      generateAndEmailItinerary(lead.email, transcript || `Cape Town trip for ${lead.name || 'a visitor'}. Generate a personalised itinerary.`, null).catch(err =>
         console.error('Itinerary generation error:', err.message)
       );
-      tavusConversations.delete(conversationId);
     } else {
       console.log('Conversation ended but no email found for', conversationId);
     }
@@ -1089,6 +1099,11 @@ app.post('/end-tavus-call', async (req, res) => {
   if (!email) return res.json({ ok: false });
 
   console.log(`End call triggered for ${email} (conv: ${conversation_id})`);
+  // Mark as processed so the Tavus webhook doesn't also generate for this conversation
+  if (conversation_id) {
+    processedConversations.add(conversation_id);
+    setTimeout(() => processedConversations.delete(conversation_id), 60 * 60 * 1000);
+  }
 
   // Try to fetch the actual conversation transcript from Tavus
   let transcript = name
