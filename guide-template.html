@@ -24,7 +24,7 @@
 
     /* ─── CSS VARIABLES ────────────────────────────────────────── */
     :root {
-      --navy: #1C1C1A;
+      --navy: #0d1b2a;
       --gold: #B8863A;
       --gold-light: #D4A55A;
       --cream: #FAF7F2;
@@ -95,12 +95,12 @@
       overflow: hidden;
       text-align: center;
       /* Beautiful fallback when photo hasn't loaded yet */
-      background: linear-gradient(135deg, #1C1C1A 0%, #2D2820 45%, #1a1714 100%);
+      background: linear-gradient(135deg, #0d1b2a 0%, #1a2d40 45%, #0a1520 100%);
     }
     #hero-bg {
       position: absolute;
       inset: 0;
-      background: url('https://thecapetownguide.com/images/camps-bay.jpg') center center / cover no-repeat;
+      background: url('https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=800&q=80') center center / cover no-repeat;
       transform: scale(1.06);
       transition: transform 8s ease-out;
     }
@@ -216,7 +216,7 @@
       left: 0;
       right: 0;
       z-index: 1000;
-      background: rgba(28,28,26,0.96);
+      background: rgba(13,27,42,0.96);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(184,134,58,0.15);
@@ -1087,6 +1087,204 @@
     .btn-download:hover { background: var(--gold); transform: translateY(-1px); }
     .btn-download svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
 
+    /* ─── ITINERARY SIDEBAR LAYOUT ─────────────────────────────── */
+    .itinerary-layout {
+      display: grid;
+      grid-template-columns: 1fr 290px;
+      gap: 2rem;
+      align-items: start;
+    }
+    .itinerary-main { min-width: 0; }
+    .itinerary-sidebar {
+      position: sticky;
+      top: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    @media (max-width: 1100px) {
+      .itinerary-layout { grid-template-columns: 1fr; }
+      .itinerary-sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+      .sidebar-widget { flex: 1; min-width: 260px; }
+    }
+    .sidebar-widget {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(184,134,58,0.2);
+      border-radius: 16px;
+      padding: 1.4rem;
+    }
+    .sidebar-widget-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    /* Weather widget */
+    .weather-month {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: 0.15rem;
+    }
+    .weather-temp {
+      font-size: 2.6rem;
+      font-weight: 300;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+    .weather-desc {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .weather-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .weather-stat {
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      padding: 0.55rem 0.65rem;
+    }
+    .weather-stat-label {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 0.2rem;
+    }
+    .weather-stat-value {
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+    }
+    /* Caipy sidebar widget */
+    .caipy-widget-desc {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      margin-bottom: 1.1rem;
+    }
+    .caipy-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1.1rem;
+    }
+    .caipy-suggestion {
+      background: rgba(184,134,58,0.07);
+      border: 1px solid rgba(184,134,58,0.15);
+      border-radius: 8px;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.76rem;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      font-family: 'Jost', sans-serif;
+    }
+    .caipy-suggestion:hover {
+      background: rgba(184,134,58,0.14);
+      border-color: rgba(184,134,58,0.3);
+      color: var(--white);
+    }
+    .btn-caipy-widget {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      background: var(--gold);
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.7rem 1rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      width: 100%;
+    }
+    .btn-caipy-widget:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ─── FLOATING ASK CAIPY BUTTON ─────────────────────────────── */
+    #ask-caipy-fab {
+      position: fixed;
+      bottom: 5.2rem;
+      right: 1.5rem;
+      z-index: 950;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--white);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.72rem 1.2rem 0.72rem 0.95rem;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 6px 24px rgba(184,134,58,0.45);
+      transition: transform 0.25s, box-shadow 0.25s;
+      white-space: nowrap;
+    }
+    #ask-caipy-fab:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(184,134,58,0.55);
+    }
+    #ask-caipy-fab .fab-icon { font-size: 1rem; line-height: 1; }
+
+    /* ─── DAY CARD ACTION BUTTONS ───────────────────────────────── */
+    .day-card-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1.2rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      flex-wrap: wrap;
+    }
+    .btn-day-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.66rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.95rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-day-maps {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.11);
+    }
+    .btn-day-maps:hover { background: rgba(255,255,255,0.12); color: var(--white); }
+    .btn-day-caipy {
+      background: rgba(184,134,58,0.1);
+      color: var(--gold);
+      border: 1px solid rgba(184,134,58,0.22);
+    }
+    .btn-day-caipy:hover { background: rgba(184,134,58,0.18); color: var(--gold-light); }
+
     /* ─── PHOTO STRIP AUTO-SCROLL ───────────────────────────────── */
     @media (prefers-reduced-motion: no-preference) {
       .photo-strip-inner {
@@ -1107,6 +1305,11 @@
 
 <!-- Scroll Progress -->
 <div id="scroll-progress"></div>
+
+<!-- Floating Ask Caipy -->
+<a id="ask-caipy-fab" href="https://thecapetownguide.com/public/chat.html" target="_blank" rel="noopener">
+  <span class="fab-icon">💬</span> Ask Caipy
+</a>
 
 <!-- Back to Top -->
 <button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -1151,6 +1354,7 @@
       <div class="hero-pill"><span class="pill-icon">📅</span> {{TRIP_DAYS}} Days</div>
       <div class="hero-pill"><span class="pill-icon">👥</span> {{TRIP_GROUP}}</div>
       <div class="hero-pill"><span class="pill-icon">✨</span> {{TRIP_INTERESTS}}</div>
+      <div class="hero-pill"><span class="pill-icon">🎯</span> {{TRIP_STYLE}}</div>
     </div>
   </div>
   <button class="hero-scroll" onclick="document.getElementById('overview').scrollIntoView({behavior:'smooth'})" aria-label="Scroll down">
@@ -1199,27 +1403,27 @@
     <div class="photo-strip-wrap fade-in">
       <div class="photo-strip" id="photo-strip">
         <div class="photo-strip-inner">
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/airport-welcome.jpg" alt="Welcome to the Mother City" loading="lazy" style="object-position: center 30%;" /><div class="photo-strip-caption">Welcome to the Mother City</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/camps-bay.jpg" alt="Camps Bay" loading="lazy" /><div class="photo-strip-caption">Camps Bay</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/table-mountain-sunset.jpg" alt="Table Mountain Sunset" loading="lazy" /><div class="photo-strip-caption">Table Mountain Sunset</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bloubergstrand.jpg" alt="Bloubergstrand" loading="lazy" /><div class="photo-strip-caption">Bloubergstrand</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" /><div class="photo-strip-caption">Bo-Kaap</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/waterfront.jpg" alt="V&amp;A Waterfront" loading="lazy" /><div class="photo-strip-caption">V&amp;A Waterfront</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/cape-point.jpg" alt="Cape Point" loading="lazy" /><div class="photo-strip-caption">Cape Point</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Chapman's Peak" loading="lazy" /><div class="photo-strip-caption">Chapman's Peak</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/winelands.jpg" alt="Winelands" loading="lazy" /><div class="photo-strip-caption">Winelands</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/noordhoek-beach.jpg" alt="Noordhoek Beach" loading="lazy" /><div class="photo-strip-caption">Noordhoek Beach</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=800&q=80" alt="Welcome to the Mother City" loading="lazy" style="object-position: center 30%;" /><div class="photo-strip-caption">Welcome to the Mother City</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=800&q=80" alt="Camps Bay" loading="lazy" /><div class="photo-strip-caption">Camps Bay</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80" alt="Table Mountain Sunset" loading="lazy" /><div class="photo-strip-caption">Table Mountain Sunset</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1585208798174-6cedd86e019a?auto=format&fit=crop&w=800&q=80" alt="Bloubergstrand" loading="lazy" /><div class="photo-strip-caption">Bloubergstrand</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=800&q=80" alt="Bo-Kaap" loading="lazy" /><div class="photo-strip-caption">Bo-Kaap</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" alt="V&amp;A Waterfront" loading="lazy" /><div class="photo-strip-caption">V&amp;A Waterfront</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1551698618-1bde79cc3da6?auto=format&fit=crop&w=800&q=80" alt="Cape Point" loading="lazy" /><div class="photo-strip-caption">Cape Point</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1519659528534-7fd733a832a0?auto=format&fit=crop&w=800&q=80" alt="Chapman's Peak" loading="lazy" /><div class="photo-strip-caption">Chapman's Peak</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1474722883778-792e7fb1a4f0?auto=format&fit=crop&w=800&q=80" alt="Winelands" loading="lazy" /><div class="photo-strip-caption">Winelands</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Noordhoek Beach" loading="lazy" /><div class="photo-strip-caption">Noordhoek Beach</div></div>
           <!-- Duplicate for seamless loop -->
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/airport-welcome.jpg" alt="Welcome to the Mother City" loading="lazy" style="object-position: center 30%;" /><div class="photo-strip-caption">Welcome to the Mother City</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/camps-bay.jpg" alt="Camps Bay" loading="lazy" /><div class="photo-strip-caption">Camps Bay</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/table-mountain-sunset.jpg" alt="Table Mountain Sunset" loading="lazy" /><div class="photo-strip-caption">Table Mountain Sunset</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bloubergstrand.jpg" alt="Bloubergstrand" loading="lazy" /><div class="photo-strip-caption">Bloubergstrand</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" /><div class="photo-strip-caption">Bo-Kaap</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/waterfront.jpg" alt="V&amp;A Waterfront" loading="lazy" /><div class="photo-strip-caption">V&amp;A Waterfront</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/cape-point.jpg" alt="Cape Point" loading="lazy" /><div class="photo-strip-caption">Cape Point</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Chapman's Peak" loading="lazy" /><div class="photo-strip-caption">Chapman's Peak</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/winelands.jpg" alt="Winelands" loading="lazy" /><div class="photo-strip-caption">Winelands</div></div>
-          <div class="photo-strip-item"><img src="https://thecapetownguide.com/images/noordhoek-beach.jpg" alt="Noordhoek Beach" loading="lazy" /><div class="photo-strip-caption">Noordhoek Beach</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=800&q=80" alt="Welcome to the Mother City" loading="lazy" style="object-position: center 30%;" /><div class="photo-strip-caption">Welcome to the Mother City</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=800&q=80" alt="Camps Bay" loading="lazy" /><div class="photo-strip-caption">Camps Bay</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80" alt="Table Mountain Sunset" loading="lazy" /><div class="photo-strip-caption">Table Mountain Sunset</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1585208798174-6cedd86e019a?auto=format&fit=crop&w=800&q=80" alt="Bloubergstrand" loading="lazy" /><div class="photo-strip-caption">Bloubergstrand</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=800&q=80" alt="Bo-Kaap" loading="lazy" /><div class="photo-strip-caption">Bo-Kaap</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" alt="V&amp;A Waterfront" loading="lazy" /><div class="photo-strip-caption">V&amp;A Waterfront</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1551698618-1bde79cc3da6?auto=format&fit=crop&w=800&q=80" alt="Cape Point" loading="lazy" /><div class="photo-strip-caption">Cape Point</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1519659528534-7fd733a832a0?auto=format&fit=crop&w=800&q=80" alt="Chapman's Peak" loading="lazy" /><div class="photo-strip-caption">Chapman's Peak</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1474722883778-792e7fb1a4f0?auto=format&fit=crop&w=800&q=80" alt="Winelands" loading="lazy" /><div class="photo-strip-caption">Winelands</div></div>
+          <div class="photo-strip-item"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Noordhoek Beach" loading="lazy" /><div class="photo-strip-caption">Noordhoek Beach</div></div>
         </div>
       </div>
     </div>
@@ -1246,10 +1450,54 @@
       <p class="section-subtitle" style="color:rgba(255,255,255,0.5)">Your complete {{TRIP_DAYS}}-day Cape Town itinerary, curated for {{CUSTOMER_NAME}}.</p>
     </div>
 
-    <div class="itinerary-timeline fade-in">
-      <div id="itinerary-days">
-        {{ITINERARY_DAYS_HTML}}
+    <div class="itinerary-layout">
+      <div class="itinerary-main">
+        <div class="itinerary-timeline fade-in">
+          <div id="itinerary-days">
+            {{ITINERARY_DAYS_HTML}}
+          </div>
+        </div>
       </div>
+      <aside class="itinerary-sidebar fade-in fade-in-delay-2">
+        <!-- Weather Widget -->
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-label">🌤 Cape Town Weather</div>
+          <div class="weather-month" id="weather-month">{{TRIP_MONTH}}</div>
+          <div class="weather-temp" id="weather-temp">22°C</div>
+          <div class="weather-desc" id="weather-desc">Warm sunny days with cool evenings. Perfect for outdoor adventures.</div>
+          <div class="weather-stats">
+            <div class="weather-stat">
+              <div class="weather-stat-label">Sea temp</div>
+              <div class="weather-stat-value" id="weather-sea">18°C</div>
+            </div>
+            <div class="weather-stat">
+              <div class="weather-stat-label">Sunshine</div>
+              <div class="weather-stat-value" id="weather-sun">9 hrs/day</div>
+            </div>
+            <div class="weather-stat">
+              <div class="weather-stat-label">Rain days</div>
+              <div class="weather-stat-value" id="weather-rain">3/month</div>
+            </div>
+            <div class="weather-stat">
+              <div class="weather-stat-label">Wind</div>
+              <div class="weather-stat-value" id="weather-wind">Moderate</div>
+            </div>
+          </div>
+        </div>
+        <!-- Caipy Widget -->
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-label">💬 Ask Caipy</div>
+          <p class="caipy-widget-desc">A question about your itinerary? Caipy knows Cape Town inside out.</p>
+          <div class="caipy-suggestions">
+            <button class="caipy-suggestion" onclick="openCaipy('What should I pack for Cape Town?')">🎒 What should I pack?</button>
+            <button class="caipy-suggestion" onclick="openCaipy('What are the best restaurants near the V&amp;A Waterfront?')">🍽 Best restaurants?</button>
+            <button class="caipy-suggestion" onclick="openCaipy('Is it safe to drive in Cape Town?')">🚗 Is it safe to drive?</button>
+          </div>
+          <a href="https://thecapetownguide.com/public/chat.html" target="_blank" rel="noopener" class="btn-caipy-widget">
+            💬 Open Caipy — Free
+          </a>
+        </div>
+      </aside>
     </div>
   </div>
 </section>
@@ -1270,7 +1518,7 @@
 
       <div class="highlight-card fade-in fade-in-delay-1">
         <div class="highlight-img-wrap">
-          <img src="https://thecapetownguide.com/images/table-mountain.jpg" alt="Table Mountain" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=800&q=80" alt="Table Mountain" loading="lazy" />
           <span class="highlight-badge">Icon</span>
         </div>
         <div class="highlight-body">
@@ -1285,7 +1533,7 @@
 
       <div class="highlight-card fade-in fade-in-delay-2">
         <div class="highlight-img-wrap">
-          <img src="https://thecapetownguide.com/images/boulders-beach.jpg" alt="Boulders Beach Penguins" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1564760055100-ed4e4b4e0a7e?auto=format&fit=crop&w=800&q=80" alt="Boulders Beach Penguins" loading="lazy" />
           <span class="highlight-badge">Wildlife</span>
         </div>
         <div class="highlight-body">
@@ -1300,7 +1548,7 @@
 
       <div class="highlight-card fade-in fade-in-delay-3">
         <div class="highlight-img-wrap">
-          <img src="https://thecapetownguide.com/images/cape-point.jpg" alt="Cape Point" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1551698618-1bde79cc3da6?auto=format&fit=crop&w=800&q=80" alt="Cape Point" loading="lazy" />
           <span class="highlight-badge">Nature</span>
         </div>
         <div class="highlight-body">
@@ -1315,7 +1563,7 @@
 
       <div class="highlight-card fade-in fade-in-delay-4">
         <div class="highlight-img-wrap">
-          <img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Chapman's Peak Drive" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1519659528534-7fd733a832a0?auto=format&fit=crop&w=800&q=80" alt="Chapman's Peak Drive" loading="lazy" />
           <span class="highlight-badge">Scenic Drive</span>
         </div>
         <div class="highlight-body">
@@ -1330,7 +1578,7 @@
 
       <div class="highlight-card fade-in fade-in-delay-5">
         <div class="highlight-img-wrap">
-          <img src="https://thecapetownguide.com/images/bo-kaap.jpg" alt="Bo-Kaap" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=800&q=80" alt="Bo-Kaap" loading="lazy" />
           <span class="highlight-badge">Culture</span>
         </div>
         <div class="highlight-body">
@@ -1345,7 +1593,7 @@
 
       <div class="highlight-card fade-in fade-in-delay-1">
         <div class="highlight-img-wrap">
-          <img src="https://thecapetownguide.com/images/robben-island.jpg" alt="Robben Island" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1526649661456-bc3d4cefd48b?auto=format&fit=crop&w=800&q=80" alt="Robben Island" loading="lazy" />
           <span class="highlight-badge">History</span>
         </div>
         <div class="highlight-body">
@@ -1378,7 +1626,7 @@
 
       <div class="tip-card fade-in fade-in-delay-1">
         <div class="tip-img-wrap">
-          <img src="https://thecapetownguide.com/images/table-mountain.jpg" alt="Safety in Cape Town" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=800&q=80" alt="Safety in Cape Town" loading="lazy" />
         </div>
         <div class="tip-content">
           <span class="tip-icon">🛡️</span>
@@ -1393,13 +1641,13 @@
 
       <div class="tip-card fade-in fade-in-delay-2">
         <div class="tip-img-wrap">
-          <img src="https://thecapetownguide.com/images/camps-bay.jpg" alt="Cape Town Beaches" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=800&q=80" alt="Cape Town Beaches" loading="lazy" />
         </div>
         <div class="tip-content">
           <span class="tip-icon">🌊</span>
           <div class="tip-title">Beaches</div>
           <div class="tip-body">Camps Bay and Clifton for glamour (cold Atlantic). Muizenberg for surf (warmer False Bay). Noordhoek for wild untouched beauty. Only swim where lifeguards are on duty.</div>
-          <a href="https://thecapetownguide.com/images/camps-bay.jpg" target="_blank" rel="noopener" class="tip-link">
+          <a href="https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=800&q=80" target="_blank" rel="noopener" class="tip-link">
             Read more
             <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
@@ -1408,7 +1656,7 @@
 
       <div class="tip-card fade-in fade-in-delay-3">
         <div class="tip-img-wrap">
-          <img src="https://thecapetownguide.com/images/winelands.jpg" alt="Cape Town Winelands" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1474722883778-792e7fb1a4f0?auto=format&fit=crop&w=800&q=80" alt="Cape Town Winelands" loading="lazy" />
         </div>
         <div class="tip-content">
           <span class="tip-icon">🍷</span>
@@ -1423,7 +1671,7 @@
 
       <div class="tip-card fade-in fade-in-delay-4">
         <div class="tip-img-wrap">
-          <img src="https://thecapetownguide.com/images/chapmans-peak.jpg" alt="Hiking in Cape Town" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1519659528534-7fd733a832a0?auto=format&fit=crop&w=800&q=80" alt="Hiking in Cape Town" loading="lazy" />
         </div>
         <div class="tip-content">
           <span class="tip-icon">🥾</span>
@@ -1438,7 +1686,7 @@
 
       <div class="tip-card fade-in fade-in-delay-1">
         <div class="tip-img-wrap">
-          <img src="https://thecapetownguide.com/images/waterfront.jpg" alt="Food in Cape Town" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80" alt="Food in Cape Town" loading="lazy" />
         </div>
         <div class="tip-content">
           <span class="tip-icon">🍽️</span>
@@ -1453,7 +1701,7 @@
 
       <div class="tip-card fade-in fade-in-delay-2">
         <div class="tip-img-wrap">
-          <img src="https://thecapetownguide.com/images/airport-welcome.jpg" alt="Getting Around Cape Town" loading="lazy" style="object-position: center 30%;" />
+          <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=800&q=80" alt="Getting Around Cape Town" loading="lazy" style="object-position: center 30%;" />
         </div>
         <div class="tip-content">
           <span class="tip-icon">🚗</span>
@@ -1818,6 +2066,66 @@
     }, { threshold: 0.6 });
     statEls.forEach(function (el) { statObserver.observe(el); });
   }
+
+  /* ── Weather Widget ──────────────────────────────────────── */
+  (function () {
+    var wd = {
+      January:   { temp:'26°C', desc:'Peak summer — hot, sunny, occasionally windy. Beach weather at its best.', sea:'20°C', sun:'11 hrs/day', rain:'1/month', wind:'Strong SE' },
+      February:  { temp:'26°C', desc:'Late summer, excellent swimming and beach days. Very popular month.', sea:'20°C', sun:'10 hrs/day', rain:'2/month', wind:'Strong SE' },
+      March:     { temp:'24°C', desc:'Early autumn — warm, less wind, great weather for hiking and scenic drives.', sea:'19°C', sun:'9 hrs/day', rain:'3/month', wind:'Moderate' },
+      April:     { temp:'22°C', desc:'Autumn settling in. Pleasant temperatures, fewer crowds, dramatic skies.', sea:'18°C', sun:'8 hrs/day', rain:'5/month', wind:'Light–Mod' },
+      May:       { temp:'18°C', desc:'Cooler and wetter. Great for wine tasting and indoor experiences.', sea:'17°C', sun:'7 hrs/day', rain:'8/month', wind:'Light' },
+      June:      { temp:'16°C', desc:'Winter — mild by European standards. Pack layers. Whale watching begins.', sea:'15°C', sun:'6 hrs/day', rain:'9/month', wind:'Light NW' },
+      July:      { temp:'15°C', desc:'Coldest month but rarely below 10°C. Whale watching peaks off Hermanus.', sea:'14°C', sun:'6 hrs/day', rain:'10/month', wind:'Light NW' },
+      August:    { temp:'16°C', desc:'Late winter — wildflowers beginning to bloom. Great hiking, fewer tourists.', sea:'14°C', sun:'7 hrs/day', rain:'8/month', wind:'Moderate' },
+      September: { temp:'18°C', desc:'Spring — wildflowers everywhere, warming up fast. One of the best months.', sea:'15°C', sun:'8 hrs/day', rain:'5/month', wind:'Light–Mod' },
+      October:   { temp:'21°C', desc:'Spring/summer — warm days returning, restaurants buzz with pre-season energy.', sea:'16°C', sun:'9 hrs/day', rain:'4/month', wind:'Mod SE' },
+      November:  { temp:'23°C', desc:'Early summer — hot days beginning. Book popular spots early.', sea:'17°C', sun:'10 hrs/day', rain:'2/month', wind:'Strong SE' },
+      December:  { temp:'25°C', desc:'Peak summer season — everything open, buzzing, and beautiful.', sea:'19°C', sun:'11 hrs/day', rain:'1/month', wind:'Strong SE' }
+    };
+    var monthEl = document.getElementById('weather-month');
+    if (!monthEl) return;
+    var raw = monthEl.textContent.trim();
+    for (var m in wd) {
+      if (raw.toLowerCase().indexOf(m.toLowerCase()) !== -1) {
+        var d = wd[m];
+        document.getElementById('weather-temp').textContent = d.temp;
+        document.getElementById('weather-desc').textContent = d.desc;
+        document.getElementById('weather-sea').textContent  = d.sea;
+        document.getElementById('weather-sun').textContent  = d.sun;
+        document.getElementById('weather-rain').textContent = d.rain;
+        document.getElementById('weather-wind').textContent = d.wind;
+        break;
+      }
+    }
+  })();
+
+  /* ── Open Caipy ───────────────────────────────────────────── */
+  function openCaipy(question) {
+    var url = 'https://thecapetownguide.com/public/chat.html';
+    if (question) url += '?q=' + encodeURIComponent(question);
+    window.open(url, '_blank', 'noopener');
+  }
+
+  /* ── Inject day card action buttons ──────────────────────── */
+  function injectDayCardActions() {
+    var cards = document.querySelectorAll('#itinerary-days .day-card');
+    cards.forEach(function (card) {
+      var content = card.querySelector('.day-content');
+      if (!content || content.querySelector('.day-card-actions')) return;
+      var dayTitle = card.querySelector('.day-title');
+      var title = dayTitle ? dayTitle.textContent.trim() : 'Cape Town';
+      var mapsQuery = encodeURIComponent('Cape Town ' + title);
+      var safeTitle = title.replace(/'/g, "\\'");
+      var actions = document.createElement('div');
+      actions.className = 'day-card-actions';
+      actions.innerHTML =
+        '<a class="btn-day-action btn-day-maps" href="https://www.google.com/maps/search/' + mapsQuery + '" target="_blank" rel="noopener">📍 View on Maps</a>' +
+        '<button class="btn-day-action btn-day-caipy" onclick="openCaipy(\'Tell me more about ' + safeTitle + '\')">💬 Ask Caipy</button>';
+      content.appendChild(actions);
+    });
+  }
+  injectDayCardActions();
 
   /* ── Initial call ─────────────────────────────────────────── */
   onScroll();
