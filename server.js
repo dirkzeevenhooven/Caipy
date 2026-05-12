@@ -199,19 +199,41 @@ function itineraryToDayCards(itinerary) {
     </div>`;
   }
 
+  // Curated Cape Town photos — rotate by day number
+  const DAY_PHOTOS = [
+    'https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?auto=format&fit=crop&w=900&q=75', // Table Mountain aerial
+    'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=900&q=75', // Cape Town cityscape
+    'https://images.unsplash.com/photo-1551918120-9739cb430c6d?auto=format&fit=crop&w=900&q=75', // Camps Bay sunset
+    'https://images.unsplash.com/photo-1516298773066-c48f8e9aca9a?auto=format&fit=crop&w=900&q=75', // Cape Town evening
+    'https://images.unsplash.com/photo-1567306301408-9b74779a11af?auto=format&fit=crop&w=900&q=75', // Wine lands
+    'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?auto=format&fit=crop&w=900&q=75', // Mountain coast
+    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=75', // Mountain vista
+    'https://images.unsplash.com/photo-1516108317508-6788f6a160e4?auto=format&fit=crop&w=900&q=75', // Ocean coast
+  ];
+
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return days.map(day => `
+  return days.map(day => {
+    const photo = DAY_PHOTOS[(parseInt(day.num) - 1) % DAY_PHOTOS.length];
+    return `
     <div class="day-card fade-in">
-      <div class="day-card-header">
-        <div class="day-number">${day.num}</div>
-        <div class="day-title-wrap">
-          <div class="day-label">Day ${day.num}</div>
-          <div class="day-title">${esc(day.title)}</div>
+      <div class="day-photo" style="height:180px;background:url('${photo}') center/cover no-repeat;border-radius:10px 10px 0 0;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,42,0.15),rgba(13,27,42,0.65));"></div>
+        <div style="position:absolute;bottom:16px;left:20px;right:20px;">
+          <div style="font-family:'Jost',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(212,165,90,0.9);margin-bottom:4px;">Day ${day.num}</div>
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:500;color:#fff;line-height:1.2;">${esc(day.title)}</div>
         </div>
-        <div class="day-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="day-card-header" style="border-top:none;border-radius:0;">
+        <div class="day-number" style="display:none;">${day.num}</div>
+        <div class="day-title-wrap">
+          <div class="day-label" style="display:none;">Day ${day.num}</div>
+          <div class="day-title" style="display:none;">${esc(day.title)}</div>
+        </div>
+        <div class="day-toggle" style="margin-left:auto;"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
       </div>
       <div class="day-card-body"><div class="day-content">${mdToHtml(day.lines.join('\n'))}</div></div>
-    </div>`).join('\n');
+    </div>`;
+  }).join('\n');
 }
 
 // Fill template and upload to Plesk via HTTPS PHP endpoint
@@ -592,6 +614,7 @@ ${finalTranscript}`,
 
   await sendItineraryEmail(email, itinerary, guideUrl);
   console.log('✅ Itinerary email sent to:', email, guideUrl ? '+ guide URL' : '(no guide URL)');
+  return { guideUrl, tripData };
 }
 
 // Verify payment — triggered when user returns from Stripe checkout
@@ -1058,16 +1081,38 @@ app.get('/tavus-personas', async (req, res) => {
   res.json(data);
 });
 
-// ─── Frontend end-call trigger — fires when user clicks End Call button ───────
+// ─── Frontend end-call trigger — awaits generation and returns guide URL ──────
 app.post('/end-tavus-call', async (req, res) => {
   const { email, name, conversation_id } = req.body || {};
   if (!email) return res.json({ ok: false });
-  const transcript = `Cape Town trip — conversation ended by visitor.`;
-  console.log(`End call triggered by frontend for ${email} (conv: ${conversation_id})`);
-  generateAndEmailItinerary(email, transcript, null).catch(err =>
-    console.error('Itinerary generation error:', err.message)
-  );
-  res.json({ ok: true });
+
+  console.log(`End call triggered for ${email} (conv: ${conversation_id})`);
+
+  // Try to fetch the actual conversation transcript from Tavus
+  let transcript = name
+    ? `Visitor name: ${name}. They had a conversation about planning a Cape Town trip. Generate a beautiful personalised itinerary.`
+    : `A visitor had a conversation about planning a Cape Town trip. Generate a beautiful personalised itinerary.`;
+
+  if (conversation_id) {
+    try {
+      const apiKey = process.env.TAVUS_API_KEY;
+      const r = await fetch(`https://tavusapi.com/v2/conversations/${conversation_id}`, {
+        headers: { 'x-api-key': apiKey },
+      });
+      const conv = await r.json();
+      console.log('Tavus conversation data keys:', Object.keys(conv));
+      if (conv.transcript) transcript = conv.transcript;
+      else if (conv.conversation_context) transcript = conv.conversation_context;
+    } catch(e) { console.error('Transcript fetch error:', e.message); }
+  }
+
+  try {
+    const result = await generateAndEmailItinerary(email, transcript, null);
+    res.json({ ok: true, guideUrl: result?.guideUrl || null, customerName: result?.tripData?.customerName || name || 'Traveller' });
+  } catch(e) {
+    console.error('Itinerary generation error:', e.message);
+    res.json({ ok: true, guideUrl: null, customerName: name || 'Traveller' });
+  }
 });
 
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
