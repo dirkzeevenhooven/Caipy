@@ -9,7 +9,6 @@ const PDFDocument = require('pdfkit');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
-const ftp = require('basic-ftp');
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -212,7 +211,7 @@ function itineraryToDayCards(itinerary) {
     </div>`).join('\n');
 }
 
-// Fill template placeholders and upload to Plesk via FTP
+// Fill template and upload to Plesk via HTTPS PHP endpoint
 async function generateAndSaveGuide(itinerary, tripData, guideId) {
   const templatePath = path.join(__dirname, 'guide-template.html');
   if (!fs.existsSync(templatePath)) {
@@ -234,39 +233,32 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
     .replace(/\{\{GUIDE_ID\}\}/g, guideId.toUpperCase())
     .replace(/\{\{GENERATED_DATE\}\}/g, date);
 
-  // Write to temp file for FTP upload
-  const tmpPath = path.join('/tmp', `${guideId}.html`);
-  fs.writeFileSync(tmpPath, html, 'utf8');
-
-  // Upload to Plesk via FTP
-  const client = new ftp.Client(30000);
+  // Upload via PHP endpoint on Plesk (avoids FTP port blocking)
+  const uploadToken = process.env.GUIDE_UPLOAD_TOKEN || 'ctg-upload-2026-secret';
   try {
-    await client.access({
-      host: process.env.FTP_HOST || '92.63.174.114',
-      user: process.env.FTP_USER,
-      password: process.env.FTP_PASS,
-      port: 21,
-      secure: true,
-      secureOptions: { rejectUnauthorized: false },
+    const res = await fetch('https://thecapetownguide.com/upload-guide.php', {
+      method: 'POST',
+      headers: {
+        'X-Upload-Token': uploadToken,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({ id: guideId, html }).toString(),
     });
-    // Ensure guides directory exists
-    try { await client.ensureDir('httpdocs/guides'); } catch(e) {}
-    await client.uploadFrom(tmpPath, `httpdocs/guides/${guideId}.html`);
-    console.log('Guide uploaded to Plesk:', guideId);
+    const result = await res.json();
+    if (result.success) {
+      console.log('Guide uploaded to Plesk:', result.url);
+      return result.url;
+    }
+    throw new Error(result.error || 'Upload failed');
   } catch (e) {
-    console.error('FTP upload error:', e.message);
-    // Fallback: also save locally so guide is accessible via Render
+    console.error('Guide upload error:', e.message);
+    // Fallback: save locally on Render
     const guidesDir = path.join(__dirname, 'public', 'guides');
     fs.mkdirSync(guidesDir, { recursive: true });
-    fs.copyFileSync(tmpPath, path.join(guidesDir, `${guideId}.html`));
+    fs.writeFileSync(path.join(guidesDir, `${guideId}.html`), html, 'utf8');
     const baseUrl = process.env.BASE_URL || 'https://caipy-sfau.onrender.com';
     return `${baseUrl}/guides/${guideId}.html`;
-  } finally {
-    client.close();
-    try { fs.unlinkSync(tmpPath); } catch(e) {}
   }
-
-  return `https://thecapetownguide.com/guides/${guideId}.html`;
 }
 
 // ─── Email helper (Postmark HTTP API — avoids SMTP port blocks on Render) ─────
