@@ -879,7 +879,8 @@ app.post('/create-tavus-conversation', async (req, res) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        replica_id: 'rd2b3e0e96d4',
+        replica_id: 'rf4e9d9790f0',
+        persona_id: 'pb550e577673',
         conversation_name: 'Cape Town Guide — Caipy',
         conversational_context: 'You are Caipy, a warm and knowledgeable Cape Town travel guide created by Dirk Zeevenhooven. Help the visitor plan their perfect Cape Town trip by asking about their travel dates, group, interests and budget. Be warm, concise and specific.',
         properties: {
