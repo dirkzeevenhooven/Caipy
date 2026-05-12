@@ -222,27 +222,13 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
   const esc = s => (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  // Extract TRIP_STYLE from itinerary text
-  const styleKeywords = ['luxury', 'budget', 'adventure', 'family', 'romantic', 'honeymoon', 'solo'];
-  const itineraryLower = itinerary.toLowerCase();
-  const matchedStyle = styleKeywords.find(k => itineraryLower.includes(k));
-  const tripStyle = matchedStyle
-    ? matchedStyle.charAt(0).toUpperCase() + matchedStyle.slice(1)
-    : 'Tailor-Made';
-
-  // Extract TRIP_MONTH from itinerary text (fallback if not in tripData)
-  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const matchedMonth = monthNames.find(m => itinerary.includes(m));
-  const tripMonth = tripData.tripMonth || matchedMonth || '';
-
   const html = template
     .replace(/\{\{CUSTOMER_NAME\}\}/g, esc(tripData.customerName || 'Traveller'))
     .replace(/\{\{TRIP_DAYS\}\}/g, esc(tripData.tripDays || ''))
-    .replace(/\{\{TRIP_MONTH\}\}/g, esc(tripMonth))
+    .replace(/\{\{TRIP_MONTH\}\}/g, esc(tripData.tripMonth || ''))
     .replace(/\{\{TRIP_GROUP\}\}/g, esc(tripData.tripGroup || ''))
     .replace(/\{\{TRIP_BUDGET\}\}/g, esc(tripData.tripBudget || ''))
     .replace(/\{\{TRIP_INTERESTS\}\}/g, esc(tripData.tripInterests || ''))
-    .replace(/\{\{TRIP_STYLE\}\}/g, esc(tripStyle))
     .replace('{{ITINERARY_DAYS_HTML}}', itineraryToDayCards(itinerary))
     .replace(/\{\{GUIDE_ID\}\}/g, guideId.toUpperCase())
     .replace(/\{\{GENERATED_DATE\}\}/g, date);
@@ -435,8 +421,6 @@ const allowedOrigins = [
   'https://thecapetownguide.com',
   'https://www.thecapetownguide.com',
   'https://caipy-sfau.onrender.com',
-  'http://localhost:3456',
-  'http://localhost:3000',
 ];
 app.use((req, res, next) => {
   const origin = req.headers.origin;
@@ -480,7 +464,7 @@ app.post('/create-checkout-session', async (req, res) => {
             name: 'Caipy — Personal Cape Town Interactive Travel Guide',
             description: 'A stunning personalised interactive travel guide with day-by-day itinerary, photos, local tips, booking links and more — curated from 10+ years of Cape Town local knowledge.',
           },
-          unit_amount: 9900,
+          unit_amount: 4900,
         },
         quantity: 1,
       }],
@@ -882,49 +866,42 @@ app.post('/subscribe', async (req, res) => {
   }
 });
 
-// ─── Brevo gate subscribe (top-10-secrets.html email gate) ───────────────────
-app.post('/gate-subscribe', async (req, res) => {
-  const { firstname, lastname, email } = req.body;
-  if (!firstname || !lastname || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'First name, last name and valid email required' });
-  }
-
-  const name = `${firstname} ${lastname}`.trim();
-  const apiKey = process.env.BREVO_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'Email service not configured' });
+// ─── Tavus CVI — create video conversation ────────────────────────────────────
+app.post('/create-tavus-conversation', async (req, res) => {
+  const apiKey = process.env.TAVUS_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'Tavus not configured' });
 
   try {
-    // Add to Brevo list 2
-    await fetch('https://api.brevo.com/v3/contacts', {
+    const response = await fetch('https://tavusapi.com/v2/conversations', {
       method: 'POST',
-      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': apiKey },
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
-        email,
-        firstName: firstname,
-        lastName: lastname,
-        listIds: [2],
-        updateEnabled: true,
-        attributes: { SOURCE: 'Top 10 Secrets Gate', SITE: 'thecapetownguide.com' },
+        replica_id: 'rf4e9d9790f0',
+        persona_id: 'pd64193fcd20',
+        conversation_name: 'Cape Town Guide — Caipy',
+        conversational_context: 'You are Caipy, a warm and knowledgeable Cape Town travel guide created by Dirk Zeevenhooven. Help the visitor plan their perfect Cape Town trip by asking about their travel dates, group, interests and budget. Be warm, concise and specific.',
+        properties: {
+          max_call_duration: 600,
+          enable_recording: false,
+        },
       }),
     });
 
-    // Send confirmation email
-    await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': apiKey },
-      body: JSON.stringify({
-        sender: { name: 'Dirk — The Cape Town Guide', email: 'hello@thecapetownguide.com' },
-        to: [{ email, name }],
-        subject: 'Your 10 Cape Town Insider Secrets 🇿🇦',
-        htmlContent: `<div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:40px 32px;background:#f9f5ef;"><h1 style="font-size:26px;color:#0d1b2a;font-weight:700;margin-bottom:8px;">Hi ${firstname}, enjoy the secrets.</h1><p style="font-family:Arial,sans-serif;font-size:14px;color:#5a4a3a;line-height:1.8;margin:16px 0 24px;">You now have full access to all 10 Cape Town insider secrets. Bookmark the page to come back anytime.</p><a href="https://thecapetownguide.com/top-10-secrets.html" style="display:inline-block;background:#B8863A;color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;border-radius:100px;text-decoration:none;margin-bottom:32px;">View All 10 Secrets →</a><hr style="border:none;border-top:1px solid #e0ddd8;margin:8px 0 28px;"><p style="font-family:Arial,sans-serif;font-size:13px;color:#5a4a3a;line-height:1.8;margin-bottom:20px;">Ready for the complete experience? Get your personalised Cape Town itinerary — built by AI around your dates, group, and interests.</p><a href="https://buy.stripe.com/4gMeVe7Bs4opdpO2ky5kk00" style="display:inline-block;background:#0d1b2a;color:#B8863A;font-family:Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 24px;border-radius:100px;text-decoration:none;">Get Your Guide for €49 →</a><p style="font-family:Arial,sans-serif;font-size:11px;color:#9a8a7a;margin-top:32px;">— Dirk · thecapetownguide.com</p></div>`,
-      }),
-    });
+    if (!response.ok) {
+      const err = await response.text();
+      console.error('Tavus error:', response.status, err);
+      return res.status(response.status).json({ error: 'Failed to create conversation' });
+    }
 
-    console.log('Gate subscriber added (Brevo):', email);
-    res.json({ success: true });
+    const data = await response.json();
+    console.log('Tavus conversation created:', data.conversation_id);
+    res.json({ url: data.conversation_url });
   } catch (err) {
-    console.error('Gate subscribe error:', err.message);
-    res.status(500).json({ error: 'Failed to subscribe' });
+    console.error('Tavus error:', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
