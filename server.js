@@ -866,6 +866,45 @@ app.post('/subscribe', async (req, res) => {
   }
 });
 
+// ─── Tavus CVI — create video conversation ────────────────────────────────────
+app.post('/create-tavus-conversation', async (req, res) => {
+  const apiKey = process.env.TAVUS_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'Tavus not configured' });
+
+  try {
+    const response = await fetch('https://tavusapi.com/v2/conversations', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        replica_id: 'rf4e9d9790f0',
+        persona_id: 'pd64193fcd20',
+        conversation_name: 'Cape Town Guide — Caipy',
+        conversational_context: 'You are Caipy, a warm and knowledgeable Cape Town travel guide created by Dirk Zeevenhooven. Help the visitor plan their perfect Cape Town trip by asking about their travel dates, group, interests and budget. Be warm, concise and specific.',
+        properties: {
+          max_call_duration: 600,
+          enable_recording: false,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      console.error('Tavus error:', response.status, err);
+      return res.status(response.status).json({ error: 'Failed to create conversation' });
+    }
+
+    const data = await response.json();
+    console.log('Tavus conversation created:', data.conversation_id);
+    res.json({ url: data.conversation_url });
+  } catch (err) {
+    console.error('Tavus error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
