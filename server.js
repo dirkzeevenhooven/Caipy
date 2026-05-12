@@ -913,6 +913,7 @@ app.post('/create-tavus-conversation', async (req, res) => {
           participant_absent_timeout: 120,
           enable_prejoin_ui: false,
         },
+        callback_url: 'https://caipy-sfau.onrender.com/tavus-tool',
       }),
     });
 
