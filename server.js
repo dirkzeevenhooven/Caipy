@@ -886,7 +886,10 @@ app.post('/create-tavus-conversation', async (req, res) => {
         properties: {
           max_call_duration: 600,
           enable_recording: false,
+          participant_left_timeout: 60,
+          apply_conversation_config: true,
         },
+        participant_name: 'Visitor',
       }),
     });
 
