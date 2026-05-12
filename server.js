@@ -880,7 +880,7 @@ app.post('/create-tavus-conversation', async (req, res) => {
       },
       body: JSON.stringify({
         replica_id: 'rf4e9d9790f0',
-        persona_id: 'pd64193fcd20',
+        persona_id: 'pb550e577673',
         conversation_name: 'Cape Town Guide — Caipy',
         conversational_context: 'You are Caipy, a warm and knowledgeable Cape Town travel guide created by Dirk Zeevenhooven. Help the visitor plan their perfect Cape Town trip by asking about their travel dates, group, interests and budget. Be warm, concise and specific.',
         properties: {
@@ -903,6 +903,16 @@ app.post('/create-tavus-conversation', async (req, res) => {
     console.error('Tavus error:', err.message);
     res.status(500).json({ error: err.message });
   }
+});
+
+// ─── Tavus debug — list available personas ───────────────────────────────────
+app.get('/tavus-personas', async (req, res) => {
+  const apiKey = process.env.TAVUS_API_KEY;
+  const response = await fetch('https://tavusapi.com/v2/personas', {
+    headers: { 'x-api-key': apiKey },
+  });
+  const data = await response.json();
+  res.json(data);
 });
 
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
