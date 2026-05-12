@@ -905,6 +905,16 @@ app.post('/create-tavus-conversation', async (req, res) => {
   }
 });
 
+// ─── Tavus debug — list available personas ───────────────────────────────────
+app.get('/tavus-personas', async (req, res) => {
+  const apiKey = process.env.TAVUS_API_KEY;
+  const response = await fetch('https://tavusapi.com/v2/personas', {
+    headers: { 'x-api-key': apiKey },
+  });
+  const data = await response.json();
+  res.json(data);
+});
+
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
