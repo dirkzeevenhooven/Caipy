@@ -914,7 +914,6 @@ app.post('/create-tavus-conversation', async (req, res) => {
           enable_recording: false,
           participant_left_timeout: 120,
           participant_absent_timeout: 120,
-          enable_prejoin_ui: false,
         },
         callback_url: 'https://caipy-sfau.onrender.com/tavus-tool',
       }),
