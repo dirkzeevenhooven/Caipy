@@ -699,6 +699,28 @@ app.post('/redeem-voucher', async (req, res) => {
     console.log(`Voucher ${normalised} redeemed by ${email} (unlimited multi-use)`);
   }
 
+  // Notify site owner of voucher redemption
+  const resendToken = process.env.RESEND_API_KEY;
+  const notifyFrom = process.env.SMTP_FROM || 'onboarding@resend.dev';
+  if (resendToken) {
+    const notifyPayload = {
+      to: ['dirkzeevenhooven@gmail.com'],
+      subject: `Voucher redeemed: ${normalised} by ${email}`,
+      html: `<p><strong>${email}</strong> just redeemed voucher code <strong>${normalised}</strong> and is generating their Cape Town itinerary.</p>`,
+    };
+    fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${resendToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: notifyFrom, ...notifyPayload }),
+    }).then(r => { if (!r.ok && notifyFrom !== 'onboarding@resend.dev') {
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${resendToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: 'onboarding@resend.dev', ...notifyPayload }),
+      });
+    }}).catch(() => {});
+  }
+
   // Fire itinerary generation in background
   generateAndEmailItinerary(email, (transcript || '').trim(), conversationId).catch(err => {
     console.error('Voucher itinerary error:', err.message);
