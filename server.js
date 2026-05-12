@@ -932,6 +932,38 @@ app.post('/create-tavus-conversation', async (req, res) => {
   }
 });
 
+// ─── One-time: patch Tavus persona with send_itinerary tool ──────────────────
+app.get('/tavus-patch-persona', async (req, res) => {
+  const apiKey = process.env.TAVUS_API_KEY;
+  const response = await fetch('https://tavusapi.com/v2/personas/pb550e577673', {
+    method: 'PATCH',
+    headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      tools: [{
+        type: 'function',
+        function: {
+          name: 'send_itinerary',
+          description: 'Send a personalised Cape Town itinerary to the visitor\'s email. Call this once you have collected travel dates, duration, group type, interests, budget, and the visitor\'s email address.',
+          parameters: {
+            type: 'object',
+            properties: {
+              email: { type: 'string', description: 'The visitor\'s email address' },
+              travel_dates: { type: 'string', description: 'When they are travelling' },
+              duration: { type: 'string', description: 'Number of days' },
+              group_type: { type: 'string', description: 'solo, couple, family, or friends' },
+              interests: { type: 'string', description: 'Main interests' },
+              budget: { type: 'string', description: 'budget, mid-range, or luxury' },
+            },
+            required: ['email'],
+          },
+        },
+      }],
+    }),
+  });
+  const data = await response.json();
+  res.json(data);
+});
+
 // ─── Tavus tool webhook — called by Caipy when itinerary is ready to send ────
 app.post('/tavus-tool', async (req, res) => {
   const { tool_name, parameters } = req.body;
