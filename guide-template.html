@@ -1307,7 +1307,7 @@
 <div id="scroll-progress"></div>
 
 <!-- Floating Ask Caipy -->
-<a id="ask-caipy-fab" href="https://thecapetownguide.com/public/chat.html" target="_blank" rel="noopener">
+<a id="ask-caipy-fab" href="https://thecapetownguide.com" target="_blank" rel="noopener">
   <span class="fab-icon">💬</span> Ask Caipy
 </a>
 
@@ -1493,7 +1493,7 @@
             <button class="caipy-suggestion" onclick="openCaipy('What are the best restaurants near the V&amp;A Waterfront?')">🍽 Best restaurants?</button>
             <button class="caipy-suggestion" onclick="openCaipy('Is it safe to drive in Cape Town?')">🚗 Is it safe to drive?</button>
           </div>
-          <a href="https://thecapetownguide.com/public/chat.html" target="_blank" rel="noopener" class="btn-caipy-widget">
+          <a href="https://thecapetownguide.com" target="_blank" rel="noopener" class="btn-caipy-widget">
             💬 Open Caipy — Free
           </a>
         </div>
@@ -2102,7 +2102,7 @@
 
   /* ── Open Caipy ───────────────────────────────────────────── */
   function openCaipy(question) {
-    var url = 'https://thecapetownguide.com/public/chat.html';
+    var url = 'https://thecapetownguide.com';
     if (question) url += '?q=' + encodeURIComponent(question);
     window.open(url, '_blank', 'noopener');
   }
