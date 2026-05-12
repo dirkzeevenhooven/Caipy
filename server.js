@@ -557,8 +557,8 @@ async function generateAndEmailItinerary(email, transcript, conversationId) {
 
   console.log('Generating itinerary with Claude for:', email);
   const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 5000,
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 3000,
     messages: [{
       role: 'user',
       content: `Based on this conversation between Caipy (a Cape Town travel agent) and a traveller, do two things:
