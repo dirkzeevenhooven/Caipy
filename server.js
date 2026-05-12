@@ -931,7 +931,7 @@ app.post('/create-tavus-conversation', async (req, res) => {
     if (data.conversation_id && email) {
       tavusConversations.set(data.conversation_id, { email, name: name || '', createdAt: Date.now() });
     }
-    res.json({ url: data.conversation_url });
+    res.json({ url: data.conversation_url, conversation_id: data.conversation_id });
   } catch (err) {
     console.error('Tavus error:', err.message);
     res.status(500).json({ error: err.message });
@@ -979,20 +979,43 @@ app.get('/tavus-patch-persona', async (req, res) => {
 // ─── Tavus webhook — handles tool calls AND conversation events ───────────────
 app.post('/tavus-tool', async (req, res) => {
   const body = req.body;
-  console.log('Tavus webhook:', JSON.stringify(body).substring(0, 300));
+  console.log('Tavus webhook event_type:', body.event_type, '| conversation_id:', body.conversation_id);
 
-  // ── Conversation-end event ───────────────────────────────────────────────────
-  const eventType = body.event_type || body.type;
-  if (eventType === 'conversation.ended' || eventType === 'application.transcription_ready') {
-    const conversationId = body.conversation_id;
-    const lead = tavusConversations.get(conversationId);
+  const eventType = body.event_type || body.type || '';
+  const conversationId = body.conversation_id;
+
+  // ── Conversation-end / transcription events ──────────────────────────────────
+  const isEndEvent = eventType === 'conversation.ended'
+    || eventType === 'application.conversation_ended'
+    || eventType === 'system.conversation_ended'
+    || eventType === 'application.transcription_ready';
+
+  if (isEndEvent && conversationId) {
+    // Try in-memory first, then fetch from Tavus API to get email from context
+    let lead = tavusConversations.get(conversationId);
+    if (!lead || !lead.email) {
+      try {
+        const apiKey = process.env.TAVUS_API_KEY;
+        const r = await fetch(`https://tavusapi.com/v2/conversations/${conversationId}`, {
+          headers: { 'x-api-key': apiKey },
+        });
+        const conv = await r.json();
+        console.log('Fetched conversation context:', conv.conversational_context?.substring(0, 100));
+        // Extract email from conversational_context: "their email address is X"
+        const match = conv.conversational_context?.match(/email address is ([^\s.]+@[^\s.]+\.[^\s]+)/);
+        if (match) lead = { email: match[1], name: conv.conversational_context?.match(/name is ([^ ]+)/)?.[1] || '' };
+      } catch(e) { console.error('Error fetching conversation:', e.message); }
+    }
+
     if (lead && lead.email) {
-      const transcript = body.transcript || body.transcription || JSON.stringify(body.data || {});
-      console.log(`Conversation ended for ${lead.email}, generating itinerary...`);
-      generateAndEmailItinerary(lead.email, transcript, null).catch(err =>
+      const transcript = body.transcript || body.transcription || body.data?.transcript || '';
+      console.log(`Conversation ended — generating itinerary for ${lead.email}`);
+      generateAndEmailItinerary(lead.email, transcript || `Cape Town trip conversation ended. Please generate a personalised Cape Town itinerary.`, null).catch(err =>
         console.error('Itinerary generation error:', err.message)
       );
       tavusConversations.delete(conversationId);
+    } else {
+      console.log('Conversation ended but no email found for', conversationId);
     }
     return res.json({ ok: true });
   }
@@ -1020,6 +1043,8 @@ Budget: ${budget || 'not specified'}`;
     return res.json({ result: `Perfect! I'm creating your personalised Cape Town itinerary now and sending it to ${email}. It will arrive within a minute. Enjoy your trip!` });
   }
 
+  // Log unhandled events for debugging
+  console.log('Unhandled webhook body:', JSON.stringify(body).substring(0, 200));
   res.json({ result: 'ok' });
 });
 
@@ -1031,6 +1056,18 @@ app.get('/tavus-personas', async (req, res) => {
   });
   const data = await response.json();
   res.json(data);
+});
+
+// ─── Frontend end-call trigger — fires when user clicks End Call button ───────
+app.post('/end-tavus-call', async (req, res) => {
+  const { email, name, conversation_id } = req.body || {};
+  if (!email) return res.json({ ok: false });
+  const transcript = `Cape Town trip — conversation ended by visitor.`;
+  console.log(`End call triggered by frontend for ${email} (conv: ${conversation_id})`);
+  generateAndEmailItinerary(email, transcript, null).catch(err =>
+    console.error('Itinerary generation error:', err.message)
+  );
+  res.json({ ok: true });
 });
 
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
