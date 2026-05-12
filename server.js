@@ -247,14 +247,16 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
   const esc = s => (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
+  const tripStyle = [tripData.tripGroup, tripData.tripBudget].filter(Boolean).join(' · ') || 'Personalised';
   const html = template
     .replace(/\{\{CUSTOMER_NAME\}\}/g, esc(tripData.customerName || 'Traveller'))
     .replace(/\{\{TRIP_DAYS\}\}/g, esc(tripData.tripDays || ''))
-    .replace(/\{\{TRIP_MONTH\}\}/g, esc(tripData.tripMonth || ''))
+    .replace(/\{\{TRIP_MONTH\}\}/g, esc(tripData.tripMonth || 'Your trip'))
     .replace(/\{\{TRIP_GROUP\}\}/g, esc(tripData.tripGroup || ''))
     .replace(/\{\{TRIP_BUDGET\}\}/g, esc(tripData.tripBudget || ''))
     .replace(/\{\{TRIP_INTERESTS\}\}/g, esc(tripData.tripInterests || ''))
-    .replace('{{ITINERARY_DAYS_HTML}}', itineraryToDayCards(itinerary))
+    .replace(/\{\{TRIP_STYLE\}\}/g, esc(tripStyle))
+    .replace(/\{\{ITINERARY_DAYS_HTML\}\}/g, itineraryToDayCards(itinerary))
     .replace(/\{\{GUIDE_ID\}\}/g, guideId.toUpperCase())
     .replace(/\{\{GENERATED_DATE\}\}/g, date);
 
