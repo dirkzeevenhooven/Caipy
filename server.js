@@ -907,6 +907,37 @@ app.post('/create-tavus-conversation', async (req, res) => {
   }
 });
 
+// ─── Tavus tool webhook — called by Caipy when itinerary is ready to send ────
+app.post('/tavus-tool', async (req, res) => {
+  const { tool_name, parameters } = req.body;
+  console.log('Tavus tool call:', tool_name, parameters);
+
+  if (tool_name === 'send_itinerary') {
+    const { email, travel_dates, duration, group_type, interests, budget } = parameters || {};
+
+    if (!email) {
+      return res.json({ result: 'I need your email address to send the itinerary. Could you share it with me?' });
+    }
+
+    // Build a structured transcript from the collected parameters
+    const transcript = `Visitor is planning a Cape Town trip.
+Travel dates / timing: ${travel_dates || 'not specified'}
+Duration: ${duration || 'not specified'}
+Travelling with: ${group_type || 'not specified'}
+Interests: ${interests || 'not specified'}
+Budget: ${budget || 'not specified'}`;
+
+    // Fire and forget — generate and email the itinerary
+    generateAndEmailItinerary(email, transcript, null).catch(err =>
+      console.error('Itinerary generation error:', err.message)
+    );
+
+    return res.json({ result: `Perfect! I'm creating your personalised Cape Town itinerary now and sending it to ${email}. It will arrive within a minute. Enjoy your trip!` });
+  }
+
+  res.json({ result: 'Tool not recognised.' });
+});
+
 // ─── Tavus debug — list available personas ───────────────────────────────────
 app.get('/tavus-personas', async (req, res) => {
   const apiKey = process.env.TAVUS_API_KEY;
