@@ -882,6 +882,7 @@ app.post('/create-tavus-conversation', async (req, res) => {
         replica_id: 'rf4e9d9790f0',
         persona_id: 'pb550e577673',
         conversation_name: 'Cape Town Guide — Caipy',
+        custom_greeting: 'Hi there! Welcome to The Cape Town Guide. My name is Caipy and I am your personal AI travel agent for Cape Town. I am going to help you plan your perfect Cape Town trip — I just need to ask you a few quick questions. When are you planning to travel to Cape Town and how many days are you staying?',
         properties: {
           max_call_duration: 600,
           enable_recording: false,
