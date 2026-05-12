@@ -231,10 +231,13 @@
     <p style="font-family:&#39;Jost&#39;,sans-serif;font-size:1rem;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.75;max-width:560px;margin:0 auto;">Plan your entire trip in minutes — with a personalized itinerary that adapts in real time to weather, location, and your travel style.</p>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
       <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">
-        Plan My Perfect Cape Town Trip
-        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Takes less than 2 minutes</em>
+        💬 Chat with Caipy
+        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Voice AI · Takes less than 2 minutes</em>
       </button>
-      <button onclick="window.location.href=&#39;guide.html&#39;" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;cursor:pointer;border:none;">Get My Personalized Itinerary</button>
+      <button onclick="openTavus()" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;" id="tavus-btn">
+        🎥 Video Call with Caipy
+        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Live video · See Caipy in person</em>
+      </button>
     </div>
   </div>
 </section>
@@ -615,6 +618,85 @@
     if (b) b.style.cssText = 'opacity:0; transition:opacity .5s; pointer-events:none;';
   }, 6000);
 
+  let _dailyCall = null;
+  let _tavusEmail = null;
+  let _tavusName = null;
+  let _tavusConvId = null;
+
+  function closeLeadForm() {
+    document.getElementById('tavus-lead-modal').style.display = 'none';
+  }
+
+  function closeTavus() {
+    const modal = document.getElementById('tavus-modal');
+    modal.style.display = 'none';
+    if (_dailyCall) { _dailyCall.destroy(); _dailyCall = null; }
+    // Trigger itinerary generation when call ends
+    if (_tavusEmail) {
+      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://caipy-sfau.onrender.com';
+      fetch(apiBase + '/end-tavus-call', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: _tavusEmail, name: _tavusName, conversation_id: _tavusConvId }),
+      }).catch(() => {});
+      _tavusEmail = null; _tavusName = null; _tavusConvId = null;
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeTavus(); closeLeadForm(); }
+  });
+
+  function openTavus() {
+    document.getElementById('tavus-lead-modal').style.display = 'flex';
+    setTimeout(() => document.getElementById('lead-name').focus(), 100);
+  }
+
+  async function startTavusWithLead() {
+    const name = document.getElementById('lead-name').value.trim();
+    const email = document.getElementById('lead-email').value.trim();
+    if (!name) { document.getElementById('lead-name').focus(); return; }
+    if (!email || !email.includes('@')) { document.getElementById('lead-email').focus(); return; }
+
+    const btn = document.getElementById('lead-submit-btn');
+    btn.textContent = 'Starting your call...';
+    btn.disabled = true;
+
+    try {
+      try { await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); } catch(_) {}
+      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://caipy-sfau.onrender.com';
+      const res = await fetch(apiBase + '/create-tavus-conversation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        _tavusEmail = email;
+        _tavusName = name;
+        _tavusConvId = data.conversation_id || null;
+        closeLeadForm();
+        const modal = document.getElementById('tavus-modal');
+        const container = document.getElementById('tavus-container');
+        modal.style.display = 'flex';
+        if (_dailyCall) { _dailyCall.destroy(); }
+        _dailyCall = DailyIframe.createFrame(container, {
+          showLeaveButton: false,
+          showFullscreenButton: false,
+          showLocalVideo: false,
+          iframeStyle: { width: '100%', height: '100%', border: 'none', borderRadius: '16px' },
+        });
+        await _dailyCall.join({ url: data.url, userName: name, startVideoOff: false, startAudioOff: false });
+      } else {
+        alert('Could not start video call. Please try the chat option instead.');
+      }
+    } catch (e) {
+      alert('Could not start video call. Please try the chat option instead.');
+    }
+    btn.textContent = 'Start Video Call with Caipy →';
+    btn.disabled = false;
+  }
+
   async function openCaipy() {
     if (caipyOpen) return;
     caipyOpen = true;
@@ -922,6 +1004,37 @@ async function stickyPay() {
 }
 </script>
 
+<!-- Lead capture form before video call -->
+<div id="tavus-lead-modal" style="display:none; position:fixed; inset:0; z-index:9998; background:rgba(0,0,0,.88); align-items:center; justify-content:center;">
+  <div style="background:#FAF7F2; border-radius:16px; padding:48px 40px; width:min(480px,92vw); box-shadow:0 32px 80px rgba(0,0,0,.4); position:relative;">
+    <button onclick="closeLeadForm()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; color:#6B6560; cursor:pointer;">✕</button>
+    <div style="font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; color:#1C1C1A; margin-bottom:8px;">Start your free video call</div>
+    <p style="font-size:14px; color:#6B6560; margin-bottom:28px; line-height:1.6;">Enter your details and Caipy will plan your perfect Cape Town trip — live, in under 5 minutes.</p>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <input id="lead-name" type="text" placeholder="Your first name" style="padding:14px 16px; border:1.5px solid rgba(0,0,0,.12); border-radius:8px; font-family:'Jost',sans-serif; font-size:14px; color:#1C1C1A; background:#fff; outline:none;">
+      <input id="lead-email" type="email" placeholder="Your email address" style="padding:14px 16px; border:1.5px solid rgba(0,0,0,.12); border-radius:8px; font-family:'Jost',sans-serif; font-size:14px; color:#1C1C1A; background:#fff; outline:none;">
+      <button onclick="startTavusWithLead()" id="lead-submit-btn" style="background:#B8863A; color:#fff; border:none; padding:16px; border-radius:8px; font-family:'Jost',sans-serif; font-size:13px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; margin-top:4px;">Start Video Call with Caipy →</button>
+    </div>
+    <p style="font-size:11px; color:#A09990; margin-top:16px; text-align:center;">Your personalised itinerary will be sent to your email after the call.</p>
+  </div>
+</div>
 
+<!-- Tavus embedded video call modal -->
+<script src="https://unpkg.com/@daily-co/daily-js"></script>
+<div id="tavus-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:linear-gradient(160deg,#0d1a2b 0%,#1C1C1A 60%,#2a1a0a 100%); align-items:center; justify-content:center; flex-direction:column;">
+  <!-- Branded header -->
+  <div style="width:min(960px,96vw); display:flex; align-items:center; justify-content:space-between; padding:0 4px 14px;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span style="font-family:'Cormorant Garamond',serif; color:#fff; font-size:17px; font-weight:600; letter-spacing:.3px;">The Cape Town Guide</span>
+      <span style="background:rgba(184,134,58,.2); border:1px solid rgba(184,134,58,.4); color:#D4A85A; font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:20px;">● Live with Caipy</span>
+    </div>
+    <button onclick="closeTavus()" title="End call" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.7); font-size:13px; font-weight:400; letter-spacing:1px; text-transform:uppercase; padding:7px 16px; border-radius:6px; cursor:pointer; font-family:'Jost',sans-serif;">End call</button>
+  </div>
+  <!-- Video frame -->
+  <div style="position:relative; width:min(960px,96vw); height:min(600px,80vh); background:#0a0a0a; border-radius:12px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.06);">
+    <div id="tavus-container" style="width:100%; height:100%;"></div>
+  </div>
+  <p style="color:rgba(255,255,255,.25); font-size:10px; margin-top:12px; letter-spacing:1.5px; text-transform:uppercase;">Press Esc to end the call</p>
+</div>
 
 </body></html>
