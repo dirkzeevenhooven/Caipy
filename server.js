@@ -936,7 +936,7 @@ app.post('/create-tavus-conversation', async (req, res) => {
 app.get('/tavus-patch-persona', async (req, res) => {
   const apiKey = process.env.TAVUS_API_KEY;
   const response = await fetch('https://tavusapi.com/v2/personas/pb550e577673', {
-    method: 'PATCH',
+    method: 'PUT',
     headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       tools: [{
