@@ -9,6 +9,7 @@ const PDFDocument = require('pdfkit');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
+const ftp = require('basic-ftp');
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -211,7 +212,7 @@ function itineraryToDayCards(itinerary) {
     </div>`).join('\n');
 }
 
-// Fill template placeholders and save to public/guides/[id].html
+// Fill template placeholders and upload to Plesk via FTP
 async function generateAndSaveGuide(itinerary, tripData, guideId) {
   const templatePath = path.join(__dirname, 'guide-template.html');
   if (!fs.existsSync(templatePath)) {
@@ -247,12 +248,38 @@ async function generateAndSaveGuide(itinerary, tripData, guideId) {
     .replace(/\{\{GUIDE_ID\}\}/g, guideId.toUpperCase())
     .replace(/\{\{GENERATED_DATE\}\}/g, date);
 
-  const guidesDir = path.join(__dirname, 'public', 'guides');
-  fs.mkdirSync(guidesDir, { recursive: true });
-  fs.writeFileSync(path.join(guidesDir, `${guideId}.html`), html, 'utf8');
+  // Write to temp file for FTP upload
+  const tmpPath = path.join('/tmp', `${guideId}.html`);
+  fs.writeFileSync(tmpPath, html, 'utf8');
 
-  const baseUrl = process.env.BASE_URL || 'https://caipy-sfau.onrender.com';
-  return `${baseUrl}/guides/${guideId}.html`;
+  // Upload to Plesk via FTP
+  const client = new ftp.Client(30000);
+  try {
+    await client.access({
+      host: process.env.FTP_HOST || '92.63.174.114',
+      user: process.env.FTP_USER,
+      password: process.env.FTP_PASS,
+      port: 21,
+      secure: false,
+    });
+    // Ensure guides directory exists
+    try { await client.ensureDir('httpdocs/guides'); } catch(e) {}
+    await client.uploadFrom(tmpPath, `httpdocs/guides/${guideId}.html`);
+    console.log('Guide uploaded to Plesk:', guideId);
+  } catch (e) {
+    console.error('FTP upload error:', e.message);
+    // Fallback: also save locally so guide is accessible via Render
+    const guidesDir = path.join(__dirname, 'public', 'guides');
+    fs.mkdirSync(guidesDir, { recursive: true });
+    fs.copyFileSync(tmpPath, path.join(guidesDir, `${guideId}.html`));
+    const baseUrl = process.env.BASE_URL || 'https://caipy-sfau.onrender.com';
+    return `${baseUrl}/guides/${guideId}.html`;
+  } finally {
+    client.close();
+    try { fs.unlinkSync(tmpPath); } catch(e) {}
+  }
+
+  return `https://thecapetownguide.com/guides/${guideId}.html`;
 }
 
 // ─── Email helper (Postmark HTTP API — avoids SMTP port blocks on Render) ─────
