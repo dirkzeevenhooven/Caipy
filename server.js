@@ -907,11 +907,12 @@ app.post('/create-tavus-conversation', async (req, res) => {
     ? `Hi ${name}! Welcome to The Cape Town Guide. My name is Caipy and I am your personal AI travel agent for Cape Town. I am going to help you plan your perfect Cape Town trip — I just need to ask you a few quick questions. When are you planning to travel to Cape Town and how many days are you staying?`
     : `Hi there! Welcome to The Cape Town Guide. My name is Caipy and I am your personal AI travel agent for Cape Town. I am going to help you plan your perfect Cape Town trip — I just need to ask you a few quick questions. When are you planning to travel to Cape Town and how many days are you staying?`;
 
-  // Save lead to email list
+  // Save lead to email list + Resend Audience
   if (email) {
     try {
       const token = process.env.RESEND_API_KEY;
       const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
+      // Notification email
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -921,6 +922,18 @@ app.post('/create-tavus-conversation', async (req, res) => {
           html: `<p><strong>${name || 'Someone'}</strong> (${email}) just started a video call with Caipy.</p>`,
         }),
       });
+      // Add to Resend Audience
+      const audienceId = process.env.RESEND_AUDIENCE_ID;
+      if (audienceId) {
+        const firstName = (name || '').split(' ')[0];
+        const lastName = (name || '').split(' ').slice(1).join(' ');
+        await fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, first_name: firstName, last_name: lastName, unsubscribed: false }),
+        });
+        console.log('Lead added to Resend Audience:', email);
+      }
     } catch(e) { console.error('Lead notification error:', e.message); }
   }
 
