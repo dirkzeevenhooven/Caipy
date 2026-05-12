@@ -885,7 +885,7 @@ app.post('/create-tavus-conversation', async (req, res) => {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from, to: ['dirkzeevenhooven@gmail.com'],
+          from, to: ['info@thecapetownguide.com'],
           subject: `New video call lead: ${name || 'Unknown'} <${email}>`,
           html: `<p><strong>${name || 'Someone'}</strong> (${email}) just started a video call with Caipy.</p>`,
         }),
