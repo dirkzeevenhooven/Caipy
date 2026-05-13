@@ -521,6 +521,36 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
+// Guide purchase checkout (separate from Caipy itinerary flow)
+app.post('/create-guide-checkout', async (req, res) => {
+  try {
+    const { email, name } = req.body;
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: 'The Cape Town Guide — Full Access',
+            description: 'Interactive guide with 11 sections, Mapbox map, curated hotels, restaurants, hidden gems & more. Built on 10+ years of local Cape Town knowledge.',
+          },
+          unit_amount: 1995,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      customer_email: email || undefined,
+      success_url: `https://thecapetownguide.com/paywall.html?success=true`,
+      cancel_url: `https://thecapetownguide.com/paywall.html`,
+      metadata: { product: 'guide', name: (name || '').slice(0, 490) },
+    });
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error('Guide checkout error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Helper: fetch transcript from ElevenLabs with retries
 async function fetchElevenLabsTranscript(conversationId) {
   for (let attempt = 0; attempt < 6; attempt++) {
