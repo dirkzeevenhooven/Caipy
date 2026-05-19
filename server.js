@@ -854,7 +854,7 @@ app.post('/safety-guide-lead', async (req, res) => {
       headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'onboarding@resend.dev',
-        to: ['info@thecapetownguide.com'],
+        to: ['dirkzeevenhooven@gmail.com'],
         subject: `New safety guide download: ${name}`,
         html: `<p><strong>${name}</strong> (${email}) downloaded the free Cape Town Safety Guide.</p>`
       })
@@ -1229,17 +1229,24 @@ app.post('/contact', async (req, res) => {
     const token = process.env.RESEND_API_KEY;
     if (!token) return res.status(500).json({ error: 'Email not configured' });
     const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
-    await fetch('https://api.resend.com/emails', {
+    const payload = {
+      to: ['dirkzeevenhooven@gmail.com'],
+      reply_to: email,
+      subject: `Contact form: ${subject || 'New message'}`,
+      html: `<p><strong>From:</strong> ${name} (${email})</p><p><strong>Subject:</strong> ${subject}</p><p><strong>Message:</strong><br>${message.replace(/\n/g, '<br>')}</p>`
+    };
+    let r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from,
-        to: ['info@thecapetownguide.com'],
-        reply_to: email,
-        subject: `Contact form: ${subject || 'New message'}`,
-        html: `<p><strong>From:</strong> ${name} (${email})</p><p><strong>Subject:</strong> ${subject}</p><p><strong>Message:</strong><br>${message.replace(/\n/g, '<br>')}</p>`
-      })
+      body: JSON.stringify({ from, ...payload })
     });
+    if (!r.ok && from !== 'onboarding@resend.dev') {
+      r = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: 'onboarding@resend.dev', ...payload })
+      });
+    }
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
