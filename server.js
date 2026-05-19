@@ -828,6 +828,24 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
+// ─── Safety guide lead capture ───────────────────────────────────────────────
+app.post('/safety-guide-lead', async (req, res) => {
+  const { name, email } = req.body;
+  if (!name || !email) return res.status(400).json({ error: 'Missing fields' });
+  console.log('Safety guide lead:', name, email);
+  try {
+    const { Resend } = require('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: 'info@thecapetownguide.com',
+      subject: `New safety guide download: ${name}`,
+      html: `<p><strong>${name}</strong> (${email}) downloaded the free safety guide.</p>`
+    });
+  } catch(e) { console.error('Safety guide lead email error:', e.message); }
+  res.json({ ok: true });
+});
+
 // ─── ElevenLabs TTS proxy — API key stays server-side ────────────────────────
 app.post('/speak', async (req, res) => {
   const { text } = req.body;
