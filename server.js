@@ -848,7 +848,7 @@ app.post('/speak', async (req, res) => {
   if (!clean) return res.status(400).json({ error: 'Empty text after cleaning' });
 
   try {
-    const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/RR95SlpB4SjmhuKa4GsP', {
+    const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/dvGaQdQfwItvPEpQKy5y', {
       method: 'POST',
       headers: {
         'xi-api-key': apiKey,
