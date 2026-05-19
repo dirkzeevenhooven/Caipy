@@ -849,14 +849,17 @@ app.post('/safety-guide-lead', async (req, res) => {
   if (!name || !email) return res.status(400).json({ error: 'Missing fields' });
   console.log('Safety guide lead:', name, email);
   try {
-    const { Resend } = require('resend');
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: 'info@thecapetownguide.com',
-      subject: `New safety guide download: ${name}`,
-      html: `<p><strong>${name}</strong> (${email}) downloaded the free safety guide.</p>`
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'onboarding@resend.dev',
+        to: ['info@thecapetownguide.com'],
+        subject: `New safety guide download: ${name}`,
+        html: `<p><strong>${name}</strong> (${email}) downloaded the free Cape Town Safety Guide.</p>`
+      })
     });
+    console.log('Safety guide lead email sent:', r.status);
   } catch(e) { console.error('Safety guide lead email error:', e.message); }
   res.json({ ok: true });
 });
