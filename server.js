@@ -828,6 +828,21 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
+// ─── Force-download safety guide PDF ─────────────────────────────────────────
+app.get('/download-safety-guide', async (req, res) => {
+  try {
+    const response = await fetch('https://thecapetownguide.com/photos/cape-town-safety-guide.pdf');
+    if (!response.ok) return res.status(404).send('PDF not found');
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="cape-town-safety-guide.pdf"');
+    const buffer = await response.arrayBuffer();
+    res.send(Buffer.from(buffer));
+  } catch(e) {
+    console.error('PDF download error:', e.message);
+    res.status(500).send('Download failed');
+  }
+});
+
 // ─── Safety guide lead capture ───────────────────────────────────────────────
 app.post('/safety-guide-lead', async (req, res) => {
   const { name, email } = req.body;
