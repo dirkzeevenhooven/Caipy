@@ -19,10 +19,10 @@
     /* SIDEBAR */
     .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: #1a3245; border-right: 1px solid rgba(201,169,110,0.18); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
     .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
-    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: rgba(90,180,232,0.95); line-height: 1.2; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
     .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
     .sidebar-section { padding: 16px 12px 6px; font-size: 10px; letter-spacing: 2px; color: rgba(90,180,232,0.85); text-transform: uppercase; font-weight: 600; }
-    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 14px; color: rgba(250,248,244,0.96); font-weight: 400; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 14px; color: rgba(250,248,244,0.96); font-weight: 400; cursor: pointer; transition: all 0.2s; text-decoration: none; }
     .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
     .sidebar-item.active { border-left: 2px solid rgba(90,180,232,0.8); color: rgba(90,180,232,0.95); background: rgba(90,180,232,0.06); }
     .sidebar-item .icon { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 1.75; }
@@ -186,7 +186,7 @@
 
 <div class="sidebar">
   <div class="sidebar-logo">
-    <div class="brand">Planet Curated</div>
+    <div class="brand">Planet <span style="color:rgba(90,180,232,0.95)">Curated</span></div>
     <div class="sub">Cape Town Guide</div>
   </div>
   <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
