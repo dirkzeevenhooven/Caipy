@@ -164,10 +164,11 @@
 
 <div class="main">
   <div class="hero">
-    <video id="hv-a" class="hero-video" autoplay muted playsinline src="https://videos.pexels.com/video-files/33646247/14298719_1920_1080_24fps.mp4"></video>
-    <video id="hv-b" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/33646748/14298633_1920_1080_24fps.mp4" style="opacity:0;"></video>
-    <video id="hv-c" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/5664984/5664984-hd_1920_1080_25fps.mp4" style="opacity:0;"></video>
-    <video id="hv-d" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/17916042/17916042-hd_1920_1080_30fps.mp4" style="opacity:0;"></video>
+    <video id="hv-a" class="hero-video" autoplay muted playsinline src="/photos/hero-capetown.mp4"></video>
+    <video id="hv-b" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/33646247/14298719_1920_1080_24fps.mp4" style="opacity:0;"></video>
+    <video id="hv-c" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/33646748/14298633_1920_1080_24fps.mp4" style="opacity:0;"></video>
+    <video id="hv-d" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/5664984/5664984-hd_1920_1080_25fps.mp4" style="opacity:0;"></video>
+    <video id="hv-e" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/17916042/17916042-hd_1920_1080_30fps.mp4" style="opacity:0;"></video>
     <div class="hero-content">
       <div class="hero-text">
         <div class="eyebrow">Planet Curated · Cape Town Guide</div>
@@ -399,7 +400,7 @@
 
   // Hero video crossfade
   (function(){
-    const vs = ['hv-a','hv-b','hv-c','hv-d'].map(id => document.getElementById(id));
+    const vs = ['hv-a','hv-b','hv-c','hv-d','hv-e'].map(id => document.getElementById(id));
     let cur = 0;
     vs.forEach((v, i) => v.addEventListener('ended', () => {
       const prev = cur;
