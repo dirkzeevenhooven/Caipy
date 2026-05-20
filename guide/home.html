@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard · Planet Curated Cape Town</title>
+  <title>Your Cape Town Trip Hub · Planet Curated</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,13 +43,14 @@
     .hero-text .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
     .hero-text h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4.5vw, 56px); font-weight: 300; line-height: 1.1; }
     .hero-text h1 em { font-style: italic; color: var(--gold); }
-    .hero-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 400px; margin-top: 12px; }
+    .hero-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 420px; margin-top: 14px; }
 
     /* WEATHER MINI */
-    .hero-weather { background: rgba(15,36,48,0.75); border: 1px solid rgba(201,169,110,0.2); border-radius: 12px; padding: 16px 20px; min-width: 160px; text-align: center; flex-shrink: 0; }
+    .hero-weather { background: rgba(15,36,48,0.75); border: 1px solid rgba(201,169,110,0.2); border-radius: 12px; padding: 16px 20px; min-width: 180px; text-align: center; flex-shrink: 0; }
     .hw-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
     .hw-temp { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; line-height: 1; color: var(--white); }
-    .hw-desc { font-size: 12px; color: var(--white-dim); margin-top: 4px; }
+    .hw-desc { font-size: 12px; color: var(--white-dim); margin-top: 4px; text-transform: capitalize; }
+    .hw-advice { font-size: 11px; color: rgba(90,180,232,0.85); margin-top: 8px; line-height: 1.4; font-style: italic; border-top: 1px solid rgba(90,180,232,0.15); padding-top: 8px; }
     .hw-live { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: rgba(74,188,100,0.8); margin-top: 6px; }
     .live-dot { width: 6px; height: 6px; background: #4abc64; border-radius: 50%; animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
@@ -57,26 +58,37 @@
     .hw-link:hover { color: var(--gold); }
 
     /* CONTENT */
-    .content { padding: 48px 60px 80px; }
+    .content { padding: 56px 60px 80px; }
 
     /* DIRK NOTE */
-    .dirk-note { display: flex; gap: 20px; align-items: flex-start; background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.18); border-radius: 14px; padding: 24px 28px; margin-bottom: 48px; }
+    .dirk-note { display: flex; gap: 20px; align-items: flex-start; background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.18); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; }
     .dirk-avatar { width: 52px; height: 52px; border-radius: 50%; background: url('/photos/dirk-jumping-seapoint.jpeg') center/cover; flex-shrink: 0; border: 2px solid rgba(201,169,110,0.3); }
     .dirk-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; }
     .dirk-text strong { color: var(--white); }
     .dirk-name { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+
+    /* UBUNTU COMPANION */
+    .ubuntu-block { display: flex; align-items: center; gap: 16px; background: rgba(90,180,232,0.05); border: 1px solid rgba(90,180,232,0.18); border-radius: 14px; padding: 18px 24px; margin-bottom: 48px; }
+    .ubuntu-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(90,180,232,0.12); border: 1.5px solid rgba(90,180,232,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ubuntu-avatar .icon { width: 18px; height: 18px; color: rgba(90,180,232,0.9); stroke-width: 1.5; }
+    .ubuntu-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(90,180,232,0.7); margin-bottom: 3px; }
+    .ubuntu-text { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .ubuntu-text a { color: rgba(90,180,232,0.85); text-decoration: none; }
+    .ubuntu-text a:hover { color: rgba(90,180,232,1); }
 
     /* SECTION GRID */
     .section-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 40px; }
     .dash-card { display: flex; flex-direction: column; background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.2s; }
     .dash-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(201,169,110,0.3); transform: translateY(-2px); }
-    .dash-card .card-icon { font-size: 24px; margin-bottom: 10px; }
+    .dash-card .card-icon { margin-bottom: 12px; }
+    .dash-card .card-icon .icon { width: 20px; height: 20px; color: var(--gold); stroke-width: 1.5; }
     .dash-card .card-name { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 5px; }
     .dash-card .card-desc { font-size: 12px; color: var(--white-faint); line-height: 1.5; }
+    .dash-card .card-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: rgba(90,180,232,0.6); margin-top: 8px; }
 
     /* FEATURED (wide cards) */
-    .featured-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+    .featured-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 56px; }
     .feat-card { position: relative; border-radius: 14px; overflow: hidden; min-height: 180px; display: flex; align-items: flex-end; text-decoration: none; transition: transform 0.25s; }
     .feat-card:hover { transform: translateY(-3px); }
     .feat-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
@@ -90,12 +102,13 @@
     .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 48px; }
     .tool-card { background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.2); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; gap: 14px; }
     .tool-card:hover { background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.35); }
-    .tool-icon { font-size: 28px; flex-shrink: 0; }
+    .tool-icon { flex-shrink: 0; }
+    .tool-icon .icon { width: 22px; height: 22px; color: var(--gold); stroke-width: 1.5; }
     .tool-name { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
     .tool-desc { font-size: 11px; color: var(--white-faint); line-height: 1.4; }
 
     /* WHALE BANNER */
-    .whale-banner { display: none; background: rgba(42,100,150,0.12); border: 1px solid rgba(42,100,200,0.25); border-radius: 12px; padding: 16px 22px; margin-bottom: 40px; align-items: center; gap: 14px; text-decoration: none; }
+    .whale-banner { display: none; background: rgba(42,100,150,0.12); border: 1px solid rgba(42,100,200,0.25); border-radius: 12px; padding: 16px 22px; margin-bottom: 48px; align-items: center; gap: 14px; text-decoration: none; }
     .whale-banner.visible { display: flex; }
     .whale-banner:hover { background: rgba(42,100,150,0.2); }
     .wb-text .wb-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
@@ -103,14 +116,14 @@
     .wb-arrow { font-size: 16px; color: var(--gold); margin-left: auto; }
 
     /* HERO BUTTONS */
-    .hero-btns { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .hero-btns { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
     .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--gold); color: var(--ocean-dark); border-radius: 7px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s; white-space: nowrap; }
     .btn-primary:hover { background: var(--gold-light); }
     .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: transparent; color: var(--white); border: 1px solid rgba(250,248,244,0.4); border-radius: 7px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
     .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
 
     /* ITINERARY CTA CARD */
-    .itinerary-cta { background: linear-gradient(135deg, rgba(201,169,110,0.09) 0%, rgba(201,169,110,0.03) 100%); border: 1px solid rgba(201,169,110,0.28); border-radius: 16px; padding: 32px 36px; margin-bottom: 48px; }
+    .itinerary-cta { background: linear-gradient(135deg, rgba(201,169,110,0.09) 0%, rgba(201,169,110,0.03) 100%); border: 1px solid rgba(201,169,110,0.28); border-radius: 16px; padding: 32px 36px; margin-bottom: 56px; }
     .itinerary-cta-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
     .itinerary-cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.5vw, 30px); font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
     .itinerary-cta-desc { font-size: 14px; color: var(--white-dim); line-height: 1.75; margin-bottom: 20px; max-width: 620px; }
@@ -119,7 +132,7 @@
     .itinerary-benefit::before { content: '✓'; color: var(--gold); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
 
     @media (max-width: 900px) { .featured-grid { grid-template-columns: 1fr; } .tools-grid { grid-template-columns: 1fr 1fr; } .itinerary-benefits { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero { height: 100svh; } .hero-content { padding: 24px 24px 48px; flex-direction: column; align-items: flex-start; } .content { padding: 24px 20px 60px; } .tools-grid { grid-template-columns: 1fr; } .itinerary-cta { padding: 24px; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero { height: 100svh; } .hero-content { padding: 24px 24px 48px; flex-direction: column; align-items: flex-start; } .content { padding: 28px 20px 60px; } .tools-grid { grid-template-columns: 1fr; } .itinerary-cta { padding: 24px; } }
 
     /* Sidebar toggle */
     .sidebar { transition: transform 0.35s ease; }
@@ -139,7 +152,7 @@
     .nav-toggle { transition: left 0.35s ease; }
     body.nav-hidden .nav-toggle { left: 16px; }
   </style>
-<script src="https://unpkg.com/lucide.292.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
 </head>
 <body>
 <button class="nav-toggle" id="navToggle" title="Toggle navigation" onclick="const h=document.body.classList.toggle('nav-hidden');this.innerHTML=h?'<span class=\'toggle-icon\'>☰</span> Menu':'<span class=\'toggle-icon\'>✕</span> Close'"><span class="toggle-icon">✕</span> Close</button>
@@ -185,18 +198,19 @@
     <video id="hv-e" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/17916042/17916042-hd_1920_1080_30fps.mp4" style="opacity:0;"></video>
     <div class="hero-content">
       <div class="hero-text">
-        <div class="eyebrow">Planet Curated · Cape Town Guide</div>
-        <h1>Plan Your Perfect Cape Town Trip —<br><em>Curated Around You</em></h1>
-        <p>Explore hand-picked places, smart maps, honest safety guidance and personalised itinerary planning — built around the way you travel.</p>
+        <div class="eyebrow">Welcome · Your Cape Town Guide</div>
+        <h1>Your Cape Town<br><em>Trip Hub</em></h1>
+        <p>Everything you need for an exceptional Cape Town trip — curated places, smart maps, honest safety guidance and a personalised itinerary built around the way you travel.</p>
         <div class="hero-btns">
-          <a href="itinerary.html" class="btn-primary">Build My Trip ✈️</a>
-          <a href="map.html" class="btn-secondary">Explore the Map 🗺️</a>
+          <a href="itinerary.html" class="btn-primary">Build My Trip</a>
+          <a href="map.html" class="btn-secondary">Explore the Map</a>
         </div>
       </div>
       <div class="hero-weather">
         <div class="hw-label">Cape Town · Now</div>
         <div class="hw-temp" id="hw-temp">--°</div>
         <div class="hw-desc" id="hw-desc">Loading...</div>
+        <div class="hw-advice" id="hw-advice" style="display:none;"></div>
         <div class="hw-live"><span class="live-dot"></span> Live data</div>
         <a href="live.html" class="hw-link">Full forecast →</a>
       </div>
@@ -214,6 +228,17 @@
       </div>
     </div>
 
+    <!-- UBUNTU COMPANION -->
+    <div class="ubuntu-block">
+      <div class="ubuntu-avatar">
+        <i data-lucide="bot" class="icon"></i>
+      </div>
+      <div>
+        <div class="ubuntu-label">Ubuntu · Your AI Trip Companion</div>
+        <div class="ubuntu-text">Ready to plan your trip? <a href="itinerary.html">Build your personalised itinerary</a> — or browse the guide to discover what Cape Town has waiting for you.</div>
+      </div>
+    </div>
+
     <!-- ITINERARY CTA -->
     <div class="itinerary-cta">
       <div class="itinerary-cta-label">Plan Your Trip</div>
@@ -225,7 +250,7 @@
         <div class="itinerary-benefit">Helps with safety, transport and timing</div>
         <div class="itinerary-benefit">Gives you Plan B options for weather and wind</div>
       </div>
-      <a href="itinerary.html" class="btn-primary">Build My Trip ✈️</a>
+      <a href="itinerary.html" class="btn-primary">Build My Trip</a>
       <a href="sample-itinerary.html" style="display:inline-block;margin-top:14px;margin-left:16px;font-size:12px;color:rgba(201,169,110,0.6);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,1)'" onmouseout="this.style.color='rgba(201,169,110,0.6)'">See a sample itinerary first →</a>
     </div>
 
@@ -245,7 +270,7 @@
       <a href="experiences.html" class="feat-card">
         <div class="feat-bg" style="background-image:url('/photos/dirk-jumping-seapoint.jpeg');"></div>
         <div class="feat-content">
-          <div class="feat-tag">Must Do</div>
+          <div class="feat-tag">Best for first-timers</div>
           <div class="feat-name">Iconic Experiences</div>
           <div class="feat-hint">The non-negotiables — Table Mountain, Cape Point &amp; more</div>
         </div>
@@ -253,23 +278,23 @@
       <a href="stay.html" class="feat-card">
         <div class="feat-bg" style="background-image:url('/photos/twelve-apostles-hotel.jpeg');"></div>
         <div class="feat-content">
-          <div class="feat-tag">Where to Stay</div>
+          <div class="feat-tag">13 hand-picked hotels · every budget</div>
           <div class="feat-name">Where to Stay</div>
-          <div class="feat-hint">13 hand-picked hotels across every budget</div>
+          <div class="feat-hint">From boutique guesthouses to clifftop luxury</div>
         </div>
       </a>
       <a href="beaches.html" class="feat-card">
         <div class="feat-bg" style="background-image:url('/photos/llandudno-beach.jpg'); background-position: center 40%;"></div>
         <div class="feat-content">
-          <div class="feat-tag">Outdoors</div>
+          <div class="feat-tag">Atlantic vs False Bay — which is right for you</div>
           <div class="feat-name">Beaches</div>
-          <div class="feat-hint">Atlantic vs False Bay — which side is right for you</div>
+          <div class="feat-hint">Cold, dramatic and beautiful on both sides</div>
         </div>
       </a>
       <a href="wine.html" class="feat-card">
         <div class="feat-bg" style="background-image:url('/photos/winelands.webp'); background-position: center 50%;"></div>
         <div class="feat-content">
-          <div class="feat-tag">Eat &amp; Drink</div>
+          <div class="feat-tag">Day trip from Cape Town</div>
           <div class="feat-name">Wine &amp; Winelands</div>
           <div class="feat-hint">Stellenbosch, Franschhoek &amp; the best estates</div>
         </div>
@@ -280,55 +305,64 @@
     <div class="section-label">Discover</div>
     <div class="card-grid">
       <a href="hidden-gems.html" class="dash-card">
-        <div class="card-icon">💎</div>
+        <div class="card-icon"><i data-lucide="gem" class="icon"></i></div>
         <div class="card-name">Hidden Gems</div>
         <div class="card-desc">Spots most visitors never find</div>
+        <div class="card-label">Off the beaten track</div>
       </a>
       <a href="neighbourhoods.html" class="dash-card">
-        <div class="card-icon">🏘️</div>
+        <div class="card-icon"><i data-lucide="map-pin" class="icon"></i></div>
         <div class="card-name">Neighbourhoods</div>
         <div class="card-desc">9 areas, honest takes, map links</div>
+        <div class="card-label">Where to base yourself</div>
       </a>
       <a href="photography.html" class="dash-card">
-        <div class="card-icon">📷</div>
+        <div class="card-icon"><i data-lucide="camera" class="icon"></i></div>
         <div class="card-name">Photography Guide</div>
         <div class="card-desc">Best spots &amp; golden hour timing</div>
+        <div class="card-label">Sunrise to sunset</div>
       </a>
       <a href="food.html" class="dash-card">
-        <div class="card-icon">🍽️</div>
+        <div class="card-icon"><i data-lucide="utensils" class="icon"></i></div>
         <div class="card-name">Restaurants</div>
         <div class="card-desc">Where Cape Town actually eats</div>
+        <div class="card-label">No tourist traps</div>
       </a>
       <a href="wine.html" class="dash-card">
-        <div class="card-icon">🍷</div>
+        <div class="card-icon"><i data-lucide="wine" class="icon"></i></div>
         <div class="card-name">Wine &amp; Winelands</div>
         <div class="card-desc">Stellenbosch, Franschhoek &amp; beyond</div>
+        <div class="card-label">45 min from the city</div>
       </a>
       <a href="markets.html" class="dash-card">
-        <div class="card-icon">🛒</div>
+        <div class="card-icon"><i data-lucide="shopping-bag" class="icon"></i></div>
         <div class="card-name">Markets</div>
         <div class="card-desc">The best Saturday morning in Africa</div>
+        <div class="card-label">Local favourites</div>
       </a>
       <a href="beaches.html" class="dash-card">
-        <div class="card-icon">🏖️</div>
+        <div class="card-icon"><i data-lucide="waves" class="icon"></i></div>
         <div class="card-name">Beaches</div>
         <div class="card-desc">Atlantic vs False Bay — which to pick</div>
+        <div class="card-label">Know the difference</div>
       </a>
       <a href="hikes.html" class="dash-card">
-        <div class="card-icon">🥾</div>
+        <div class="card-icon"><i data-lucide="mountain" class="icon"></i></div>
         <div class="card-name">Outdoor Activities</div>
         <div class="card-desc">6 hikes before most people wake up</div>
+        <div class="card-label">Active travellers</div>
       </a>
       <a href="daytrips.html" class="dash-card">
-        <div class="card-icon">🚗</div>
+        <div class="card-icon"><i data-lucide="car" class="icon"></i></div>
         <div class="card-name">Day Trips</div>
         <div class="card-desc">Hermanus, Franschhoek &amp; the Peninsula</div>
+        <div class="card-label">Worth the drive</div>
       </a>
     </div>
 
     <!-- START HERE -->
     <a href="starthere.html" class="tool-card" style="background:rgba(201,169,110,0.1);border-color:rgba(201,169,110,0.35);margin-bottom:14px;display:flex;">
-      <div class="tool-icon">🧭</div>
+      <div class="tool-icon"><i data-lucide="compass" class="icon"></i></div>
       <div>
         <div class="tool-name" style="color:var(--gold);">Start Here — Find Your Trip</div>
         <div class="tool-desc">3 quick questions → your personalised guide recommendations</div>
@@ -339,42 +373,42 @@
     <div class="section-label">Plan Your Trip</div>
     <div class="tools-grid">
       <a href="budget.html" class="tool-card">
-        <div class="tool-icon">💰</div>
+        <div class="tool-icon"><i data-lucide="wallet" class="icon"></i></div>
         <div>
           <div class="tool-name">What Will It Cost?</div>
           <div class="tool-desc">Get a personalised cost estimate for your trip</div>
         </div>
       </a>
       <a href="live.html" class="tool-card">
-        <div class="tool-icon">🌤️</div>
+        <div class="tool-icon"><i data-lucide="sun" class="icon"></i></div>
         <div>
           <div class="tool-name">Live Cape Town</div>
           <div class="tool-desc">Weather, webcams, whale season &amp; currency</div>
         </div>
       </a>
       <a href="carrental.html" class="tool-card">
-        <div class="tool-icon">🚘</div>
+        <div class="tool-icon"><i data-lucide="key" class="icon"></i></div>
         <div>
           <div class="tool-name">Car Rental Guide</div>
           <div class="tool-desc">Do you need one? Which company? Dirk's tips</div>
         </div>
       </a>
       <a href="safety.html" class="tool-card">
-        <div class="tool-icon">🛡️</div>
+        <div class="tool-icon"><i data-lucide="shield" class="icon"></i></div>
         <div>
           <div class="tool-name">Safety Guide</div>
           <div class="tool-desc">How to enjoy the city confidently</div>
         </div>
       </a>
       <a href="practical.html" class="tool-card">
-        <div class="tool-icon">📋</div>
+        <div class="tool-icon"><i data-lucide="clipboard-list" class="icon"></i></div>
         <div>
           <div class="tool-name">Travel Essentials</div>
           <div class="tool-desc">SIM cards, transport, tipping &amp; more</div>
         </div>
       </a>
       <a href="myguide.html" class="tool-card">
-        <div class="tool-icon">📖</div>
+        <div class="tool-icon"><i data-lucide="book-open" class="icon"></i></div>
         <div>
           <div class="tool-name">My Guide</div>
           <div class="tool-desc">Retrieve your personalised Ubuntu guide</div>
@@ -386,14 +420,31 @@
 </div>
 
 <script>
-  // Mini weather widget
+  // Weather travel intelligence
+  function getWeatherAdvice(temp, weatherId, windSpeed) {
+    if (weatherId >= 200 && weatherId < 300) return 'Thunderstorms expected — perfect day for wine tasting indoors';
+    if (weatherId >= 500 && weatherId < 600) return 'Rainy day — head to the Waterfront or a museum';
+    if (windSpeed > 10) return 'South-easter is up — False Bay beaches are calmer today';
+    if (weatherId === 800 && temp > 22) return 'Perfect for Table Mountain — go before noon';
+    if (weatherId === 800 && temp <= 22) return 'Clear skies — great day for the Cape Peninsula drive';
+    if (weatherId >= 801 && weatherId <= 802) return 'Partly cloudy — ideal for Boulders Beach';
+    if (weatherId >= 803) return 'Overcast — a good excuse for a winelands day trip';
+    return 'Good conditions for exploring the city';
+  }
+
   async function loadWeather() {
     try {
       const res = await fetch('https://api.openweathermap.org/data/2.5/weather?lat=-33.9249&lon=18.4241&units=metric&appid=demo');
       if (!res.ok) throw new Error();
       const d = await res.json();
-      document.getElementById('hw-temp').textContent = Math.round(d.main.temp) + '°C';
+      const temp = Math.round(d.main.temp);
+      const weatherId = d.weather[0].id;
+      const windSpeed = d.wind ? d.wind.speed : 0;
+      document.getElementById('hw-temp').textContent = temp + '°C';
       document.getElementById('hw-desc').textContent = d.weather[0].description;
+      const adviceEl = document.getElementById('hw-advice');
+      adviceEl.textContent = getWeatherAdvice(temp, weatherId, windSpeed);
+      adviceEl.style.display = 'block';
     } catch(e) {
       document.getElementById('hw-temp').textContent = '20°C';
       document.getElementById('hw-desc').textContent = 'Partly cloudy';
