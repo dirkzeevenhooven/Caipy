@@ -36,7 +36,7 @@
     }
     .hero-video {
       position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; object-position: center; z-index: 0;
+      object-fit: cover; object-position: center; z-index: 0; transition: opacity 1.5s;
     }
     .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.25) 0%, rgba(15,36,48,0.75) 70%, rgba(15,36,48,0.95) 100%); z-index: 1; }
     .hero-content { position: relative; z-index: 2; padding: 60px 60px 80px; width: 100%; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
@@ -164,9 +164,10 @@
 
 <div class="main">
   <div class="hero">
-    <video class="hero-video" autoplay muted loop playsinline poster="/photos/capetown-droneshot.jpg">
-      <source src="/photos/cape-town-hero.mp4" type="video/mp4">
-    </video>
+    <video id="hv-a" class="hero-video" autoplay muted playsinline src="https://videos.pexels.com/video-files/33646247/14298719_1920_1080_24fps.mp4"></video>
+    <video id="hv-b" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/33646748/14298633_1920_1080_24fps.mp4" style="opacity:0;"></video>
+    <video id="hv-c" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/5664984/5664984-hd_1920_1080_25fps.mp4" style="opacity:0;"></video>
+    <video id="hv-d" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/17916042/17916042-hd_1920_1080_30fps.mp4" style="opacity:0;"></video>
     <div class="hero-content">
       <div class="hero-text">
         <div class="eyebrow">Planet Curated · Cape Town Guide</div>
@@ -395,6 +396,20 @@
   }
 
   loadWeather();
+
+  // Hero video crossfade
+  (function(){
+    const vs = ['hv-a','hv-b','hv-c','hv-d'].map(id => document.getElementById(id));
+    let cur = 0;
+    vs.forEach((v, i) => v.addEventListener('ended', () => {
+      const prev = cur;
+      cur = (cur + 1) % vs.length;
+      vs[cur].style.opacity = '1';
+      vs[cur].play();
+      vs[prev].style.opacity = '0';
+      setTimeout(() => vs[prev].pause(), 1500);
+    }));
+  })();
 </script>
 
 </body>
