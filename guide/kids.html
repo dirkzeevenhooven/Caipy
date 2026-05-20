@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cape Town with Kids · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+
+    /* HERO */
+    .hero {
+      position: relative; height: 55vh; min-height: 380px;
+      background: linear-gradient(160deg, #0F2430 0%, #0d3a2e 40%, #1B3A4B 100%);
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(201,169,110,0.07) 0%, transparent 65%);
+    }
+    .hero-bg-text {
+      position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(80px, 14vw, 150px);
+      font-weight: 300; color: rgba(201,169,110,0.055); line-height: 1; pointer-events: none;
+      white-space: nowrap;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(38px, 5vw, 68px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub { margin-top: 16px; font-size: 15px; color: var(--white-dim); max-width: 540px; line-height: 1.7; }
+
+    /* NAVIGATOR */
+    .nav-strip { background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(201,169,110,0.1); padding: 0 60px; display: flex; gap: 0; overflow-x: auto; }
+    .nav-strip::-webkit-scrollbar { display: none; }
+    .nav-btn { flex-shrink: 0; padding: 18px 22px; font-size: 12px; color: var(--white-faint); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; text-decoration: none; white-space: nowrap; }
+    .nav-btn:hover { color: var(--white); border-bottom-color: rgba(201,169,110,0.4); }
+    .nav-btn.active-nav { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* CONTENT */
+    .content { padding: 60px; max-width: 1100px; }
+    .intro { font-size: 16px; color: var(--white-dim); line-height: 1.8; max-width: 720px; margin-bottom: 16px; }
+    .intro-note { font-size: 13px; color: rgba(201,169,110,0.7); font-style: italic; margin-bottom: 56px; }
+
+    .section-anchor { display: block; position: relative; top: -80px; visibility: hidden; }
+    .section-block { margin-bottom: 72px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; margin-bottom: 6px; }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-intro { font-size: 13px; color: var(--white-faint); margin-bottom: 28px; max-width: 680px; line-height: 1.7; }
+
+    /* ACTIVITY CARDS */
+    .activity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 8px; }
+    .activity-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 12px; padding: 26px; transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .activity-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.22); transform: translateY(-2px); }
+    .activity-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold-dim), transparent); }
+    .activity-emoji { font-size: 28px; margin-bottom: 12px; }
+    .activity-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .activity-tag { display: inline-block; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .activity-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 12px; }
+    .activity-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .activity-meta span { font-size: 11px; color: var(--white-faint); }
+    .activity-meta span strong { color: var(--gold); }
+
+    /* HOTEL CARDS */
+    .hotel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 8px; }
+    .hotel-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 12px; padding: 26px; transition: all 0.2s;
+    }
+    .hotel-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.22); }
+    .hotel-name { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .hotel-area { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hotel-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 14px; }
+    .hotel-features { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
+    .hotel-feature { font-size: 12px; color: var(--white-faint); }
+    .hotel-feature::before { content: '✓ '; color: var(--gold); }
+    .hotel-btn { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ocean-dark); background: var(--gold); padding: 10px 22px; border-radius: 6px; text-decoration: none; transition: all 0.2s; }
+    .hotel-btn:hover { background: var(--gold-light); }
+
+    /* RESTAURANT CARDS */
+    .restaurant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .restaurant-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 10px; padding: 22px; transition: all 0.2s;
+    }
+    .restaurant-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.22); }
+    .restaurant-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+    .restaurant-area { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .restaurant-desc { font-size: 13px; color: var(--white-dim); line-height: 1.65; }
+
+    /* NEIGHBOURHOOD STRIP */
+    .neighbourhood-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .neighbourhood-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 10px; padding: 22px; transition: all 0.2s;
+    }
+    .neighbourhood-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.22); }
+    .neighbourhood-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .neighbourhood-badge { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .neighbourhood-desc { font-size: 13px; color: var(--white-dim); line-height: 1.65; }
+
+    /* TIPS BOX */
+    .tips-box {
+      background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.18);
+      border-radius: 12px; padding: 36px 40px; margin-bottom: 48px;
+    }
+    .tips-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; margin-bottom: 6px; }
+    .tips-box h3 em { font-style: italic; color: var(--gold); }
+    .tips-box > p { font-size: 13px; color: var(--white-faint); margin-bottom: 24px; }
+    .tips-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .tips-list li { font-size: 13px; color: var(--white-dim); line-height: 1.65; padding-left: 20px; position: relative; }
+    .tips-list li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 12px; }
+    .tips-list li strong { color: var(--white); }
+
+    /* DIRK TIP */
+    .dirk-tip { margin: 32px 0 40px; padding: 20px 24px; background: rgba(201,169,110,0.06); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; }
+    .dirk-tip-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .dirk-tip p { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin: 0; }
+
+    .divider { border: none; border-top: 1px solid rgba(201,169,110,0.1); margin: 56px 0; }
+
+    /* AGE BADGE */
+    .age-badge { display: inline-block; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(201,169,110,0.3); color: var(--gold); margin-left: 8px; vertical-align: middle; }
+
+    /* CTA STRIP */
+    .cta-strip { margin: 72px 0 0; padding: 56px 60px; background: rgba(201,169,110,0.06); border-top: 1px solid rgba(201,169,110,0.12); border-bottom: 1px solid rgba(201,169,110,0.12); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .cta-strip-text .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-strip-text h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+    .cta-strip-text h2 em { font-style: italic; color: var(--gold); }
+    .cta-strip-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 480px; }
+    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 15px 36px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; } .main { margin-left: 0; }
+      .hero-content { padding: 28px 24px; } .content { padding: 24px; }
+      .nav-strip { padding: 0 16px; } .hero-bg-text { display: none; }
+      .cta-strip { padding: 40px 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item active"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="starthere.html" class="sidebar-item"><span class="icon">🧭</span> Start Here</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg-text">Kids</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Cape Town Guide · Family Travel</div>
+      <h1 class="hero-title">Cape Town<br>with <em>Kids</em></h1>
+      <p class="hero-sub">The world's most dramatic city is also one of its best for young families. Penguins, tide pools, cable cars, and wide open space — your kids will never want to leave.</p>
+    </div>
+  </div>
+
+  <!-- NAVIGATOR -->
+  <nav class="nav-strip">
+    <a href="#activities" class="nav-btn active-nav">Things To Do</a>
+    <a href="#stays" class="nav-btn">Family Stays</a>
+    <a href="#neighbourhoods" class="nav-btn">Safe Areas</a>
+    <a href="#restaurants" class="nav-btn">Kid-Friendly Eats</a>
+    <a href="#beaches" class="nav-btn">Best Beaches</a>
+    <a href="#tips" class="nav-btn">Practical Tips</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+
+    <p class="intro">Cape Town punches above its weight as a family destination. The scenery is spectacular, the weather is generous (October–April), the food is excellent, and activities for kids are genuinely world-class — not an afterthought. Young families who visit once almost always come back.</p>
+    <p class="intro-note">Best age range for this guide: toddlers (2+) through teenagers. Everything here is tried-and-tested for real families.</p>
+
+    <!-- TOP FAMILY BOX -->
+    <div class="tips-box">
+      <h3>The <em>Family First</em> — 5 things to know before you arrive</h3>
+      <p>These will save you time, money, and at least one meltdown.</p>
+      <ul class="tips-list">
+        <li><strong>Book Boulders Beach early:</strong> The African penguin colony is a must-do. Entry is timed — reserve online ahead of your visit, especially in peak season.</li>
+        <li><strong>Rent a car:</strong> Cape Town's family highlights are spread across the Peninsula. A car gives you total freedom and is cheaper than you expect. Rentalcars.com compares all providers.</li>
+        <li><strong>The Two Oceans Aquarium is rain insurance:</strong> On a bad weather day this is your best friend. It runs 3–4 hours easily and kids absolutely love the predator exhibit.</li>
+        <li><strong>Atlantic-side beaches for toddlers, False Bay for older swimmers:</strong> The Atlantic (Camps Bay, Clifton) is beautiful but cold and has surf. False Bay (Muizenberg, Fish Hoek) is warmer and calmer — far better for small kids in the water.</li>
+        <li><strong>Sun is fierce:</strong> The Cape summer sun at altitude is strong. Factor 50 sunscreen, hats, and rash vests are non-negotiable. Reapply after every swim.</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ACTIVITIES SECTION -->
+    <span class="section-anchor" id="activities"></span>
+    <div class="section-block">
+      <h2 class="section-title">Things to Do <em>with Kids</em></h2>
+      <p class="section-intro">Cape Town's best family activities are genuinely world-class — not just for children, but for the adults dragged along. These are the experiences kids talk about for years.</p>
+
+      <div class="activity-grid">
+        <div class="activity-card">
+          <div class="activity-emoji">🐧</div>
+          <div class="activity-name">Boulders Beach Penguins</div>
+          <div class="activity-tag">Simon's Town · All Ages · Must-Do</div>
+          <div class="activity-desc">Watch African penguins waddle within arm's reach on a sheltered granite beach. One of the only places in the world to get this close to wild penguins in their natural habitat. The boardwalk allows kids of all ages and strollers to navigate easily.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> All ages</span>
+            <span><strong>Duration:</strong> 1.5–2 hrs</span>
+            <span><strong>Cost:</strong> ~R200 adults / R100 children</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🦈</div>
+          <div class="activity-name">Two Oceans Aquarium</div>
+          <div class="activity-tag">V&amp;A Waterfront · Ages 2+ · Indoor</div>
+          <div class="activity-desc">World-class aquarium at the V&amp;A Waterfront with sharks, rays, turtles, and a spectacular kelp forest tank that fills an entire room. The touch pool is a highlight for younger kids. Perfect for a rainy day or a hot afternoon break — plan for 3 hours minimum.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 2–14</span>
+            <span><strong>Duration:</strong> 2–4 hrs</span>
+            <span><strong>Cost:</strong> ~R250 adults / R150 children</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🚡</div>
+          <div class="activity-name">Table Mountain Cable Car</div>
+          <div class="activity-tag">City Bowl · Ages 4+ · Iconic</div>
+          <div class="activity-desc">The rotating cable car to the summit is an experience in itself — kids are mesmerised watching the city shrink below them. On top, the plateau is wide and safe with low stone walls. Kids who can walk will love exploring the rocks and spotting dassies (rock hyrax).</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 4+</span>
+            <span><strong>Duration:</strong> Half day</span>
+            <span><strong>Tip:</strong> Book first car up (7:30am) to beat clouds</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🦒</div>
+          <div class="activity-name">Imhoff Farm</div>
+          <div class="activity-tag">Kommetjie · Ages 2+ · Petting Farm</div>
+          <div class="activity-desc">A heritage farm in Kommetjie with a proper petting zoo (camels, ostriches, meerkats, rabbits), a reptile sanctuary, a farmers' market, and great outdoor restaurants. This is the perfect half-day outing for young kids who need open space and hands-on animal interaction.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Toddlers to 10</span>
+            <span><strong>Duration:</strong> 2–3 hrs</span>
+            <span><strong>Cost:</strong> Entry free, animal rides extra</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🦜</div>
+          <div class="activity-name">World of Birds</div>
+          <div class="activity-tag">Hout Bay · Ages 3+ · Walk-through</div>
+          <div class="activity-desc">Africa's largest bird park with 3,000+ birds across 400 species in walk-through aviaries. Kids can hand-feed birds and interact with meerkats and monkeys. The flamingo pool and parrot colony are highlights. Calm, safe, and educational — genuinely loved by children of all ages.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 3–12</span>
+            <span><strong>Duration:</strong> 2 hrs</span>
+            <span><strong>Cost:</strong> ~R200 adults / R130 children</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🌊</div>
+          <div class="activity-name">Tide Pooling at Cape Point</div>
+          <div class="activity-tag">Cape Point · Ages 5+ · Nature</div>
+          <div class="activity-desc">The tidal pools at the base of Cape Point and along the Cape Peninsula coastline are extraordinary — starfish, sea anemones, crabs, octopus and blennies fill every rock crevice. Pair with a visit to Cape Point Nature Reserve where baboons and ostriches roam freely alongside the paths.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 5+</span>
+            <span><strong>Duration:</strong> Half day with Cape Point</span>
+            <span><strong>Tip:</strong> Low tide = best pools</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🚢</div>
+          <div class="activity-name">Hout Bay Harbour &amp; Seal Island</div>
+          <div class="activity-tag">Hout Bay · Ages 4+ · Boat Trip</div>
+          <div class="activity-desc">Board a short boat trip from Hout Bay Harbour to Duiker Island — home to 60,000+ Cape fur seals. The smell is memorable, but kids absolutely love the chaos of seals barking, jumping, and sunbathing on every available rock. The harbour itself is lively with fresh fish stalls and a market.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 4+</span>
+            <span><strong>Duration:</strong> 40 min boat + harbour time</span>
+            <span><strong>Cost:</strong> ~R150 per person</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🏄</div>
+          <div class="activity-name">Surf Lessons at Muizenberg</div>
+          <div class="activity-tag">Muizenberg · Ages 6+ · Adventure</div>
+          <div class="activity-desc">Muizenberg Beach is South Africa's surf school capital — with its gentle, long waves and warm(er) water it's the perfect learning ground. Surf schools cater to kids from age 6 upwards with small boards, wetsuits, and patient instructors. The colourful Victorian beach huts make for perfect photos too.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 6+</span>
+            <span><strong>Duration:</strong> 2 hr lesson</span>
+            <span><strong>Cost:</strong> ~R400 per person incl. board &amp; wetsuit</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🌿</div>
+          <div class="activity-name">Kirstenbosch Botanical Gardens</div>
+          <div class="activity-tag">Constantia · All Ages · Outdoors</div>
+          <div class="activity-desc">One of the world's great botanical gardens on the slopes of Table Mountain. The Boomslang tree canopy walkway is spectacular for older kids. There's a treetop playground, open lawns for picnics, and free-roaming wildlife including mongoose and sunbirds. Summer Sunday concerts are family-friendly and magical.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> All ages</span>
+            <span><strong>Duration:</strong> 2–4 hrs</span>
+            <span><strong>Cost:</strong> ~R220 adults / R20 children under 6 free</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🎢</div>
+          <div class="activity-name">Go-Karts at GrandWest Casino</div>
+          <div class="activity-tag">Goodwood · Ages 5+ · Rainy Day</div>
+          <div class="activity-desc">GrandWest has an indoor entertainment complex with go-karts, bumper cars, mini-bowling, arcade games, and an ice rink. Completely sheltered and great for rainy days or evenings when outdoor options close. Older kids will want to spend the entire day here.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 5–16</span>
+            <span><strong>Duration:</strong> 2–3 hrs</span>
+            <span><strong>Tip:</strong> Best on weekday mornings (quieter)</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🦁</div>
+          <div class="activity-name">Spier &amp; Eagles Encounter</div>
+          <div class="activity-tag">Stellenbosch · Ages 4+ · Day Trip</div>
+          <div class="activity-desc">Spier wine estate (30 mins from Cape Town) hosts the Eagles Encounter raptor sanctuary where kids can meet owls, eagles, and vultures up close — including free-flight demonstrations. The estate also has a beautiful outdoor restaurant, a small animal farm, and massive open lawns. A perfect family day trip to the Winelands.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> Ages 4+</span>
+            <span><strong>Duration:</strong> Half day</span>
+            <span><strong>Tip:</strong> Combine with Stellenbosch lunch</span>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="activity-emoji">🚴</div>
+          <div class="activity-name">Cycle the Sea Point Promenade</div>
+          <div class="activity-tag">Sea Point · All Ages · Active</div>
+          <div class="activity-desc">The Sea Point Promenade runs 4km along the Atlantic coast with a dedicated cycle path alongside it. Rent bikes or scooters at Sea Point and cruise the waterfront together. The tidal pool at Sea Point Pavilion is one of the best in Cape Town — enormous, safe, and free to use.</div>
+          <div class="activity-meta">
+            <span><strong>Best for:</strong> All ages</span>
+            <span><strong>Duration:</strong> 2 hrs</span>
+            <span><strong>Cost:</strong> Bike rental ~R80/hr</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>If I had to pick just three with young kids: Boulders Beach in the morning, Cape Point tide pools after lunch, and the Two Oceans Aquarium as your rainy day reserve. That's the Peninsula day — a perfect Cape Town loop that even teenagers will love.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- FAMILY STAYS SECTION -->
+    <span class="section-anchor" id="stays"></span>
+    <div class="section-block">
+      <h2 class="section-title">Where to <em>Stay</em> with Kids</h2>
+      <p class="section-intro">Families need space, safety, and access to food without complicated logistics. These properties deliver all three — chosen because they genuinely work for children, not just for adults.</p>
+
+      <div class="hotel-grid">
+        <div class="hotel-card">
+          <div class="hotel-name">The Westin Cape Town</div>
+          <div class="hotel-area">Convention Square · City Bowl</div>
+          <div class="hotel-desc">Cape Town's best family-friendly five-star. Enormous rooms, a stunning rooftop pool, and a kids' club make this the easiest family choice in the City Bowl. The location is central and walkable to the V&amp;A Waterfront.</div>
+          <div class="hotel-features">
+            <div class="hotel-feature">Kids' club (ages 4–12)</div>
+            <div class="hotel-feature">Large heated rooftop pool</div>
+            <div class="hotel-feature">Walk to aquarium &amp; Waterfront</div>
+            <div class="hotel-feature">Family rooms &amp; interconnecting options</div>
+          </div>
+          <a href="https://www.booking.com/searchresults.html?aid=PLACEHOLDER&ss=Westin+Cape+Town" class="hotel-btn" target="_blank">Check Availability</a>
+        </div>
+
+        <div class="hotel-card">
+          <div class="hotel-name">Camps Bay Retreat</div>
+          <div class="hotel-area">Camps Bay · Atlantic Seaboard</div>
+          <div class="hotel-desc">A beautifully restored Edwardian manor above Camps Bay with 18 garden suites and spectacular mountain-and-ocean views. The grounds are private and safe for kids to roam. 5 minutes' walk to the beach strip — families with older children especially love the location.</div>
+          <div class="hotel-features">
+            <div class="hotel-feature">Private secure estate grounds</div>
+            <div class="hotel-feature">Pool with mountain views</div>
+            <div class="hotel-feature">5 min walk to Camps Bay beach</div>
+            <div class="hotel-feature">Suites with kitchenette options</div>
+          </div>
+          <a href="https://www.booking.com/searchresults.html?aid=PLACEHOLDER&ss=Camps+Bay+Retreat" class="hotel-btn" target="_blank">Check Availability</a>
+        </div>
+
+        <div class="hotel-card">
+          <div class="hotel-name">Vineyard Hotel</div>
+          <div class="hotel-area">Newlands · Southern Suburbs</div>
+          <div class="hotel-desc">Six acres of private riverside gardens in the heart of Newlands — one of Cape Town's safest, greenest suburbs. Two pools, a spa, excellent family dining, and access to Kirstenbosch on the doorstep. Ideal for families who want space and calm rather than city energy.</div>
+          <div class="hotel-features">
+            <div class="hotel-feature">6 acres of safe, enclosed gardens</div>
+            <div class="hotel-feature">Two outdoor pools</div>
+            <div class="hotel-feature">5 min from Kirstenbosch</div>
+            <div class="hotel-feature">Family suites with extra beds</div>
+          </div>
+          <a href="https://www.booking.com/searchresults.html?aid=PLACEHOLDER&ss=Vineyard+Hotel+Cape+Town" class="hotel-btn" target="_blank">Check Availability</a>
+        </div>
+
+        <div class="hotel-card">
+          <div class="hotel-name">Atlantic Suites</div>
+          <div class="hotel-area">Bloubergstrand · Table Bay</div>
+          <div class="hotel-area" style="margin-top:2px;color:var(--white-faint);">Best Table Mountain view in Cape Town</div>
+          <div class="hotel-desc">Self-catering apartment suites right on the Bloubergstrand beachfront — with the most iconic Table Mountain view available anywhere. Fully equipped kitchens make this ideal for families cooking their own meals. The beach here is wide, flat, and perfect for children.</div>
+          <div class="hotel-features">
+            <div class="hotel-feature">Full kitchen in every suite</div>
+            <div class="hotel-feature">Directly on calm, wide beach</div>
+            <div class="hotel-feature">Spacious — bedroom + living area</div>
+            <div class="hotel-feature">Great value for families</div>
+          </div>
+          <a href="https://www.booking.com/searchresults.html?aid=PLACEHOLDER&ss=Bloubergstrand+self+catering+apartments" class="hotel-btn" target="_blank">Check Availability</a>
+        </div>
+
+        <div class="hotel-card">
+          <div class="hotel-name">Tintswalo Atlantic</div>
+          <div class="hotel-area">Hout Bay Pass · Atlantic Coast</div>
+          <div class="hotel-desc">Built on the rocks of Chapman's Peak with each suite literally above the ocean — this is for the family that wants jaw-dropping and memorable above practical. Older kids and teenagers are completely wowed by the location. Suites sleep up to 4. Reserve well in advance.</div>
+          <div class="hotel-features">
+            <div class="hotel-feature">Suites above the Atlantic Ocean</div>
+            <div class="hotel-feature">Exceptional seafood restaurant</div>
+            <div class="hotel-feature">Best-in-class for older kids</div>
+            <div class="hotel-feature">Very limited rooms — book early</div>
+          </div>
+          <a href="https://www.booking.com/searchresults.html?aid=PLACEHOLDER&ss=Tintswalo+Atlantic" class="hotel-btn" target="_blank">Check Availability</a>
+        </div>
+
+        <div class="hotel-card">
+          <div class="hotel-name">Constantia Uitsig</div>
+          <div class="hotel-area">Constantia · Southern Suburbs</div>
+          <div class="hotel-desc">A peaceful wine estate in Constantia Valley — one of Cape Town's most affluent and safe areas. Farm cottages and suites spread across a working vineyard. Kids can roam freely. Mountain bikes available. The farm restaurant is exceptional. 20 minutes from the city, a world away in feel.</div>
+          <div class="hotel-features">
+            <div class="hotel-feature">Safe farm estate — free-roam for kids</div>
+            <div class="hotel-feature">Working vineyard setting</div>
+            <div class="hotel-feature">Pool + mountain views</div>
+            <div class="hotel-feature">Constantia Village shops nearby</div>
+          </div>
+          <a href="https://www.booking.com/searchresults.html?aid=PLACEHOLDER&ss=Constantia+Uitsig" class="hotel-btn" target="_blank">Check Availability</a>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>For families with toddlers, Vineyard Hotel or Constantia Uitsig wins — the secure enclosed grounds give parents peace of mind. For families with teenagers who want surf, nightlife, and energy, Camps Bay is the vibe. For a once-in-a-lifetime memory, book Tintswalo Atlantic — no child forgets sleeping above the ocean.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- NEIGHBOURHOODS SECTION -->
+    <span class="section-anchor" id="neighbourhoods"></span>
+    <div class="section-block">
+      <h2 class="section-title">Safest <em>Areas</em> for Families</h2>
+      <p class="section-intro">Cape Town is a city of contrasts. Knowing which neighbourhoods are genuinely safe for families with children makes a real difference to your experience.</p>
+
+      <div class="neighbourhood-grid">
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Constantia Valley</div>
+          <div class="neighbourhood-badge">Southern Suburbs · Family Favourite</div>
+          <div class="neighbourhood-desc">Cape Town's most family-friendly suburb. Quiet, green, and affluent with excellent schools, Kirstenbosch on its border, and a string of wine estates. Kids can play freely. Constantia Village offers safe, comfortable shopping and restaurants. Low crime, high quality of life.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Camps Bay</div>
+          <div class="neighbourhood-badge">Atlantic Seaboard · Lively &amp; Safe</div>
+          <div class="neighbourhood-desc">The most glamorous beach strip in Cape Town — broad pavements, a safe beachfront, excellent restaurants along the strip, and the Twelve Apostles mountain range as a backdrop. Very tourist-friendly and heavily frequented. Ideal for families who want a beach holiday feel.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Sea Point</div>
+          <div class="neighbourhood-badge">Atlantic Seaboard · Urban &amp; Active</div>
+          <div class="neighbourhood-desc">A buzzing neighbourhood with a 4km promenade along the Atlantic coast, a large public tidal pool, playgrounds, and a strong community feel. Very walkable and safe during the day. Excellent coffee shops, delis, and kid-friendly restaurants. Close to the City Bowl for sightseeing.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Newlands &amp; Claremont</div>
+          <div class="neighbourhood-badge">Southern Suburbs · Residential &amp; Quiet</div>
+          <div class="neighbourhood-desc">The southern suburbs form Cape Town's family heartland — residential streets, good private schools, cricket grounds, and Newlands Forest for forest walks. Claremont's Cavendish Square mall is one of Cape Town's best shopping centres. Very safe, very local, less touristy but highly liveable.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Simon's Town</div>
+          <div class="neighbourhood-badge">False Bay Coast · Charming Village</div>
+          <div class="neighbourhood-desc">A historic naval village on the False Bay coast — charming, compact, and completely manageable on foot. Boulders Beach penguins are 2km from the village centre. The False Bay waterfront has excellent fish restaurants and a relaxed local feel. Perfect for a day base when visiting the Peninsula.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">V&amp;A Waterfront</div>
+          <div class="neighbourhood-badge">City Bowl · Fully Serviced</div>
+          <div class="neighbourhood-desc">The Waterfront precinct is privately managed, heavily secured, and completely pedestrian-friendly — one of Cape Town's safest areas for families to explore freely. The aquarium, restaurants, market halls, ferris wheel, and boat trips make it a self-contained family destination. Safe 24 hours.</div>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>Stay in Constantia or Sea Point, use the V&amp;A Waterfront as your safe city base, and you'll have the best of all worlds. Avoid staying in the CBD itself (De Waterkant can work, but the downtown streets require more vigilance with young children in tow).</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- RESTAURANTS SECTION -->
+    <span class="section-anchor" id="restaurants"></span>
+    <div class="section-block">
+      <h2 class="section-title">Where to <em>Eat</em> with Kids</h2>
+      <p class="section-intro">Cape Town's restaurant scene is world-class — but not every venue is built for families. These places genuinely welcome children, with space, outdoor seating, and menus that work for all ages.</p>
+
+      <div class="restaurant-grid">
+        <div class="restaurant-card">
+          <div class="restaurant-name">Harbour House</div>
+          <div class="restaurant-area">V&amp;A Waterfront &amp; Kalk Bay</div>
+          <div class="restaurant-desc">Spectacular seafood with outdoor decks right over the water. Kids menus available, casual enough for families, and the views distract even the most restless children. The Kalk Bay branch has seals and waves crashing below — genuinely magical.</div>
+        </div>
+
+        <div class="restaurant-card">
+          <div class="restaurant-name">The Roundhouse</div>
+          <div class="restaurant-area">Camps Bay</div>
+          <div class="restaurant-desc">Outdoor tables overlooking Camps Bay beach — the sunsets are extraordinary and older children love watching the surfers below. The menu is broad enough to satisfy adults and kids alike. Book the terrace for special family dinners you'll remember forever.</div>
+        </div>
+
+        <div class="restaurant-card">
+          <div class="restaurant-name">Café Roux at Noordhoek Farm Village</div>
+          <div class="restaurant-area">Noordhoek</div>
+          <div class="restaurant-desc">A converted farmhouse with a shaded garden, chickens wandering the grounds, and a relaxed vibe that families absolutely love. Kids can roam freely in the outdoor space while adults enjoy excellent food and wine. The farm village has craft shops, a toy store, and an ice cream parlour.</div>
+        </div>
+
+        <div class="restaurant-card">
+          <div class="restaurant-name">La Mouette</div>
+          <div class="restaurant-area">Sea Point</div>
+          <div class="restaurant-desc">A beloved Sea Point institution with a shaded courtyard garden. Creative Mediterranean menus with options that work for adventurous young eaters. The courtyard setting means kids can get up and move without disrupting other diners. Excellent value tasting menus for adults.</div>
+        </div>
+
+        <div class="restaurant-card">
+          <div class="restaurant-name">Spier Farm Kitchen</div>
+          <div class="restaurant-area">Stellenbosch (day trip)</div>
+          <div class="restaurant-desc">An outdoor braai-style restaurant on Spier estate. Wide open lawns, picnic blankets, and a relaxed atmosphere where kids can run free. The farm-to-table menus are excellent and you can pair with Eagles Encounter next door for a perfect family day trip to the Winelands.</div>
+        </div>
+
+        <div class="restaurant-card">
+          <div class="restaurant-name">Knead Bakery</div>
+          <div class="restaurant-area">Multiple locations</div>
+          <div class="restaurant-desc">Cape Town's best casual breakfast and lunch chain — relaxed, always busy, and genuinely kid-friendly with high chairs, wide tables, and menus that hit every age group. The sourdough, pastries, and smoothies are excellent. Branches in Constantia, Sea Point, Kloof Street, and beyond.</div>
+        </div>
+
+        <div class="restaurant-card">
+          <div class="restaurant-name">Olympia Café</div>
+          <div class="restaurant-area">Kalk Bay</div>
+          <div class="restaurant-desc">A Kalk Bay institution for 30+ years. Casual, loud, and completely unpretentious — exactly the energy that works for families. The food is rustic and generous: breakfasts, sandwiches, and bakes. Pair with a walk along the Kalk Bay harbour where seals sunbathe on the docks.</div>
+        </div>
+
+        <div class="restaurant-card">
+          <div class="restaurant-name">Moyo at Kirstenbosch</div>
+          <div class="restaurant-area">Kirstenbosch Gardens</div>
+          <div class="restaurant-desc">An African-inspired restaurant inside Kirstenbosch with outdoor terrace seating beneath ancient trees. Combine with a visit to the gardens — kids get their nature fix, adults get excellent food and wine. The Sunday summer concerts are perfect for laid-back family evenings with a blanket on the lawn.</div>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>South Africans genuinely love children in restaurants — don't feel anxious about noise or movement in the way you might in Europe. Most Capetonian restaurants with outdoor seating are naturally family-friendly. Just look for the garden or terrace and you'll be fine.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- BEACHES SECTION -->
+    <span class="section-anchor" id="beaches"></span>
+    <div class="section-block">
+      <h2 class="section-title">Best <em>Beaches</em> for Families</h2>
+      <p class="section-intro">Not all Cape Town beaches are equal for children. Here's how to choose based on your kids' ages and swimming confidence.</p>
+
+      <div class="neighbourhood-grid">
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Fish Hoek Beach</div>
+          <div class="neighbourhood-badge">False Bay · Warmest &amp; Calmest</div>
+          <div class="neighbourhood-desc">The safest and warmest swimming beach in Cape Town — sheltered from the wind, with gentle waves and water that reaches 20°C+ in summer. A firm favourite for families with toddlers and young swimmers. Lifeguards on duty in season. The beach café and grassy areas behind the beach are perfect for long afternoons.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Muizenberg Beach</div>
+          <div class="neighbourhood-badge">False Bay · Surf School Capital</div>
+          <div class="neighbourhood-desc">Long, flat, and relatively warm — perfect for beginner surfers and bodyboarders. The colourful Victorian beach huts are iconic. Warmer water than the Atlantic side. Many surf schools operate here for children from age 6. Safe, monitored, and fun.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Boulders Beach</div>
+          <div class="neighbourhood-badge">Simon's Town · Penguins &amp; Granite Pools</div>
+          <div class="neighbourhood-desc">Beyond the penguin colony, the granite boulders create sheltered tidal pools that are perfectly safe for small children. The water is calm and clear. It's a paid entry beach (part of the penguin reserve) but one of the most unique swim spots in the world.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Sea Point Tidal Pool</div>
+          <div class="neighbourhood-badge">Atlantic Seaboard · Safe &amp; Free</div>
+          <div class="neighbourhood-desc">A massive salt-water tidal pool right on the Sea Point Promenade — one of Cape Town's most loved public spaces. It's safe for all ages including toddlers, free to enter, and has changing rooms. The surrounding promenade is flat and perfect for scooters and bikes. Open year-round.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Camps Bay Beach</div>
+          <div class="neighbourhood-badge">Atlantic Seaboard · Scenic &amp; Lively</div>
+          <div class="neighbourhood-desc">The most famous beach in Cape Town — wide, beautiful, and dramatic. Best for older children and teenagers who are confident in the water. The Atlantic is cold (14–16°C) and has surf, but the scenery is unmatched. The beach strip restaurants are steps away. Not ideal for toddlers in the water.</div>
+        </div>
+
+        <div class="neighbourhood-card">
+          <div class="neighbourhood-name">Bloubergstrand</div>
+          <div class="neighbourhood-badge">Table Bay · Iconic Views</div>
+          <div class="neighbourhood-desc">The famous Table Mountain viewpoint beach. The beach itself is long and wide with gentle surf. Water is cool but manageable. Best for the family photo of a lifetime rather than all-day swimming. Excellent for kitesurfing, beach walks, and the Blouberg village's relaxed restaurants and cafés.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PRACTICAL TIPS SECTION -->
+    <span class="section-anchor" id="tips"></span>
+    <div class="section-block">
+      <h2 class="section-title"><em>Practical</em> Tips for Family Travel</h2>
+      <p class="section-intro">Everything you need to know about logistics, safety, health, and getting around Cape Town with children.</p>
+
+      <div class="tips-box">
+        <h3>Getting <em>Around</em></h3>
+        <p>Transport choices matter most with children.</p>
+        <ul class="tips-list">
+          <li><strong>Rent a car — it's essential:</strong> Cape Town's public transport is limited and Ubers can be unreliable at peak times. With a rental car you're in control of your schedule. Child car seats are available from most rental companies — always reserve in advance and confirm when you pick up.</li>
+          <li><strong>Child car seats are legally required</strong> in South Africa for children under 3 (forward or rear-facing depending on age). Children 3–14 must use a booster if available. Bring your own if you want to guarantee fit and quality.</li>
+          <li><strong>Uber works well in Cape Town</strong> but note that Uber drivers are not legally required to provide car seats. Factor this into your planning for shorter in-city trips where you carry your own seat.</li>
+          <li><strong>The MyCiTi bus</strong> runs along the Atlantic Seaboard (Sea Point → Camps Bay → Hout Bay) and is actually good for older kids and teenagers. Air-conditioned and cheap.</li>
+        </ul>
+      </div>
+
+      <div class="tips-box">
+        <h3>Health &amp; <em>Safety</em></h3>
+        <p>Cape Town is a safe and healthy destination for families — with a few specifics to know.</p>
+        <ul class="tips-list">
+          <li><strong>No malaria risk</strong> in Cape Town or the Western Cape. You do not need malaria prophylactics for this region. Only relevant if you're extending to Kruger or northern South Africa.</li>
+          <li><strong>Medical facilities are excellent:</strong> The Cape Town private hospital network (Netcare, Life Healthcare) is world-class. Travel insurance with medical cover is still recommended — private GP and hospital costs are high without it.</li>
+          <li><strong>Sun protection is non-negotiable:</strong> Cape Town's altitude and reflected ocean glare make the UV index exceptionally high. SPF 50+ on all exposed skin every 2 hours. Wide-brim hats and rash vests for beach days.</li>
+          <li><strong>Sea safety — know the rip currents:</strong> The Atlantic coast has strong rip currents. Always swim between the flags where lifeguards are present. False Bay beaches (Fish Hoek, Muizenberg) are safer for young swimmers.</li>
+          <li><strong>Baboon awareness at Cape Point:</strong> Cape Point Nature Reserve baboons are wild and can be aggressive — they are after your food. Never feed them, keep car windows closed, and hold children close. Rangers are present but baboons move fast.</li>
+          <li><strong>City safety:</strong> In tourist areas (Waterfront, Sea Point, Camps Bay, Constantia) Cape Town is very safe. Stay aware in the CBD and avoid walking in unfamiliar areas after dark with children. Your hotel or host will advise which areas to avoid.</li>
+        </ul>
+      </div>
+
+      <div class="tips-box">
+        <h3>Family <em>Logistics</em></h3>
+        <p>The small things that make family travel smooth.</p>
+        <ul class="tips-list">
+          <li><strong>Weather window:</strong> November to April is the best family season — warm, dry, and long days. December–January is peak season (Cape Town's summer); February and March have equally great weather with fewer crowds. May–August is the Cape rainy season.</li>
+          <li><strong>Stroller-friendly:</strong> The V&amp;A Waterfront, Sea Point Promenade, and Kirstenbosch are all stroller-friendly. Most restaurants have step-free access. Cobbled areas in Kalk Bay and Bo-Kaap require an off-road style stroller.</li>
+          <li><strong>Nappies &amp; baby supplies:</strong> Major supermarkets (Pick n Pay, Checkers, Woolworths Food) stock all international baby brands. Formula, nappies, wipes, and baby food are all widely available — no need to overpacks.</li>
+          <li><strong>Electricity:</strong> South Africa uses Type M plugs (round 3-pin). Bring a universal adaptor. Voltage is 230V. UK and European devices work fine. US devices need a voltage converter for high-draw items.</li>
+          <li><strong>Tipping:</strong> Tip restaurant service staff 10–15% as a minimum — service workers in Cape Town depend on tips. R10–20 to parking attendants. R50–100 per day to hotel housekeeping.</li>
+        </ul>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>The single best thing you can do for a family trip to Cape Town is rent a good car and stay in one place for the full trip — don't try to mix in a safari or Johannesburg. The Cape Peninsula alone is enough for 10–14 days. You'll return home having barely scratched the surface, and already planning to come back.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA STRIP -->
+  <div class="cta-strip">
+    <div class="cta-strip-text">
+      <div class="eyebrow">Build Your Family Itinerary</div>
+      <h2>Plan your perfect<br><em>family trip</em> to Cape Town</h2>
+      <p>Tell Ubuntu your kids' ages and interests — and get a personalised Cape Town itinerary in minutes. Day by day, family-ready, with the right balance of adventure and downtime.</p>
+    </div>
+    <a href="itinerary.html" class="btn-cta">Build My Family Trip</a>
+  </div>
+
+</div>
+
+</body>
+</html>

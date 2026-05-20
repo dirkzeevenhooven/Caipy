@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Lingo · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+
+    .hero {
+      position: relative; height: 50vh; min-height: 340px;
+      background: linear-gradient(135deg, #0F2430 0%, #1B3A4B 50%, #0d3a2e 100%);
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(201,169,110,0.08) 0%, transparent 60%);
+    }
+    .hero-bg-text {
+      position: absolute; right: 60px; top: 50%; transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(80px, 15vw, 160px);
+      font-weight: 300; color: rgba(201,169,110,0.06); line-height: 1; pointer-events: none;
+      white-space: nowrap;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 40px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 64px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+
+    .content { padding: 60px; max-width: 1100px; }
+    .intro { font-size: 16px; color: var(--white-dim); line-height: 1.8; max-width: 700px; margin-bottom: 16px; }
+    .intro-note { font-size: 13px; color: rgba(201,169,110,0.7); font-style: italic; margin-bottom: 56px; }
+
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; margin-bottom: 8px; }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-intro { font-size: 13px; color: var(--white-faint); margin-bottom: 24px; }
+    .section-block { margin-bottom: 56px; }
+
+    .slang-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 8px; }
+    .slang-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 10px; padding: 20px 22px; transition: all 0.2s;
+    }
+    .slang-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.22); transform: translateY(-1px); }
+    .slang-word { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--gold); margin-bottom: 2px; }
+    .slang-pron { font-size: 10px; letter-spacing: 1px; color: var(--white-faint); text-transform: uppercase; margin-bottom: 8px; }
+    .slang-meaning { font-size: 13px; color: var(--white-dim); line-height: 1.6; margin-bottom: 8px; }
+    .slang-example { font-size: 12px; color: rgba(201,169,110,0.65); font-style: italic; border-left: 2px solid var(--gold-dim); padding-left: 10px; }
+
+    .dirk-tip { margin: 0 0 40px; padding: 20px 24px; background: rgba(201,169,110,0.06); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; }
+    .dirk-tip-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .dirk-tip p { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin: 0; }
+
+    .divider { border: none; border-top: 1px solid rgba(201,169,110,0.1); margin: 48px 0; }
+
+    .survival-box {
+      background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.18);
+      border-radius: 12px; padding: 36px 40px; margin-bottom: 48px;
+    }
+    .survival-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; margin-bottom: 6px; }
+    .survival-box h3 em { font-style: italic; color: var(--gold); }
+    .survival-box p { font-size: 13px; color: var(--white-faint); margin-bottom: 20px; }
+    .survival-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .survival-list li { font-size: 13px; color: var(--white-dim); line-height: 1.5; }
+    .survival-list li strong { color: var(--gold); }
+
+    .cta-strip { margin: 72px 0 0; padding: 56px 60px; background: rgba(201,169,110,0.06); border-top: 1px solid rgba(201,169,110,0.12); border-bottom: 1px solid rgba(201,169,110,0.12); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .cta-strip-text .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-strip-text h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+    .cta-strip-text h2 em { font-style: italic; color: var(--gold); }
+    .cta-strip-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 480px; }
+    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 15px 36px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero-content { padding: 24px; } .content { padding: 24px; } .hero-bg-text { display: none; } .cta-strip { padding: 40px 24px; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item active"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="starthere.html" class="sidebar-item"><span class="icon">🧭</span> Start Here</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-bg-text">Lekker</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Cape Town Guide · Local Culture</div>
+      <h1 class="hero-title">Speak Like a<br><em>Local</em></h1>
+    </div>
+  </div>
+
+  <div class="content">
+    <p class="intro">South Africans have a language of their own — a glorious mix of Afrikaans, Zulu, Xhosa, English, and pure street creativity. Learn a few words and you'll instantly connect with locals in a way no tourist ever does.</p>
+    <p class="intro-note">Don't be shy about using them. Capetonians love it when visitors make the effort — and they'll correct you with a smile if you get it wrong.</p>
+
+    <!-- SURVIVAL BOX -->
+    <div class="survival-box">
+      <h3>The <em>Essential 8</em> — learn these before you land</h3>
+      <p>If you only remember eight words, make it these.</p>
+      <ul class="survival-list">
+        <li><strong>Howzit</strong> — Hello / How are you?</li>
+        <li><strong>Lekker</strong> — Nice, great, delicious, cool</li>
+        <li><strong>Ja</strong> — Yes (sounds like "yah")</li>
+        <li><strong>Sharp sharp</strong> — OK, agreed, no problem</li>
+        <li><strong>Braai</strong> — BBQ (sacred institution)</li>
+        <li><strong>Just now</strong> — Later (not now, not soon)</li>
+        <li><strong>Eish</strong> — Wow / Oh no / That's rough</li>
+        <li><strong>Robot</strong> — Traffic light (not a machine)</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- GREETINGS -->
+    <div class="section-block">
+      <h2 class="section-title">Greetings &amp; <em>Everyday</em></h2>
+      <p class="section-intro">How to say hello, yes, and everything in between.</p>
+      <div class="slang-grid">
+        <div class="slang-card">
+          <div class="slang-word">Howzit</div>
+          <div class="slang-pron">HOW-zit</div>
+          <div class="slang-meaning">Universal greeting meaning "How are you?" or simply "Hello." Used constantly, by everyone, in every context.</div>
+          <div class="slang-example">"Howzit bru, how's it going?"</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Ja</div>
+          <div class="slang-pron">Yah</div>
+          <div class="slang-meaning">Yes. From Afrikaans. You'll hear this instead of "yes" in almost every conversation.</div>
+          <div class="slang-example">"Ja, that braai was lekker hey."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Sharp sharp</div>
+          <div class="slang-pron">Sharp sharp</div>
+          <div class="slang-meaning">OK, agreed, no problem, sounds good. One "sharp" works too, but doubling it adds enthusiasm.</div>
+          <div class="slang-example">"Meet at 6?" — "Sharp sharp."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Lekker</div>
+          <div class="slang-pron">LECK-er</div>
+          <div class="slang-meaning">Nice, great, delicious, cool, enjoyable. The single most useful word in the Cape Town vocabulary. Use it for everything.</div>
+          <div class="slang-example">"That was a lekker day hey."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Eish</div>
+          <div class="slang-pron">Aysh</div>
+          <div class="slang-meaning">A versatile exclamation of surprise, dismay, disbelief or sympathy. From Zulu and Xhosa. Works in almost any situation.</div>
+          <div class="slang-example">"Eish, that traffic was bad."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Ag</div>
+          <div class="slang-pron">Ach</div>
+          <div class="slang-meaning">A sigh or mild expression — like "oh" or "ah." Can signal resignation, mild irritation, or warmth depending on tone.</div>
+          <div class="slang-example">"Ag, don't worry about it."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Yebo</div>
+          <div class="slang-pron">YEH-boh</div>
+          <div class="slang-meaning">Yes, in Zulu. Widely understood across South Africa. Often used enthusiastically.</div>
+          <div class="slang-example">"You coming to the braai?" — "Yebo!"</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Sommer</div>
+          <div class="slang-pron">SOM-er</div>
+          <div class="slang-meaning">Just because, randomly, without a specific reason. A very Afrikaans concept — doing something for the sheer sake of it.</div>
+          <div class="slang-example">"We just went for a drive sommer."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dirk-tip">
+      <div class="dirk-tip-label">Dirk's Tip</div>
+      <p>The fastest way to make a local smile: greet them with "Howzit" and end any compliment with "lekker." Works in a restaurant, at a market, on a hike — anywhere. They'll know immediately you're paying attention.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- TIME -->
+    <div class="section-block">
+      <h2 class="section-title">South African <em>Time</em></h2>
+      <p class="section-intro">This one will confuse you. Learn it early.</p>
+      <div class="slang-grid">
+        <div class="slang-card">
+          <div class="slang-word">Now now</div>
+          <div class="slang-pron">Now now</div>
+          <div class="slang-meaning">Soon — but not immediately. Could be 5 minutes, could be 30. Context-dependent. More urgent than "just now."</div>
+          <div class="slang-example">"I'll be there now now."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Just now</div>
+          <div class="slang-pron">Just now</div>
+          <div class="slang-meaning">Later. Not now. Possibly much later. The most misunderstood phrase for visitors — it does NOT mean immediately.</div>
+          <div class="slang-example">"I'll do it just now." (could be hours)</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Now</div>
+          <div class="slang-pron">Now</div>
+          <div class="slang-meaning">Actually means now. The only one of the three that means what it says — but locals rarely use it alone.</div>
+          <div class="slang-example">"Come now!" (means immediately)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dirk-tip">
+      <div class="dirk-tip-label">Dirk's Tip</div>
+      <p>Don't get frustrated by "just now." It's not rudeness — it's a genuine cultural relationship with time that locals are proud of. If something is truly urgent, say "right now" or "immediately." Otherwise, relax — you're in Cape Town.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PEOPLE -->
+    <div class="section-block">
+      <h2 class="section-title">People &amp; <em>Places</em></h2>
+      <p class="section-intro">Who's who and what things are called.</p>
+      <div class="slang-grid">
+        <div class="slang-card">
+          <div class="slang-word">Bru / Boet</div>
+          <div class="slang-pron">Brew / Boot</div>
+          <div class="slang-meaning">Bro, mate, friend. "Bru" is Cape Town coloured community slang that's gone mainstream. "Boet" is Afrikaans for brother, same warmth.</div>
+          <div class="slang-example">"My bru, you have to try the oysters."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Oke / Ou</div>
+          <div class="slang-pron">Oak / Oh</div>
+          <div class="slang-meaning">A guy, bloke, person. Completely neutral. "That oke over there" just means "that person."</div>
+          <div class="slang-example">"He's a good oke, very chilled."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">China</div>
+          <div class="slang-pron">CHY-na</div>
+          <div class="slang-meaning">Friend, mate. Originally from Cockney rhyming slang (china plate = mate). Common in Cape Town street culture.</div>
+          <div class="slang-example">"He's my china, known him for years."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Mzansi</div>
+          <div class="slang-pron">mm-ZAN-see</div>
+          <div class="slang-meaning">South Africa — the informal, proud name for the country. From the Xhosa word for "south." Used constantly in casual speech.</div>
+          <div class="slang-example">"Mzansi is the most beautiful country."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Robot</div>
+          <div class="slang-pron">ROH-bot</div>
+          <div class="slang-meaning">Traffic light. Not a machine. This will catch you off guard. "Turn left at the robot" is completely normal.</div>
+          <div class="slang-example">"Turn right at the second robot."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Bakkie</div>
+          <div class="slang-pron">BUCK-ee</div>
+          <div class="slang-meaning">A pickup truck. Very common vehicle in South Africa, very common word. If someone offers you a lift in their bakkie, it's a pickup.</div>
+          <div class="slang-example">"He drove it over in his bakkie."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Spaza</div>
+          <div class="slang-pron">SPA-za</div>
+          <div class="slang-meaning">A small informal shop, usually home-based, selling basics like bread, airtime, and snacks. The township convenience store.</div>
+          <div class="slang-example">"Grab some water from the spaza."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Sangoma</div>
+          <div class="slang-pron">san-GOH-ma</div>
+          <div class="slang-meaning">A traditional healer — part herbalist, part spiritual practitioner. A deeply respected figure in African culture. Not to be confused with a witch doctor.</div>
+          <div class="slang-example">"She consulted a sangoma before the decision."</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- FOOD & DRINK -->
+    <div class="section-block">
+      <h2 class="section-title">Food, Drink &amp; <em>Braai</em></h2>
+      <p class="section-intro">The most important vocabulary in the country.</p>
+      <div class="slang-grid">
+        <div class="slang-card">
+          <div class="slang-word">Braai</div>
+          <div class="slang-pron">Bry (rhymes with "cry")</div>
+          <div class="slang-meaning">A barbecue — but so much more than that. It's a social ritual, a cultural institution, a reason to gather. South Africans braai year-round, in any weather.</div>
+          <div class="slang-example">"We're having a braai on Sunday, join us."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Boerewors</div>
+          <div class="slang-pron">BOO-reh-vors</div>
+          <div class="slang-meaning">A spiced coiled sausage — the centrepiece of every braai. Made from beef, pork and spices. "Wors" for short. Non-negotiable at any braai.</div>
+          <div class="slang-example">"Throw on some wors, the braai's ready."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Biltong</div>
+          <div class="slang-pron">BIL-tong</div>
+          <div class="slang-meaning">Dried, cured meat — the South African answer to jerky but infinitely better. Beef, game or ostrich. Buy it everywhere. Eat it constantly.</div>
+          <div class="slang-example">"Pack some biltong for the hike."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Dop</div>
+          <div class="slang-pron">Dop</div>
+          <div class="slang-meaning">A drink — specifically an alcoholic one. "Having a dop" means having a drink. "Dop" can also mean to fail an exam, but in social settings it's always about the drink.</div>
+          <div class="slang-example">"Fancy a dop after work?"</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Rooibos</div>
+          <div class="slang-pron">ROY-bos</div>
+          <div class="slang-meaning">Red bush herbal tea — grown only in the Cederberg mountains near Cape Town. South Africa's most famous export. Ask for it everywhere.</div>
+          <div class="slang-example">"Can I get a rooibos, no milk."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Vetkoek</div>
+          <div class="slang-pron">FET-cook</div>
+          <div class="slang-meaning">Deep-fried dough bread filled with mince, jam, or cheese. A South African street food classic. The name literally means "fat cake."</div>
+          <div class="slang-example">"Get a vetkoek from the market stall."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Potjie</div>
+          <div class="slang-pron">POY-kee</div>
+          <div class="slang-meaning">A slow-cooked stew made in a cast-iron pot over coals. A weekend ritual — the slower the better. Never stir a potjie. Ever.</div>
+          <div class="slang-example">"The potjie's been on since this morning."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Naartjie</div>
+          <div class="slang-pron">NAR-chee</div>
+          <div class="slang-meaning">A tangerine or mandarin. From the Cape Malay community. You'll see them sold at markets and roadside stalls all over the Western Cape.</div>
+          <div class="slang-example">"Grab a bag of naartjies at the market."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dirk-tip">
+      <div class="dirk-tip-label">Dirk's Tip</div>
+      <p>If a local invites you to a braai, say yes. Always say yes. Bring something to drink, offer to help with the fire, and never rush. A braai is not a quick meal — it's an afternoon. It's one of the best ways to experience real South African culture.</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- EXPRESSIONS -->
+    <div class="section-block">
+      <h2 class="section-title">Expressions &amp; <em>Feelings</em></h2>
+      <p class="section-intro">What South Africans say when they feel something.</p>
+      <div class="slang-grid">
+        <div class="slang-card">
+          <div class="slang-word">Shame</div>
+          <div class="slang-pron">Shame</div>
+          <div class="slang-meaning">This one surprises visitors the most. "Shame" is used to express cuteness, sympathy, or endearment — not embarrassment. A puppy is "so shame." A sick child is "shame, poor thing."</div>
+          <div class="slang-example">"Look at that puppy — shame, so cute!"</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Hey</div>
+          <div class="slang-pron">Hey</div>
+          <div class="slang-meaning">Added to the end of sentences for emphasis or to invite agreement. A uniquely South African verbal tic you'll pick up within hours of arriving.</div>
+          <div class="slang-example">"That hike was hectic hey."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Jol</div>
+          <div class="slang-pron">Joll</div>
+          <div class="slang-meaning">A party, a fun event, a good time. Also a verb — to jol means to party or go out. Cape Town has excellent jolling options.</div>
+          <div class="slang-example">"What a jol that was last night."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Hectic</div>
+          <div class="slang-pron">HEC-tic</div>
+          <div class="slang-meaning">Intense, extreme, or impressive — not necessarily negative. A hectic view means an incredible view. Hectic traffic means very bad traffic. Context is everything.</div>
+          <div class="slang-example">"The sunset from Lion's Head was hectic."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Gatvol</div>
+          <div class="slang-pron">GHUT-fol</div>
+          <div class="slang-meaning">Fed up, done, had enough. Literally "full of hole" in Afrikaans. A very expressive way of saying you're completely over something.</div>
+          <div class="slang-example">"I'm gatvol of this traffic, eish."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Ubuntu</div>
+          <div class="slang-pron">oo-BOON-too</div>
+          <div class="slang-meaning">A Zulu/Xhosa philosophy meaning "I am because we are." Humanity, community, collective care. One of South Africa's most important and beautiful concepts.</div>
+          <div class="slang-example">"Ubuntu — that's why the community helped."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Skinner</div>
+          <div class="slang-pron">SKIN-er</div>
+          <div class="slang-meaning">Gossip, or to gossip. "What's the skinner?" means "what's the latest gossip?" A beloved pastime.</div>
+          <div class="slang-example">"Eish, the skinner at work today was bad."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Kak</div>
+          <div class="slang-pron">Kuck</div>
+          <div class="slang-meaning">Rubbish, bad, nonsense. A mild expletive by South African standards, used constantly in casual conversation. "That's kak" means "that's rubbish."</div>
+          <div class="slang-example">"The weather today is kak."</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- CAPE TOWN SPECIFIC -->
+    <div class="section-block">
+      <h2 class="section-title">Cape Town <em>Specific</em></h2>
+      <p class="section-intro">Words and phrases you'll only really hear in the Mother City.</p>
+      <div class="slang-grid">
+        <div class="slang-card">
+          <div class="slang-word">Kaap</div>
+          <div class="slang-pron">Karp</div>
+          <div class="slang-meaning">Afrikaans for "Cape" — as in Cape Town. Locals sometimes call the city "die Kaap" (the Cape). A term of affection.</div>
+          <div class="slang-example">"Nothing beats die Kaap in summer."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Bo-Kaap</div>
+          <div class="slang-pron">Boo-Karp</div>
+          <div class="slang-meaning">Literally "above the Cape" — the colourful Malay Quarter on the slopes of Signal Hill. One of Cape Town's most photographed neighbourhoods. Home of Cape Malay culture.</div>
+          <div class="slang-example">"Take a walk through Bo-Kaap at sunrise."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">The Berg</div>
+          <div class="slang-pron">The Berg</div>
+          <div class="slang-meaning">Table Mountain. Locals don't usually call it by its full name — it's "the Berg" (the mountain) or simply "the mountain." A constant reference point in daily life.</div>
+          <div class="slang-example">"You can see the Berg from here."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Koektail</div>
+          <div class="slang-pron">COOK-tail</div>
+          <div class="slang-meaning">Cookie / biscuit in Afrikaans. You'll see this on menus and in bakeries. Cape Town has a strong Afrikaans baking culture — the koektail is part of it.</div>
+          <div class="slang-example">"Two koektail with the coffee, please."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Tackies</div>
+          <div class="slang-pron">TACK-eez</div>
+          <div class="slang-meaning">Sneakers, trainers. Wear tackies on the mountain. Essential vocabulary for any outdoor activity in Cape Town.</div>
+          <div class="slang-example">"Wear your old tackies for the hike."</div>
+        </div>
+        <div class="slang-card">
+          <div class="slang-word">Trek</div>
+          <div class="slang-pron">Trek</div>
+          <div class="slang-meaning">To pull, or a long difficult journey. Also means to feel like doing something: "I don't have the trek" means "I can't be bothered." Used in English conversation all the time.</div>
+          <div class="slang-example">"I don't have the trek to walk there."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dirk-tip">
+      <div class="dirk-tip-label">Dirk's Tip</div>
+      <p>Cape Town's coloured community has its own rich dialect — a blend of Afrikaans, English and Malay that's unlike anything else in the world. The words "bru," "china," and "lekker" all flow from this culture. When you use them, you're connecting with something deep and uniquely Cape Town.</p>
+    </div>
+
+    <div class="cta-strip">
+      <div class="cta-strip-text">
+        <div class="eyebrow">Ready to explore?</div>
+        <h2>Build your perfect<br><em>Cape Town itinerary</em></h2>
+        <p>Now you speak the language — let's plan the trip. Tell Caipy when you're visiting and what you love, and we'll build a day-by-day plan around your travel style.</p>
+      </div>
+      <a href="itinerary.html" class="btn-cta">Build My Trip ✈️</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

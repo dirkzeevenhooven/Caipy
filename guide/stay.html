@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Where to Stay · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --stay: #2E6E8C;
+      --stay-light: #5fa8c8;
+      --stay-dim: rgba(46,110,140,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.88);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--stay); color: var(--stay-light); background: rgba(46,110,140,0.1); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 82vh; min-height: 540px;
+      background: url('/photos/twelve-apostles-hotel.jpeg') center center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.1) 0%, rgba(15,36,48,0.94) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 52px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--stay-light); margin-bottom: 14px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 7vw, 86px); font-weight: 300; line-height: 1.0; margin-bottom: 18px; }
+    .hero-title em { font-style: italic; color: var(--stay-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 520px; }
+    .hero-badge { position: absolute; top: 28px; right: 60px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(95,168,200,0.3); border-radius: 12px; padding: 14px 20px; max-width: 230px; text-align: center; }
+    .hero-badge-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--stay-light); line-height: 1; }
+    .hero-badge-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white-faint); margin-top: 4px; }
+
+    /* ── DIRK'S RULE ── */
+    .dirks-rule { background: linear-gradient(135deg, rgba(46,110,140,0.08), transparent); border-bottom: 1px solid rgba(46,110,140,0.12); padding: 40px 60px; display: flex; align-items: center; gap: 28px; }
+    .rule-icon { font-size: 36px; flex-shrink: 0; }
+    .rule-text { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-style: italic; color: var(--white); line-height: 1.6; }
+    .rule-text strong { color: var(--stay-light); font-style: normal; }
+
+    /* ── INTRO ── */
+    .intro { padding: 52px 60px; border-bottom: 1px solid rgba(46,110,140,0.1); }
+    .intro-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--stay-light); margin-bottom: 12px; }
+    .intro-heading { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; line-height: 1.3; max-width: 700px; margin-bottom: 14px; }
+    .intro-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; max-width: 660px; }
+
+    /* ── AREA TABS ── */
+    .area-wrap { padding: 52px 60px 80px; }
+    .area-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
+    .area-tab { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 22px; border-radius: 40px; border: 1.5px solid rgba(46,110,140,0.3); color: var(--white-dim); background: transparent; cursor: pointer; transition: all 0.2s; }
+    .area-tab.active, .area-tab:hover { background: var(--stay); color: var(--white); border-color: var(--stay); }
+    .area-panel { display: none; }
+    .area-panel.active { display: block; }
+
+    /* ── AREA NOTE ── */
+    .area-note { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 28px; padding: 16px 20px; border-left: 3px solid var(--stay); background: rgba(46,110,140,0.06); border-radius: 0 8px 8px 0; max-width: 700px; }
+
+    /* ── TIER TOGGLE ── */
+    .tier-toggle { display: flex; margin-bottom: 28px; border: 1.5px solid rgba(46,110,140,0.3); border-radius: 8px; overflow: hidden; width: fit-content; }
+    .tier-btn { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 22px; border-right: 1.5px solid rgba(46,110,140,0.3); color: var(--white-dim); background: transparent; cursor: pointer; transition: all 0.2s; }
+    .tier-btn:last-child { border-right: none; }
+    .tier-btn.active { background: var(--stay); color: var(--white); }
+    .tier-panel { display: none; }
+    .tier-panel.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+    /* ── HOTEL CARDS ── */
+    .hotel-card { background: var(--ocean-mid); border-radius: 12px; border: 1px solid rgba(46,110,140,0.15); overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s; }
+    .hotel-card:hover { border-color: rgba(95,168,200,0.4); transform: translateY(-2px); }
+    .hotel-photo { height: 180px; background-size: cover; background-position: center; position: relative; }
+    .hotel-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(15,36,48,0.8) 100%); }
+    .hotel-tier-badge { position: absolute; top: 12px; left: 12px; background: var(--stay); color: #fff; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; }
+    .hotel-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .hotel-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; line-height: 1.2; color: var(--white); }
+    .hotel-quote { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic; color: var(--stay-light); line-height: 1.5; }
+    .hotel-desc { font-size: 12px; color: var(--white-dim); line-height: 1.7; flex: 1; }
+    .hotel-price { font-size: 12px; font-weight: 600; color: var(--gold-light); }
+    .hotel-tips { margin-top: 4px; }
+    .hotel-tip { font-size: 11px; color: var(--white-faint); line-height: 1.6; padding: 2px 0; }
+    .hotel-tip::before { content: '→ '; color: var(--stay-light); }
+    .hotel-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--stay); color: var(--white); border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s; margin-top: auto; }
+    .hotel-btn:hover { background: var(--stay-light); }
+
+    /* ── AFFILIATE NOTE ── */
+    .affiliate-note { padding: 32px 60px; border-top: 1px solid rgba(46,110,140,0.1); }
+    .affiliate-note p { font-size: 12px; color: var(--white-faint); line-height: 1.7; max-width: 600px; }
+    .affiliate-note a { color: var(--stay-light); text-decoration: none; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .hero-content { padding: 32px 24px; }
+      .hero-badge { display: none; }
+      .dirks-rule { padding: 28px 24px; }
+      .intro { padding: 32px 24px; }
+      .area-wrap { padding: 32px 24px 60px; }
+    }
+
+    /* ── HOTEL ACTIONS ── */
+    .hotel-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+    .hotel-map-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border: 1px solid rgba(95,168,200,0.3); color: var(--stay-light); border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .hotel-map-link:hover { background: rgba(95,168,200,0.1); border-color: var(--stay-light); }
+
+    /* ── CTA STRIP ── */
+    .cta-strip { padding: 56px 60px; background: rgba(201,169,110,0.05); border-top: 1px solid rgba(201,169,110,0.12); display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .cta-strip-text .strip-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-strip-text h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 2.5vw, 34px); font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+    .cta-strip-text h3 em { font-style: italic; color: var(--gold); }
+    .cta-strip-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 500px; }
+    .btn-cta-gold { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 15px 36px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-cta-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    /* ── RELATED ── */
+    .related-strip { padding: 48px 60px; border-top: 1px solid rgba(201,169,110,0.12); }
+
+    /* ── SCROLL ANIMATION ── */
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Curated<br>Cape Town Guide</div>
+    <div class="sub">By Dirk Zeevenhooven</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item active"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat & Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</nav>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">✦ Curated Accommodation</div>
+      <h1 class="hero-title">Where to<br><em>Sleep in Style</em></h1>
+      <p class="hero-sub">Hand-picked hotels, guesthouses and boutique stays across Cape Town's best neighbourhoods — for every budget.</p>
+    </div>
+    <div class="hero-badge">
+      <div class="hero-badge-num">13</div>
+      <div class="hero-badge-label">Curated Properties</div>
+    </div>
+  </div>
+
+  <!-- DIRK'S RULE -->
+  <div class="dirks-rule">
+    <div class="rule-icon">🏨</div>
+    <div class="rule-text">
+      <strong>Where you stay changes everything.</strong> Sea Point puts you on the promenade. Gardens puts you in the city's soul. Camps Bay puts the ocean at your feet. Choose your base first — the rest follows.
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro fade-up">
+    <div class="intro-label">Before You Book</div>
+    <h2 class="intro-heading">Cape Town has four distinct bases — each gives you a completely different experience.</h2>
+    <p class="intro-text">Sea Point is the Atlantic Seaboard's most liveable neighbourhood — great restaurants, a long promenade, and 10 minutes from everywhere. The City Bowl and Gardens are walkable, historic, and full of character. Camps Bay is pure glamour — beach, mountain backdrop, sundowners. The Waterfront is world-class and convenient but can feel touristy. All four are safe, well-serviced, and within easy reach of each other.</p>
+  </div>
+
+  <!-- AREA TABS -->
+  <div class="area-wrap">
+    <div class="area-tabs fade-up">
+      <button class="area-tab active" onclick="switchArea('seapoint', this)">Sea Point</button>
+      <button class="area-tab" onclick="switchArea('citybowl', this)">City Bowl</button>
+      <button class="area-tab" onclick="switchArea('campsbay', this)">Camps Bay</button>
+      <button class="area-tab" onclick="switchArea('waterfront', this)">Waterfront</button>
+    </div>
+
+    <!-- ── SEA POINT ── -->
+    <div id="area-seapoint" class="area-panel active fade-up">
+      <p class="area-note">Sea Point is the Atlantic Seaboard's most liveable neighbourhood — beach promenade, excellent restaurants, and 10 minutes from the City Bowl. The best base for most first-time visitors.</p>
+      <div class="tier-toggle">
+        <button class="tier-btn active" onclick="switchTier('seapoint','budget',this)">Budget</button>
+        <button class="tier-btn" onclick="switchTier('seapoint','midrange',this)">Midrange</button>
+        <button class="tier-btn" onclick="switchTier('seapoint','luxury',this)">Luxury</button>
+      </div>
+      <div id="sp-budget" class="tier-panel active">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/Signal-Hill.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Budget</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Protea Hotel Sea Point</div>
+            <div class="hotel-quote">"Reliable, well-located, and walking distance to the promenade. Great value."</div>
+            <div class="hotel-desc">Reliable Marriott brand hotel with sea views, a pool, and easy access to restaurants on Main Road. Clean, well-run, and excellent value for the location.</div>
+            <div class="hotel-price">from ~R800 – R1,400 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Ask for a sea-facing room</div>
+              <div class="hotel-tip">Walk the promenade to Green Point — 20 min</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/protea-hotel-fire-ice-sea-point.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/Signal-Hill.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Budget</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">POD Boutique Hostel</div>
+            <div class="hotel-quote">"Cape Town's best-designed hostel — private pods, rooftop terrace, social vibe."</div>
+            <div class="hotel-desc">Private pods, a rooftop terrace with Atlantic views, and a social atmosphere that makes it easy to meet fellow travellers. Perfect for solo visitors and couples on a budget.</div>
+            <div class="hotel-price">from ~R650 – R1,100 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Private rooms available — not just dorms</div>
+              <div class="hotel-tip">Rooftop sundowners are excellent</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/pod-sea-point.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+      <div id="sp-midrange" class="tier-panel">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/Signal-Hill.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Midrange</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Winchester Mansions Hotel</div>
+            <div class="hotel-quote">"Sunday jazz brunch on the courtyard. A Cape Town institution for 80 years."</div>
+            <div class="hotel-desc">Elegant Cape Dutch architecture, a beautiful courtyard pool, and Sunday jazz brunches that draw locals and visitors alike. Right on the Sea Point promenade.</div>
+            <div class="hotel-price">from ~R2,500 – R4,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Book the Sunday jazz brunch even if not staying</div>
+              <div class="hotel-tip">Sea-facing rooms are worth the premium</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/winchester-mansions.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/Signal-Hill.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Midrange</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">The Marly Boutique Hotel</div>
+            <div class="hotel-quote">"Rooftop pool with Atlantic Seaboard views. Stylish, modern, exceptionally well-run."</div>
+            <div class="hotel-desc">Design-forward boutique hotel with a rooftop pool overlooking the Atlantic Seaboard. Exceptional service and a strong sense of place — a step above the usual.</div>
+            <div class="hotel-price">from ~R3,000 – R5,500 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Rooftop pool is stunning at sunset</div>
+              <div class="hotel-tip">Short Uber to Camps Bay and the City Bowl</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/the-marly.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+      <div id="sp-luxury" class="tier-panel">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/Signal-Hill.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Ellerman House</div>
+            <div class="hotel-quote">"One of Africa's finest small hotels. Panoramic ocean views. An extraordinary wine cellar."</div>
+            <div class="hotel-desc">A historic Edwardian villa in Bantry Bay — one of Africa's most celebrated small luxury hotels. Panoramic Atlantic views, over 8,000 wines in the cellar, and deeply personalised service.</div>
+            <div class="hotel-price">from ~R12,000 – R22,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Ask for a wine cellar tasting — extraordinary</div>
+              <div class="hotel-tip">Private pool has uninterrupted ocean views</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/ellerman-house.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CITY BOWL ── -->
+    <div id="area-citybowl" class="area-panel fade-up">
+      <p class="area-note">The City Bowl and Gardens are Cape Town's historic heart — walkable, culturally rich, and close to Long Street, the Company's Garden, and the V&A Waterfront. Best for urban explorers.</p>
+      <div class="tier-toggle">
+        <button class="tier-btn active" onclick="switchTier('citybowl','budget',this)">Budget</button>
+        <button class="tier-btn" onclick="switchTier('citybowl','midrange',this)">Midrange</button>
+        <button class="tier-btn" onclick="switchTier('citybowl','luxury',this)">Luxury</button>
+      </div>
+      <div id="cb-budget" class="tier-panel active">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/bree-street.jpg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Budget</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">The Backpack Guesthouse</div>
+            <div class="hotel-quote">"Award-winning, Fair Trade certified. The best guesthouse in Cape Town for the price."</div>
+            <div class="hotel-desc">Cape Town's most beloved guesthouse — award-winning, Fair Trade certified, with private rooms available. Great social atmosphere and a central Gardens location near everything.</div>
+            <div class="hotel-price">from ~R550 – R1,200 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Private en-suite rooms available — not just dorms</div>
+              <div class="hotel-tip">Walking distance to Long Street and the Company's Garden</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/the-backpack.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/bree-street.jpg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Budget</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Ashanti Gardens Guesthouse</div>
+            <div class="hotel-quote">"Popular, sociable, great pool. Short walk from Long Street and all the action."</div>
+            <div class="hotel-desc">Popular guesthouse with a pool, bar, and a great communal vibe in the heart of Gardens. A short walk from Long Street. Clean, well-run, and excellent value.</div>
+            <div class="hotel-price">from ~R600 – R1,400 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Pool is a great afternoon hangout</div>
+              <div class="hotel-tip">Ask staff for their restaurant picks — always reliable</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/ashanti-lodge-gardens.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+      <div id="cb-midrange" class="tier-panel">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/bree-street.jpg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Midrange</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Four Rosmead Boutique Hotel</div>
+            <div class="hotel-quote">"Only 8 rooms. Victorian villa with a garden pool. A genuine hidden gem."</div>
+            <div class="hotel-desc">An exquisite Victorian villa in Gardens with only 8 rooms — antiques, a beautiful garden pool, and breakfasts that guests rave about. One of Cape Town's best-kept secrets.</div>
+            <div class="hotel-price">from ~R2,800 – R4,500 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Book well ahead — only 8 rooms</div>
+              <div class="hotel-tip">Walking distance to the Company's Garden</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/four-rosmead.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/bree-street.jpg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Midrange</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Daddy Long Legs Art Hotel</div>
+            <div class="hotel-quote">"13 rooms, each designed by a different South African artist. On Long Street. Completely unique."</div>
+            <div class="hotel-desc">Cape Town's most creative hotel — 13 rooms, each designed by a different local artist. In the thick of Long Street. Quirky, memorable, and surprisingly affordable.</div>
+            <div class="hotel-price">from ~R1,800 – R2,800 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Ask for your favourite room theme when booking</div>
+              <div class="hotel-tip">Long Street restaurants and bars at your door</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/daddy-long-legs.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+      <div id="cb-luxury" class="tier-panel">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/bree-street.jpg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Belmond Mount Nelson Hotel</div>
+            <div class="hotel-quote">"The Pink Lady. Cape Town's most iconic hotel since 1899. Afternoon tea is a Cape Town institution."</div>
+            <div class="hotel-desc">Cape Town's most historic and beloved hotel — surrounded by manicured gardens at the foot of Table Mountain. Afternoon tea at The Nellie is a rite of passage.</div>
+            <div class="hotel-price">from ~R8,000 – R18,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Afternoon tea (14:00–17:30) is worth it even if not staying</div>
+              <div class="hotel-tip">The garden pool is stunning on a summer afternoon</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/mount-nelson.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/bree-street.jpg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Kensington Place</div>
+            <div class="hotel-quote">"8 suites on the Higgovale hillside. Sweeping City Bowl views. Feels like a private house."</div>
+            <div class="hotel-desc">8 suites perched on the Higgovale hillside with sweeping views over the City Bowl. Intimate, design-led, and exceptionally well-run — an alternative to the Pink Lady for discerning travellers.</div>
+            <div class="hotel-price">from ~R5,500 – R9,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Every room has a private terrace or balcony</div>
+              <div class="hotel-tip">Short walk into the Gardens neighbourhood</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/kensington-place.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CAMPS BAY ── -->
+    <div id="area-campsbay" class="area-panel fade-up">
+      <p class="area-note">Camps Bay is Cape Town's glamour strip — a long white-sand beach, the Twelve Apostles mountain range as a backdrop, and some of the best sunset spots in the world. Expect to pay a premium.</p>
+      <div class="tier-toggle">
+        <button class="tier-btn active" onclick="switchTier('campsbay','midrange',this)">Midrange</button>
+        <button class="tier-btn" onclick="switchTier('campsbay','luxury',this)">Luxury</button>
+      </div>
+      <div id="camb-midrange" class="tier-panel active">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/camps-bay.webp')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Midrange</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Camps Bay Retreat</div>
+            <div class="hotel-quote">"Manor house in the kloof above Camps Bay. Quieter, more intimate than the strip."</div>
+            <div class="hotel-desc">A beautifully restored manor house set in the kloof above Camps Bay — lush gardens, two pools, and a spa. More intimate than the beachfront hotels with easy access down to the strip.</div>
+            <div class="hotel-price">from ~R3,500 – R7,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Request a mountain-view room for sunrise</div>
+              <div class="hotel-tip">The spa is excellent — book ahead</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/camps-bay-retreat.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+      <div id="camb-luxury" class="tier-panel">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/camps-bay.webp')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">The Bay Hotel</div>
+            <div class="hotel-quote">"Right on the beach. Four pools. The Twelve Apostles as your backdrop. The quintessential Camps Bay."</div>
+            <div class="hotel-desc">The Bay Hotel sits directly on Camps Bay beach with four pools, three restaurants, and uninterrupted views of the Twelve Apostles. The benchmark Camps Bay experience.</div>
+            <div class="hotel-price">from ~R6,000 – R14,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Book a sea-facing room — the views are extraordinary</div>
+              <div class="hotel-tip">Sundowners at the beach bar as the mountains turn pink</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/the-bay.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/camps-bay.webp')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Twelve Apostles Hotel & Spa</div>
+            <div class="hotel-quote">"Tucked between mountains and ocean. One of the most dramatic hotel settings in Africa."</div>
+            <div class="hotel-desc">Set on the road to Hout Bay between the Twelve Apostles mountains and the Atlantic — one of Africa's most dramatic hotel locations. World-class spa and private cinema.</div>
+            <div class="hotel-price">from ~R7,500 – R16,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">The spa is among the best in Africa</div>
+              <div class="hotel-tip">Hike directly into Table Mountain National Park</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/twelve-apostles.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WATERFRONT ── -->
+    <div id="area-waterfront" class="area-panel fade-up">
+      <p class="area-note">The V&A Waterfront is Cape Town's premier harbour precinct — world-class shopping, restaurants, and the departure point for Robben Island. De Waterkant next door is Cape Town's most charming village-like neighbourhood.</p>
+      <div class="tier-toggle">
+        <button class="tier-btn active" onclick="switchTier('waterfront','budget',this)">Budget</button>
+        <button class="tier-btn" onclick="switchTier('waterfront','midrange',this)">Midrange</button>
+        <button class="tier-btn" onclick="switchTier('waterfront','luxury',this)">Luxury</button>
+      </div>
+      <div id="wf-budget" class="tier-panel active">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/waterfront.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Budget</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Protea Hotel Breakwater Lodge</div>
+            <div class="hotel-quote">"Set in a converted Victorian prison on the Waterfront. An only-in-Cape-Town story."</div>
+            <div class="hotel-desc">Set in a converted 19th-century prison on the edge of the V&A Waterfront — a uniquely Cape Town experience. Affordable, well-located, and surprisingly comfortable.</div>
+            <div class="hotel-price">from ~R1,200 – R2,200 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Ask about the history of the building — fascinating</div>
+              <div class="hotel-tip">Robben Island ferry is a 5-minute walk</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/breakwater-lodge.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+      <div id="wf-midrange" class="tier-panel">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/waterfront.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Midrange</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">DoubleTree by Hilton Cape Town</div>
+            <div class="hotel-quote">"Modern, well-run, rooftop pool. One of the best midrange options near the harbour."</div>
+            <div class="hotel-desc">Modern Hilton hotel on the edge of the Waterfront with a rooftop pool and reliable service. One of the best midrange options in the harbour precinct.</div>
+            <div class="hotel-price">from ~R2,500 – R4,500 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Rooftop pool has great Table Mountain views</div>
+              <div class="hotel-tip">5-minute walk to the V&A Waterfront</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/doubletree-by-hilton-cape-town.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/waterfront.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Midrange</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Village & Life De Waterkant</div>
+            <div class="hotel-quote">"Boutique apartments in De Waterkant. Self-catering with concierge. Ideal for longer stays."</div>
+            <div class="hotel-desc">Boutique apartments and suites in the heart of De Waterkant — Cape Town's most charming neighbourhood. Self-catering with concierge service, ideal for couples and families.</div>
+            <div class="hotel-price">from ~R2,800 – R5,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Cape Quarter market and restaurants at your door</div>
+              <div class="hotel-tip">10-minute walk to the Waterfront</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/village-n-life-de-waterkant.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+      <div id="wf-luxury" class="tier-panel">
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/waterfront.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">Cape Grace Hotel</div>
+            <div class="hotel-quote">"Between the yacht basin and the harbour. Exceptional whisky bar. Intimate scale."</div>
+            <div class="hotel-desc">Quietly positioned between the yacht marina and the harbour, Cape Grace has a warmth and intimacy that larger Waterfront hotels lack. The Signal whisky bar is one of Africa's finest.</div>
+            <div class="hotel-price">from ~R8,000 – R16,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">The Signal whisky bar has over 400 whiskies</div>
+              <div class="hotel-tip">Borrow hotel bikes to explore the city</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/cape-grace.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/waterfront.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">The Silo Hotel</div>
+            <div class="hotel-quote">"28 rooms inside a converted grain silo. Bubble windows. Zeitz MOCAA below. Extraordinary."</div>
+            <div class="hotel-desc">Cape Town's most visually dramatic hotel — 28 rooms inside a converted grain elevator with iconic bubble windows. The Zeitz Museum of Contemporary African Art is on the floors below.</div>
+            <div class="hotel-price">from ~R10,000 – R28,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Rooftop bar has the best Table Mountain view in the city</div>
+              <div class="hotel-tip">The Zeitz MOCAA museum is world-class African art</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/the-silo.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+        <div class="hotel-card fade-up">
+          <div class="hotel-photo" style="background-image:url('../photos/waterfront.jpeg')">
+            <div class="hotel-photo-overlay"></div>
+            <div class="hotel-tier-badge">Luxury</div>
+          </div>
+          <div class="hotel-body">
+            <div class="hotel-name">One&Only Cape Town</div>
+            <div class="hotel-quote">"Two private islands. Nobu restaurant. The benchmark for Cape Town luxury."</div>
+            <div class="hotel-desc">An island resort in the heart of the Waterfront — two private islands connected by bridges, a world-class spa, and Nobu Cape Town. The undisputed benchmark for luxury in the Mother City.</div>
+            <div class="hotel-price">from ~R9,000 – R22,000 / night</div>
+            <div class="hotel-tips">
+              <div class="hotel-tip">Nobu restaurant is exceptional — book ahead</div>
+              <div class="hotel-tip">Sunset cocktails on the marina terrace</div>
+            </div>
+            <a class="hotel-btn" href="https://www.booking.com/hotel/za/one-and-only-cape-town.html" target="_blank" rel="noopener">Book on Booking.com →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /area-wrap -->
+
+  <!-- CTA STRIP -->
+  <div class="cta-strip">
+    <div class="cta-strip-text">
+      <div class="strip-eyebrow">Plan Your Full Trip</div>
+      <h3>Not sure which area is right<br>for <em>your trip?</em></h3>
+      <p>Tell Caipy your dates, travel style, and what matters most to you — she'll recommend the right neighbourhood and hotels to match.</p>
+    </div>
+    <a href="itinerary.html" class="btn-cta-gold">Build My Trip ✈️</a>
+  </div>
+
+  <!-- RELATED PAGES -->
+  <div class="related-strip">
+    <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#C9A96E;margin-bottom:24px;">Explore More</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+      <a href="neighbourhoods.html" style="display:block;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.12);border-radius:10px;padding:20px 22px;text-decoration:none;color:#FAF8F4;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(201,169,110,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(201,169,110,0.12)'">
+        <div style="font-size:22px;margin-bottom:8px;">🏘️</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:4px;">Neighbourhoods</div>
+        <div style="font-size:12px;color:rgba(250,248,244,0.55);">Deep dive into all 9 areas</div>
+      </a>
+      <a href="budget.html" style="display:block;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.12);border-radius:10px;padding:20px 22px;text-decoration:none;color:#FAF8F4;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(201,169,110,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(201,169,110,0.12)'">
+        <div style="font-size:22px;margin-bottom:8px;">💰</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:4px;">What Will It Cost?</div>
+        <div style="font-size:12px;color:rgba(250,248,244,0.55);">Full budget breakdown for your trip</div>
+      </a>
+      <a href="safety.html" style="display:block;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.12);border-radius:10px;padding:20px 22px;text-decoration:none;color:#FAF8F4;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(201,169,110,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(201,169,110,0.12)'">
+        <div style="font-size:22px;margin-bottom:8px;">🛡️</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:4px;">Safety Guide</div>
+        <div style="font-size:12px;color:rgba(250,248,244,0.55);">Area safety &amp; what to know</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- AFFILIATE NOTE -->
+  <div class="affiliate-note">
+    <p>Booking links go directly to Booking.com. All prices are approximate and subject to seasonal variation. Prices shown in South African Rand (ZAR). The Cape Town Guide may earn a commission on bookings made through these links — at no extra cost to you.</p>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+  function switchArea(area, btn) {
+    document.querySelectorAll('.area-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.area-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('area-' + area).classList.add('active');
+    btn.classList.add('active');
+  }
+  function switchTier(area, tier, btn) {
+    const prefix = { seapoint: 'sp', citybowl: 'cb', campsbay: 'camb', waterfront: 'wf' };
+    const p = prefix[area];
+    const panel = document.getElementById('area-' + area);
+    panel.querySelectorAll('.tier-panel').forEach(t => t.classList.remove('active'));
+    panel.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(p + '-' + tier).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Add map links to all hotel cards
+  document.querySelectorAll('.hotel-card').forEach(card => {
+    const name = card.querySelector('.hotel-name')?.textContent.trim();
+    const btn = card.querySelector('.hotel-btn');
+    if (name && btn) {
+      const mapUrl = 'https://maps.google.com/?q=' + encodeURIComponent(name + ' Cape Town');
+      const mapLink = document.createElement('a');
+      mapLink.href = mapUrl;
+      mapLink.target = '_blank';
+      mapLink.rel = 'noopener';
+      mapLink.className = 'hotel-map-link';
+      mapLink.textContent = '📍 Map';
+      const actions = document.createElement('div');
+      actions.className = 'hotel-actions';
+      btn.parentNode.insertBefore(actions, btn);
+      actions.appendChild(btn);
+      actions.appendChild(mapLink);
+    }
+  });
+
+  // Scroll animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

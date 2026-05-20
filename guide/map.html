@@ -71,6 +71,14 @@
     .topbar-search input::placeholder { color: rgba(250,248,244,0.35); }
     .search-icon { color: var(--gold); font-size: 14px; }
 
+    /* ── INTRO BAR ── */
+    .intro-bar {
+      padding: 7px 20px; background: rgba(15,36,48,0.95);
+      border-bottom: 1px solid rgba(201,169,110,0.08);
+      font-size: 12px; color: rgba(250,248,244,0.5); line-height: 1.4;
+      flex-shrink: 0;
+    }
+
     /* ── FILTER BAR ── */
     .filter-bar {
       display: flex; align-items: center; gap: 8px; padding: 10px 20px;
@@ -135,6 +143,7 @@
     .panel-desc { font-size: 13px; line-height: 1.7; color: var(--white-dim); margin-bottom: 20px; }
     .panel-tips { margin-bottom: 20px; }
     .panel-tips h4 { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .panel-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; opacity: 0.75; }
     .panel-tip { display: flex; gap: 8px; font-size: 13px; color: var(--white-dim); margin-bottom: 8px; line-height: 1.5; }
     .panel-tip::before { content: '→'; color: var(--gold); flex-shrink: 0; }
     .panel-actions { display: flex; flex-direction: column; gap: 8px; }
@@ -209,6 +218,7 @@
     .cat-hikes { background: #7C4A7C; }
     .cat-wine { background: #8B3A62; }
     .cat-culture { background: #6E7C4A; }
+    .cat-stay    { background: #2E6E8C; }
     .cat-safety { background: #C09A3A; }
 
     .tag-experiences { background: rgba(201,169,110,0.15); color: var(--gold); }
@@ -244,25 +254,28 @@
     <div class="brand">Planet Curated</div>
     <div class="sub">Cape Town Guide</div>
   </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
   <div class="sidebar-section">Dashboard</div>
-  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
   <a href="map.html" class="sidebar-item active"><span class="icon">🗺️</span> Interactive Map</a>
   <div class="sidebar-section">Discover</div>
   <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
   <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
-  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
   <div class="sidebar-section">Eat & Drink</div>
-  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
-  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
   <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
   <div class="sidebar-section">Outdoors</div>
   <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
-  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
   <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
   <div class="sidebar-section">Plan Your Trip</div>
   <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
-  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
-  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Travel Essentials</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
   <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
 </nav>
 
@@ -276,6 +289,9 @@
       <input type="text" id="searchInput" placeholder="Search locations, e.g. 'sunset spot with kids'…" />
     </div>
   </div>
+
+  <!-- INTRO -->
+  <div class="intro-bar">Explore Cape Town by interest — from beaches, hikes and wine estates to restaurants, hidden gems and places to stay. Click any pin for Dirk's insider tips, practical notes and booking links.</div>
 
   <!-- FILTER BAR -->
   <div class="filter-bar">
@@ -303,6 +319,9 @@
     <button class="filter-btn" data-cat="culture">
       <span class="filter-dot cat-culture"></span> Culture
     </button>
+    <button class="filter-btn" data-cat="stay">
+      <span class="filter-dot cat-stay"></span> Where to Stay
+    </button>
   </div>
 
   <!-- MAP WRAP -->
@@ -319,6 +338,7 @@
       <div class="legend-item"><div class="legend-dot cat-hikes"></div> Hikes</div>
       <div class="legend-item"><div class="legend-dot cat-wine"></div> Wine</div>
       <div class="legend-item"><div class="legend-dot cat-culture"></div> Culture</div>
+      <div class="legend-item"><div class="legend-dot cat-stay"></div> Where to Stay</div>
     </div>
 
     <!-- INFO PANEL -->
@@ -342,7 +362,7 @@
 <!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
-    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
     <a href="map.html" class="bottom-nav-item active"><span class="nav-icon">🗺️</span>Map</a>
     <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
     <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
@@ -597,6 +617,154 @@ const locations = [
     desc: 'Set on the eastern slopes of Table Mountain, Kirstenbosch is one of the world\'s great botanical gardens. 7,000 plant species, the famous Boomslang canopy walkway, and Sunday summer concerts.',
     tips: ['Summer sunset concerts (Nov–Apr) — bring a picnic and blanket', 'The Boomslang canopy walkway gives a different perspective', 'Go at opening time for the best light and fewest people', 'The fynbos section is unique — found nowhere else on earth'],
     duration: '2–4 hrs', price: 'R220', booking: 'https://www.sanbi.org/gardens/kirstenbosch'
+  },
+
+  // WHERE TO STAY — SEA POINT
+  {
+    id: 'hotel-protea-seapoint', cat: 'stay', emoji: '🏨',
+    name: 'Protea Hotel Sea Point', lat: -33.9267, lng: 18.3847,
+    photo: '../photos/Signal-Hill.jpeg',
+    tag: 'Budget · Sea Point',
+    quote: 'Reliable, well-located, and walking distance to the promenade. Great value.',
+    desc: 'Reliable Marriott brand hotel on the Sea Point promenade with sea views. Clean rooms, pool, and easy access to restaurants. Excellent value for the location.',
+    tips: ['Ask for a sea-facing room', 'Walk the promenade to Green Point — 20 min', 'Close to many restaurants on Main Road'],
+    duration: 'Stay', price: 'from ~R800/night', booking: 'https://www.booking.com/hotel/za/protea-hotel-fire-ice-sea-point.html'
+  },
+  {
+    id: 'hotel-winchester-mansions', cat: 'stay', emoji: '🏨',
+    name: 'Winchester Mansions Hotel', lat: -33.9269, lng: 18.3854,
+    photo: '../photos/Signal-Hill.jpeg',
+    tag: 'Midrange · Sea Point',
+    quote: 'Sunday jazz brunch on the courtyard. A Cape Town institution.',
+    desc: 'An elegant Cape Dutch hotel right on the Sea Point promenade. Beautiful courtyard pool and Sunday jazz brunches that draw locals and visitors alike.',
+    tips: ['Book the Sunday jazz brunch even if not staying', 'Sea-facing rooms are worth the premium', 'Walk to Giovanni\'s Deli — 5 min'],
+    duration: 'Stay', price: 'from ~R2,500/night', booking: 'https://www.booking.com/hotel/za/winchester-mansions.html'
+  },
+  {
+    id: 'hotel-marly', cat: 'stay', emoji: '🏨',
+    name: 'The Marly Boutique Hotel', lat: -33.9278, lng: 18.3748,
+    photo: '../photos/Signal-Hill.jpeg',
+    tag: 'Midrange · Sea Point',
+    quote: 'Rooftop pool with Atlantic Seaboard views. Stylish and well-run.',
+    desc: 'Design-forward boutique hotel with a rooftop pool overlooking the Atlantic Seaboard. Exceptional service and a strong sense of place — a step above the usual.',
+    tips: ['Rooftop pool is stunning at sunset', 'Short Uber to Camps Bay and the City Bowl', 'Breakfast on the terrace is excellent'],
+    duration: 'Stay', price: 'from ~R3,000/night', booking: 'https://www.booking.com/hotel/za/the-marly.html'
+  },
+  {
+    id: 'hotel-ellerman', cat: 'stay', emoji: '🏨',
+    name: 'Ellerman House', lat: -33.9213, lng: 18.3793,
+    photo: '../photos/Signal-Hill.jpeg',
+    tag: 'Luxury · Bantry Bay',
+    quote: 'One of Africa\'s finest small hotels. Panoramic ocean views. Extraordinary wine cellar.',
+    desc: 'A historic villa in Bantry Bay — one of Africa\'s most celebrated small luxury hotels. Panoramic Atlantic views, an exceptional wine cellar, and deeply personalised service.',
+    tips: ['The wine cellar holds over 8,000 bottles — ask for a tasting', 'Private pool has uninterrupted ocean views', 'Book the villa for the ultimate experience'],
+    duration: 'Stay', price: 'from ~R12,000/night', booking: 'https://www.booking.com/hotel/za/ellerman-house.html'
+  },
+
+  // WHERE TO STAY — CITY BOWL / GARDENS
+  {
+    id: 'hotel-backpack', cat: 'stay', emoji: '🏨',
+    name: 'The Backpack Guesthouse', lat: -33.9366, lng: 18.4085,
+    photo: '../photos/bree-street.jpg',
+    tag: 'Budget · Gardens',
+    quote: 'Award-winning, Fair Trade certified. The best backpacker in Cape Town.',
+    desc: 'Cape Town\'s most beloved guesthouse — award-winning, Fair Trade certified, with private rooms available. Great social atmosphere and a central Gardens location.',
+    tips: ['Private en-suite rooms available — not just dorms', 'Staff are incredibly helpful for planning your trip', 'Walking distance to Long Street and the Company\'s Garden'],
+    duration: 'Stay', price: 'from ~R550/night', booking: 'https://www.booking.com/hotel/za/the-backpack.html'
+  },
+  {
+    id: 'hotel-four-rosmead', cat: 'stay', emoji: '🏨',
+    name: 'Four Rosmead Boutique Hotel', lat: -33.9398, lng: 18.4153,
+    photo: '../photos/bree-street.jpg',
+    tag: 'Midrange · Gardens',
+    quote: 'Only 8 rooms. Victorian villa with a garden pool. A hidden gem.',
+    desc: 'An exquisite Victorian villa in Gardens with only 8 rooms. Antiques, a beautiful garden pool, and breakfasts that guests rave about. One of Cape Town\'s best-kept secrets.',
+    tips: ['Book well ahead — only 8 rooms', 'Ask for the garden-facing suite', 'Walking distance to the Company\'s Garden and Long Street'],
+    duration: 'Stay', price: 'from ~R2,800/night', booking: 'https://www.booking.com/hotel/za/four-rosmead.html'
+  },
+  {
+    id: 'hotel-mount-nelson', cat: 'stay', emoji: '🏨',
+    name: 'Belmond Mount Nelson Hotel', lat: -33.9379, lng: 18.4151,
+    photo: '../photos/bree-street.jpg',
+    tag: 'Luxury · Gardens',
+    quote: 'The Pink Lady. Cape Town\'s most legendary hotel since 1899. Afternoon tea is iconic.',
+    desc: 'Cape Town\'s most historic and beloved hotel — surrounded by manicured gardens at the foot of Table Mountain. Afternoon tea here is a Cape Town institution that shouldn\'t be missed.',
+    tips: ['Afternoon tea (14:00–17:30) is worth it even if not staying', 'The garden pool is stunning on a summer afternoon', 'Two restaurants and a legendary bar — The Lounge'],
+    duration: 'Stay', price: 'from ~R8,000/night', booking: 'https://www.booking.com/hotel/za/mount-nelson.html'
+  },
+
+  // WHERE TO STAY — CAMPS BAY
+  {
+    id: 'hotel-camps-bay-retreat', cat: 'stay', emoji: '🏨',
+    name: 'Camps Bay Retreat', lat: -33.9538, lng: 18.3718,
+    photo: '../photos/camps-bay.webp',
+    tag: 'Midrange · Camps Bay',
+    quote: 'Manor house in the Camps Bay kloof. Pools, spa, and quieter than the beachfront strip.',
+    desc: 'A beautifully restored manor house set in the kloof above Camps Bay — lush gardens, two pools, and a spa. More intimate than the beachfront hotels with easy access to the beach.',
+    tips: ['The spa is excellent — book in advance', 'Request a mountain-view room for the sunrise', 'Short walk down to the Camps Bay beach strip'],
+    duration: 'Stay', price: 'from ~R3,500/night', booking: 'https://www.booking.com/hotel/za/camps-bay-retreat.html'
+  },
+  {
+    id: 'hotel-bay-hotel', cat: 'stay', emoji: '🏨',
+    name: 'The Bay Hotel', lat: -33.9486, lng: 18.3770,
+    photo: '../photos/camps-bay.webp',
+    tag: 'Luxury · Camps Bay',
+    quote: 'Right on the beach. Four pools. Twelve Apostles mountain backdrop. The quintessential Camps Bay experience.',
+    desc: 'The Bay Hotel sits directly on Camps Bay beach with four pools, three restaurants, and uninterrupted views of the Twelve Apostles mountain range. The benchmark Camps Bay stay.',
+    tips: ['Book a sea-facing room — the views are extraordinary', 'Sundowners at the beach bar as the mountains turn pink', 'Llandudno and Clifton beaches are a short drive'],
+    duration: 'Stay', price: 'from ~R6,000/night', booking: 'https://www.booking.com/hotel/za/the-bay.html'
+  },
+  {
+    id: 'hotel-twelve-apostles', cat: 'stay', emoji: '🏨',
+    name: 'Twelve Apostles Hotel & Spa', lat: -33.9747, lng: 18.3596,
+    photo: '../photos/camps-bay.webp',
+    tag: 'Luxury · Camps Bay',
+    quote: 'Tucked between mountains and ocean. One of the most dramatic hotel settings in Africa.',
+    desc: 'Set on the road to Hout Bay between the mountains and the Atlantic — one of the most dramatic hotel locations in Africa. World-class spa, private cinema, and exceptional service.',
+    tips: ['The spa is among the best in Africa — treat yourself', 'The private cinema screens movies nightly', 'Hike directly from the hotel into Table Mountain National Park'],
+    duration: 'Stay', price: 'from ~R7,500/night', booking: 'https://www.booking.com/hotel/za/twelve-apostles.html'
+  },
+
+  // WHERE TO STAY — WATERFRONT
+  {
+    id: 'hotel-breakwater', cat: 'stay', emoji: '🏨',
+    name: 'Protea Hotel Breakwater Lodge', lat: -33.9012, lng: 18.4179,
+    photo: '../photos/waterfront.jpeg',
+    tag: 'Budget · Waterfront',
+    quote: 'A converted Victorian prison on the Waterfront. Only in Cape Town.',
+    desc: 'Set in a converted Victorian prison on the edge of the V&A Waterfront — a uniquely Cape Town experience. Affordable, well-located, and surprisingly comfortable.',
+    tips: ['Ask about the history of the building — it\'s fascinating', 'Steps from the V&A Waterfront shopping and restaurants', 'Robben Island ferry is a 5-min walk'],
+    duration: 'Stay', price: 'from ~R1,200/night', booking: 'https://www.booking.com/hotel/za/breakwater-lodge.html'
+  },
+  {
+    id: 'hotel-cape-grace', cat: 'stay', emoji: '🏨',
+    name: 'Cape Grace Hotel', lat: -33.9075, lng: 18.4216,
+    photo: '../photos/waterfront.jpeg',
+    tag: 'Luxury · Waterfront',
+    quote: 'Tucked between the yacht basin and harbour. Exceptional whisky bar. Intimate scale.',
+    desc: 'Quietly positioned between the yacht marina and the harbour, Cape Grace has a warmth and intimacy that larger Waterfront hotels lack. The whisky bar is one of the finest in Africa.',
+    tips: ['The Signal whisky bar has over 400 whiskies — go for a late drink', 'Harbour-facing rooms have extraordinary views', 'Borrow one of the hotel\'s bikes to explore the city'],
+    duration: 'Stay', price: 'from ~R8,000/night', booking: 'https://www.booking.com/hotel/za/cape-grace.html'
+  },
+  {
+    id: 'hotel-silo', cat: 'stay', emoji: '🏨',
+    name: 'The Silo Hotel', lat: -33.9076, lng: 18.4224,
+    photo: '../photos/waterfront.jpeg',
+    tag: 'Luxury · Waterfront',
+    quote: '28 rooms inside a converted grain silo. Bubble windows. Zeitz MOCAA museum below. Extraordinary.',
+    desc: 'Cape Town\'s most visually dramatic hotel — 28 rooms inside a converted grain elevator with iconic bubble windows. The Zeitz Museum of Contemporary African Art occupies the floors below.',
+    tips: ['Rooftop pool and bar has the best view of Table Mountain from the water', 'The Zeitz MOCAA museum is a must — world-class African art', 'Book the penthouse for a once-in-a-lifetime experience'],
+    duration: 'Stay', price: 'from ~R10,000/night', booking: 'https://www.booking.com/hotel/za/the-silo.html'
+  },
+  {
+    id: 'hotel-one-and-only', cat: 'stay', emoji: '🏨',
+    name: 'One&Only Cape Town', lat: -33.9064, lng: 18.4185,
+    photo: '../photos/waterfront.jpeg',
+    tag: 'Luxury · Waterfront',
+    quote: 'Two private islands. Nobu restaurant. The benchmark for Cape Town luxury.',
+    desc: 'An island resort in the heart of the Waterfront — two private islands connected by bridges, a world-class spa, and Nobu Cape Town. The benchmark for luxury in the Mother City.',
+    tips: ['Nobu restaurant is exceptional — book ahead', 'The spa island is a sanctuary within the city', 'Sunset cocktails on the marina terrace'],
+    duration: 'Stay', price: 'from ~R9,000/night', booking: 'https://www.booking.com/hotel/za/one-and-only-cape-town.html'
   }
 ];
 
@@ -608,13 +776,14 @@ const catColor = {
   beaches:     '#3A8FC0',
   hikes:       '#7C4A7C',
   wine:        '#8B3A62',
-  culture:     '#6E7C4A'
+  culture:     '#6E7C4A',
+  stay:        '#2E6E8C'
 };
 
 // ── INIT MAP ──
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/dark-v11',
+  style: 'mapbox://styles/mapbox/satellite-streets-v12',
   center: [18.4241, -33.9249],
   zoom: 11,
   pitch: 30,
@@ -666,9 +835,13 @@ function openPanel(loc) {
 
   const meta = document.getElementById('panelMeta');
   let metaHTML = '';
+  if (loc.duration || loc.price) metaHTML += `<div class="panel-label">Best For</div>`;
   if (loc.duration) metaHTML += `<span>⏱ ${loc.duration}</span>`;
   if (loc.price) metaHTML += `<span>💰 ${loc.price}</span>`;
   meta.innerHTML = metaHTML;
+
+  document.getElementById('panelQuote').innerHTML = `<div class="panel-label">Good to Know</div>"${loc.quote}"`;
+  document.getElementById('panelDesc').innerHTML = `<div class="panel-label">Why Go</div>${loc.desc}`;
 
   const tipsEl = document.getElementById('panelTips');
   if (loc.tips && loc.tips.length) {

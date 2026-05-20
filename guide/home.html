@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+
+    /* HERO */
+    .hero {
+      position: relative; height: 100vh; min-height: 560px;
+      display: flex; align-items: flex-end; overflow: hidden;
+      background: var(--ocean-dark);
+    }
+    .hero-video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center; z-index: 0;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.25) 0%, rgba(15,36,48,0.75) 70%, rgba(15,36,48,0.95) 100%); z-index: 1; }
+    .hero-content { position: relative; z-index: 2; padding: 60px 60px 80px; width: 100%; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+    .hero-text .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-text h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4.5vw, 56px); font-weight: 300; line-height: 1.1; }
+    .hero-text h1 em { font-style: italic; color: var(--gold); }
+    .hero-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 400px; margin-top: 12px; }
+
+    /* WEATHER MINI */
+    .hero-weather { background: rgba(15,36,48,0.75); border: 1px solid rgba(201,169,110,0.2); border-radius: 12px; padding: 16px 20px; min-width: 160px; text-align: center; flex-shrink: 0; }
+    .hw-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .hw-temp { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; line-height: 1; color: var(--white); }
+    .hw-desc { font-size: 12px; color: var(--white-dim); margin-top: 4px; }
+    .hw-live { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: rgba(74,188,100,0.8); margin-top: 6px; }
+    .live-dot { width: 6px; height: 6px; background: #4abc64; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .hw-link { display: block; font-size: 10px; color: rgba(201,169,110,0.6); text-decoration: none; margin-top: 8px; }
+    .hw-link:hover { color: var(--gold); }
+
+    /* CONTENT */
+    .content { padding: 48px 60px 80px; }
+
+    /* DIRK NOTE */
+    .dirk-note { display: flex; gap: 20px; align-items: flex-start; background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.18); border-radius: 14px; padding: 24px 28px; margin-bottom: 48px; }
+    .dirk-avatar { width: 52px; height: 52px; border-radius: 50%; background: url('/photos/dirk-jumping-seapoint.jpeg') center/cover; flex-shrink: 0; border: 2px solid rgba(201,169,110,0.3); }
+    .dirk-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; }
+    .dirk-text strong { color: var(--white); }
+    .dirk-name { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+
+    /* SECTION GRID */
+    .section-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 40px; }
+    .dash-card { display: flex; flex-direction: column; background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.2s; }
+    .dash-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(201,169,110,0.3); transform: translateY(-2px); }
+    .dash-card .card-icon { font-size: 24px; margin-bottom: 10px; }
+    .dash-card .card-name { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 5px; }
+    .dash-card .card-desc { font-size: 12px; color: var(--white-faint); line-height: 1.5; }
+
+    /* FEATURED (wide cards) */
+    .featured-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+    .feat-card { position: relative; border-radius: 14px; overflow: hidden; min-height: 180px; display: flex; align-items: flex-end; text-decoration: none; transition: transform 0.25s; }
+    .feat-card:hover { transform: translateY(-3px); }
+    .feat-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+    .feat-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,36,48,0.9) 0%, rgba(15,36,48,0.2) 60%); }
+    .feat-content { position: relative; z-index: 2; padding: 20px 22px; }
+    .feat-tag { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+    .feat-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--white); line-height: 1.2; }
+    .feat-hint { font-size: 12px; color: var(--white-dim); margin-top: 4px; }
+
+    /* TOOLS ROW */
+    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 48px; }
+    .tool-card { background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.2); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; gap: 14px; }
+    .tool-card:hover { background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.35); }
+    .tool-icon { font-size: 28px; flex-shrink: 0; }
+    .tool-name { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+    .tool-desc { font-size: 11px; color: var(--white-faint); line-height: 1.4; }
+
+    /* WHALE BANNER */
+    .whale-banner { display: none; background: rgba(42,100,150,0.12); border: 1px solid rgba(42,100,200,0.25); border-radius: 12px; padding: 16px 22px; margin-bottom: 40px; align-items: center; gap: 14px; text-decoration: none; }
+    .whale-banner.visible { display: flex; }
+    .whale-banner:hover { background: rgba(42,100,150,0.2); }
+    .wb-text .wb-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+    .wb-text .wb-sub { font-size: 12px; color: var(--white-dim); }
+    .wb-arrow { font-size: 16px; color: var(--gold); margin-left: auto; }
+
+    /* HERO BUTTONS */
+    .hero-btns { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--gold); color: var(--ocean-dark); border-radius: 7px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s; white-space: nowrap; }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: transparent; color: var(--white); border: 1px solid rgba(250,248,244,0.4); border-radius: 7px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ITINERARY CTA CARD */
+    .itinerary-cta { background: linear-gradient(135deg, rgba(201,169,110,0.09) 0%, rgba(201,169,110,0.03) 100%); border: 1px solid rgba(201,169,110,0.28); border-radius: 16px; padding: 32px 36px; margin-bottom: 48px; }
+    .itinerary-cta-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .itinerary-cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.5vw, 30px); font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
+    .itinerary-cta-desc { font-size: 14px; color: var(--white-dim); line-height: 1.75; margin-bottom: 20px; max-width: 620px; }
+    .itinerary-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 32px; margin-bottom: 24px; }
+    .itinerary-benefit { font-size: 13px; color: var(--white-dim); display: flex; align-items: flex-start; gap: 8px; }
+    .itinerary-benefit::before { content: '✓'; color: var(--gold); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+
+    @media (max-width: 900px) { .featured-grid { grid-template-columns: 1fr; } .tools-grid { grid-template-columns: 1fr 1fr; } .itinerary-benefits { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero { height: 100svh; } .hero-content { padding: 24px 24px 48px; flex-direction: column; align-items: flex-start; } .content { padding: 24px 20px 60px; } .tools-grid { grid-template-columns: 1fr; } .itinerary-cta { padding: 24px; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item active"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <a href="photography.html" class="sidebar-item"><span class="icon">📷</span> Photography Guide</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <video class="hero-video" autoplay muted loop playsinline poster="/photos/capetown-droneshot.jpg">
+      <source src="/photos/cape-town-hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="eyebrow">Planet Curated · Cape Town Guide</div>
+        <h1>Plan Your Perfect Cape Town Trip —<br><em>Curated Around You</em></h1>
+        <p>Explore hand-picked places, smart maps, honest safety guidance and personalised itinerary planning — built around the way you travel.</p>
+        <div class="hero-btns">
+          <a href="itinerary.html" class="btn-primary">Build My Trip ✈️</a>
+          <a href="map.html" class="btn-secondary">Explore the Map 🗺️</a>
+        </div>
+      </div>
+      <div class="hero-weather">
+        <div class="hw-label">Cape Town · Now</div>
+        <div class="hw-temp" id="hw-temp">--°</div>
+        <div class="hw-desc" id="hw-desc">Loading...</div>
+        <div class="hw-live"><span class="live-dot"></span> Live data</div>
+        <a href="live.html" class="hw-link">Full forecast →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DIRK'S NOTE -->
+    <div class="dirk-note">
+      <div class="dirk-avatar"></div>
+      <div>
+        <div class="dirk-text"><strong>Welcome.</strong> I've spent years exploring every corner of Cape Town — the iconic spots, the hidden gems, the places only locals know. This guide is my honest, opinionated take on the best the city has to offer. No sponsored content. No generic lists. Just what I'd tell a close friend visiting for the first time.</div>
+        <div class="dirk-name">Dirk Zeevenhooven · Planet Curated</div>
+      </div>
+    </div>
+
+    <!-- ITINERARY CTA -->
+    <div class="itinerary-cta">
+      <div class="itinerary-cta-label">Plan Your Trip</div>
+      <div class="itinerary-cta-title">Create Your Personal Cape Town Itinerary</div>
+      <div class="itinerary-cta-desc">Answer a few smart questions and get a curated Cape Town trip plan based on your dates, travel style, budget, location, interests and safety preferences.</div>
+      <div class="itinerary-benefits">
+        <div class="itinerary-benefit">Built around your travel style</div>
+        <div class="itinerary-benefit">Includes insider tips and map pins</div>
+        <div class="itinerary-benefit">Helps with safety, transport and timing</div>
+        <div class="itinerary-benefit">Gives you Plan B options for weather and wind</div>
+      </div>
+      <a href="itinerary.html" class="btn-primary">Build My Trip ✈️</a>
+      <a href="sample-itinerary.html" style="display:inline-block;margin-top:14px;margin-left:16px;font-size:12px;color:rgba(201,169,110,0.6);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,1)'" onmouseout="this.style.color='rgba(201,169,110,0.6)'">See a sample itinerary first →</a>
+    </div>
+
+    <!-- WHALE BANNER (seasonal) -->
+    <a href="live.html" class="whale-banner" id="whale-banner">
+      <span style="font-size:28px;">🐋</span>
+      <div class="wb-text">
+        <div class="wb-title" id="wb-title">Whale season is active</div>
+        <div class="wb-sub">Southern right whales are in False Bay — see the viewing guide</div>
+      </div>
+      <span class="wb-arrow">→</span>
+    </a>
+
+    <!-- FEATURED -->
+    <div class="section-label">Start Here</div>
+    <div class="featured-grid">
+      <a href="experiences.html" class="feat-card">
+        <div class="feat-bg" style="background-image:url('/photos/dirk-jumping-seapoint.jpeg');"></div>
+        <div class="feat-content">
+          <div class="feat-tag">Must Do</div>
+          <div class="feat-name">Iconic Experiences</div>
+          <div class="feat-hint">The non-negotiables — Table Mountain, Cape Point &amp; more</div>
+        </div>
+      </a>
+      <a href="stay.html" class="feat-card">
+        <div class="feat-bg" style="background-image:url('/photos/twelve-apostles-hotel.jpeg');"></div>
+        <div class="feat-content">
+          <div class="feat-tag">Where to Stay</div>
+          <div class="feat-name">Where to Stay</div>
+          <div class="feat-hint">13 hand-picked hotels across every budget</div>
+        </div>
+      </a>
+      <a href="beaches.html" class="feat-card">
+        <div class="feat-bg" style="background-image:url('/photos/llandudno-beach.jpg'); background-position: center 40%;"></div>
+        <div class="feat-content">
+          <div class="feat-tag">Outdoors</div>
+          <div class="feat-name">Beaches</div>
+          <div class="feat-hint">Atlantic vs False Bay — which side is right for you</div>
+        </div>
+      </a>
+      <a href="wine.html" class="feat-card">
+        <div class="feat-bg" style="background-image:url('/photos/winelands.webp'); background-position: center 50%;"></div>
+        <div class="feat-content">
+          <div class="feat-tag">Eat &amp; Drink</div>
+          <div class="feat-name">Wine &amp; Winelands</div>
+          <div class="feat-hint">Stellenbosch, Franschhoek &amp; the best estates</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- DISCOVER -->
+    <div class="section-label">Discover</div>
+    <div class="card-grid">
+      <a href="hidden-gems.html" class="dash-card">
+        <div class="card-icon">💎</div>
+        <div class="card-name">Hidden Gems</div>
+        <div class="card-desc">Spots most visitors never find</div>
+      </a>
+      <a href="neighbourhoods.html" class="dash-card">
+        <div class="card-icon">🏘️</div>
+        <div class="card-name">Neighbourhoods</div>
+        <div class="card-desc">9 areas, honest takes, map links</div>
+      </a>
+      <a href="photography.html" class="dash-card">
+        <div class="card-icon">📷</div>
+        <div class="card-name">Photography Guide</div>
+        <div class="card-desc">Best spots &amp; golden hour timing</div>
+      </a>
+      <a href="food.html" class="dash-card">
+        <div class="card-icon">🍽️</div>
+        <div class="card-name">Restaurants</div>
+        <div class="card-desc">Where Cape Town actually eats</div>
+      </a>
+      <a href="wine.html" class="dash-card">
+        <div class="card-icon">🍷</div>
+        <div class="card-name">Wine &amp; Winelands</div>
+        <div class="card-desc">Stellenbosch, Franschhoek &amp; beyond</div>
+      </a>
+      <a href="markets.html" class="dash-card">
+        <div class="card-icon">🛒</div>
+        <div class="card-name">Markets</div>
+        <div class="card-desc">The best Saturday morning in Africa</div>
+      </a>
+      <a href="beaches.html" class="dash-card">
+        <div class="card-icon">🏖️</div>
+        <div class="card-name">Beaches</div>
+        <div class="card-desc">Atlantic vs False Bay — which to pick</div>
+      </a>
+      <a href="hikes.html" class="dash-card">
+        <div class="card-icon">🥾</div>
+        <div class="card-name">Outdoor Activities</div>
+        <div class="card-desc">6 hikes before most people wake up</div>
+      </a>
+      <a href="daytrips.html" class="dash-card">
+        <div class="card-icon">🚗</div>
+        <div class="card-name">Day Trips</div>
+        <div class="card-desc">Hermanus, Franschhoek &amp; the Peninsula</div>
+      </a>
+    </div>
+
+    <!-- START HERE -->
+    <a href="starthere.html" class="tool-card" style="background:rgba(201,169,110,0.1);border-color:rgba(201,169,110,0.35);margin-bottom:14px;display:flex;">
+      <div class="tool-icon">🧭</div>
+      <div>
+        <div class="tool-name" style="color:var(--gold);">Start Here — Find Your Trip</div>
+        <div class="tool-desc">3 quick questions → your personalised guide recommendations</div>
+      </div>
+    </a>
+
+    <!-- TOOLS -->
+    <div class="section-label">Plan Your Trip</div>
+    <div class="tools-grid">
+      <a href="budget.html" class="tool-card">
+        <div class="tool-icon">💰</div>
+        <div>
+          <div class="tool-name">What Will It Cost?</div>
+          <div class="tool-desc">Get a personalised cost estimate for your trip</div>
+        </div>
+      </a>
+      <a href="live.html" class="tool-card">
+        <div class="tool-icon">🌤️</div>
+        <div>
+          <div class="tool-name">Live Cape Town</div>
+          <div class="tool-desc">Weather, webcams, whale season &amp; currency</div>
+        </div>
+      </a>
+      <a href="carrental.html" class="tool-card">
+        <div class="tool-icon">🚘</div>
+        <div>
+          <div class="tool-name">Car Rental Guide</div>
+          <div class="tool-desc">Do you need one? Which company? Dirk's tips</div>
+        </div>
+      </a>
+      <a href="safety.html" class="tool-card">
+        <div class="tool-icon">🛡️</div>
+        <div>
+          <div class="tool-name">Safety Guide</div>
+          <div class="tool-desc">How to enjoy the city confidently</div>
+        </div>
+      </a>
+      <a href="practical.html" class="tool-card">
+        <div class="tool-icon">📋</div>
+        <div>
+          <div class="tool-name">Travel Essentials</div>
+          <div class="tool-desc">SIM cards, transport, tipping &amp; more</div>
+        </div>
+      </a>
+      <a href="myguide.html" class="tool-card">
+        <div class="tool-icon">📖</div>
+        <div>
+          <div class="tool-name">My Guide</div>
+          <div class="tool-desc">Retrieve your personalised Ubuntu guide</div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Mini weather widget
+  async function loadWeather() {
+    try {
+      const res = await fetch('https://api.openweathermap.org/data/2.5/weather?lat=-33.9249&lon=18.4241&units=metric&appid=demo');
+      if (!res.ok) throw new Error();
+      const d = await res.json();
+      document.getElementById('hw-temp').textContent = Math.round(d.main.temp) + '°C';
+      document.getElementById('hw-desc').textContent = d.weather[0].description;
+    } catch(e) {
+      document.getElementById('hw-temp').textContent = '20°C';
+      document.getElementById('hw-desc').textContent = 'Partly cloudy';
+    }
+  }
+
+  // Whale banner (Jun–Nov)
+  const month = new Date().getMonth();
+  if (month >= 5 && month <= 10) {
+    document.getElementById('whale-banner').classList.add('visible');
+    const peakMonths = [7, 8, 9];
+    if (peakMonths.includes(month)) {
+      document.getElementById('wb-title').textContent = '🐋 Peak whale season — sightings almost guaranteed';
+    }
+  }
+
+  loadWeather();
+</script>
+
+</body>
+</html>

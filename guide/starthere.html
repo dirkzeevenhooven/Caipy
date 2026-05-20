@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Start Here · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --gold: #C9A96E; --gold-light: #e0c48a;
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: url('/photos/table-mountain.jpeg') center/cover no-repeat fixed;
+      color: var(--white); overflow-x: hidden;
+    }
+    body::before { content: ''; position: fixed; inset: 0; background: rgba(15,36,48,0.78); z-index: 0; pointer-events: none; }
+
+    /* SIDEBAR */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 101; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 60px 40px; position: relative; z-index: 1; }
+
+    /* QUIZ CARD */
+    .quiz-card { max-width: 620px; width: 100%; }
+    .quiz-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; text-align: center; }
+    .quiz-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 5vw, 52px); font-weight: 300; line-height: 1.1; text-align: center; margin-bottom: 10px; }
+    .quiz-title em { font-style: italic; color: var(--gold); }
+    .quiz-subtitle { font-size: 15px; color: var(--white-dim); line-height: 1.7; text-align: center; margin-bottom: 48px; }
+
+    /* PROGRESS */
+    .progress-row { display: flex; gap: 6px; justify-content: center; margin-bottom: 40px; }
+    .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(201,169,110,0.25); transition: background 0.3s; }
+    .progress-dot.done { background: var(--gold); }
+    .progress-dot.active { background: var(--gold); width: 24px; border-radius: 4px; }
+
+    /* STEP */
+    .step { display: none; animation: fadeIn 0.35s ease; }
+    .step.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .step-question { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; line-height: 1.3; margin-bottom: 28px; text-align: center; }
+
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .option {
+      background: rgba(255,255,255,0.05); border: 1.5px solid rgba(201,169,110,0.18);
+      border-radius: 12px; padding: 20px 18px; cursor: pointer; transition: all 0.2s;
+      text-align: left;
+    }
+    .option:hover { background: rgba(255,255,255,0.09); border-color: rgba(201,169,110,0.4); transform: translateY(-2px); }
+    .option.selected { background: rgba(201,169,110,0.1); border-color: var(--gold); }
+    .option-icon { font-size: 24px; margin-bottom: 8px; }
+    .option-label { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; margin-bottom: 4px; }
+    .option-hint { font-size: 12px; color: var(--white-faint); line-height: 1.5; }
+
+    .next-btn {
+      display: block; width: 100%; margin-top: 24px; padding: 16px;
+      background: var(--gold); color: var(--ocean-dark);
+      border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
+      transition: all 0.2s; font-family: 'Inter', sans-serif;
+      opacity: 0.4; pointer-events: none;
+    }
+    .next-btn.enabled { opacity: 1; pointer-events: all; }
+    .next-btn.enabled:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* RESULT */
+    .result { display: none; animation: fadeIn 0.4s ease; }
+    .result.active { display: block; }
+
+    .result-profile { text-align: center; margin-bottom: 36px; }
+    .result-badge { display: inline-block; background: rgba(201,169,110,0.12); border: 1px solid rgba(201,169,110,0.3); border-radius: 40px; padding: 8px 20px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .result-name { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+    .result-name em { font-style: italic; color: var(--gold); }
+    .result-desc { font-size: 14px; color: var(--white-dim); line-height: 1.75; max-width: 500px; margin: 0 auto; }
+
+    .result-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 32px 0; }
+    .result-link {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 10px; padding: 16px; text-decoration: none; color: var(--white);
+      transition: all 0.2s;
+    }
+    .result-link:hover { background: rgba(255,255,255,0.09); border-color: rgba(201,169,110,0.3); transform: translateY(-2px); }
+    .result-link-icon { font-size: 22px; flex-shrink: 0; }
+    .result-link-name { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 400; margin-bottom: 2px; }
+    .result-link-hint { font-size: 11px; color: var(--white-faint); line-height: 1.4; }
+
+    .result-cta { text-align: center; margin-top: 28px; }
+    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 16px 40px; border-radius: 6px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .restart-link { display: block; margin-top: 16px; font-size: 12px; color: var(--white-faint); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; transition: color 0.2s; }
+    .restart-link:hover { color: var(--white-dim); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; padding: 40px 20px; } .options { grid-template-columns: 1fr; } .result-links { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="starthere.html" class="sidebar-item active"><span class="icon">🧭</span> Start Here</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="quiz-card">
+
+    <!-- INTRO -->
+    <div id="intro">
+      <div class="quiz-eyebrow">Cape Town Guide · First Time Here?</div>
+      <h1 class="quiz-title">Find your perfect<br><em>Cape Town trip</em></h1>
+      <p class="quiz-subtitle">Three quick questions. We'll show you exactly where to start in the guide — based on your travel style, trip length, and what matters most to you.</p>
+      <button class="next-btn enabled" id="start-btn" onclick="startQuiz()">Let's Go →</button>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quiz" style="display:none;">
+      <div class="progress-row" id="progress">
+        <div class="progress-dot active" id="dot-1"></div>
+        <div class="progress-dot" id="dot-2"></div>
+        <div class="progress-dot" id="dot-3"></div>
+      </div>
+
+      <!-- STEP 1: Trip length -->
+      <div class="step active" id="step-1">
+        <div class="step-question">How long are you in Cape Town?</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(this, 1, 'short')">
+            <div class="option-icon">⚡</div>
+            <div class="option-label">2–3 days</div>
+            <div class="option-hint">Weekend or quick stopover</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 1, 'week')">
+            <div class="option-icon">📅</div>
+            <div class="option-label">4–7 days</div>
+            <div class="option-hint">A proper short break</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 1, 'long')">
+            <div class="option-icon">🌍</div>
+            <div class="option-label">8–14 days</div>
+            <div class="option-hint">Time to really explore</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 1, 'extended')">
+            <div class="option-icon">🏡</div>
+            <div class="option-label">2+ weeks</div>
+            <div class="option-hint">Living like a local</div>
+          </div>
+        </div>
+        <button class="next-btn" id="next-1" onclick="nextStep(2)">Next →</button>
+      </div>
+
+      <!-- STEP 2: Travel style -->
+      <div class="step" id="step-2">
+        <div class="step-question">What kind of traveller are you?</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(this, 2, 'adventure')">
+            <div class="option-icon">🥾</div>
+            <div class="option-label">Adventure seeker</div>
+            <div class="option-hint">Hikes, ocean swims, pushing limits</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 2, 'foodie')">
+            <div class="option-icon">🍽️</div>
+            <div class="option-label">Foodie &amp; culture</div>
+            <div class="option-hint">Restaurants, markets, wine, art</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 2, 'beach')">
+            <div class="option-icon">🏖️</div>
+            <div class="option-label">Beach &amp; relaxation</div>
+            <div class="option-hint">Sun, sundowners, slow mornings</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 2, 'explorer')">
+            <div class="option-icon">🗺️</div>
+            <div class="option-label">Explorer</div>
+            <div class="option-hint">A bit of everything, go wherever</div>
+          </div>
+        </div>
+        <button class="next-btn" id="next-2" onclick="nextStep(3)">Next →</button>
+      </div>
+
+      <!-- STEP 3: Priority -->
+      <div class="step" id="step-3">
+        <div class="step-question">What's your biggest priority?</div>
+        <div class="options">
+          <div class="option" onclick="selectOption(this, 3, 'iconic')">
+            <div class="option-icon">⭐</div>
+            <div class="option-label">Not missing the highlights</div>
+            <div class="option-hint">Table Mountain, Cape Point, Robben Island</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 3, 'local')">
+            <div class="option-icon">💎</div>
+            <div class="option-label">Finding local gems</div>
+            <div class="option-hint">Spots tourists never reach</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 3, 'safety')">
+            <div class="option-icon">🛡️</div>
+            <div class="option-label">Feeling confident &amp; safe</div>
+            <div class="option-hint">Navigating Cape Town with clarity</div>
+          </div>
+          <div class="option" onclick="selectOption(this, 3, 'plan')">
+            <div class="option-icon">✈️</div>
+            <div class="option-label">A clear plan, ready to go</div>
+            <div class="option-hint">Day-by-day itinerary sorted</div>
+          </div>
+        </div>
+        <button class="next-btn" id="next-3" onclick="showResult()">See My Guide →</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result" id="result">
+      <div class="result-profile">
+        <div class="result-badge" id="result-badge">Your Profile</div>
+        <div class="result-name" id="result-name">Loading...</div>
+        <p class="result-desc" id="result-desc"></p>
+      </div>
+      <div class="result-links" id="result-links"></div>
+      <div class="result-cta">
+        <a href="itinerary.html" class="btn-cta">Build My Full Itinerary ✈️</a>
+        <span class="restart-link" onclick="restart()">Start over →</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const answers = { 1: null, 2: null, 3: null };
+
+  function startQuiz() {
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+  }
+
+  function selectOption(el, step, value) {
+    el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[step] = value;
+    document.getElementById('next-' + step).classList.add('enabled');
+  }
+
+  function nextStep(num) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + num).classList.add('active');
+    updateProgress(num);
+  }
+
+  function updateProgress(step) {
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.getElementById('dot-' + i);
+      dot.className = 'progress-dot';
+      if (i < step) dot.classList.add('done');
+      else if (i === step) dot.classList.add('active');
+    }
+  }
+
+  const profiles = {
+    // style: adventure
+    adventure: {
+      iconic:  { badge: 'Summit Chaser', name: 'The <em>Adventure Explorer</em>', desc: 'You want big views, physical challenge, and the stories to match. Cape Town is built for you — from Lion\'s Head at sunrise to the Cederberg on a day trip.', links: [{ icon: '🥾', name: 'Outdoor Activities', hint: 'Hikes, runs & outdoor adventures', href: 'hikes.html' }, { icon: '⭐', name: 'Iconic Experiences', hint: 'Table Mountain, Cape Point & more', href: 'experiences.html' }, { icon: '🚗', name: 'Day Trips', hint: 'Cape Point, Cederberg & beyond', href: 'daytrips.html' }, { icon: '🏖️', name: 'Beaches', hint: 'Best beaches for swimmers & surfers', href: 'beaches.html' }] },
+      local:   { badge: 'Off the Beaten Track', name: 'The <em>Hidden Cape Explorer</em>', desc: 'You want to find the city beneath the surface — the neighbourhood spots, the quiet hikes, the local rituals. This guide will take you there.', links: [{ icon: '💎', name: 'Hidden Gems', hint: 'Spots most visitors never find', href: 'hidden-gems.html' }, { icon: '🥾', name: 'Outdoor Activities', hint: 'Less crowded trails & secret spots', href: 'hikes.html' }, { icon: '🏘️', name: 'Neighbourhoods', hint: 'Where locals actually live & eat', href: 'neighbourhoods.html' }, { icon: '🗺️', name: 'Interactive Map', hint: 'Explore by area', href: 'map.html' }] },
+      safety:  { badge: 'Confident Adventurer', name: 'The <em>Safety-Smart Explorer</em>', desc: 'You want to push boundaries and explore — but with a solid plan and full confidence. Here\'s exactly what you need to read first.', links: [{ icon: '🛡️', name: 'Safety Guide', hint: 'Dirk\'s honest, practical safety guide', href: 'safety.html' }, { icon: '🥾', name: 'Outdoor Activities', hint: 'Safe trails & what to know', href: 'hikes.html' }, { icon: '📋', name: 'Travel Essentials', hint: 'SIMs, transport & practical info', href: 'practical.html' }, { icon: '✈️', name: 'Build My Trip', hint: 'Get a personalised itinerary', href: 'itinerary.html' }] },
+      plan:    { badge: 'Ready to Go', name: 'The <em>Prepared Adventurer</em>', desc: 'You know what you want — adventure, big experiences, a real plan. Let\'s get you sorted from top to bottom.', links: [{ icon: '✈️', name: 'Build My Trip', hint: 'Your personalised day-by-day plan', href: 'itinerary.html' }, { icon: '🥾', name: 'Outdoor Activities', hint: 'The best hikes & adventures', href: 'hikes.html' }, { icon: '📅', name: 'Sample Itinerary', hint: 'See a full 5-day plan first', href: 'sample-itinerary.html' }, { icon: '🚗', name: 'Day Trips', hint: 'Plan your day trips out of the city', href: 'daytrips.html' }] },
+    },
+    // style: foodie
+    foodie: {
+      iconic:  { badge: 'Culinary Highlights', name: 'The <em>Gourmet Explorer</em>', desc: 'You want the best food Cape Town has to offer — and the iconic experiences to go with it. Both are world-class. Here\'s where to start.', links: [{ icon: '🍽️', name: 'Restaurants & Foodies', hint: 'Where Cape Town actually eats', href: 'food.html' }, { icon: '🍷', name: 'Wine & Winelands', hint: 'Estates, tastings & wine routes', href: 'wine.html' }, { icon: '⭐', name: 'Iconic Experiences', hint: 'Table Mountain & Cape Point', href: 'experiences.html' }, { icon: '🛒', name: 'Markets', hint: 'Neighbourgoods & the best markets', href: 'markets.html' }] },
+      local:   { badge: 'Local Table', name: 'The <em>Neighbourhood Foodie</em>', desc: 'You want to eat where locals eat — the hidden gems, the neighbourhood spots nobody writes about. This is your guide.', links: [{ icon: '🍽️', name: 'Restaurants & Foodies', hint: 'The restaurants worth your time', href: 'food.html' }, { icon: '🛒', name: 'Markets', hint: 'Neighbourgoods, OZCF & more', href: 'markets.html' }, { icon: '🏘️', name: 'Neighbourhoods', hint: 'Eat by area — Woodstock, Gardens, Sea Point', href: 'neighbourhoods.html' }, { icon: '💎', name: 'Hidden Gems', hint: 'Spots most food guides miss', href: 'hidden-gems.html' }] },
+      safety:  { badge: 'Savvy Diner', name: 'The <em>Smart Foodie</em>', desc: 'Great food and smart planning — Cape Town delivers both if you know where to look. Start here.', links: [{ icon: '🍽️', name: 'Restaurants & Foodies', hint: 'Vetted, honest restaurant picks', href: 'food.html' }, { icon: '🛡️', name: 'Safety Guide', hint: 'Navigate the city with confidence', href: 'safety.html' }, { icon: '🛒', name: 'Markets', hint: 'Safe, daytime food markets', href: 'markets.html' }, { icon: '📋', name: 'Travel Essentials', hint: 'Tipping, transport & practical info', href: 'practical.html' }] },
+      plan:    { badge: 'Foodie Itinerary', name: 'The <em>Planned Gourmet</em>', desc: 'You want a clear plan built around food, wine, and the best dining experiences Cape Town offers. Let\'s build it.', links: [{ icon: '✈️', name: 'Build My Trip', hint: 'Personalised itinerary with food focus', href: 'itinerary.html' }, { icon: '🍽️', name: 'Restaurants & Foodies', hint: 'The full restaurant guide', href: 'food.html' }, { icon: '🍷', name: 'Wine & Winelands', hint: 'Plan your wine day in Stellenbosch', href: 'wine.html' }, { icon: '📅', name: 'Sample Itinerary', hint: 'See how a 5-day trip looks', href: 'sample-itinerary.html' }] },
+    },
+    // style: beach
+    beach: {
+      iconic:  { badge: 'Atlantic Seaboard', name: 'The <em>Beach & Views</em> Person', desc: 'Sun, ocean, and the most dramatic mountain backdrop on earth. Cape Town\'s beaches are extraordinary — here\'s how to do them right.', links: [{ icon: '🏖️', name: 'Beaches', hint: 'Atlantic vs False Bay — the full guide', href: 'beaches.html' }, { icon: '⭐', name: 'Iconic Experiences', hint: 'Table Mountain & Cape Point', href: 'experiences.html' }, { icon: '🏨', name: 'Where to Stay', hint: 'Best base for beach access', href: 'stay.html' }, { icon: '🚗', name: 'Day Trips', hint: 'Cape Point & Boulders Beach', href: 'daytrips.html' }] },
+      local:   { badge: 'Secluded Shores', name: 'The <em>Secret Beach Finder</em>', desc: 'You want the quiet coves and tide pools the tourists miss — not the Camps Bay selfie crowd. This guide will take you there.', links: [{ icon: '🏖️', name: 'Beaches', hint: 'The hidden beaches beyond the obvious ones', href: 'beaches.html' }, { icon: '💎', name: 'Hidden Gems', hint: 'Secret spots most visitors miss', href: 'hidden-gems.html' }, { icon: '🏘️', name: 'Neighbourhoods', hint: 'Kalk Bay, Llandudno & beyond', href: 'neighbourhoods.html' }, { icon: '🗺️', name: 'Interactive Map', hint: 'Find beaches by location', href: 'map.html' }] },
+      safety:  { badge: 'Safe Shores', name: 'The <em>Smart Beach Traveller</em>', desc: 'Cape Town\'s beaches are beautiful — and some require a few things to know. Start with the safety guide, then enjoy them fully.', links: [{ icon: '🛡️', name: 'Safety Guide', hint: 'Beach safety & what to know', href: 'safety.html' }, { icon: '🏖️', name: 'Beaches', hint: 'Best beaches with safety context', href: 'beaches.html' }, { icon: '📋', name: 'Travel Essentials', hint: 'Transport, SIMs & practical info', href: 'practical.html' }, { icon: '✈️', name: 'Build My Trip', hint: 'Get a personalised plan', href: 'itinerary.html' }] },
+      plan:    { badge: 'Beach Break Planned', name: 'The <em>Organised Beach Lover</em>', desc: 'You want a clear plan with the best beaches, the right area to stay, and no wasted days. Here\'s your starting point.', links: [{ icon: '✈️', name: 'Build My Trip', hint: 'Your personalised beach itinerary', href: 'itinerary.html' }, { icon: '🏖️', name: 'Beaches', hint: 'The full Cape Town beach guide', href: 'beaches.html' }, { icon: '🏨', name: 'Where to Stay', hint: 'Sea Point or Camps Bay — which base?', href: 'stay.html' }, { icon: '📅', name: 'Sample Itinerary', hint: 'See a full 5-day plan', href: 'sample-itinerary.html' }] },
+    },
+    // style: explorer
+    explorer: {
+      iconic:  { badge: 'Full Cape Town', name: 'The <em>Complete Explorer</em>', desc: 'You want it all — and Cape Town can deliver. Mountains, beaches, wine, food, history. Here\'s the full picture.', links: [{ icon: '⭐', name: 'Iconic Experiences', hint: 'Start with the non-negotiables', href: 'experiences.html' }, { icon: '🗺️', name: 'Interactive Map', hint: 'See everything by location', href: 'map.html' }, { icon: '🚗', name: 'Day Trips', hint: 'Get out of the city too', href: 'daytrips.html' }, { icon: '✈️', name: 'Build My Trip', hint: 'Build your complete itinerary', href: 'itinerary.html' }] },
+      local:   { badge: 'Local Insider', name: 'The <em>Real Cape Town Seeker</em>', desc: 'You want to peel back the tourist layer and find the real city. This guide is built exactly for that.', links: [{ icon: '💎', name: 'Hidden Gems', hint: 'The spots the guidebooks skip', href: 'hidden-gems.html' }, { icon: '🏘️', name: 'Neighbourhoods', hint: 'Where locals actually live & eat', href: 'neighbourhoods.html' }, { icon: '🛒', name: 'Markets', hint: 'Saturday mornings done right', href: 'markets.html' }, { icon: '🍽️', name: 'Restaurants & Foodies', hint: 'Where Cape Town actually eats', href: 'food.html' }] },
+      safety:  { badge: 'Informed Explorer', name: 'The <em>Smart Adventurer</em>', desc: 'You want to explore everything — with full confidence. The safety guide is your first stop, then the rest follows easily.', links: [{ icon: '🛡️', name: 'Safety Guide', hint: 'Dirk\'s honest Cape Town safety guide', href: 'safety.html' }, { icon: '🏘️', name: 'Neighbourhoods', hint: 'Which areas are right for you', href: 'neighbourhoods.html' }, { icon: '📋', name: 'Travel Essentials', hint: 'Everything practical in one place', href: 'practical.html' }, { icon: '✈️', name: 'Build My Trip', hint: 'Get a personalised itinerary', href: 'itinerary.html' }] },
+      plan:    { badge: 'Ready to Roll', name: 'The <em>Prepared Explorer</em>', desc: 'You want a real plan, properly sorted, before you land. Let\'s build it — day by day, area by area.', links: [{ icon: '✈️', name: 'Build My Trip', hint: 'Your personalised day-by-day plan', href: 'itinerary.html' }, { icon: '📅', name: 'Sample Itinerary', hint: 'See a complete 5-day example', href: 'sample-itinerary.html' }, { icon: '🏨', name: 'Where to Stay', hint: 'Pick the right area to base yourself', href: 'stay.html' }, { icon: '🗺️', name: 'Interactive Map', hint: 'Plan your routes visually', href: 'map.html' }] },
+    },
+  };
+
+  function showResult() {
+    document.getElementById('quiz').style.display = 'none';
+    const resultEl = document.getElementById('result');
+    resultEl.classList.add('active');
+
+    const style = answers[2];
+    const priority = answers[3];
+    const profile = profiles[style]?.[priority] || profiles.explorer.plan;
+
+    document.getElementById('result-badge').textContent = profile.badge;
+    document.getElementById('result-name').innerHTML = profile.name;
+    document.getElementById('result-desc').textContent = profile.desc;
+
+    const linksEl = document.getElementById('result-links');
+    linksEl.innerHTML = profile.links.map(l => `
+      <a href="${l.href}" class="result-link">
+        <div class="result-link-icon">${l.icon}</div>
+        <div>
+          <div class="result-link-name">${l.name}</div>
+          <div class="result-link-hint">${l.hint}</div>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  function restart() {
+    answers[1] = answers[2] = answers[3] = null;
+    document.getElementById('result').classList.remove('active');
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('.next-btn').forEach(b => b.classList.remove('enabled'));
+    document.getElementById('step-1').classList.add('active');
+    updateProgress(1);
+    document.getElementById('quiz').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

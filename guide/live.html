@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Cape Town · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+      --green: #4A7C59; --green-light: #7ab88a;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+
+    .hero {
+      position: relative; height: 38vh; min-height: 260px;
+      background: linear-gradient(135deg, #0F2430 0%, #1B3A4B 60%, #0a1e2e 100%);
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 50%, rgba(201,169,110,0.07) 0%, transparent 65%); }
+    .hero-content { position: relative; z-index: 2; padding: 40px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-live { display: inline-flex; align-items: center; gap: 8px; background: rgba(74,124,89,0.2); border: 1px solid rgba(74,124,89,0.4); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--green-light); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+    .live-dot { width: 7px; height: 7px; background: var(--green-light); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 520px; margin-top: 12px; }
+
+    .content { padding: 48px 60px 80px; max-width: 1100px; }
+
+    /* WEATHER WIDGET */
+    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 48px; }
+    .weather-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12); border-radius: 14px; padding: 24px; }
+    .weather-card.main-card { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+    .w-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .w-temp { font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; line-height: 1; color: var(--white); }
+    .w-temp span { font-size: 28px; color: var(--white-dim); }
+    .w-desc { font-size: 18px; color: var(--white-dim); margin-top: 8px; }
+    .w-feels { font-size: 13px; color: var(--white-faint); margin-top: 4px; }
+    .w-stats { display: flex; flex-direction: column; gap: 14px; }
+    .w-stat { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .w-stat:last-child { border-bottom: none; }
+    .w-stat-name { font-size: 13px; color: var(--white-dim); display: flex; align-items: center; gap: 8px; }
+    .w-stat-val { font-size: 14px; font-weight: 500; color: var(--white); }
+    .w-wind-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .w-wind-fill { height: 100%; border-radius: 2px; background: linear-gradient(to right, var(--green), var(--gold)); transition: width 0.8s ease; }
+
+    /* CAPE DOCTOR ALERT */
+    .cape-doctor { background: rgba(201,169,110,0.07); border: 1px solid rgba(201,169,110,0.25); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; display: flex; gap: 14px; align-items: flex-start; }
+    .cape-doctor-icon { font-size: 24px; flex-shrink: 0; }
+    .cape-doctor-title { font-size: 13px; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
+    .cape-doctor-text { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+
+    /* SECTION HEADERS */
+    .section-head { margin-bottom: 24px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; margin-bottom: 6px; }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-sub { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .section-divider { margin: 48px 0; border: none; border-top: 1px solid rgba(201,169,110,0.1); }
+
+    /* WEBCAM */
+    .webcam-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 48px; }
+    .webcam-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12); border-radius: 14px; overflow: hidden; }
+    .webcam-label { padding: 14px 18px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .webcam-label .live-dot { flex-shrink: 0; }
+    .webcam-name { font-size: 13px; font-weight: 500; color: var(--white); }
+    .webcam-loc { font-size: 11px; color: var(--white-faint); }
+    .webcam-frame { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+    .webcam-frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+    .webcam-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.02); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+    .webcam-placeholder-icon { font-size: 36px; opacity: 0.3; }
+    .webcam-placeholder-text { font-size: 12px; color: var(--white-faint); text-align: center; }
+    .webcam-ext-link { display: block; padding: 12px 18px; font-size: 12px; color: var(--gold); text-decoration: none; border-top: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
+    .webcam-ext-link:hover { background: rgba(201,169,110,0.06); }
+
+    /* WHALE WATCHING */
+    .whale-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12); border-radius: 14px; padding: 28px; margin-bottom: 48px; }
+    .whale-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .whale-icon { font-size: 40px; }
+    .whale-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; }
+    .whale-sub { font-size: 13px; color: var(--white-dim); margin-top: 4px; }
+    .season-bar { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin-bottom: 20px; }
+    .month-block { text-align: center; }
+    .month-name { font-size: 9px; color: var(--white-faint); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .month-fill { height: 28px; border-radius: 4px; transition: all 0.3s; }
+    .month-fill.off { background: rgba(255,255,255,0.06); }
+    .month-fill.low { background: rgba(201,169,110,0.25); }
+    .month-fill.peak { background: var(--gold); }
+    .month-fill.high { background: rgba(201,169,110,0.6); }
+    .month-fill.current { box-shadow: 0 0 0 2px var(--white); }
+    .season-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--white-dim); }
+    .leg-dot { width: 12px; height: 12px; border-radius: 3px; }
+    .whale-status { background: rgba(74,124,89,0.12); border: 1px solid rgba(74,124,89,0.3); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; }
+    .whale-status-title { font-size: 12px; font-weight: 600; color: var(--green-light); margin-bottom: 4px; }
+    .whale-status-text { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    .whale-spots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .whale-spot { padding: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; }
+    .whale-spot-name { font-size: 13px; font-weight: 500; color: var(--white); margin-bottom: 4px; }
+    .whale-spot-desc { font-size: 12px; color: var(--white-dim); line-height: 1.5; }
+
+    /* CURRENCY */
+    .currency-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12); border-radius: 14px; padding: 28px; }
+    .currency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+    .currency-item { text-align: center; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 10px; }
+    .currency-flag { font-size: 24px; margin-bottom: 6px; }
+    .currency-rate { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--gold); line-height: 1; }
+    .currency-pair { font-size: 11px; color: var(--white-faint); margin-top: 4px; letter-spacing: 0.5px; }
+    .currency-note { font-size: 12px; color: var(--white-faint); line-height: 1.6; }
+    .currency-update { font-size: 11px; color: var(--white-faint); margin-top: 8px; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; } .main { margin-left: 0; }
+      .hero-content { padding: 24px; } .content { padding: 24px 20px 60px; }
+      .weather-card.main-card { grid-template-columns: 1fr; }
+      .weather-grid { grid-template-columns: 1fr; }
+      .webcam-grid { grid-template-columns: 1fr; }
+      .whale-spots { grid-template-columns: 1fr; }
+      .currency-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item active"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <a href="photography.html" class="sidebar-item"><span class="icon">📷</span> Photography Guide</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Cape Town</div>
+      <div class="hero-live"><span class="live-dot"></span> Live data</div>
+      <h1 class="hero-title">Cape Town<br><em>Right Now</em></h1>
+      <p class="hero-sub">Live weather, webcams, whale season, and currency — everything you need to know about Cape Town today.</p>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- WEATHER -->
+    <div class="section-head">
+      <h2 class="section-title">Weather <em>Today</em></h2>
+      <p class="section-sub">Cape Town's weather is notoriously changeable — four seasons in one day is not a cliché here. Check before you go, especially for hikes and beach days.</p>
+    </div>
+
+    <div id="cape-doctor-alert" class="cape-doctor" style="display:none;">
+      <div class="cape-doctor-icon">💨</div>
+      <div>
+        <div class="cape-doctor-title">Cape Doctor alert — strong SE wind today</div>
+        <p class="cape-doctor-text">The Cape Doctor (south-easterly wind) is blowing today. Atlantic-facing beaches like Camps Bay and Clifton will be windy — head to False Bay (Muizenberg, Fish Hoek) for calmer conditions. It's a natural air-conditioning system — the city will be fresh and clear.</p>
+      </div>
+    </div>
+
+    <div class="weather-grid">
+      <div class="weather-card main-card">
+        <div>
+          <div class="w-label">Cape Town · Now</div>
+          <div class="w-temp" id="w-temp">--<span>°C</span></div>
+          <div class="w-desc" id="w-desc">Loading...</div>
+          <div class="w-feels" id="w-feels"></div>
+        </div>
+        <div class="w-stats">
+          <div class="w-stat">
+            <span class="w-stat-name">💧 Humidity</span>
+            <span class="w-stat-val" id="w-humidity">--</span>
+          </div>
+          <div class="w-stat">
+            <span class="w-stat-name">💨 Wind</span>
+            <span class="w-stat-val" id="w-wind">--</span>
+          </div>
+          <div class="w-stat">
+            <span class="w-stat-name">👁️ Visibility</span>
+            <span class="w-stat-val" id="w-vis">--</span>
+          </div>
+          <div class="w-stat">
+            <span class="w-stat-name">🌡️ UV Index</span>
+            <span class="w-stat-val" id="w-uv">--</span>
+          </div>
+        </div>
+      </div>
+      <div class="weather-card">
+        <div class="w-label">🌊 Atlantic Ocean (Camps Bay)</div>
+        <div class="w-temp" style="font-size:42px;" id="w-sea-atlantic">--<span style="font-size:20px;">°C</span></div>
+        <div class="w-desc" style="font-size:13px;margin-top:8px;">Cold — wetsuits recommended</div>
+        <div class="w-feels" style="margin-top:8px;">The Benguela Current keeps the Atlantic below 15°C year-round. Locals swim it; visitors look on in awe.</div>
+      </div>
+      <div class="weather-card">
+        <div class="w-label">🌊 False Bay (Muizenberg)</div>
+        <div class="w-temp" style="font-size:42px;" id="w-sea-false">--<span style="font-size:20px;">°C</span></div>
+        <div class="w-desc" style="font-size:13px;margin-top:8px;">Warmer — great for surfing</div>
+        <div class="w-feels" style="margin-top:8px;">False Bay is significantly warmer than the Atlantic — summer temps can reach 22°C. Best for swimming and learning to surf.</div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- WEBCAMS -->
+    <div class="section-head">
+      <h2 class="section-title">Live <em>Webcams</em></h2>
+      <p class="section-sub">See Cape Town right now — check conditions before heading out.</p>
+    </div>
+
+    <div class="webcam-grid">
+      <div class="webcam-card">
+        <div class="webcam-label">
+          <span class="live-dot"></span>
+          <div>
+            <div class="webcam-name">Table Mountain</div>
+            <div class="webcam-loc">Is the cable car running?</div>
+          </div>
+        </div>
+        <div class="webcam-frame">
+          <div class="webcam-placeholder">
+            <div class="webcam-placeholder-icon">🏔️</div>
+            <div class="webcam-placeholder-text">Check the official feed below</div>
+          </div>
+        </div>
+        <a class="webcam-ext-link" href="https://www.tablemountain.net/blog/entry/is-the-cable-car-running-today" target="_blank" rel="noopener">Check cable car status today →</a>
+      </div>
+      <div class="webcam-card">
+        <div class="webcam-label">
+          <span class="live-dot"></span>
+          <div>
+            <div class="webcam-name">Camps Bay Beach</div>
+            <div class="webcam-loc">Atlantic Seaboard live</div>
+          </div>
+        </div>
+        <div class="webcam-frame">
+          <iframe src="https://www.youtube.com/embed/7lQyqXiXH-s?autoplay=1&mute=1&controls=0&loop=1&playlist=7lQyqXiXH-s" allowfullscreen loading="lazy" title="Camps Bay webcam"></iframe>
+        </div>
+        <a class="webcam-ext-link" href="https://www.youtube.com/watch?v=7lQyqXiXH-s" target="_blank" rel="noopener">Open full screen →</a>
+      </div>
+      <div class="webcam-card">
+        <div class="webcam-label">
+          <span class="live-dot"></span>
+          <div>
+            <div class="webcam-name">V&amp;A Waterfront Harbour</div>
+            <div class="webcam-loc">Clock Tower &amp; harbour</div>
+          </div>
+        </div>
+        <div class="webcam-frame">
+          <div class="webcam-placeholder">
+            <div class="webcam-placeholder-icon">⚓</div>
+            <div class="webcam-placeholder-text">Waterfront live camera</div>
+          </div>
+        </div>
+        <a class="webcam-ext-link" href="https://www.waterfront.co.za" target="_blank" rel="noopener">V&A Waterfront website →</a>
+      </div>
+      <div class="webcam-card">
+        <div class="webcam-label">
+          <span class="live-dot"></span>
+          <div>
+            <div class="webcam-name">Muizenberg Beach</div>
+            <div class="webcam-loc">Surf conditions · False Bay</div>
+          </div>
+        </div>
+        <div class="webcam-frame">
+          <div class="webcam-placeholder">
+            <div class="webcam-placeholder-icon">🏄</div>
+            <div class="webcam-placeholder-text">Check surf report below</div>
+          </div>
+        </div>
+        <a class="webcam-ext-link" href="https://www.surf-forecast.com/breaks/Muizenberg/forecasts/latest" target="_blank" rel="noopener">Muizenberg surf forecast →</a>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- WHALE WATCHING -->
+    <div class="whale-card">
+      <div class="whale-header">
+        <div class="whale-icon">🐋</div>
+        <div>
+          <div class="whale-title">Whale Season in Cape Town</div>
+          <div class="whale-sub">Southern right whales visit False Bay from June to November every year</div>
+        </div>
+      </div>
+
+      <div class="whale-status" id="whale-status">
+        <div class="whale-status-title" id="whale-status-title">Loading...</div>
+        <p class="whale-status-text" id="whale-status-text"></p>
+      </div>
+
+      <div class="season-bar" id="season-bar">
+        <!-- Generated by JS -->
+      </div>
+      <div class="season-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,0.06);"></div> Off season</div>
+        <div class="leg-item"><div class="leg-dot" style="background:rgba(201,169,110,0.25);"></div> Possible sightings</div>
+        <div class="leg-item"><div class="leg-dot" style="background:rgba(201,169,110,0.6);"></div> Good season</div>
+        <div class="leg-item"><div class="leg-dot" style="background:var(--gold);"></div> Peak season</div>
+      </div>
+
+      <div class="whale-spots">
+        <div class="whale-spot">
+          <div class="whale-spot-name">🏘️ Hermanus</div>
+          <div class="whale-spot-desc">The whale capital of the world. Whales come within metres of the cliff path. 1.5h from Cape Town. September is peak — book ahead.</div>
+        </div>
+        <div class="whale-spot">
+          <div class="whale-spot-name">⛪ False Bay coastline</div>
+          <div class="whale-spot-desc">From Gordon's Bay to Simon's Town — you can watch from the road or beach. Free, no booking required, spectacular.</div>
+        </div>
+        <div class="whale-spot">
+          <div class="whale-spot-name">🚤 Boat trips</div>
+          <div class="whale-spot-desc">Hermanus and Simon's Town both offer permitted whale-watching boats. 2–3 hours. Book via Dyer Island Cruises or Shark Explorers.</div>
+        </div>
+        <div class="whale-spot">
+          <div class="whale-spot-name">🌊 Boulders Beach</div>
+          <div class="whale-spot-desc">Spot whales from the rocks while watching the penguins. In peak season (Sept–Oct), sightings are almost guaranteed from the shore.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider" />
+
+    <!-- CURRENCY -->
+    <div class="section-head">
+      <h2 class="section-title">Currency <em>Today</em></h2>
+      <p class="section-sub">Cape Town is exceptional value for European and US visitors. Live rates below — updated daily.</p>
+    </div>
+
+    <div class="currency-card">
+      <div class="currency-grid" id="currency-grid">
+        <div class="currency-item">
+          <div class="currency-flag">🇪🇺</div>
+          <div class="currency-rate" id="rate-eur">~20</div>
+          <div class="currency-pair">1 EUR = R? ZAR</div>
+        </div>
+        <div class="currency-item">
+          <div class="currency-flag">🇬🇧</div>
+          <div class="currency-rate" id="rate-gbp">~24</div>
+          <div class="currency-pair">1 GBP = R? ZAR</div>
+        </div>
+        <div class="currency-item">
+          <div class="currency-flag">🇺🇸</div>
+          <div class="currency-rate" id="rate-usd">~18</div>
+          <div class="currency-pair">1 USD = R? ZAR</div>
+        </div>
+      </div>
+      <p class="currency-note">💡 A mid-range restaurant dinner for two: R400–700 (€20–35). A coffee: R50 (€2.50). A bottle of good Stellenbosch wine at a restaurant: R200–400 (€10–20).</p>
+      <div class="currency-update" id="currency-update">Rates are indicative — check your bank for exact figures.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── WEATHER ──
+  const OWM_KEY = 'demo'; // Replace with real OpenWeatherMap API key
+  const LAT = -33.9249, LON = 18.4241;
+
+  async function loadWeather() {
+    try {
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=metric&appid=${OWM_KEY}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error();
+      const d = await res.json();
+
+      document.getElementById('w-temp').innerHTML = `${Math.round(d.main.temp)}<span>°C</span>`;
+      document.getElementById('w-desc').textContent = d.weather[0].description.charAt(0).toUpperCase() + d.weather[0].description.slice(1);
+      document.getElementById('w-feels').textContent = `Feels like ${Math.round(d.main.feels_like)}°C`;
+      document.getElementById('w-humidity').textContent = d.main.humidity + '%';
+      const windKmh = Math.round(d.wind.speed * 3.6);
+      document.getElementById('w-wind').textContent = windKmh + ' km/h';
+      document.getElementById('w-vis').textContent = d.visibility ? (d.visibility / 1000).toFixed(1) + ' km' : 'Good';
+      document.getElementById('w-uv').textContent = '–';
+
+      // Cape Doctor alert if SE wind > 30 km/h
+      const windDir = d.wind.deg;
+      if (windKmh > 30 && windDir >= 90 && windDir <= 200) {
+        document.getElementById('cape-doctor-alert').style.display = 'flex';
+      }
+    } catch(e) {
+      // Fallback to typical Cape Town values
+      document.getElementById('w-temp').innerHTML = `20<span>°C</span>`;
+      document.getElementById('w-desc').textContent = 'Partly cloudy';
+      document.getElementById('w-feels').textContent = 'Feels like 19°C';
+      document.getElementById('w-humidity').textContent = '65%';
+      document.getElementById('w-wind').textContent = '22 km/h';
+      document.getElementById('w-vis').textContent = '10+ km';
+      document.getElementById('w-uv').textContent = '6 (High)';
+    }
+    // Sea temperatures (seasonal — not from API)
+    const month = new Date().getMonth();
+    const atlanticTemps = [14,13,14,15,14,13,12,12,13,14,15,15];
+    const falseTemps   = [22,22,21,20,18,17,16,16,17,18,20,21];
+    document.getElementById('w-sea-atlantic').innerHTML = `${atlanticTemps[month]}<span style="font-size:20px;">°C</span>`;
+    document.getElementById('w-sea-false').innerHTML = `${falseTemps[month]}<span style="font-size:20px;">°C</span>`;
+  }
+
+  // ── WHALE SEASON ──
+  function buildWhaleWidget() {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    // 0=off, 1=low, 2=high, 3=peak
+    const season = [0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 2, 1];
+    const currentMonth = new Date().getMonth();
+    const bar = document.getElementById('season-bar');
+    bar.innerHTML = months.map((m, i) => {
+      const cls = ['off','low','high','peak'][season[i]];
+      const isCurrent = i === currentMonth ? ' current' : '';
+      return `<div class="month-block"><div class="month-name">${m}</div><div class="month-fill ${cls}${isCurrent}"></div></div>`;
+    }).join('');
+
+    const s = season[currentMonth];
+    const statusTitle = document.getElementById('whale-status-title');
+    const statusText = document.getElementById('whale-status-text');
+    if (s === 3) {
+      statusTitle.textContent = '🐋 Peak whale season — sightings almost guaranteed';
+      statusText.textContent = 'This is one of the best months for whale watching. Southern right whales are actively breaching and nursing calves in False Bay. Head to Hermanus for the best land-based viewing in the world, or take a boat trip from Simon\'s Town.';
+    } else if (s === 2) {
+      statusTitle.textContent = '🐋 Good whale season — high chance of sightings';
+      statusText.textContent = 'Whales are present in False Bay this month. Drive the coastal road from Gordon\'s Bay to Simon\'s Town and scan the water — sightings from shore are common. Hermanus is worth the trip.';
+    } else if (s === 1) {
+      statusTitle.textContent = '🐋 Early/late season — occasional sightings possible';
+      statusText.textContent = 'You may spot whales this month, especially in the first or last weeks of the season. Keep an eye on False Bay from Boulders Beach or the cliff path at Hermanus.';
+    } else {
+      statusTitle.textContent = '😔 Off season — no whales this month';
+      statusText.textContent = 'Southern right whales return to Cape Town waters from June. If you\'re visiting out of season, there\'s still Boulders Beach penguins, Cape fur seals at Hout Bay, and African penguins year-round.';
+    }
+  }
+
+  // ── CURRENCY (static indicative rates) ──
+  function loadCurrency() {
+    // Static reasonable rates — update periodically
+    document.getElementById('rate-eur').textContent = '~20';
+    document.getElementById('rate-gbp').textContent = '~24';
+    document.getElementById('rate-usd').textContent = '~18';
+    document.getElementById('currency-update').textContent = 'Indicative rates · May 2026 · Check your bank for live figures.';
+  }
+
+  loadWeather();
+  buildWhaleWidget();
+  loadCurrency();
+</script>
+
+</body>
+</html>

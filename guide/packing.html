@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cape Town Packing List · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+
+    /* HERO */
+    .hero {
+      position: relative; height: 50vh; min-height: 360px;
+      background: linear-gradient(150deg, #0F2430 0%, #1a2e20 50%, #1B3A4B 100%);
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 65% 45%, rgba(201,169,110,0.07) 0%, transparent 65%);
+    }
+    .hero-bg-text {
+      position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(70px, 12vw, 140px);
+      font-weight: 300; color: rgba(201,169,110,0.055); line-height: 1; pointer-events: none; white-space: nowrap;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(38px, 5vw, 66px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub { margin-top: 16px; font-size: 15px; color: var(--white-dim); max-width: 520px; line-height: 1.7; }
+
+    /* SEASON TOGGLE */
+    .season-bar { background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(201,169,110,0.1); padding: 20px 60px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .season-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--white-faint); }
+    .season-btn { padding: 8px 20px; border-radius: 20px; border: 1px solid rgba(201,169,110,0.25); font-size: 12px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; background: transparent; }
+    .season-btn:hover { border-color: rgba(201,169,110,0.5); color: var(--white); }
+    .season-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ocean-dark); font-weight: 600; }
+
+    /* NAV */
+    .nav-strip { background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(201,169,110,0.08); padding: 0 60px; display: flex; gap: 0; overflow-x: auto; }
+    .nav-strip::-webkit-scrollbar { display: none; }
+    .nav-btn { flex-shrink: 0; padding: 16px 20px; font-size: 12px; color: var(--white-faint); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .nav-btn:hover { color: var(--white); border-bottom-color: rgba(201,169,110,0.4); }
+    .nav-btn.active-nav { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* CONTENT */
+    .content { padding: 60px; max-width: 1100px; }
+    .intro { font-size: 16px; color: var(--white-dim); line-height: 1.8; max-width: 720px; margin-bottom: 14px; }
+    .intro-note { font-size: 13px; color: rgba(201,169,110,0.7); font-style: italic; margin-bottom: 52px; }
+
+    .section-anchor { display: block; position: relative; top: -80px; visibility: hidden; }
+    .section-block { margin-bottom: 64px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; margin-bottom: 6px; }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-intro { font-size: 13px; color: var(--white-faint); margin-bottom: 24px; max-width: 680px; line-height: 1.7; }
+
+    /* CHECKLIST */
+    .checklist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .checklist-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 12px; padding: 24px; transition: all 0.2s;
+    }
+    .checklist-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(201,169,110,0.2); }
+    .checklist-card-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .checklist-card-title span { font-size: 20px; }
+    .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; min-width: 16px; border: 1px solid rgba(201,169,110,0.35); border-radius: 3px; margin-top: 2px; cursor: pointer; transition: all 0.2s; }
+    .check-item input[type="checkbox"]:checked { background: var(--gold); border-color: var(--gold); background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 8l3.5 3.5L13 5' stroke='%230F2430' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+    .check-item label { font-size: 13px; color: var(--white-dim); line-height: 1.5; cursor: pointer; flex: 1; }
+    .check-item label .note { font-size: 11px; color: var(--white-faint); display: block; margin-top: 2px; font-style: italic; }
+    .check-item input[type="checkbox"]:checked + label { color: var(--white-faint); text-decoration: line-through; text-decoration-color: rgba(201,169,110,0.4); }
+
+    /* PROGRESS BAR */
+    .progress-wrap { margin-bottom: 40px; }
+    .progress-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--white-faint); margin-bottom: 8px; }
+    .progress-bar-bg { background: rgba(255,255,255,0.06); border-radius: 20px; height: 6px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 20px; transition: width 0.3s ease; }
+    .progress-count { font-size: 12px; color: var(--gold); margin-top: 6px; }
+
+    /* SEASON CALLOUT */
+    .season-callout {
+      background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.18);
+      border-radius: 12px; padding: 28px 32px; margin-bottom: 48px;
+    }
+    .season-callout h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; margin-bottom: 6px; }
+    .season-callout h3 em { font-style: italic; color: var(--gold); }
+    .season-callout p { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+    .season-callout .season-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .season-tag { font-size: 10px; letter-spacing: 1px; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(201,169,110,0.25); color: var(--gold); text-transform: uppercase; }
+
+    /* NOT NEEDED BOX */
+    .skip-box {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 28px 32px; margin-bottom: 48px;
+    }
+    .skip-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; margin-bottom: 6px; color: var(--white); }
+    .skip-box h3 em { font-style: italic; color: rgba(250,248,244,0.4); }
+    .skip-box p { font-size: 13px; color: var(--white-faint); margin-bottom: 16px; }
+    .skip-list { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+    .skip-list li { font-size: 13px; color: var(--white-faint); padding-left: 20px; position: relative; line-height: 1.5; }
+    .skip-list li::before { content: '✕'; position: absolute; left: 0; color: rgba(201,169,110,0.3); font-size: 11px; top: 2px; }
+
+    /* DIRK TIP */
+    .dirk-tip { margin: 0 0 40px; padding: 20px 24px; background: rgba(201,169,110,0.06); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; }
+    .dirk-tip-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .dirk-tip p { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin: 0; }
+
+    .divider { border: none; border-top: 1px solid rgba(201,169,110,0.1); margin: 48px 0; }
+
+    /* RESET BTN */
+    .reset-btn { display: inline-block; margin-top: 32px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--white-faint); background: transparent; border: 1px solid rgba(255,255,255,0.1); padding: 9px 20px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .reset-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.25); }
+
+    /* CTA STRIP */
+    .cta-strip { margin: 72px 0 0; padding: 56px 60px; background: rgba(201,169,110,0.06); border-top: 1px solid rgba(201,169,110,0.12); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .cta-strip-text .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-strip-text h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+    .cta-strip-text h2 em { font-style: italic; color: var(--gold); }
+    .cta-strip-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 480px; }
+    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 15px 36px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; } .main { margin-left: 0; }
+      .hero-content { padding: 28px 24px; } .content { padding: 24px; }
+      .season-bar { padding: 16px 24px; } .nav-strip { padding: 0 16px; }
+      .hero-bg-text { display: none; } .cta-strip { padding: 40px 24px; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item active"><span class="icon">🎒</span> Packing List</a>
+  <a href="starthere.html" class="sidebar-item"><span class="icon">🧭</span> Start Here</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg-text">Pack</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Cape Town Guide · Trip Preparation</div>
+      <h1 class="hero-title">The Cape Town<br><em>Packing List</em></h1>
+      <p class="hero-sub">Everything you actually need — and nothing you don't. Built for Cape Town's unique mix of beach, mountain, wine, and city.</p>
+    </div>
+  </div>
+
+  <!-- SEASON TOGGLE -->
+  <div class="season-bar">
+    <span class="season-label">I'm travelling in:</span>
+    <button class="season-btn active" onclick="setSeason('summer', this)">Summer (Nov–Apr)</button>
+    <button class="season-btn" onclick="setSeason('winter', this)">Winter (May–Oct)</button>
+    <button class="season-btn" onclick="setSeason('both', this)">Not sure yet</button>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav-strip">
+    <a href="#essentials" class="nav-btn active-nav">Essentials</a>
+    <a href="#clothing" class="nav-btn">Clothing</a>
+    <a href="#beach" class="nav-btn">Beach &amp; Outdoors</a>
+    <a href="#health" class="nav-btn">Health</a>
+    <a href="#tech" class="nav-btn">Tech &amp; Docs</a>
+    <a href="#kids-pack" class="nav-btn">With Kids</a>
+    <a href="#skip" class="nav-btn">Leave Behind</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <p class="intro">Cape Town is a city of dramatic contrasts — you might hike Table Mountain in the morning, have lunch at a beach bar, and dress smart-casual for dinner in Camps Bay the same evening. Pack light, pack smart, and pack for all of it.</p>
+    <p class="intro-note">Tick items off as you pack. Your progress is saved in this browser session.</p>
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-label">Packing progress</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+      <div class="progress-count" id="progressCount">0 of <span id="totalCount">0</span> items packed</div>
+    </div>
+
+    <!-- SEASON CALLOUT -->
+    <div class="season-callout" id="seasonCallout">
+      <h3>You're packing for <em>Cape Town Summer</em></h3>
+      <p>November to April is Cape Town's summer — long days, strong sun, warm evenings, and the famous Cape Doctor wind. Think light layers, serious sun protection, and at least one smart-casual outfit for Camps Bay evenings.</p>
+      <div class="season-tags">
+        <span class="season-tag">Avg 26°C days</span>
+        <span class="season-tag">Strong UV</span>
+        <span class="season-tag">Cape Doctor wind</span>
+        <span class="season-tag">Warm evenings</span>
+        <span class="season-tag">Occasional rain</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ESSENTIALS -->
+    <span class="section-anchor" id="essentials"></span>
+    <div class="section-block">
+      <h2 class="section-title">The <em>Essentials</em></h2>
+      <p class="section-intro">The things that will ruin your trip if you forget them. Pack these first.</p>
+
+      <div class="checklist-grid">
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>📄</span> Documents</div>
+          <div class="check-item"><input type="checkbox" id="d1"><label for="d1">Passport <span class="note">Valid for 6+ months beyond travel dates</span></label></div>
+          <div class="check-item"><input type="checkbox" id="d2"><label for="d2">Travel insurance documents <span class="note">Printed + digital copy — medical cover essential</span></label></div>
+          <div class="check-item"><input type="checkbox" id="d3"><label for="d3">Flight confirmation &amp; hotel bookings <span class="note">Printed backup recommended</span></label></div>
+          <div class="check-item"><input type="checkbox" id="d4"><label for="d4">Driver's licence <span class="note">Your home licence is valid in SA — bring it</span></label></div>
+          <div class="check-item"><input type="checkbox" id="d5"><label for="d5">Emergency contact list <span class="note">Hotel, car hire, insurance, SA emergency numbers</span></label></div>
+          <div class="check-item"><input type="checkbox" id="d6"><label for="d6">Yellow fever certificate <span class="note">Only if arriving from a yellow fever zone</span></label></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>💳</span> Money &amp; Cards</div>
+          <div class="check-item"><input type="checkbox" id="m1"><label for="m1">Debit/credit card <span class="note">Visa &amp; Mastercard widely accepted</span></label></div>
+          <div class="check-item"><input type="checkbox" id="m2"><label for="m2">Cash (Rands) <span class="note">Get at airport ATM on arrival — better rate than airport exchange</span></label></div>
+          <div class="check-item"><input type="checkbox" id="m3"><label for="m3">Notify your bank before travelling <span class="note">Avoid card blocks on foreign transactions</span></label></div>
+          <div class="check-item"><input type="checkbox" id="m4"><label for="m4">Backup card in separate bag <span class="note">In case of loss or theft</span></label></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>🔌</span> Adaptor &amp; Power</div>
+          <div class="check-item"><input type="checkbox" id="p1"><label for="p1">Type M adaptor (round 3-pin) <span class="note">South Africa's standard plug — buy before you leave</span></label></div>
+          <div class="check-item"><input type="checkbox" id="p2"><label for="p2">Universal power bank <span class="note">Load shedding can still occur — power backup is smart</span></label></div>
+          <div class="check-item"><input type="checkbox" id="p3"><label for="p3">Multi-port USB charger <span class="note">One adaptor, charge everything</span></label></div>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>South Africa still experiences occasional load shedding (scheduled power cuts). A charged power bank is your best friend on those days. Also — photograph all your documents on your phone and email them to yourself before you leave. If your bag is stolen, you'll be glad you did.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- CLOTHING -->
+    <span class="section-anchor" id="clothing"></span>
+    <div class="section-block">
+      <h2 class="section-title"><em>Clothing</em></h2>
+      <p class="section-intro">Cape Town's dress code is relaxed but not sloppy. Smart casual gets you into almost every restaurant. Pack light — laundry is easy and cheap.</p>
+
+      <div class="checklist-grid">
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>☀️</span> Summer (Nov–Apr)</div>
+          <div class="check-item"><input type="checkbox" id="c1"><label for="c1">Light t-shirts (5–7) <span class="note">Breathable cotton or linen</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c2"><label for="c2">Shorts (2–3 pairs)</label></div>
+          <div class="check-item"><input type="checkbox" id="c3"><label for="c3">Lightweight trousers (1–2) <span class="note">Smart casual for restaurants &amp; wine estates</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c4"><label for="c4">Light dress or sundress <span class="note">Perfect for beach towns and wine estates</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c5"><label for="c5">Light jacket or windbreaker <span class="note">Essential — Cape Doctor wind is cold even in summer</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c6"><label for="c6">Thin fleece or hoodie <span class="note">For Table Mountain and evening Atlantic coast</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c7"><label for="c7">Smart casual top or shirt (1–2) <span class="note">For Camps Bay dinner, wine tastings</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c8"><label for="c8">Swimwear (2 sets) <span class="note">One dries while you wear the other</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c9"><label for="c9">Comfortable walking shoes <span class="note">City days and light trails</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c10"><label for="c10">Flip flops / sandals</label></div>
+          <div class="check-item"><input type="checkbox" id="c11"><label for="c11">Trainers or trail shoes <span class="note">For Lion's Head, Table Mountain</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c12"><label for="c12">Sun hat / cap <span class="note">UV is fierce — non-negotiable</span></label></div>
+          <div class="check-item"><input type="checkbox" id="c13"><label for="c13">Light scarf <span class="note">Wind protection + doubles as beach cover-up</span></label></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>🌧️</span> Winter (May–Oct)</div>
+          <div class="check-item"><input type="checkbox" id="w1"><label for="w1">Waterproof jacket <span class="note">Cape rain comes sideways — a proper one</span></label></div>
+          <div class="check-item"><input type="checkbox" id="w2"><label for="w2">Warm layers (fleece, thermals) <span class="note">Mornings and evenings are cold</span></label></div>
+          <div class="check-item"><input type="checkbox" id="w3"><label for="w3">Jeans or heavier trousers (2)</label></div>
+          <div class="check-item"><input type="checkbox" id="w4"><label for="w4">Jumpers / knitwear (2–3)</label></div>
+          <div class="check-item"><input type="checkbox" id="w5"><label for="w5">Waterproof walking shoes or boots <span class="note">Trails can be muddy in winter</span></label></div>
+          <div class="check-item"><input type="checkbox" id="w6"><label for="w6">Light swimwear <span class="note">Still needed — heated pools, spas, False Bay on warm days</span></label></div>
+          <div class="check-item"><input type="checkbox" id="w7"><label for="w7">Gloves &amp; beanie <span class="note">For early mornings and coastal wind</span></label></div>
+          <div class="check-item"><input type="checkbox" id="w8"><label for="w8">Umbrella (compact) <span class="note">Or buy one on arrival for R50</span></label></div>
+          <div class="check-item"><input type="checkbox" id="w9"><label for="w9">Smart casual outfit <span class="note">Wine estates and restaurants still expect this year-round</span></label></div>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>The Cape Doctor — Cape Town's famous south-easterly wind — can make a 28°C summer day feel genuinely cold on Table Mountain or the Boulders Beach boardwalk. Always pack a windbreaker even in peak summer. The wind drops in the evenings, so don't let it stop you from going up the mountain — just bring the layer.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- BEACH & OUTDOORS -->
+    <span class="section-anchor" id="beach"></span>
+    <div class="section-block">
+      <h2 class="section-title">Beach &amp; <em>Outdoors</em></h2>
+      <p class="section-intro">Cape Town is an outdoor city. These items earn their space in your bag every single day.</p>
+
+      <div class="checklist-grid">
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>🏖️</span> Beach Essentials</div>
+          <div class="check-item"><input type="checkbox" id="b1"><label for="b1">SPF 50+ sunscreen <span class="note">Buy a large bottle — Cape UV is extreme</span></label></div>
+          <div class="check-item"><input type="checkbox" id="b2"><label for="b2">Rash vest / UV shirt <span class="note">Essential for all-day beach days</span></label></div>
+          <div class="check-item"><input type="checkbox" id="b3"><label for="b3">Beach towel (quick-dry) <span class="note">Compact microfibre saves space</span></label></div>
+          <div class="check-item"><input type="checkbox" id="b4"><label for="b4">Waterproof dry bag <span class="note">Protect phone, keys, cash at the beach</span></label></div>
+          <div class="check-item"><input type="checkbox" id="b5"><label for="b5">Polarised sunglasses <span class="note">Glare off the Atlantic and False Bay is intense</span></label></div>
+          <div class="check-item"><input type="checkbox" id="b6"><label for="b6">Reusable water bottle <span class="note">Cape Town tap water is excellent and safe</span></label></div>
+          <div class="check-item"><input type="checkbox" id="b7"><label for="b7">Insect repellent <span class="note">For Kirstenbosch evenings and garden restaurants</span></label></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>🥾</span> Hiking &amp; Mountain</div>
+          <div class="check-item"><input type="checkbox" id="h1"><label for="h1">Hiking shoes / trail runners <span class="note">Grip is essential on Table Mountain granite</span></label></div>
+          <div class="check-item"><input type="checkbox" id="h2"><label for="h2">Thin wool or moisture-wicking socks</label></div>
+          <div class="check-item"><input type="checkbox" id="h3"><label for="h3">Daypack (20–25L) <span class="note">Water, snacks, layer, sunscreen</span></label></div>
+          <div class="check-item"><input type="checkbox" id="h4"><label for="h4">Trekking poles <span class="note">Optional — helpful for Platteklip descent on tired legs</span></label></div>
+          <div class="check-item"><input type="checkbox" id="h5"><label for="h5">Headlamp / torch <span class="note">For early Lion's Head summit starts</span></label></div>
+          <div class="check-item"><input type="checkbox" id="h6"><label for="h6">High-energy snacks <span class="note">Bars, nuts — nothing perishable</span></label></div>
+          <div class="check-item"><input type="checkbox" id="h7"><label for="h7">Emergency whistle <span class="note">Small, weighs nothing, potentially lifesaving</span></label></div>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>Cape Town tap water is some of the best in Africa — clean, fresh mountain water. Bring a reusable bottle and refill it everywhere. You'll save money and reduce plastic. Most restaurants and cafés will fill it for free if you ask.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- HEALTH -->
+    <span class="section-anchor" id="health"></span>
+    <div class="section-block">
+      <h2 class="section-title">Health &amp; <em>Pharmacy</em></h2>
+      <p class="section-intro">Cape Town has excellent pharmacies (Dis-Chem, Clicks) where you can buy almost anything on arrival. These are the things worth bringing from home.</p>
+
+      <div class="checklist-grid">
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>💊</span> Medications</div>
+          <div class="check-item"><input type="checkbox" id="med1"><label for="med1">Prescription medication <span class="note">3–4 weeks supply + copy of prescription</span></label></div>
+          <div class="check-item"><input type="checkbox" id="med2"><label for="med2">Antihistamines <span class="note">Pollen is high in spring — November especially</span></label></div>
+          <div class="check-item"><input type="checkbox" id="med3"><label for="med3">Ibuprofen / paracetamol <span class="note">Available locally but convenient to have</span></label></div>
+          <div class="check-item"><input type="checkbox" id="med4"><label for="med4">Diarrhoea tablets <span class="note">Just in case — rich food and wine does happen</span></label></div>
+          <div class="check-item"><input type="checkbox" id="med5"><label for="med5">Rehydration sachets <span class="note">Cape summer heat + wine = dehydration</span></label></div>
+          <div class="check-item"><input type="checkbox" id="med6"><label for="med6">Blister plasters <span class="note">Essential for hiking days</span></label></div>
+          <div class="check-item"><input type="checkbox" id="med7"><label for="med7">After-sun lotion <span class="note">Available locally — buy at Clicks on arrival</span></label></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>🩺</span> Health Notes</div>
+          <div class="check-item"><input type="checkbox" id="hn1"><label for="hn1">Travel insurance with medical cover confirmed <span class="note">Private hospital costs without insurance are high</span></label></div>
+          <div class="check-item"><input type="checkbox" id="hn2"><label for="hn2">No malaria tablets needed <span class="note">Cape Town and Western Cape are malaria-free</span></label></div>
+          <div class="check-item"><input type="checkbox" id="hn3"><label for="hn3">Vaccinations up to date <span class="note">Routine vaccinations — no exotics needed for Cape Town</span></label></div>
+          <div class="check-item"><input type="checkbox" id="hn4"><label for="hn4">Sunscreen applied daily <span class="note">UV index 10–11 in summer — even on cloudy days</span></label></div>
+          <div class="check-item"><input type="checkbox" id="hn5"><label for="hn5">Sea safety briefed <span class="note">Atlantic has strong rip currents — swim between flags</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- TECH & DOCS -->
+    <span class="section-anchor" id="tech"></span>
+    <div class="section-block">
+      <h2 class="section-title">Tech &amp; <em>Connectivity</em></h2>
+      <p class="section-intro">Stay connected, charged, and ready to capture every moment.</p>
+
+      <div class="checklist-grid">
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>📱</span> Tech Essentials</div>
+          <div class="check-item"><input type="checkbox" id="t1"><label for="t1">Smartphone with offline maps downloaded <span class="note">Google Maps offline map of Cape Town</span></label></div>
+          <div class="check-item"><input type="checkbox" id="t2"><label for="t2">Local SIM or eSIM <span class="note">Vodacom &amp; MTN have prepaid data from R50 at the airport</span></label></div>
+          <div class="check-item"><input type="checkbox" id="t3"><label for="t3">Power bank (10,000mAh+) <span class="note">Load shedding backup + long beach days</span></label></div>
+          <div class="check-item"><input type="checkbox" id="t4"><label for="t4">Camera or use phone <span class="note">Cape Town is extraordinarily photogenic</span></label></div>
+          <div class="check-item"><input type="checkbox" id="t5"><label for="t5">Extra memory cards / cloud storage set up</label></div>
+          <div class="check-item"><input type="checkbox" id="t6"><label for="t6">Laptop / tablet (if working remotely) <span class="note">Cape Town has excellent co-working culture</span></label></div>
+          <div class="check-item"><input type="checkbox" id="t7"><label for="t7">Earphones / earbuds <span class="note">Long flight + airport waiting</span></label></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>🚗</span> Driving in SA</div>
+          <div class="check-item"><input type="checkbox" id="dr1"><label for="dr1">Driver's licence (original) <span class="note">Mandatory — carry at all times while driving</span></label></div>
+          <div class="check-item"><input type="checkbox" id="dr2"><label for="dr2">International driving permit <span class="note">Recommended if your licence is not in English</span></label></div>
+          <div class="check-item"><input type="checkbox" id="dr3"><label for="dr3">Car hire confirmation <span class="note">Print + digital</span></label></div>
+          <div class="check-item"><input type="checkbox" id="dr4"><label for="dr4">Google Maps downloaded offline <span class="note">Data can be spotty in remote Peninsula areas</span></label></div>
+          <div class="check-item"><input type="checkbox" id="dr5"><label for="dr5">Toll money (Rands cash) <span class="note">N1 and N2 toll roads take cash</span></label></div>
+          <div class="check-item"><input type="checkbox" id="dr6"><label for="dr6">Emergency roadside number saved <span class="note">Your car hire company's 24hr number</span></label></div>
+        </div>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>Buy a local Vodacom prepaid SIM at the airport the moment you land — it's R50 and gives you 1GB of data. Top it up via the Vodacom app or any supermarket. Don't rely on your home roaming plan — the costs are brutal and the local data is fast and cheap. Vodacom has the best coverage on the Cape Peninsula.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- KIDS PACKING -->
+    <span class="section-anchor" id="kids-pack"></span>
+    <div class="section-block">
+      <h2 class="section-title">Travelling <em>with Kids</em></h2>
+      <p class="section-intro">Extra items that make family travel to Cape Town significantly smoother.</p>
+
+      <div class="checklist-grid">
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>👶</span> For Toddlers &amp; Young Kids</div>
+          <div class="check-item"><input type="checkbox" id="k1"><label for="k1">Child car seat <span class="note">Bring your own or reserve from car hire in advance</span></label></div>
+          <div class="check-item"><input type="checkbox" id="k2"><label for="k2">Children's SPF 50+ sunscreen <span class="note">Sensitive skin formula — UV here is fierce</span></label></div>
+          <div class="check-item"><input type="checkbox" id="k3"><label for="k3">Rash vests for kids <span class="note">One per child per beach day minimum</span></label></div>
+          <div class="check-item"><input type="checkbox" id="k4"><label for="k4">Kids' wide-brim hats <span class="note">Non-negotiable in Cape Town sun</span></label></div>
+          <div class="check-item"><input type="checkbox" id="k5"><label for="k5">Nappy bag &amp; supplies for first 2 days <span class="note">All brands available at Checkers, Pick n Pay on arrival</span></label></div>
+          <div class="check-item"><input type="checkbox" id="k6"><label for="k6">Favourite snacks from home <span class="note">For picky eaters — Cape Town shops are well stocked</span></label></div>
+          <div class="check-item"><input type="checkbox" id="k7"><label for="k7">Compact stroller <span class="note">V&amp;A Waterfront &amp; Kirstenbosch are stroller-friendly</span></label></div>
+          <div class="check-item"><input type="checkbox" id="k8"><label for="k8">Kids' medications <span class="note">Calpol, antihistamine, ear drops — bring from home</span></label></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-card-title"><span>🎒</span> For Older Kids &amp; Teens</div>
+          <div class="check-item"><input type="checkbox" id="ok1"><label for="ok1">Wetsuit (thin 2mm) <span class="note">For Muizenberg surf or Atlantic swimming — or hire locally</span></label></div>
+          <div class="check-item"><input type="checkbox" id="ok2"><label for="ok2">Bodyboard <span class="note">Hire at Muizenberg for R80/day — no need to bring</span></label></div>
+          <div class="check-item"><input type="checkbox" id="ok3"><label for="ok3">Waterproof phone case <span class="note">Tide pools and boat trips</span></label></div>
+          <div class="check-item"><input type="checkbox" id="ok4"><label for="ok4">Small backpack for day activities</label></div>
+          <div class="check-item"><input type="checkbox" id="ok5"><label for="ok5">Binoculars <span class="note">Wildlife, whale watching (July–Nov), seabirds</span></label></div>
+          <div class="check-item"><input type="checkbox" id="ok6"><label for="ok6">Downloaded entertainment for long drives <span class="note">Cape Point is 1 hour from the city</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- LEAVE BEHIND -->
+    <span class="section-anchor" id="skip"></span>
+    <div class="section-block">
+      <h2 class="section-title">Leave <em>Behind</em></h2>
+      <p class="section-intro">Things that take up space unnecessarily — Cape Town has everything, and most of this you can buy on arrival for less.</p>
+
+      <div class="skip-box">
+        <h3>Don't <em>bother</em> packing these</h3>
+        <p>Save the space and buy locally if you need them — or just don't need them at all.</p>
+        <ul class="skip-list">
+          <li>Heavy guidebooks — this guide has everything</li>
+          <li>Formal wear — smart casual is the maximum dress code</li>
+          <li>Multiple pairs of jeans — takes too much space, dries slowly</li>
+          <li>Hair dryer — hotels provide them, or buy for R150 at Clicks</li>
+          <li>Malaria tablets — not needed for Cape Town</li>
+          <li>Mosquito net — not needed for the Western Cape</li>
+          <li>Huge first aid kit — Dis-Chem pharmacies are everywhere</li>
+          <li>Bottled water from home — Cape tap water is excellent</li>
+          <li>Lots of cash — cards accepted almost everywhere</li>
+          <li>Expensive jewellery — leave it at home, not worth the risk</li>
+          <li>Too many shoes — 3 pairs maximum (flip flops, walkers, smart)</li>
+          <li>Beach umbrella — hire at most beaches for R50/day</li>
+        </ul>
+      </div>
+
+      <div class="dirk-tip">
+        <div class="dirk-tip-label">Dirk's Tip</div>
+        <p>Woolworths Food in Cape Town stocks excellent quality toiletries, sunscreen, and travel essentials at very reasonable prices. Pick up what you need on day one rather than lugging it from home. Their sunscreen range is particularly good and significantly cheaper than airport prices.</p>
+      </div>
+
+      <button class="reset-btn" onclick="resetAll()">Reset all checkboxes</button>
+    </div>
+
+  </div>
+
+  <!-- CTA STRIP -->
+  <div class="cta-strip">
+    <div class="cta-strip-text">
+      <div class="eyebrow">Almost ready to go</div>
+      <h2>Now build your<br><em>perfect itinerary</em></h2>
+      <p>You've packed the bag — now plan the trip. Tell Ubuntu what you love and get a personalised Cape Town itinerary in minutes. Day by day, neighbourhood by neighbourhood.</p>
+    </div>
+    <a href="itinerary.html" class="btn-cta">Build My Trip</a>
+  </div>
+
+</div>
+
+<script>
+  // CHECKBOX PROGRESS
+  function updateProgress() {
+    const all = document.querySelectorAll('.check-item input[type="checkbox"]');
+    const checked = document.querySelectorAll('.check-item input[type="checkbox"]:checked');
+    const pct = all.length ? Math.round((checked.length / all.length) * 100) : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressCount').innerHTML = checked.length + ' of <span id="totalCount">' + all.length + '</span> items packed';
+    // Save to localStorage
+    const state = {};
+    all.forEach(cb => { state[cb.id] = cb.checked; });
+    localStorage.setItem('ctg_packing', JSON.stringify(state));
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => cb.checked = false);
+    localStorage.removeItem('ctg_packing');
+    updateProgress();
+  }
+
+  // RESTORE FROM LOCALSTORAGE
+  function restoreState() {
+    try {
+      const state = JSON.parse(localStorage.getItem('ctg_packing') || '{}');
+      Object.keys(state).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = state[id];
+      });
+    } catch(e) {}
+    updateProgress();
+  }
+
+  document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', updateProgress);
+  });
+
+  // SEASON TOGGLE
+  const seasonData = {
+    summer: {
+      title: "You're packing for <em>Cape Town Summer</em>",
+      text: "November to April is Cape Town's summer — long days, strong sun, warm evenings, and the famous Cape Doctor wind. Think light layers, serious sun protection, and at least one smart-casual outfit for Camps Bay evenings.",
+      tags: ["Avg 26°C days", "Strong UV", "Cape Doctor wind", "Warm evenings", "Occasional rain"]
+    },
+    winter: {
+      title: "You're packing for <em>Cape Town Winter</em>",
+      text: "May to October brings the Cape rains and cooler temperatures — but also dramatic skies, fewer tourists, and whale season (July–November). A waterproof jacket is non-negotiable. The sun still shines between the fronts.",
+      tags: ["Avg 17°C days", "Rain fronts", "Strong winds", "Whale season", "Lower UV"]
+    },
+    both: {
+      title: "Packing for <em>any season</em>",
+      text: "If you're not sure of your travel dates yet, pack for versatility — layers that work in both summer warmth and winter chill. A good waterproof jacket and a light fleece cover both seasons effectively.",
+      tags: ["Pack layers", "Waterproof essential", "Year-round sun protection", "Swimwear always"]
+    }
+  };
+
+  function setSeason(season, btn) {
+    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const d = seasonData[season];
+    const box = document.getElementById('seasonCallout');
+    box.querySelector('h3').innerHTML = d.title;
+    box.querySelector('p').textContent = d.text;
+    const tagsEl = box.querySelector('.season-tags');
+    tagsEl.innerHTML = d.tags.map(t => `<span class="season-tag">${t}</span>`).join('');
+  }
+
+  // INIT
+  restoreState();
+</script>
+
+</body>
+</html>

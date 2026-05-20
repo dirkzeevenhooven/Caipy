@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neighbourhoods · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --cream: #F5F0E8; --cream-dark: #ede7db;
+      --ink: #1a2e3b; --ink-mid: #2a4050; --ink-light: #4a6070;
+      --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ─── SIDEBAR (unchanged) ─── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ─── LAYOUT ─── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; height: 68vh; min-height: 480px;
+      background: url('/photos/bo-kaap_DZ.jpg') center 55%/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(160deg, rgba(15,36,48,0.08) 0%, rgba(15,36,48,0.45) 55%, rgba(15,36,48,0.92) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; padding: 64px 80px; max-width: 860px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 6vw, 84px); font-weight: 300; line-height: 1.03; margin-bottom: 22px; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-subtitle { font-size: 17px; color: var(--white-dim); line-height: 1.75; max-width: 500px; }
+
+    /* ─── CONTENT WRAPPER ─── */
+    .content { padding: 80px; max-width: 1280px; }
+
+    /* ─── INTRO BLOCK ─── */
+    .intro-block { margin-bottom: 72px; }
+    .intro { font-size: 18px; color: var(--white-dim); line-height: 1.95; max-width: 700px; margin-bottom: 36px; }
+    .cta-strip { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--ocean-dark); padding: 14px 28px; border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,169,110,0.25); }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--white-dim); padding: 13px 24px; border-radius: 6px; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; text-decoration: none; border: 1px solid rgba(201,169,110,0.22); cursor: pointer; transition: all 0.2s; }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--white); }
+
+    /* ─── DIRK'S FIELD NOTE ─── */
+    .field-note {
+      background: var(--cream); border-radius: 16px; padding: 52px 56px;
+      margin-bottom: 80px; position: relative; overflow: hidden;
+    }
+    .field-note::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    }
+    .field-note::after {
+      content: '"'; position: absolute; right: 48px; top: 24px;
+      font-family: 'Cormorant Garamond', serif; font-size: 120px; font-style: italic;
+      color: rgba(15,36,48,0.06); line-height: 1; pointer-events: none;
+    }
+    .field-note-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink); opacity: 0.4; margin-bottom: 20px; }
+    .field-note-quote {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.8vw, 32px);
+      font-weight: 300; font-style: italic; color: var(--ink); line-height: 1.5;
+      margin-bottom: 24px; max-width: 780px;
+    }
+    .field-note-body { font-size: 15px; color: var(--ink-mid); line-height: 1.9; max-width: 720px; margin-bottom: 32px; }
+    .field-note-sig { display: flex; align-items: center; gap: 16px; }
+    .field-note-avatar {
+      width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+      background: url('/photos/dirk-lions-head.jpeg') center/cover;
+      border: 2px solid var(--gold);
+    }
+    .field-note-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .field-note-role { font-size: 11px; color: var(--ink-light); letter-spacing: 0.3px; margin-top: 2px; }
+
+    /* ─── NEIGHBOURHOOD GRID ─── */
+    .neigh-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 36px; margin-bottom: 80px; }
+
+    .neigh-card {
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.32);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .neigh-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.42); }
+
+    /* Photo strip */
+    .neigh-photo {
+      height: 248px; background: center/cover no-repeat;
+      position: relative; overflow: hidden;
+    }
+    .neigh-photo::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 35%, rgba(15,36,48,0.65) 100%);
+    }
+    .neigh-photo-meta {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      padding: 16px 24px; display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .neigh-area { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(250,248,244,0.75); }
+    .neigh-photo-cta {
+      font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+      color: rgba(250,248,244,0.6); text-decoration: none;
+      border-bottom: 1px solid rgba(250,248,244,0.25); padding-bottom: 1px;
+      transition: all 0.2s;
+    }
+    .neigh-photo-cta:hover { color: var(--gold); border-color: var(--gold); }
+
+    /* Cream content panel */
+    .neigh-body { background: var(--cream); padding: 32px 32px 28px; }
+    .neigh-name {
+      font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400;
+      color: var(--ink); line-height: 1.1; margin-bottom: 14px;
+    }
+    .neigh-vibe { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .vibe-tag {
+      background: rgba(15,36,48,0.07); border: 1px solid rgba(15,36,48,0.14);
+      border-radius: 20px; padding: 4px 13px; font-size: 11px;
+      color: var(--ink); font-weight: 500; letter-spacing: 0.2px;
+    }
+    .neigh-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.88; margin-bottom: 24px; }
+
+    .neigh-details { border-top: 1px solid rgba(15,36,48,0.1); padding-top: 22px; margin-bottom: 22px; }
+    .detail-row { display: flex; gap: 14px; margin-bottom: 11px; }
+    .detail-label {
+      font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--ocean); min-width: 86px; padding-top: 3px;
+      font-weight: 600; opacity: 0.55; flex-shrink: 0;
+    }
+    .detail-val { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+
+    .neigh-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 4px; }
+    .neigh-map-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--ink-light); text-decoration: none;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .neigh-map-link:hover { color: var(--ocean); }
+    .neigh-save {
+      font-size: 11px; color: var(--ocean-dark); background: rgba(201,169,110,0.18);
+      border: 1px solid rgba(201,169,110,0.35); border-radius: 20px;
+      padding: 5px 15px; cursor: pointer; transition: all 0.2s; text-decoration: none;
+      font-weight: 500; letter-spacing: 0.3px;
+    }
+    .neigh-save:hover { background: rgba(201,169,110,0.32); }
+
+    /* ─── AT A GLANCE TABLE ─── */
+    .section-header { margin-bottom: 36px; }
+    .section-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; margin-bottom: 12px; }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-sub { font-size: 15px; color: var(--white-dim); line-height: 1.75; max-width: 580px; }
+
+    .compare-wrap { background: rgba(255,255,255,0.02); border: 1px solid rgba(201,169,110,0.1); border-radius: 14px; overflow: hidden; margin-bottom: 80px; }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); padding: 16px 20px; text-align: left; border-bottom: 1px solid rgba(201,169,110,0.12); background: rgba(201,169,110,0.04); }
+    .compare-table td { font-size: 13px; color: var(--white-dim); padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(255,255,255,0.025); }
+    .compare-table td:first-child { font-weight: 500; color: var(--white); }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+    .dot-green { background: #4A7C59; }
+    .dot-gold { background: var(--gold); }
+    .dot-red { background: #8B3A3A; }
+
+    /* ─── BOTTOM CTA STRIP ─── */
+    .bottom-cta {
+      background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.14);
+      border-radius: 16px; padding: 56px; text-align: center; margin-bottom: 48px;
+    }
+    .bottom-cta-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .bottom-cta-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; margin-bottom: 14px; }
+    .bottom-cta-title em { font-style: italic; color: var(--gold); }
+    .bottom-cta-sub { font-size: 16px; color: var(--white-dim); margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.75; }
+    .bottom-cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ─── MAGAZINE SPREAD — two-column single-screen layout ─── */
+    .mag-spread {
+      display: grid;
+      grid-template-columns: 45% 55%;
+      min-height: 82vh;
+      max-height: 88vh;
+      margin-bottom: 80px;
+      border-radius: 18px; overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+    }
+
+    /* LEFT: cinematic image column */
+    .mag-image {
+      position: relative; overflow: hidden;
+      background: center 30%/cover no-repeat;
+      filter: brightness(1.12) contrast(1.08) saturate(1.15);
+      image-rendering: high-quality;
+    }
+    .mag-image::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(105deg,
+        rgba(15,36,48,0.35) 0%,
+        rgba(15,36,48,0.08) 50%,
+        rgba(15,36,48,0.3) 100%);
+    }
+    .mag-image-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      padding: 32px 36px;
+      background: linear-gradient(to top, rgba(15,36,48,0.9) 0%, transparent 100%);
+    }
+    .mag-featured-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(201,169,110,0.2); border: 1px solid rgba(201,169,110,0.4);
+      border-radius: 20px; padding: 5px 14px; margin-bottom: 14px;
+      font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold);
+      backdrop-filter: blur(4px);
+    }
+    .mag-dirks-pick {
+      position: absolute; top: 20px; left: 20px; z-index: 3;
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(15,36,48,0.75); border: 1px solid rgba(201,169,110,0.4);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold);
+      backdrop-filter: blur(6px);
+    }
+    .mag-dirks-pick::before { content: '★'; font-size: 10px; }
+    .mag-issue { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(250,248,244,0.5); margin-bottom: 8px; }
+    .mag-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(48px, 5.5vw, 82px);
+      font-weight: 300; line-height: 0.95; color: var(--white);
+    }
+    .mag-title em { font-style: italic; color: var(--gold); }
+
+    /* RIGHT: cream editorial panel */
+    .mag-panel {
+      background: var(--cream);
+      padding: 28px 32px 24px;
+      display: flex; flex-direction: column;
+      overflow-y: auto; position: relative;
+    }
+    .mag-bookmark {
+      position: absolute; top: 20px; right: 20px;
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; color: var(--ink-light); text-decoration: none;
+      background: rgba(15,36,48,0.06); border: 1px solid rgba(15,36,48,0.1);
+      border-radius: 6px; padding: 6px 10px; transition: all 0.2s;
+      font-weight: 500;
+    }
+    .mag-bookmark:hover { background: rgba(15,36,48,0.1); color: var(--ink); }
+    .mag-subhead {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(16px, 1.6vw, 22px);
+      font-weight: 400; font-style: italic;
+      color: var(--ink); margin-bottom: 6px; line-height: 1.35;
+    }
+    .mag-intro {
+      font-size: 13px; color: var(--ink-mid); line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .mag-vibe { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .mag-vibe-tag {
+      background: var(--ocean-dark); color: var(--gold);
+      border: 1px solid rgba(201,169,110,0.22);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.2px;
+    }
+
+    /* Compact decision cards — 2×2 grid */
+    .mag-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 7px; margin-bottom: 14px;
+    }
+    .mag-cell {
+      background: rgba(15,36,48,0.03); border: 1px solid rgba(15,36,48,0.07);
+      border-radius: 9px; padding: 11px 14px;
+    }
+    .mag-cell-label {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--ocean); opacity: 0.5; font-weight: 600; margin-bottom: 4px;
+    }
+    .mag-cell-icon { font-size: 11px; opacity: 0.75; letter-spacing: 0; }
+    .mag-cell-val { font-size: 12px; color: var(--ink-mid); line-height: 1.5; }
+
+    /* Compact route strip */
+    .mag-routes { margin-bottom: 14px; }
+    .mag-routes-label {
+      font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--ink); opacity: 0.3; margin-bottom: 10px;
+    }
+    .mag-route {
+      display: flex; align-items: center; margin-bottom: 10px;
+      background: rgba(15,36,48,0.03); border: 1px solid rgba(15,36,48,0.06);
+      border-radius: 8px; padding: 8px 12px; flex-wrap: nowrap; gap: 0;
+    }
+    .mag-route-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
+    .mag-route-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(15,36,48,0.1); border: 1.5px solid rgba(15,36,48,0.18);
+    }
+    .mag-route-dot.start-dot { background: var(--gold); border-color: var(--gold); }
+    .mag-route-stop { font-size: 11px; font-weight: 500; color: var(--ink-mid); white-space: nowrap; padding: 0 4px; }
+    .mag-route-stop.start { color: var(--ocean); font-weight: 700; }
+    .mag-route-line {
+      flex: 1; height: 1px; min-width: 16px;
+      background: linear-gradient(90deg, rgba(201,169,110,0.3), rgba(201,169,110,0.1));
+      margin: 0 2px; align-self: center; position: relative; top: -5px;
+    }
+    .mag-route-badge {
+      font-size: 9px; color: var(--gold); font-style: italic; font-weight: 500;
+      margin-left: auto; padding-left: 10px; white-space: nowrap; align-self: center;
+      opacity: 0.75;
+    }
+
+    /* Compact field note */
+    .mag-field-note {
+      background: rgba(15,36,48,0.04); border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0; padding: 14px 16px 14px 18px;
+      margin-bottom: 18px; position: relative; overflow: hidden; flex-shrink: 0;
+    }
+    .mag-field-note::after {
+      content: '\201C'; position: absolute; right: 10px; top: 4px;
+      font-family: 'Cormorant Garamond', serif; font-size: 56px; font-style: italic;
+      color: rgba(15,36,48,0.05); line-height: 1; pointer-events: none;
+    }
+    .mag-field-note-label {
+      font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--ocean); opacity: 0.4; margin-bottom: 6px;
+    }
+    .mag-field-note-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-style: italic; font-weight: 300;
+      color: var(--ink); line-height: 1.55;
+    }
+    .mag-field-note-sig {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(15,36,48,0.07);
+    }
+    .mag-field-note-avatar {
+      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+      background: url('/photos/dirk-lions-head.jpeg') center/cover;
+      border: 1.5px solid var(--gold);
+    }
+    .mag-field-note-name { font-size: 11px; font-weight: 600; color: var(--ink); }
+    .mag-field-note-role { font-size: 9px; color: var(--ink-light); margin-top: 1px; }
+
+    /* Action buttons */
+    .mag-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: auto; padding-top: 6px; }
+    .mag-btn-gold {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--gold); color: var(--ocean-dark);
+      padding: 11px 20px; border-radius: 7px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+      text-transform: uppercase; text-decoration: none; cursor: pointer;
+      transition: all 0.2s; border: none; flex-shrink: 0;
+    }
+    .mag-btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,169,110,0.3); }
+    .mag-btn-primary {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: transparent; color: var(--ink);
+      border: 1px solid rgba(15,36,48,0.18);
+      padding: 10px 16px; border-radius: 7px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.8px;
+      text-transform: uppercase; text-decoration: none; cursor: pointer;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .mag-btn-primary:hover { background: rgba(15,36,48,0.06); border-color: rgba(15,36,48,0.3); }
+    .mag-btn-save {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: transparent; color: var(--ink-light);
+      border: 1px solid rgba(15,36,48,0.1);
+      padding: 10px 14px; border-radius: 7px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.4px;
+      text-transform: uppercase; text-decoration: none; cursor: pointer;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .mag-btn-save:hover { color: var(--ink); border-color: rgba(15,36,48,0.22); }
+
+    /* Section divider */
+    .section-divider {
+      display: flex; align-items: center; gap: 20px; margin-bottom: 56px;
+    }
+    .section-divider-line { flex: 1; height: 1px; background: rgba(201,169,110,0.12); }
+    .section-divider-text {
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); opacity: 0.6;
+      white-space: nowrap;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .neigh-grid { grid-template-columns: 1fr; max-width: 680px; }
+      .content { padding: 56px; }
+      .hero-content { padding: 48px 56px; }
+      .field-note { padding: 40px; }
+      .mag-spread { grid-template-columns: 42% 58%; min-height: 75vh; max-height: none; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .hero { height: 55vh; min-height: 360px; }
+      .hero-content { padding: 28px; }
+      .content { padding: 20px; }
+      .field-note { padding: 28px 24px; }
+      .field-note::after { display: none; }
+      .compare-wrap { display: none; }
+      .bottom-cta { padding: 36px 24px; }
+      /* Stack magazine spread on mobile */
+      .mag-spread { grid-template-columns: 1fr; min-height: auto; max-height: none; }
+      .mag-image { height: 280px; }
+      .mag-panel { padding: 24px 20px; overflow-y: visible; }
+      .mag-grid { grid-template-columns: 1fr 1fr; }
+      .mag-actions { flex-wrap: wrap; }
+      .mag-btn-gold { flex: 1 1 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR (unchanged) ─── -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item active"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <a href="photography.html" class="sidebar-item"><span class="icon">📷</span> Photography Guide</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Cape Town Guide</div>
+      <h1 class="hero-title">Cape Town<br><em>Neighbourhoods</em></h1>
+      <p class="hero-subtitle">Nine distinct worlds — each with its own energy, its own restaurants, its own reason to linger.</p>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- INTRO -->
+    <div class="intro-block">
+      <p class="intro">Cape Town isn't one city — it's nine cities wearing the same mountain as a backdrop. Where you base yourself shapes everything: what you eat, how far you walk, what kind of mornings you have. Here's Dirk's honest, no-tourist-board take on each.</p>
+      <div class="cta-strip">
+        <a href="itinerary.html" class="btn-primary">✈️ Build My Trip</a>
+        <a href="itinerary.html" class="btn-ghost">💬 Ask Ubuntu</a>
+        <a href="myguide.html" class="btn-ghost">📖 Save to My Guide</a>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SEA POINT · MAGAZINE SPREAD  — two-column single-screen
+         To reuse: copy .mag-spread block, change image URL,
+         .mag-title text, vibe tags, cell values, routes, field note.
+    ═══════════════════════════════════════════════════════ -->
+    <div class="mag-spread">
+
+      <!-- LEFT: CINEMATIC IMAGE -->
+      <div class="mag-image" style="background-image: url('/photos/seapoint.jpeg'); background-position: center 20%; background-size: cover;">
+        <div class="mag-dirks-pick">Dirk's Pick · Best First-Time Base</div>
+        <div class="mag-image-overlay">
+          <div class="mag-featured-label">Featured Neighbourhood</div>
+          <div class="mag-issue">Atlantic Seaboard · Sea Point</div>
+          <div class="mag-title">Sea<br><em>Point</em></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CREAM EDITORIAL PANEL -->
+      <div class="mag-panel">
+
+        <a href="myguide.html" class="mag-bookmark">🔖 Save</a>
+        <p class="mag-subhead">The smartest base for first-time Cape Town visitors.</p>
+        <p class="mag-intro">Wake up by the ocean, walk the promenade, grab coffee on Main Road and reach almost every Cape Town highlight within minutes.</p>
+
+        <div class="mag-vibe">
+          <span class="mag-vibe-tag">Walkable</span>
+          <span class="mag-vibe-tag">Safe Base</span>
+          <span class="mag-vibe-tag">Promenade</span>
+          <span class="mag-vibe-tag">Local Life</span>
+          <span class="mag-vibe-tag">Easy Uber</span>
+          <span class="mag-vibe-tag">Best First Stay</span>
+        </div>
+
+        <div class="mag-grid">
+          <div class="mag-cell">
+            <div class="mag-cell-label"><span class="mag-cell-icon">👤</span>Best for</div>
+            <div class="mag-cell-val">First-time visitors, couples, solo travellers, digital nomads</div>
+          </div>
+          <div class="mag-cell">
+            <div class="mag-cell-label"><span class="mag-cell-icon">🕐</span>Best time</div>
+            <div class="mag-cell-val">Morning promenade walks, sunset drinks</div>
+          </div>
+          <div class="mag-cell">
+            <div class="mag-cell-label"><span class="mag-cell-icon">🍽️</span>Eat here</div>
+            <div class="mag-cell-val">Kleinsky's · La Mouette · Jarryds</div>
+          </div>
+          <div class="mag-cell">
+            <div class="mag-cell-label"><span class="mag-cell-icon">⚠️</span>Avoid if</div>
+            <div class="mag-cell-val">You want beach glamour — choose Camps Bay</div>
+          </div>
+        </div>
+
+        <div class="mag-routes">
+          <div class="mag-routes-label">Walking routes</div>
+          <div class="mag-route">
+            <div class="mag-route-wrap"><div class="mag-route-dot start-dot"></div><div class="mag-route-stop start">Sea Point</div></div>
+            <div class="mag-route-line"></div>
+            <div class="mag-route-wrap"><div class="mag-route-dot"></div><div class="mag-route-stop">Green Point</div></div>
+            <div class="mag-route-line"></div>
+            <div class="mag-route-wrap"><div class="mag-route-dot"></div><div class="mag-route-stop">V&amp;A Waterfront</div></div>
+            <div class="mag-route-badge">🚶 ~20 min</div>
+          </div>
+          <div class="mag-route">
+            <div class="mag-route-wrap"><div class="mag-route-dot start-dot"></div><div class="mag-route-stop start">Sea Point</div></div>
+            <div class="mag-route-line"></div>
+            <div class="mag-route-wrap"><div class="mag-route-dot"></div><div class="mag-route-stop">Clifton</div></div>
+            <div class="mag-route-line"></div>
+            <div class="mag-route-wrap"><div class="mag-route-dot"></div><div class="mag-route-stop">Camps Bay</div></div>
+            <div class="mag-route-badge">🚶 ~25 min</div>
+          </div>
+        </div>
+
+        <div class="mag-field-note">
+          <div class="mag-field-note-label">Dirk's Field Note</div>
+          <div class="mag-field-note-text">"If it's your first Cape Town trip, stay here. It gives you freedom, safety, restaurants, ocean walks and easy access to everything."</div>
+          <div class="mag-field-note-sig">
+            <div class="mag-field-note-avatar"></div>
+            <div><div class="mag-field-note-name">Dirk Zeevenhooven</div><div class="mag-field-note-role">Founder · 15 years in Cape Town</div></div>
+          </div>
+        </div>
+
+        <div class="mag-actions">
+          <a href="itinerary.html" class="mag-btn-gold">✈️ Add to My Itinerary</a>
+          <a href="itinerary.html" class="mag-btn-primary">💬 Ask Ubuntu</a>
+          <a href="#camps-bay" class="mag-btn-primary">⚖️ Compare Areas</a>
+        </div>
+
+      </div>
+    </div>
+    <!-- END SEA POINT MAGAZINE SPREAD -->
+
+    <!-- SECTION DIVIDER -->
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-text">All Neighbourhoods</div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- DIRK'S FIELD NOTE -->
+    <div class="field-note">
+      <div class="field-note-label">Dirk's Field Note · May 2026</div>
+      <div class="field-note-quote">
+        "Most visitors pick their hotel and then discover the neighbourhood. It should be the other way around."
+      </div>
+      <p class="field-note-body">
+        I've watched people book a beautiful hotel in Camps Bay and spend half their holiday in an Uber because nothing is walkable. I've seen families land in the Waterfront and miss the real Cape Town entirely. And I've watched solo travellers plant themselves in Sea Point and never want to leave.<br><br>
+        The neighbourhood is the decision. Get it right and everything else flows — the morning coffee spot you discover on day two, the restaurant you walk past on the way home, the promenade run you do every day. Get it wrong and you spend your trip in transit.<br><br>
+        My honest take: <strong>Sea Point for first-timers, always.</strong> Then branch out from there.
+      </p>
+      <div class="field-note-sig">
+        <div class="field-note-avatar"></div>
+        <div>
+          <div class="field-note-name">Dirk Zeevenhooven</div>
+          <div class="field-note-role">Founder, Planet Curated · 15 years in Cape Town</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEIGHBOURHOOD CARDS -->
+    <div class="neigh-grid">
+
+      <!-- SEA POINT -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/hero-aerial.jpg');">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">Atlantic Seaboard · Dirk's #1 pick</span>
+            <a href="https://maps.google.com/?q=Sea+Point+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Sea Point</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Walkable</span>
+            <span class="vibe-tag">Local vibe</span>
+            <span class="vibe-tag">Promenade</span>
+            <span class="vibe-tag">Cafés</span>
+            <span class="vibe-tag">Safe</span>
+          </div>
+          <p class="neigh-desc">The most walkable neighbourhood in Cape Town. A 5km promenade along the Atlantic, lined with restaurants, coffee shops, and the best people-watching in the city. Diverse, energetic, and unpretentious — this is where locals actually live. The safest and most convenient base for first-time visitors.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Couples, solo travellers, anyone who wants convenience</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">Kleinsky's, La Mouette, Sea Point Rotisserie</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">The Sea Point Pavilion — free ocean pools, open air</span></div>
+            <div class="detail-row"><span class="detail-label">Walk to</span><span class="detail-val">Green Point, V&A Waterfront (20 min), Camps Bay (25 min)</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=Sea+Point+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAMPS BAY -->
+      <div class="neigh-card" id="camps-bay">
+        <div class="neigh-photo" style="background-image: url('/photos/camps-bay.webp');">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">Atlantic Seaboard · Glamorous</span>
+            <a href="https://maps.google.com/?q=Camps+Bay+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Camps Bay</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Beach clubs</span>
+            <span class="vibe-tag">Sundowners</span>
+            <span class="vibe-tag">Scenic</span>
+            <span class="vibe-tag">Expensive</span>
+            <span class="vibe-tag">Romantic</span>
+          </div>
+          <p class="neigh-desc">Glamorous, sunburnt, and beautiful. The beach strip backed by the Twelve Apostles mountain range is one of the most photographed spots in Africa. Expensive, yes — but worth it for sundowners at least once. Visit mid-week for a calmer experience; weekends get packed.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Romantic trips, luxury seekers, beach lovers</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">The Bay Hotel terrace, Codfather (best sushi), Chinchilla</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">Sunset from the beach — the mountain turns pink</span></div>
+            <div class="detail-row"><span class="detail-label">Warning</span><span class="detail-val">Baboons come down from the mountain — secure your picnic</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=Camps+Bay+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- DE WATERKANT -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/Cape-Town-Stadium.jpeg'); background-position: center 40%;">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">City Centre · Central base</span>
+            <a href="https://maps.google.com/?q=De+Waterkant+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">De Waterkant &amp; Green Point</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Boutique hotels</span>
+            <span class="vibe-tag">Restaurants</span>
+            <span class="vibe-tag">Nightlife</span>
+            <span class="vibe-tag">LGBTQ+ friendly</span>
+          </div>
+          <p class="neigh-desc">Boutique hotels, Cape Dutch architecture, and some of the best restaurants in the city. Walking distance to the V&A Waterfront and the Cape Town Stadium. A great base if you want central without touristy. De Waterkant has a vibrant LGBTQ+ scene and strong nightlife.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Nightlife seekers, foodies, cultural explorers</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">The Chefs Warehouse & Canteen, Loading Bay, Burrata</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">Cape Quarter shopping arcade — independent boutiques</span></div>
+            <div class="detail-row"><span class="detail-label">Walk to</span><span class="detail-val">V&A Waterfront (10 min), Sea Point (15 min)</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=De+Waterkant+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BO-KAAP -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/bo-kaap.webp');">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">City Centre · Cultural gem</span>
+            <a href="https://maps.google.com/?q=Bo-Kaap+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Bo-Kaap</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Cultural</span>
+            <span class="vibe-tag">Photography</span>
+            <span class="vibe-tag">History</span>
+            <span class="vibe-tag">Cape Malay</span>
+            <span class="vibe-tag">Go early</span>
+          </div>
+          <p class="neigh-desc">The iconic multicoloured neighbourhood on the slopes of Signal Hill. Home to the Cape Malay community for 200+ years. Visit for the architecture, the history, and the best samosas you'll find anywhere. Go before 8am — by 10am the tour buses arrive and the magic fades.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Photography, cultural immersion, history lovers</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">Biesmiellah (Cape Malay classics since 1969), Bo Kaap Kombuis</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">Bo-Kaap Museum — R30 entry, genuinely fascinating</span></div>
+            <div class="detail-row"><span class="detail-label">Best time</span><span class="detail-val">Before 8am — empty streets, golden morning light</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=Bo-Kaap+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BREE STREET -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/bree-street.jpg'); background-position: center 30%;">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">City Bowl · Food &amp; creative hub</span>
+            <a href="https://maps.google.com/?q=Bree+Street+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Bree Street &amp; Gardens</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Fine dining</span>
+            <span class="vibe-tag">Wine bars</span>
+            <span class="vibe-tag">Independent shops</span>
+            <span class="vibe-tag">Foodie central</span>
+          </div>
+          <p class="neigh-desc">The heartbeat of Cape Town's food and creative scene. Bree Street is lined with independent restaurants, wine bars, and concept stores. This is where chefs open their passion projects — every dinner feels like an event. Book 2–3 weeks ahead for weekends.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Foodies, wine lovers, creative crowd</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">Fyn, The Shortmarket Club, Chefs Warehouse Beau Constantia</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">The Company's Garden — oldest garden in South Africa</span></div>
+            <div class="detail-row"><span class="detail-label">Tip</span><span class="detail-val">Book restaurants 2–3 weeks ahead for weekends</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=Bree+Street+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONSTANTIA -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/Groot Constantia.jpeg'); background-position: center 40%;">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">Southern Suburbs · Wine country</span>
+            <a href="https://maps.google.com/?q=Constantia+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Constantia &amp; Newlands</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Wine estates</span>
+            <span class="vibe-tag">Hiking</span>
+            <span class="vibe-tag">Family-friendly</span>
+            <span class="vibe-tag">Lush</span>
+            <span class="vibe-tag">Peaceful</span>
+          </div>
+          <p class="neigh-desc">Cape Town's wine valley hidden in plain sight. Groot Constantia — the oldest wine estate in South Africa — sits here alongside Klein Constantia, Buitenverwachting and Steenberg. Lush, green, and cooler than the coast. Newlands has Kirstenbosch — arguably the world's most beautiful botanical garden.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Families, wine lovers, nature seekers</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">Kirstenbosch — Sunday evening concerts in summer are magical</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">Constantia Uitsig, La Colombe, Buitenverwachting restaurant</span></div>
+            <div class="detail-row"><span class="detail-label">Getting here</span><span class="detail-val">20 min from city centre — Uber works fine</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=Constantia+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WATERFRONT -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/waterfront.jpeg');">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">V&amp;A Waterfront · Harbour</span>
+            <a href="https://maps.google.com/?q=V%26A+Waterfront+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Waterfront</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Shopping</span>
+            <span class="vibe-tag">Ferries</span>
+            <span class="vibe-tag">Harbour views</span>
+            <span class="vibe-tag">Touristy</span>
+            <span class="vibe-tag">Seals</span>
+          </div>
+          <p class="neigh-desc">Tourist central — but good tourist central. The working harbour, seals on the jetty, Robben Island ferries, and 400+ shops and restaurants. Don't skip it — just don't eat at the obvious places. The Watershed market inside has local designers, great food stalls, and far better prices.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Families, shopping, Robben Island trips</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">Robben Island ferry — book online, sells out fast</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">Harbour House, Quay Four (upstairs), The V&A Food Market</span></div>
+            <div class="detail-row"><span class="detail-label">Tip</span><span class="detail-val">The seals hang around Quay 5 — free entertainment</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=V%26A+Waterfront+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- KALK BAY -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/boulders-beach.jpeg');">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">Southern Peninsula · Character</span>
+            <a href="https://maps.google.com/?q=Kalk+Bay+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Kalk Bay &amp; Simon's Town</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Penguins</span>
+            <span class="vibe-tag">Antiques</span>
+            <span class="vibe-tag">Local food</span>
+            <span class="vibe-tag">Fishing village</span>
+            <span class="vibe-tag">Day trip</span>
+          </div>
+          <p class="neigh-desc">The most characterful stretch of the peninsula. Kalk Bay has a working harbour, independent galleries, and the best fish & chips in Cape Town (Kalky's — cash only, eat on the harbour wall). Simon's Town is home to the African penguin colony at Boulders Beach — unmissable.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Day trips, antique hunters, penguin fans</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">Boulders Beach penguins — buy tickets in advance online</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">Kalky's (fish & chips), Harbour House Kalk Bay, Empire Café</span></div>
+            <div class="detail-row"><span class="detail-label">Getting here</span><span class="detail-val">45 min from Sea Point, or scenic train from Cape Town station</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=Kalk+Bay+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WOODSTOCK -->
+      <div class="neigh-card">
+        <div class="neigh-photo" style="background-image: url('/photos/woodstock.webp');">
+          <div class="neigh-photo-meta">
+            <span class="neigh-area">Inner City · Creative</span>
+            <a href="https://maps.google.com/?q=Woodstock+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
+          </div>
+        </div>
+        <div class="neigh-body">
+          <h3 class="neigh-name">Woodstock &amp; Observatory</h3>
+          <div class="neigh-vibe">
+            <span class="vibe-tag">Street art</span>
+            <span class="vibe-tag">Markets</span>
+            <span class="vibe-tag">Creative scene</span>
+            <span class="vibe-tag">Foodie</span>
+            <span class="vibe-tag">Bohemian</span>
+          </div>
+          <p class="neigh-desc">Cape Town's creative heartland. Woodstock is home to the Neighbourgoods Market (the best in the city) and a sprawling street art scene. Observatory is the student and bohemian neighbourhood — cheap eats, live music, vinyl shops, and a completely different energy from the tourist belt.</p>
+          <div class="neigh-details">
+            <div class="detail-row"><span class="detail-label">Best for</span><span class="detail-val">Creatives, foodies, market lovers, younger travellers</span></div>
+            <div class="detail-row"><span class="detail-label">Don't miss</span><span class="detail-val">Neighbourgoods Market at the Old Biscuit Mill — Saturdays only</span></div>
+            <div class="detail-row"><span class="detail-label">Eat here</span><span class="detail-val">The Test Kitchen (Woodstock), Pot Luck Club, Superette</span></div>
+            <div class="detail-row"><span class="detail-label">Tip</span><span class="detail-val">Stick to Albert Road and Lower Main — avoid isolated streets at night</span></div>
+          </div>
+          <div class="neigh-footer">
+            <a href="https://maps.google.com/?q=Woodstock+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- END GRID -->
+
+    <!-- AT A GLANCE TABLE -->
+    <div class="section-header">
+      <div class="section-eyebrow">Quick reference</div>
+      <h2 class="section-title">At a <em>Glance</em></h2>
+      <p class="section-sub">How the neighbourhoods compare — so you can pick the right base for your trip in seconds.</p>
+    </div>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Neighbourhood</th>
+            <th>Tourist Level</th>
+            <th>Walkability</th>
+            <th>Price Level</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Sea Point</td><td><span class="dot dot-gold"></span> Medium</td><td><span class="dot dot-green"></span> Excellent</td><td><span class="dot dot-gold"></span> Mid</td><td>First-timers, couples</td></tr>
+          <tr><td>Camps Bay</td><td><span class="dot dot-red"></span> High</td><td><span class="dot dot-gold"></span> Good</td><td><span class="dot dot-red"></span> Expensive</td><td>Luxury, beach lovers</td></tr>
+          <tr><td>De Waterkant</td><td><span class="dot dot-gold"></span> Medium</td><td><span class="dot dot-green"></span> Excellent</td><td><span class="dot dot-gold"></span> Mid</td><td>Nightlife, foodies</td></tr>
+          <tr><td>Bo-Kaap</td><td><span class="dot dot-red"></span> High</td><td><span class="dot dot-green"></span> Good</td><td><span class="dot dot-green"></span> Affordable</td><td>Photography, culture</td></tr>
+          <tr><td>Bree Street / Gardens</td><td><span class="dot dot-green"></span> Low</td><td><span class="dot dot-green"></span> Excellent</td><td><span class="dot dot-gold"></span> Mid–High</td><td>Serious foodies</td></tr>
+          <tr><td>Constantia</td><td><span class="dot dot-green"></span> Low</td><td><span class="dot dot-red"></span> Needs car</td><td><span class="dot dot-gold"></span> Mid–High</td><td>Wine, families</td></tr>
+          <tr><td>Waterfront</td><td><span class="dot dot-red"></span> Very high</td><td><span class="dot dot-green"></span> Excellent</td><td><span class="dot dot-red"></span> Expensive</td><td>Shopping, Robben Island</td></tr>
+          <tr><td>Kalk Bay / Simon's Town</td><td><span class="dot dot-gold"></span> Medium</td><td><span class="dot dot-gold"></span> Good locally</td><td><span class="dot dot-green"></span> Affordable</td><td>Day trips, penguins</td></tr>
+          <tr><td>Woodstock / Observatory</td><td><span class="dot dot-green"></span> Low</td><td><span class="dot dot-gold"></span> Good</td><td><span class="dot dot-green"></span> Affordable</td><td>Markets, creatives</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BOTTOM CTA -->
+    <div class="bottom-cta">
+      <div class="bottom-cta-eyebrow">Ready to plan?</div>
+      <h2 class="bottom-cta-title">Tell Ubuntu your trip.<br><em>Get the right neighbourhood.</em></h2>
+      <p class="bottom-cta-sub">Ubuntu asks the right questions — dates, travel style, budget, who you're with — and tells you exactly where to stay.</p>
+      <div class="bottom-cta-buttons">
+        <a href="itinerary.html" class="btn-primary">✈️ Build My Trip</a>
+        <a href="itinerary.html" class="btn-ghost">💬 Ask Ubuntu</a>
+        <a href="myguide.html" class="btn-ghost">📖 Save to My Guide</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

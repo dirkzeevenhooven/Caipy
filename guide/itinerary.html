@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build My Trip · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --gold: #C9A96E; --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25); --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+    /* HERO */
+    .hero {
+      position: relative; height: 60vh; min-height: 420px;
+      background: url('/photos/table-mountain.jpeg') center/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.2) 0%, rgba(15,36,48,0.92) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 48px 60px; max-width: 680px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 300; line-height: 1.1; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; }
+
+    /* CONTENT */
+    .content { padding: 64px 60px 80px; max-width: 900px; }
+
+    /* STEPS */
+    .steps-section { margin-bottom: 64px; }
+    .section-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .steps-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; position: relative; }
+    .steps-row::before {
+      content: ''; position: absolute; top: 28px; left: calc(16.66% + 12px); right: calc(16.66% + 12px);
+      height: 1px; background: rgba(201,169,110,0.2); z-index: 0;
+    }
+    .step { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600;
+      border: 1px solid rgba(201,169,110,0.3); background: var(--ocean-dark); color: var(--gold);
+      transition: all 0.3s;
+    }
+    .step.active .step-num { background: var(--gold); color: var(--ocean-dark); border-color: var(--gold); }
+    .step-title { font-size: 13px; font-weight: 500; color: var(--white); margin-bottom: 6px; }
+    .step-desc { font-size: 12px; color: var(--white-faint); line-height: 1.6; }
+
+    /* UBUNTU CARD */
+    .ubuntu-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.18);
+      border-radius: 16px; padding: 40px 48px; margin-bottom: 40px;
+      display: flex; gap: 40px; align-items: center;
+    }
+    .ubuntu-avatar {
+      width: 100px; height: 100px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(201,169,110,0.2), rgba(201,169,110,0.05));
+      border: 2px solid rgba(201,169,110,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+    }
+    .ubuntu-info { flex: 1; }
+    .ubuntu-badge { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .ubuntu-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .ubuntu-name em { font-style: italic; color: var(--gold); }
+    .ubuntu-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 20px; }
+    .ubuntu-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ubuntu-tag { font-size: 11px; color: var(--white-faint); background: rgba(255,255,255,0.05); border: 1px solid rgba(201,169,110,0.12); border-radius: 20px; padding: 4px 12px; }
+
+    /* PREPARE BOX */
+    .prepare-box {
+      background: rgba(201,169,110,0.05); border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 12px; padding: 32px 36px; margin-bottom: 40px;
+    }
+    .prepare-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 6px; }
+    .prepare-title em { font-style: italic; color: var(--gold); }
+    .prepare-sub { font-size: 13px; color: var(--white-faint); margin-bottom: 24px; }
+    .prepare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .prepare-item { display: flex; gap: 12px; align-items: flex-start; }
+    .prepare-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .prepare-text strong { font-size: 13px; color: var(--white); display: block; margin-bottom: 2px; }
+    .prepare-text span { font-size: 12px; color: var(--white-faint); line-height: 1.5; }
+
+    /* INTERESTS */
+    .interests-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.15); border-radius: 16px; padding: 36px 40px; margin-bottom: 32px; }
+    .interests-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; margin-bottom: 6px; }
+    .interests-box h3 em { font-style: italic; color: var(--gold); }
+    .interests-box p { font-size: 13px; color: var(--white-faint); margin-bottom: 24px; }
+    .interest-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .interest-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px; border-radius: 40px; font-size: 13px; cursor: pointer;
+      border: 1px solid rgba(201,169,110,0.2); color: var(--white-dim);
+      background: rgba(255,255,255,0.04); transition: all 0.2s; user-select: none;
+    }
+    .interest-chip:hover { border-color: rgba(201,169,110,0.5); color: var(--white); background: rgba(201,169,110,0.06); }
+    .interest-chip.selected { background: rgba(201,169,110,0.15); border-color: var(--gold); color: var(--gold); }
+    .interest-chip.mix { border-style: dashed; }
+    .interest-chip.mix.selected { background: rgba(201,169,110,0.12); }
+    .interests-hint { font-size: 11px; color: var(--white-faint); font-style: italic; }
+
+    /* CTA */
+    .cta-box { text-align: center; padding: 48px 40px; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.15); border-radius: 16px; margin-bottom: 32px; }
+    .cta-box h2 { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; margin-bottom: 12px; }
+    .cta-box h2 em { font-style: italic; color: var(--gold); }
+    .cta-box p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 480px; margin: 0 auto 32px; }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--gold); color: var(--ocean-dark);
+      padding: 18px 48px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; text-decoration: none;
+      transition: all 0.2s; margin-bottom: 16px;
+    }
+    .cta-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,169,110,0.25); }
+    .cta-note { font-size: 12px; color: var(--white-faint); }
+    .cta-sample { display: inline-block; margin-top: 16px; font-size: 12px; color: rgba(201,169,110,0.55); text-decoration: none; transition: color 0.2s; }
+    .cta-sample:hover { color: var(--gold); }
+
+    /* WHAT HAPPENS NEXT */
+    .next-section { margin-top: 48px; }
+    .next-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; margin-bottom: 20px; }
+    .next-title em { font-style: italic; color: var(--gold); }
+    .next-steps { display: flex; flex-direction: column; gap: 0; border: 1px solid rgba(201,169,110,0.12); border-radius: 12px; overflow: hidden; }
+    .next-step { display: flex; gap: 20px; align-items: flex-start; padding: 20px 24px; border-bottom: 1px solid rgba(201,169,110,0.08); }
+    .next-step:last-child { border-bottom: none; }
+    .next-step-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--gold); opacity: 0.5; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+    .next-step-text strong { font-size: 13px; color: var(--white); display: block; margin-bottom: 4px; }
+    .next-step-text span { font-size: 12px; color: var(--white-faint); line-height: 1.6; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; } .main { margin-left: 0; }
+      .hero-content { padding: 32px 24px; }
+      .content { padding: 40px 24px 60px; }
+      .steps-row { grid-template-columns: 1fr; gap: 24px; }
+      .steps-row::before { display: none; }
+      .ubuntu-card { flex-direction: column; padding: 28px 24px; gap: 24px; }
+      .prepare-grid { grid-template-columns: 1fr; }
+      .cta-box { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item active"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Plan Your Trip</div>
+      <h1 class="hero-title">Your personalised<br><em>Cape Town itinerary</em><br>in under 2 minutes</h1>
+      <p class="hero-sub">Have a quick conversation with Ubuntu — our AI Cape Town travel guide — and get a day-by-day plan built entirely around you.</p>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOW IT WORKS -->
+    <div class="steps-section">
+      <div class="section-label">How it works</div>
+      <div class="steps-row">
+        <div class="step active">
+          <div class="step-num">1</div>
+          <div class="step-title">Talk to Ubuntu</div>
+          <div class="step-desc">A short 2-minute voice conversation. Ubuntu asks about your dates, style and interests.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">We build your plan</div>
+          <div class="step-desc">AI generates a personalised day-by-day itinerary based on exactly what you said.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Check your inbox</div>
+          <div class="step-desc">Your itinerary arrives by email within minutes — ready to use, save and share.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UBUNTU INTRO -->
+    <div class="ubuntu-card">
+      <div class="ubuntu-avatar">🌍</div>
+      <div class="ubuntu-info">
+        <div class="ubuntu-badge">Your AI Cape Town Travel Guide</div>
+        <div class="ubuntu-name">Meet <em>Ubuntu</em></div>
+        <div class="ubuntu-desc">Ubuntu knows Cape Town the way a local does — the hikes to do before 7am, the wine estates worth the drive, the beaches that don't appear on any tourist map. Ask anything. The conversation takes about 2 minutes and the itinerary is built around exactly what you say.</div>
+        <div class="ubuntu-tags">
+          <span class="ubuntu-tag">🗣️ Voice AI</span>
+          <span class="ubuntu-tag">🕐 ~2 minutes</span>
+          <span class="ubuntu-tag">📧 Emailed to you</span>
+          <span class="ubuntu-tag">🆓 Free</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREPARE -->
+    <div class="prepare-box">
+      <div class="prepare-title">Before you start — <em>have these ready</em></div>
+      <div class="prepare-sub">Ubuntu will ask you about these. Takes 30 seconds to think through.</div>
+      <div class="prepare-grid">
+        <div class="prepare-item">
+          <div class="prepare-icon">📅</div>
+          <div class="prepare-text">
+            <strong>Your dates</strong>
+            <span>When are you arriving and leaving Cape Town?</span>
+          </div>
+        </div>
+        <div class="prepare-item">
+          <div class="prepare-icon">🧳</div>
+          <div class="prepare-text">
+            <strong>Travel style</strong>
+            <span>Solo, couple, family, group? First time or returning?</span>
+          </div>
+        </div>
+        <div class="prepare-item">
+          <div class="prepare-icon">❤️</div>
+          <div class="prepare-text">
+            <strong>What you love</strong>
+            <span>Outdoors, food, wine, culture, beaches, nightlife?</span>
+          </div>
+        </div>
+        <div class="prepare-item">
+          <div class="prepare-icon">💰</div>
+          <div class="prepare-text">
+            <strong>Budget feel</strong>
+            <span>Backpacker, mid-range, or no limit? Roughly.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERESTS -->
+    <div class="interests-box">
+      <h3>What do you <em>love most?</em></h3>
+      <p>Pick as many as you like — Ubuntu will build your itinerary around these.</p>
+      <div class="interest-chips">
+        <div class="interest-chip" onclick="toggleInterest(this)">🥾 Hiking & Outdoors</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🍽️ Food & Restaurants</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🍷 Wine & Winelands</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🏖️ Beaches</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🎨 Culture & Art</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🌙 Nightlife</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">💎 Hidden Gems</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🚗 Day Trips</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">📸 Photography</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🛒 Markets</div>
+        <div class="interest-chip" onclick="toggleInterest(this)">🐧 Wildlife & Nature</div>
+        <div class="interest-chip mix" onclick="toggleMix(this)">✨ Mix of Everything</div>
+      </div>
+      <div class="interests-hint" id="interests-hint">Select what excites you most about Cape Town.</div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-box">
+      <h2>Ready? Let's build<br><em>your Cape Town trip</em></h2>
+      <p>Click below to start your conversation with Ubuntu. Make sure your microphone is on — it's a voice call, not a chat.</p>
+      <a href="https://thecapetownguide.com" class="cta-btn">
+        <span>🌍</span> Start talking to Ubuntu
+      </a>
+      <div class="cta-note">🎙️ Voice call · ~2 minutes · Free · Itinerary sent to your inbox</div>
+      <br>
+      <a href="sample-itinerary.html" class="cta-sample">See a sample itinerary first →</a>
+    </div>
+
+    <!-- WHAT HAPPENS NEXT -->
+    <div class="next-section">
+      <div class="next-title">What happens <em>after the call</em></div>
+      <div class="next-steps">
+        <div class="next-step">
+          <div class="next-step-num">1</div>
+          <div class="next-step-text">
+            <strong>Your itinerary is generated immediately</strong>
+            <span>Based on everything you told Ubuntu — dates, style, interests, budget — a personalised day-by-day plan is created in seconds.</span>
+          </div>
+        </div>
+        <div class="next-step">
+          <div class="next-step-num">2</div>
+          <div class="next-step-text">
+            <strong>It arrives in your inbox within minutes</strong>
+            <span>Look for an email from hello@thecapetownguide.com. Check spam if it doesn't appear after 5 minutes.</span>
+          </div>
+        </div>
+        <div class="next-step">
+          <div class="next-step-num">3</div>
+          <div class="next-step-text">
+            <strong>Can't find it? Resend it instantly</strong>
+            <span>Go to <a href="myguide.html" style="color:var(--gold);text-decoration:none;">My Guide</a> and enter your email — we'll resend your itinerary link in seconds.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggleInterest(chip) {
+    const mixChip = document.querySelector('.interest-chip.mix');
+    mixChip.classList.remove('selected');
+    chip.classList.toggle('selected');
+    updateHint();
+  }
+
+  function toggleMix(chip) {
+    const allChips = document.querySelectorAll('.interest-chip:not(.mix)');
+    allChips.forEach(c => c.classList.remove('selected'));
+    chip.classList.toggle('selected');
+    updateHint();
+  }
+
+  function updateHint() {
+    const selected = document.querySelectorAll('.interest-chip.selected');
+    const hint = document.getElementById('interests-hint');
+    const mixSelected = document.querySelector('.interest-chip.mix.selected');
+    if (mixSelected) {
+      hint.textContent = 'Perfect — Ubuntu will build you a well-rounded Cape Town experience covering all the best bits.';
+    } else if (selected.length === 0) {
+      hint.textContent = 'Select what excites you most about Cape Town.';
+    } else if (selected.length === 1) {
+      hint.textContent = '1 interest selected — feel free to add more!';
+    } else {
+      hint.textContent = selected.length + ' interests selected — lekker! Ubuntu will work with all of these.';
+    }
+  }
+</script>
+</body>
+</html>
