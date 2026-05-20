@@ -251,9 +251,27 @@
     .activity-meta-item strong { color: var(--white-dim); }
 
     @media (max-width: 900px) { .activity-nav { padding: 12px 24px; } .activities-wrap { padding: 0 24px 60px; } }
+  /* Sidebar toggle */
+    .sidebar { transition: transform 0.35s ease; }
+    .main { transition: margin-left 0.35s ease; }
+    body.nav-hidden .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+    body.nav-hidden .main { margin-left: 0; }
+    .nav-toggle {
+      position: fixed; top: 16px; left: calc(var(--sidebar-w) + 12px); z-index: 200;
+      height: 32px; padding: 0 14px 0 10px; border-radius: 20px;
+      background: rgba(15,36,48,0.75); border: 1px solid rgba(201,169,110,0.3);
+      color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 7px;
+      font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      backdrop-filter: blur(6px); white-space: nowrap;
+    }
+    .nav-toggle:hover { background: rgba(201,169,110,0.15); border-color: var(--gold); }
+    .nav-toggle .toggle-icon { font-size: 13px; }
+    .nav-toggle { transition: left 0.35s ease; }
+    body.nav-hidden .nav-toggle { left: 16px; }
   </style>
 </head>
 <body>
+<button class="nav-toggle" id="navToggle" title="Toggle navigation" onclick="const h=document.body.classList.toggle('nav-hidden');this.innerHTML=h?'<span class=\'toggle-icon\'>☰<\/span> Menu':'<span class=\'toggle-icon\'>✕<\/span> Close'"><span class="toggle-icon">✕</span> Close</button>
 
 <!-- SIDEBAR -->
 <nav class="sidebar">
