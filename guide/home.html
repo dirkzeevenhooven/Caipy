@@ -24,7 +24,7 @@
     .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 14px; color: rgba(250,248,244,0.88); cursor: pointer; transition: all 0.2s; text-decoration: none; }
     .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
     .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
-    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+    .sidebar-item .icon { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 1.75; }
 
     .main { margin-left: var(--sidebar-w); }
 
@@ -129,16 +129,17 @@
     .nav-toggle {
       position: fixed; top: 16px; left: calc(var(--sidebar-w) + 12px); z-index: 200;
       height: 32px; padding: 0 14px 0 10px; border-radius: 20px;
-      background: rgba(15,36,48,0.75); border: 1px solid rgba(201,169,110,0.3);
-      color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 7px;
+      background: rgba(15,36,48,0.75); border: 1px solid rgba(90,180,232,0.35);
+      color: rgba(90,180,232,0.9); cursor: pointer; display: flex; align-items: center; gap: 7px;
       font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
       backdrop-filter: blur(6px); white-space: nowrap;
     }
-    .nav-toggle:hover { background: rgba(201,169,110,0.15); border-color: var(--gold); }
+    .nav-toggle:hover { background: rgba(90,180,232,0.12); border-color: rgba(90,180,232,0.7); }
     .nav-toggle .toggle-icon { font-size: 13px; }
     .nav-toggle { transition: left 0.35s ease; }
     body.nav-hidden .nav-toggle { left: 16px; }
   </style>
+<script src="https://unpkg.com/lucide.292.0/dist/umd/lucide.min.js"></script>
 </head>
 <body>
 <button class="nav-toggle" id="navToggle" title="Toggle navigation" onclick="const h=document.body.classList.toggle('nav-hidden');this.innerHTML=h?'<span class=\'toggle-icon\'>☰</span> Menu':'<span class=\'toggle-icon\'>✕</span> Close'"><span class="toggle-icon">✕</span> Close</button>
@@ -149,30 +150,30 @@
     <div class="sub">Cape Town Guide</div>
   </div>
   <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
-    <div class="sidebar-section">Dashboard</div>
-  <a href="home.html" class="sidebar-item active"><span class="icon">🏠</span> Home</a>
-  <a href="sample-itinerary.html" class="sidebar-item"><span class="icon">📄</span> Sample Itinerary</a>
-  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
-  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+      <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item active"><i data-lucide="home" class="icon"></i> Home</a>
+  <a href="sample-itinerary.html" class="sidebar-item"><i data-lucide="file-text" class="icon"></i> Sample Itinerary</a>
+  <a href="map.html" class="sidebar-item"><i data-lucide="map" class="icon"></i> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><i data-lucide="sun" class="icon"></i> Live Cape Town</a>
   <div class="sidebar-section">Explore</div>
-  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
-  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
-  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
-  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches & Outdoors</a>
-  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <a href="experiences.html" class="sidebar-item"><i data-lucide="star" class="icon"></i> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><i data-lucide="gem" class="icon"></i> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><i data-lucide="map-pin" class="icon"></i> Neighbourhoods</a>
+  <a href="beaches.html" class="sidebar-item"><i data-lucide="waves" class="icon"></i> Beaches & Outdoors</a>
+  <a href="daytrips.html" class="sidebar-item"><i data-lucide="car" class="icon"></i> Day Trips</a>
   <div class="sidebar-section">Eat & Drink</div>
-  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Foodies</a>
-  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
+  <a href="food.html" class="sidebar-item"><i data-lucide="utensils" class="icon"></i> Where to Eat</a>
+  <a href="wine.html" class="sidebar-item"><i data-lucide="wine" class="icon"></i> Wine & Winelands</a>
   <div class="sidebar-section">Stay & Get Around</div>
-  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
-  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Car Rental</a>
+  <a href="stay.html" class="sidebar-item"><i data-lucide="bed-double" class="icon"></i> Where to Stay</a>
+  <a href="carrental.html" class="sidebar-item"><i data-lucide="key" class="icon"></i> Car Rental</a>
   <div class="sidebar-section">Trip Prep</div>
-  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> Budget & Costs</a>
-  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
-  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing & Essentials</a>
+  <a href="budget.html" class="sidebar-item"><i data-lucide="wallet" class="icon"></i> Budget & Costs</a>
+  <a href="safety.html" class="sidebar-item"><i data-lucide="shield" class="icon"></i> Safety Guide</a>
+  <a href="packing.html" class="sidebar-item"><i data-lucide="luggage" class="icon"></i> Packing & Essentials</a>
   <div class="sidebar-section">My Trip</div>
-  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
-  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+  <a href="itinerary.html" class="sidebar-item"><i data-lucide="plane" class="icon"></i> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><i data-lucide="book-open" class="icon"></i> My Guide</a>
 </div>
 
 <div class="main">
@@ -432,5 +433,6 @@
   })();
 </script>
 
+<script>lucide.createIcons();</script>
 </body>
 </html>
