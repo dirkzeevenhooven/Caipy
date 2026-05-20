@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sample Personalised Itinerary · Planet Curated Cape Town</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -33,12 +33,12 @@
     /* HERO */
     .hero {
       position: relative; height: 52vh; min-height: 360px;
-      background: url('/photos/capetown-droneshot.jpg') center 40%/cover no-repeat;
+      background: url('/photos/hero-aerial.jpg') center 40%/cover no-repeat;
       display: flex; align-items: flex-end; overflow: hidden;
     }
     .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.2) 0%, rgba(15,36,48,0.88) 100%); }
     .hero-content { position: relative; z-index: 2; padding: 48px 60px; }
-    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .hero-eyebrow { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
     .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4.5vw, 58px); font-weight: 300; line-height: 1.1; margin-bottom: 14px; }
     .hero-title em { font-style: italic; color: var(--gold); }
     .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 560px; }
@@ -46,64 +46,131 @@
     /* PROFILE STRIP */
     .profile-strip {
       background: rgba(201,169,110,0.06); border-bottom: 1px solid rgba(201,169,110,0.12);
-      padding: 20px 60px; display: flex; gap: 32px; align-items: center; flex-wrap: wrap;
+      padding: 20px 60px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
     }
-    .profile-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-right: 4px; }
-    .profile-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--white-dim); background: rgba(255,255,255,0.05); border: 1px solid rgba(201,169,110,0.15); border-radius: 20px; padding: 4px 12px; }
+    .profile-label { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-right: 4px; white-space: nowrap; }
+    .profile-tag { display: inline-flex; align-items: center; gap: 6px; font-family: 'Jost', sans-serif; font-size: 11px; color: var(--white-dim); background: rgba(255,255,255,0.05); border: 1px solid rgba(201,169,110,0.15); border-radius: 20px; padding: 4px 12px; }
 
     /* CONTENT */
-    .content { padding: 52px 60px 80px; max-width: 900px; }
+    .content { padding: 52px 60px 80px; max-width: 960px; }
+
+    /* SECTION HEADERS */
+    .section-eyebrow { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .section-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3vw, 40px); font-weight: 300; line-height: 1.1; margin-bottom: 8px; }
+    .section-heading em { font-style: italic; color: var(--gold); }
+    .section-sub { font-size: 14px; color: var(--white-dim); line-height: 1.7; margin-bottom: 40px; }
 
     /* DAY CARDS */
     .day-card {
-      margin-bottom: 40px; border: 1px solid rgba(201,169,110,0.15);
-      border-radius: 16px; overflow: hidden;
+      margin-bottom: 32px; border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 12px; overflow: hidden;
     }
-    .day-header {
-      background: linear-gradient(135deg, rgba(201,169,110,0.1) 0%, rgba(201,169,110,0.04) 100%);
-      padding: 24px 32px; border-bottom: 1px solid rgba(201,169,110,0.12);
-      display: flex; align-items: baseline; gap: 16px;
+    .day-photo {
+      position: relative; height: 220px; overflow: hidden;
     }
-    .day-number { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--gold); line-height: 1; flex-shrink: 0; }
-    .day-header-text { }
-    .day-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--white); margin-bottom: 4px; }
-    .day-vibe { font-size: 12px; color: var(--white-dim); }
-    .day-body { padding: 0; }
+    .day-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; display: block; }
+    .day-card:hover .day-photo img { transform: scale(1.03); }
+    .day-photo-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(15,36,48,0.75) 0%, rgba(15,36,48,0.15) 60%);
+    }
+    .day-photo-label {
+      position: absolute; bottom: 20px; left: 28px; z-index: 2;
+    }
+    .day-num { font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 400; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+    .day-title-over { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--white); line-height: 1.15; }
+    .day-vibe { font-family: 'Jost', sans-serif; font-size: 11px; color: rgba(250,248,244,0.6); margin-top: 4px; letter-spacing: 0.5px; }
 
-    .time-block { padding: 22px 32px; border-bottom: 1px solid rgba(201,169,110,0.07); }
+    .day-body { }
+    .time-block { padding: 20px 28px; border-bottom: 1px solid rgba(201,169,110,0.07); display: grid; grid-template-columns: 90px 1fr; gap: 20px; align-items: baseline; }
     .time-block:last-child { border-bottom: none; }
-    .time-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-    .time-label::after { content: ''; flex: 1; height: 1px; background: rgba(201,169,110,0.12); }
-    .time-content { font-size: 14px; color: var(--white-dim); line-height: 1.7; }
-    .time-content strong { color: var(--white); }
+    .time-label { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); padding-top: 3px; }
+    .time-content { font-size: 14px; color: var(--white-dim); line-height: 1.75; }
+    .time-content strong { color: var(--white); font-weight: 500; }
+    .time-content a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,169,110,0.3); transition: border-color 0.2s; }
+    .time-content a:hover { border-color: var(--gold); }
 
     /* NOTES ROW */
     .notes-row {
       display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
       border-top: 1px solid rgba(201,169,110,0.1);
-      background: rgba(15,36,48,0.4);
+      background: rgba(15,36,48,0.5);
     }
-    .note-block { padding: 18px 22px; border-right: 1px solid rgba(201,169,110,0.08); }
+    .note-block { padding: 18px 24px; border-right: 1px solid rgba(201,169,110,0.08); }
     .note-block:last-child { border-right: none; }
-    .note-icon { font-size: 14px; margin-bottom: 6px; }
-    .note-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; opacity: 0.8; }
-    .note-text { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+    .note-label { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; opacity: 0.8; }
+    .note-text { font-size: 12px; color: var(--white-dim); line-height: 1.65; }
+
+    /* DIVIDER */
+    .section-divider { border: none; border-top: 1px solid rgba(201,169,110,0.12); margin: 64px 0 56px; }
+
+    /* WHERE TO STAY */
+    .stay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px; }
+    .stay-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 10px; overflow: hidden; transition: all 0.25s;
+    }
+    .stay-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.28); transform: translateY(-2px); }
+    .stay-photo { height: 140px; overflow: hidden; }
+    .stay-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+    .stay-card:hover .stay-photo img { transform: scale(1.05); }
+    .stay-info { padding: 20px; }
+    .stay-tier { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .stay-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--white); margin-bottom: 4px; line-height: 1.2; }
+    .stay-area { font-family: 'Jost', sans-serif; font-size: 11px; color: var(--white-faint); margin-bottom: 10px; }
+    .stay-desc { font-size: 12px; color: var(--white-dim); line-height: 1.65; margin-bottom: 14px; }
+    .stay-price { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold); margin-bottom: 14px; }
+    .stay-link { display: inline-flex; align-items: center; gap: 6px; font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); text-decoration: none; border: 1px solid rgba(201,169,110,0.3); border-radius: 4px; padding: 7px 14px; transition: all 0.2s; }
+    .stay-link:hover { background: rgba(201,169,110,0.1); border-color: var(--gold); }
+
+    .stay-tier-label { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,169,110,0.5); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+
+    /* CAR RENTAL */
+    .car-companies { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .car-company {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 10px; padding: 24px 20px; text-align: center; transition: all 0.25s;
+    }
+    .car-company:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.28); transform: translateY(-2px); }
+    .company-tag { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .company-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--white); margin-bottom: 8px; }
+    .company-desc { font-size: 12px; color: var(--white-dim); line-height: 1.6; margin-bottom: 16px; }
+    .company-link { display: inline-block; font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,169,110,0.3); padding-bottom: 2px; transition: border-color 0.2s; }
+    .company-link:hover { border-color: var(--gold); }
+
+    .car-types { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .car-type {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.1);
+      border-radius: 10px; overflow: hidden; transition: all 0.25s;
+    }
+    .car-type:hover { border-color: rgba(201,169,110,0.25); transform: translateY(-2px); }
+    .car-type-photo { height: 110px; overflow: hidden; background: rgba(255,255,255,0.05); }
+    .car-type-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .car-type-info { padding: 16px; }
+    .car-type-label { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+    .car-type-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; color: var(--white); margin-bottom: 4px; }
+    .car-type-example { font-size: 11px; color: var(--white-faint); margin-bottom: 6px; }
+    .car-type-price { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--gold); }
+
+    .rental-note { background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.15); border-radius: 8px; padding: 18px 24px; font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 40px; }
+    .rental-note strong { color: var(--gold); }
 
     /* CTA */
     .cta-card {
-      margin-top: 16px; background: linear-gradient(135deg, rgba(201,169,110,0.09), rgba(201,169,110,0.02));
-      border: 1px solid rgba(201,169,110,0.28); border-radius: 16px;
+      margin-top: 24px; background: linear-gradient(135deg, rgba(201,169,110,0.09), rgba(201,169,110,0.02));
+      border: 1px solid rgba(201,169,110,0.28); border-radius: 12px;
       padding: 44px 48px; display: flex; align-items: center; justify-content: space-between; gap: 40px;
     }
-    .cta-text .cta-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-text .cta-label { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
     .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 10px; }
     .cta-text h3 em { font-style: italic; color: var(--gold); }
     .cta-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 440px; }
-    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 6px; font-family: 'Jost', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; }
     .btn-cta:hover { background: var(--gold-light); }
 
-    @media (max-width: 900px) { .notes-row { grid-template-columns: 1fr; } .note-block { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.08); } .cta-card { flex-direction: column; padding: 32px 28px; } }
-    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero-content { padding: 32px 24px; } .content { padding: 32px 20px 60px; } .profile-strip { padding: 16px 20px; gap: 12px; } .day-header { padding: 20px 20px; } .time-block { padding: 18px 20px; } .note-block { padding: 14px 16px; } }
+    @media (max-width: 1100px) { .car-companies { grid-template-columns: repeat(2, 1fr); } .car-types { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 900px) { .stay-grid { grid-template-columns: 1fr; } .notes-row { grid-template-columns: 1fr; } .note-block { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.08); } .cta-card { flex-direction: column; padding: 32px 28px; } .time-block { grid-template-columns: 1fr; gap: 4px; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero-content { padding: 32px 24px; } .content { padding: 32px 20px 60px; } .profile-strip { padding: 16px 20px; } .car-companies { grid-template-columns: 1fr 1fr; } .car-types { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
@@ -137,7 +204,7 @@
   <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
   <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
   <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
-  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Car Rental</a>
   <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
   <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
   <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
@@ -153,232 +220,465 @@
     <div class="hero-content">
       <div class="hero-eyebrow">Planet Curated · Sample Output</div>
       <h1 class="hero-title">Sample Personalised<br><em>Cape Town Itinerary</em></h1>
-      <p class="hero-sub">For a first-time visitor who loves views, food, wine, beaches and smart safety planning.</p>
+      <p class="hero-sub">Five days. First-time visitor. Views, food, wine, beaches — done properly.</p>
     </div>
   </div>
 
   <!-- PROFILE STRIP -->
   <div class="profile-strip">
-    <span class="profile-label">This trip is built for</span>
-    <span class="profile-tag">🗺️ First-time visitor</span>
-    <span class="profile-tag">🏔️ Views &amp; outdoors</span>
-    <span class="profile-tag">🍽️ Food lover</span>
-    <span class="profile-tag">🍷 Wine</span>
-    <span class="profile-tag">🏖️ Beaches</span>
-    <span class="profile-tag">🛡️ Safety-conscious</span>
-    <span class="profile-tag">📅 5 days</span>
+    <span class="profile-label">Built for</span>
+    <span class="profile-tag">First-time visitor</span>
+    <span class="profile-tag">Views &amp; outdoors</span>
+    <span class="profile-tag">Food &amp; wine</span>
+    <span class="profile-tag">Beaches</span>
+    <span class="profile-tag">Safety-conscious</span>
+    <span class="profile-tag">5 days</span>
   </div>
 
   <div class="content">
 
+    <div class="section-eyebrow">The Itinerary</div>
+    <h2 class="section-heading">Five days.<br><em>Perfectly sequenced.</em></h2>
+    <p class="section-sub">This is a sample. Your itinerary is built around your exact trip — your dates, budget, travel style and interests.</p>
+
     <!-- DAY 1 -->
     <div class="day-card">
-      <div class="day-header">
-        <div class="day-number">1</div>
-        <div class="day-header-text">
-          <div class="day-title">Arrival Day — Settle In &amp; Find Your Feet</div>
-          <div class="day-vibe">Easy start · Sea Point · First sunset · No pressure</div>
+      <div class="day-photo">
+        <img src="/photos/sea-point.jpeg" alt="Sea Point, Cape Town" loading="lazy">
+        <div class="day-photo-overlay"></div>
+        <div class="day-photo-label">
+          <div class="day-num">Day One · Arrival</div>
+          <div class="day-title-over">Settle In</div>
+          <div class="day-vibe">Sea Point · V&amp;A Waterfront · Bree Street</div>
         </div>
       </div>
       <div class="day-body">
         <div class="time-block">
-          <div class="time-label">Morning / Arrival</div>
-          <div class="time-content">Land, transfer to your accommodation, and <strong>do nothing</strong>. Unpack, shower, get oriented. Cape Town rewards the rested traveller. Don't try to cram your first afternoon — you have five days.</div>
+          <div class="time-label">Morning</div>
+          <div class="time-content">Land, transfer, unpack. Cape Town rewards the rested traveller — don't try to cram the first afternoon. Book a car through the airport desks or collect your pre-booked rental from <strong>Sixt</strong> or <strong>Hertz</strong> (both in the arrivals hall).</div>
         </div>
         <div class="time-block">
           <div class="time-label">Afternoon</div>
-          <div class="time-content">Walk the <strong>Sea Point Promenade</strong> — a 3km coastal path with mountain views, ocean pools and the real Cape Town in plain sight. Families, joggers, pensioners, beach volleyball. Watch the Atlantic crash against the rocks. End at the <strong>Sea Point Pavilion tidal pool</strong> for a swim if you're brave enough (water is cold).</div>
+          <div class="time-content">Walk the <strong>Sea Point Promenade</strong> — 3km of coastal path with Table Mountain behind you and the Atlantic ahead. Real Cape Town in plain sight. End at the <strong>Sea Point Pavilion tidal pool</strong>.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Evening</div>
-          <div class="time-content"><strong>Sunset drinks at Koi Bar or Café Caprice</strong> on the Camps Bay strip — watch the sun drop behind the Twelve Apostles with a glass of something cold. Then cross to <strong>Bree Street for dinner</strong>. Superette (if open), Wren, or Bocca. All brilliant, none will disappoint. Budget R250–400 per person.</div>
+          <div class="time-content"><strong>Sunset drinks at Camps Bay</strong> strip — Café Caprice or Koi Bar. Then <strong>Bree Street for dinner</strong>: Superette, Wren, or Bocca. Book ahead. Budget R250–400 per person.</div>
         </div>
       </div>
       <div class="notes-row">
         <div class="note-block">
-          <div class="note-icon">💡</div>
           <div class="note-label">Insider Tip</div>
-          <div class="note-text">Book Bree Street dinner reservations online before you land — good tables go fast, especially Thursday–Saturday.</div>
+          <div class="note-text">Book Bree Street dinner before you land — good tables go Thursday to Saturday within hours of opening.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">🛡️</div>
-          <div class="note-label">Safety &amp; Timing</div>
-          <div class="note-text">Uber from airport to accommodation. Uber back from Bree Street at night. Never walk to your car alone late evening in unfamiliar areas.</div>
+          <div class="note-label">Safety</div>
+          <div class="note-text">Uber from airport to accommodation. Uber back from Bree Street at night. Never walk alone late in unfamiliar areas.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">☁️</div>
-          <div class="note-label">Plan B (Bad Weather)</div>
-          <div class="note-text">Skip the promenade and head to the <strong>V&amp;A Waterfront</strong> instead — good for a rainy first afternoon. The Two Oceans Aquarium is excellent.</div>
+          <div class="note-label">Bad Weather Plan</div>
+          <div class="note-text">Skip the promenade — head straight to the V&amp;A Waterfront. The Two Oceans Aquarium is excellent on a rainy first afternoon.</div>
         </div>
       </div>
     </div>
 
     <!-- DAY 2 -->
     <div class="day-card">
-      <div class="day-header">
-        <div class="day-number">2</div>
-        <div class="day-header-text">
-          <div class="day-title">Table Mountain &amp; the City</div>
-          <div class="day-vibe">Iconic views · Cape Malay culture · Kloof Street dinner</div>
+      <div class="day-photo">
+        <img src="/photos/Table Mountain.jpeg" alt="Table Mountain, Cape Town" loading="lazy">
+        <div class="day-photo-overlay"></div>
+        <div class="day-photo-label">
+          <div class="day-num">Day Two · Icons</div>
+          <div class="day-title-over">Table Mountain</div>
+          <div class="day-vibe">Cable Car · Bo-Kaap · Kloof Street</div>
         </div>
       </div>
       <div class="day-body">
         <div class="time-block">
           <div class="time-label">Morning</div>
-          <div class="time-content">Book the <strong>Table Mountain cable car</strong> for 8:30am — early morning gives you the best light, fewer crowds, and the clearest views. Check the cloud cover the night before (tablecloth = car may not run). The summit walk takes 30–60 minutes at your own pace. 360° views of the Peninsula, both oceans, Robben Island.</div>
+          <div class="time-content">Book the <strong>Table Mountain cable car</strong> for 8:30am — early gives you the best light and fewest crowds. Check the cloud cover the night before. 360° views of both oceans, the Peninsula and Robben Island. Allow 2 hours on top.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Afternoon</div>
-          <div class="time-content">Head to <strong>Bo-Kaap</strong> — the colourful Cape Malay neighbourhood with cobblestone streets, pastel houses and a 300-year history. Wander, photograph, grab a koeksister. Then walk 10 minutes to <strong>Signal Hill</strong> if you have energy — drive to the top for a second panoramic view of the city and harbour. Sunset from here is spectacular if you time it right.</div>
+          <div class="time-content"><strong>Bo-Kaap</strong> — cobblestone streets, pastel houses, 300 years of Cape Malay history. Wander, photograph. Then drive up <strong>Signal Hill</strong> for a second panoramic view. Sunset from here is one of the best in Cape Town.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Evening</div>
-          <div class="time-content">Dinner on <strong>Kloof Street</strong> — Cape Town's coolest dining strip. Try <strong>The Black Sheep</strong> (book ahead, always full), <strong>La Mouette</strong> for refined dining, or <strong>Café du Cap</strong> for something lighter. Walk Kloof Street before choosing — the vibe changes every 50 metres.</div>
+          <div class="time-content">Dinner on <strong>Kloof Street</strong>. Try <strong>The Black Sheep</strong> (book ahead), <strong>La Mouette</strong> for something refined, or walk the strip and choose by feel — the vibe changes every 50 metres.</div>
         </div>
       </div>
       <div class="notes-row">
         <div class="note-block">
-          <div class="note-icon">💡</div>
           <div class="note-label">Insider Tip</div>
-          <div class="note-text">Book the cable car online the night before — R380 return. If you miss the early slot, Signal Hill is a free alternative for views at sunset.</div>
+          <div class="note-text">Book the cable car online the night before — R380 return. If you miss the early slot, Signal Hill is a free sunset alternative.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">🛡️</div>
-          <div class="note-label">Safety &amp; Timing</div>
-          <div class="note-text">Bo-Kaap is safe in the day — go before 10am for photos without crowds. Don't photograph locals without permission. Uber between areas after dark.</div>
+          <div class="note-label">Safety</div>
+          <div class="note-text">Bo-Kaap is safe in the day — go before 10am for photos without crowds. Don't photograph locals without permission.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">☁️</div>
-          <div class="note-label">Plan B (Bad Weather)</div>
-          <div class="note-text">If the mountain is clouded out, do <strong>Robben Island</strong> instead (book in advance) — a deeply moving 3.5-hour experience whatever the weather.</div>
+          <div class="note-label">Bad Weather Plan</div>
+          <div class="note-text">If the mountain is clouded out, do <a href="https://www.robben-island.org.za" target="_blank">Robben Island</a> instead — a deeply moving 3.5-hour experience in any weather.</div>
         </div>
       </div>
     </div>
 
     <!-- DAY 3 -->
     <div class="day-card">
-      <div class="day-header">
-        <div class="day-number">3</div>
-        <div class="day-header-text">
-          <div class="day-title">Cape Peninsula Full Day</div>
-          <div class="day-vibe">Chapman's Peak · Boulders Beach Penguins · Cape Point · Noordhoek sunset</div>
+      <div class="day-photo">
+        <img src="/photos/chapmans-peak.jpeg" alt="Chapman's Peak Drive, Cape Peninsula" loading="lazy">
+        <div class="day-photo-overlay"></div>
+        <div class="day-photo-label">
+          <div class="day-num">Day Three · Peninsula</div>
+          <div class="day-title-over">Cape Point</div>
+          <div class="day-vibe">Chapman's Peak · Boulders Beach · Cape of Good Hope</div>
         </div>
       </div>
       <div class="day-body">
         <div class="time-block">
-          <div class="time-label">Morning — Early Start</div>
-          <div class="time-content">Leave by <strong>7:30am</strong>. Drive Chapman's Peak — one of the most dramatic coastal roads on earth. Stop at every viewpoint. It takes 20 minutes if you don't stop; allow 1 hour if you do it properly. Head to <strong>Boulders Beach</strong> — 3,000 African penguins that walk up to you. One of the most extraordinary wildlife encounters in the world. R220 entry.</div>
+          <div class="time-label">Early Start</div>
+          <div class="time-content">Leave by 7:30am. Drive <strong>Chapman's Peak</strong> — one of the most dramatic coastal roads on earth. Stop at every viewpoint. Allow 1 hour if you do it properly. Then <strong>Boulders Beach</strong> — 3,000 African penguins that walk up to you. R220 entry. Extraordinary.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Afternoon</div>
-          <div class="time-content">Drive to <strong>Cape of Good Hope</strong> — the dramatic southwestern tip of Africa. The Flying Dutchman funicular saves the climb. Walk the trails, feel the wind, stand at the southwesternmost point in Africa. The fynbos is extraordinary. Stop at <strong>Simon's Town</strong> on the way back for a late lunch at Seaforth Restaurant — tables right on the water.</div>
+          <div class="time-content">Drive to the <strong>Cape of Good Hope</strong> — the dramatic southwestern tip of Africa. Flying Dutchman funicular saves the climb. Walk the trails, feel the wind. Stop at <strong>Simon's Town</strong> on the way back — lunch at Seaforth Restaurant, tables right on the water.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Evening</div>
-          <div class="time-content">Watch the sunset from <strong>Noordhoek Beach</strong> — 8km of wild, deserted beach with the Chapman's Peak cliffs turning pink. Stop at the <strong>Noordhoek Farm Village</strong> for dinner: The Foodbarn is exceptional (book ahead). Drive back the coastal route via Hout Bay.</div>
+          <div class="time-content">Sunset at <strong>Noordhoek Beach</strong> — 8km of wild, deserted sand with Chapman's Peak cliffs turning pink. Dinner at <strong>The Foodbarn</strong> at Noordhoek Farm Village. Book ahead. One of the best meals on the Peninsula.</div>
         </div>
       </div>
       <div class="notes-row">
         <div class="note-block">
-          <div class="note-icon">💡</div>
           <div class="note-label">Insider Tip</div>
           <div class="note-text">Baboons at Cape Point are wild and bold — lock your car, never feed them, keep windows closed. They will open a door if you leave it unlocked.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">🛡️</div>
-          <div class="note-label">Safety &amp; Timing</div>
-          <div class="note-text">This is a full 10–11 hour day. You need a hire car. The roads are safe and well-maintained. Don't drive Chapman's Peak in heavy rain — it closes.</div>
+          <div class="note-label">Safety</div>
+          <div class="note-text">Full 10–11 hour day. You need a hire car. Roads are safe and well-maintained. Don't drive Chapman's Peak in heavy rain — it closes.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">☁️</div>
-          <div class="note-label">Plan B (Bad Weather)</div>
-          <div class="note-text">Do Boulders Beach only (penguins don't mind the rain) and swap the Point for the <strong>Kalk Bay</strong> harbour, galleries and coffee on the main road.</div>
+          <div class="note-label">Bad Weather Plan</div>
+          <div class="note-text">Do Boulders Beach only (penguins don't mind the rain) and swap Cape Point for Kalk Bay harbour, galleries and coffee.</div>
         </div>
       </div>
     </div>
 
     <!-- DAY 4 -->
     <div class="day-card">
-      <div class="day-header">
-        <div class="day-number">4</div>
-        <div class="day-header-text">
-          <div class="day-title">Constantia Wine Route &amp; Kirstenbosch</div>
-          <div class="day-vibe">World-class wine · Botanical gardens · Relaxed dinner</div>
+      <div class="day-photo">
+        <img src="/photos/kirstenbosch.webp" alt="Kirstenbosch, Cape Town" loading="lazy">
+        <div class="day-photo-overlay"></div>
+        <div class="day-photo-label">
+          <div class="day-num">Day Four · Winelands</div>
+          <div class="day-title-over">Constantia &amp; Kirstenbosch</div>
+          <div class="day-vibe">Groot Constantia · Klein Constantia · Botanical Gardens</div>
         </div>
       </div>
       <div class="day-body">
         <div class="time-block">
           <div class="time-label">Morning</div>
-          <div class="time-content">Drive to <strong>Constantia</strong> — the oldest wine-producing area in the Southern Hemisphere, 20 minutes from the city centre. Start at <strong>Groot Constantia</strong> (South Africa's oldest estate, 1685), then <strong>Klein Constantia</strong> for their famous Vin de Constance dessert wine. Allow 1.5 hours per estate. Tastings from R100–200 per person.</div>
+          <div class="time-content">Drive to <strong>Constantia</strong> — the oldest wine-producing area in the Southern Hemisphere, 20 minutes from the city. Start at <strong>Groot Constantia</strong> (1685, South Africa's oldest estate), then <strong>Klein Constantia</strong> for their famous Vin de Constance dessert wine. Tastings from R100–200 per person.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Afternoon</div>
-          <div class="time-content"><strong>Kirstenbosch National Botanical Garden</strong> — one of the great botanical gardens of the world, built into the eastern slopes of Table Mountain. Walk the treetop canopy walkway, explore the Cape Fynbos section, have a lazy picnic on the lawn. Allow 2–3 hours. Entry R220. Summer: check for Sunday concerts — legendary.</div>
+          <div class="time-content"><strong>Kirstenbosch National Botanical Garden</strong> — built into the eastern slopes of Table Mountain. Walk the treetop canopy walkway, explore Cape Fynbos, picnic on the lawn. Allow 2–3 hours. Entry R220. In summer, check for Sunday concerts — legendary.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Evening</div>
-          <div class="time-content">Relaxed dinner back in Cape Town. If you want something special: <strong>The Test Kitchen</strong> (book months ahead) or <strong>FYN</strong> near the Company's Garden. If you want easy: return to Bree Street and try somewhere you missed on Night 1. Or <strong>La Colombe</strong> in Constantia itself — one of Africa's best restaurants.</div>
+          <div class="time-content">If you want something exceptional: <strong>La Colombe</strong> in Constantia — one of Africa's best restaurants. Or return to Bree Street for somewhere you missed on Night 1.</div>
         </div>
       </div>
       <div class="notes-row">
         <div class="note-block">
-          <div class="note-icon">💡</div>
           <div class="note-label">Insider Tip</div>
-          <div class="note-text">Designate a driver or use Uber between estates — the Constantia estates are 5–10 minutes apart. A wine tour driver costs R600–900 for the day and is worth every rand.</div>
+          <div class="note-text">Designate a driver or use Uber between estates. A wine tour driver costs R600–900 for the day — genuinely worth it.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">🛡️</div>
-          <div class="note-label">Safety &amp; Timing</div>
-          <div class="note-text">Constantia is one of Cape Town's safest and most affluent suburbs. Kirstenbosch closes at 6pm in winter, 7pm in summer. Check hours before going.</div>
+          <div class="note-label">Safety</div>
+          <div class="note-text">Constantia is one of Cape Town's safest suburbs. Kirstenbosch closes at 6pm in winter, 7pm in summer.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">☁️</div>
-          <div class="note-label">Plan B (Bad Weather)</div>
-          <div class="note-text">Wine estates are perfect in any weather — skip Kirstenbosch and add a third estate. <strong>Buitenverwachting</strong> has an exceptional restaurant for a long rainy lunch.</div>
+          <div class="note-label">Bad Weather Plan</div>
+          <div class="note-text">Wine estates are perfect in any weather. Skip Kirstenbosch, add a third estate — <strong>Buitenverwachting</strong> has an exceptional restaurant for a long rainy lunch.</div>
         </div>
       </div>
     </div>
 
     <!-- DAY 5 -->
     <div class="day-card">
-      <div class="day-header">
-        <div class="day-number">5</div>
-        <div class="day-header-text">
-          <div class="day-title">Waterfront, Culture &amp; One Last Hidden Gem</div>
-          <div class="day-vibe">Zeitz MOCAA · V&amp;A Waterfront · Send-off dinner</div>
+      <div class="day-photo">
+        <img src="/photos/waterfront.jpeg" alt="V&A Waterfront, Cape Town" loading="lazy">
+        <div class="day-photo-overlay"></div>
+        <div class="day-photo-label">
+          <div class="day-num">Day Five · Culture</div>
+          <div class="day-title-over">Waterfront &amp; Zeitz</div>
+          <div class="day-vibe">V&amp;A Waterfront · Zeitz MOCAA · Send-off dinner</div>
         </div>
       </div>
       <div class="day-body">
         <div class="time-block">
           <div class="time-label">Morning</div>
-          <div class="time-content">Walk the <strong>V&amp;A Waterfront</strong> — the working harbour with Table Mountain as backdrop. This is one of the great urban views on earth. Don't eat here (overpriced) but walk, sit, watch the boats. Visit the <strong>Zeitz Museum of Contemporary African Art</strong> — the world's largest museum of contemporary African art, inside a converted grain silo. Allow 2 hours. Extraordinary building alone.</div>
+          <div class="time-content">Walk the <strong>V&amp;A Waterfront</strong> — the working harbour with Table Mountain as backdrop. One of the great urban views on earth. Then visit <strong>Zeitz Museum of Contemporary African Art</strong> — the world's largest museum of contemporary African art, inside a converted grain silo. Allow 2 hours. Extraordinary building alone.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Afternoon</div>
-          <div class="time-content">Depending on energy: explore <strong>De Waterkant</strong> (Cape Town's design district), browse <strong>Neighbourgoods Market</strong> (Saturday only at Old Biscuit Mill), or return to any spot you want to see one more time. If you haven't done it yet — <strong>Lion's Head hike</strong> takes 2 hours and gives arguably the best view in Cape Town. Check safety: go with others or a guide.</div>
+          <div class="time-content">Explore <strong>De Waterkant</strong> (Cape Town's design district) or browse <strong>Neighbourgoods Market</strong> (Saturday only at Old Biscuit Mill). If you haven't done it — <strong>Lion's Head hike</strong> takes 2 hours and gives arguably the best view in Cape Town.</div>
         </div>
         <div class="time-block">
           <div class="time-label">Evening</div>
-          <div class="time-content">Final dinner at a place off the tourist trail. <strong>The Pot Luck Club</strong> in Woodstock (small plates, rooftop, book ahead), <strong>Harbour House</strong> in Kalk Bay (seafood, right on the harbour), or ask your accommodation for their honest local recommendation — that's always the best option on your last night.</div>
+          <div class="time-content">Final dinner off the tourist trail. <strong>The Pot Luck Club</strong> in Woodstock (small plates, rooftop, book ahead), or <strong>Harbour House</strong> in Kalk Bay (seafood, right on the harbour). Ask your accommodation for their honest recommendation — always the best option on the last night.</div>
         </div>
       </div>
       <div class="notes-row">
         <div class="note-block">
-          <div class="note-icon">💡</div>
           <div class="note-label">Insider Tip</div>
-          <div class="note-text">Zeitz MOCAA is closed on Tuesdays. Book tickets online. The Silo Hotel rooftop bar is above it — incredible sundowner spot even if you're not staying.</div>
+          <div class="note-text">Zeitz MOCAA is closed on Tuesdays. Book tickets online. The Silo Hotel rooftop bar above it is an incredible sundowner even if you're not staying.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">🛡️</div>
-          <div class="note-label">Safety &amp; Timing</div>
-          <div class="note-text">The Waterfront is safe at all hours. Woodstock (Biscuit Mill) is fine in the day, use Uber at night. Don't walk from Woodstock to the city centre at night.</div>
+          <div class="note-label">Safety</div>
+          <div class="note-text">The Waterfront is safe at all hours. Woodstock is fine in the day — use Uber at night. Don't walk from Woodstock to the city centre after dark.</div>
         </div>
         <div class="note-block">
-          <div class="note-icon">☁️</div>
-          <div class="note-label">Plan B (Bad Weather)</div>
-          <div class="note-text">A full rainy day at Zeitz MOCAA plus lunch and shopping at the V&amp;A Waterfront is genuinely enjoyable. The <strong>Two Oceans Aquarium</strong> is also excellent in rain.</div>
+          <div class="note-label">Bad Weather Plan</div>
+          <div class="note-text">A full rainy day at Zeitz MOCAA plus lunch and shopping at the V&amp;A Waterfront is genuinely enjoyable.</div>
         </div>
       </div>
+    </div>
+
+    <!-- WHERE TO STAY -->
+    <hr class="section-divider">
+
+    <div class="section-eyebrow">Accommodation</div>
+    <h2 class="section-heading">Where to <em>Stay</em></h2>
+    <p class="section-sub">Three picks per budget tier — all vetted, all well-located. Links go to Booking.com.</p>
+
+    <div class="stay-tier-label">Budget · Under R2,000 / night</div>
+    <div class="stay-grid">
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Budget accommodation Cape Town" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Budget</div>
+          <div class="stay-name">Ashanti Lodge Green Point</div>
+          <div class="stay-area">Green Point · 5 min from Waterfront</div>
+          <div class="stay-desc">The best-run guesthouse in its category. Great communal areas, honest reviews, and a location that puts you 5 minutes from the Waterfront on foot.</div>
+          <div class="stay-price">From R800 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/ashanti-lodge-green-point.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Guesthouse Cape Town" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Budget</div>
+          <div class="stay-name">Protea Hotel Breakwater Lodge</div>
+          <div class="stay-area">V&amp;A Waterfront · On the harbour</div>
+          <div class="stay-desc">Converted 19th-century prison — genuinely one of the most interesting budget hotels in the city. Walking distance to everything at the Waterfront.</div>
+          <div class="stay-price">From R1,200 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/proteabreakwaterlodge.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Cape Town accommodation" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Budget</div>
+          <div class="stay-name">Rouge on Rose</div>
+          <div class="stay-area">Sea Point · Quiet residential street</div>
+          <div class="stay-desc">Compact, clean and well-run. Sea Point puts you on the promenade and a short Uber from everywhere. Good breakfast included.</div>
+          <div class="stay-price">From R1,100 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/rouge-on-rose.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stay-tier-label" style="margin-top:40px;">Mid-range · R2,000–5,000 / night</div>
+    <div class="stay-grid">
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Boutique hotel Cape Town" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Mid-range</div>
+          <div class="stay-name">POD Boutique Hotel</div>
+          <div class="stay-area">Camps Bay · Beachfront strip</div>
+          <div class="stay-desc">Stylish boutique hotel steps from the Camps Bay beach. Rooftop pool, great design, and you wake up with the Twelve Apostles mountain range outside your window.</div>
+          <div class="stay-price">From R2,800 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/pod-boutique-hotel.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Mid-range hotel Cape Town" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Mid-range</div>
+          <div class="stay-name">La Splendida Boutique Hotel</div>
+          <div class="stay-area">Mouille Point · Sea-facing</div>
+          <div class="stay-desc">Sea-facing rooms with Table Mountain views. Quiet, sophisticated, and walkable to both Sea Point and the Waterfront. Excellent value for the location.</div>
+          <div class="stay-price">From R2,200 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/la-splendida.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Hotel Cape Town" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Mid-range</div>
+          <div class="stay-name">Vineyard Hotel</div>
+          <div class="stay-area">Newlands · Kirstenbosch gardens area</div>
+          <div class="stay-desc">Set in manicured gardens at the foot of Table Mountain. Ideal if you're doing the Constantia wine route or Kirstenbosch. Two restaurants, two pools, timeless feel.</div>
+          <div class="stay-price">From R3,200 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/vineyard.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stay-tier-label" style="margin-top:40px;">Luxury · R5,000+ / night</div>
+    <div class="stay-grid">
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Luxury hotel Cape Town" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Luxury</div>
+          <div class="stay-name">The Silo Hotel</div>
+          <div class="stay-area">V&amp;A Waterfront · Above Zeitz MOCAA</div>
+          <div class="stay-desc">The finest hotel in Cape Town. Converted grain silo above the Zeitz Museum, with pillowed bay windows and uninterrupted harbour views. A genuinely once-in-a-lifetime stay.</div>
+          <div class="stay-price">From R12,000 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/the-silo.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/261395/pexels-photo-261395.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Cape Grace Hotel" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Luxury</div>
+          <div class="stay-name">Cape Grace Hotel</div>
+          <div class="stay-area">V&amp;A Waterfront · Private quay</div>
+          <div class="stay-desc">On its own private quay, surrounded by the working harbour on three sides. Intimate, beautifully run, and with one of the best whisky bars in Africa. A Cape Town institution.</div>
+          <div class="stay-price">From R8,000 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/cape-grace.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+      <div class="stay-card">
+        <div class="stay-photo">
+          <img src="https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Twelve Apostles Hotel Cape Town" loading="lazy">
+        </div>
+        <div class="stay-info">
+          <div class="stay-tier">Luxury</div>
+          <div class="stay-name">Twelve Apostles Hotel &amp; Spa</div>
+          <div class="stay-area">Camps Bay · Mountain &amp; ocean</div>
+          <div class="stay-desc">Set between the Twelve Apostles mountain range and the Atlantic. Dramatic, secluded, and the helicopter pad means some guests arrive properly. Exceptional spa.</div>
+          <div class="stay-price">From R7,500 / night</div>
+          <!-- AFFILIATE LINK: Replace YOUR_BOOKING_ID with your Booking.com affiliate ID -->
+          <a href="https://www.booking.com/hotel/za/twelve-apostles.html?aid=YOUR_BOOKING_ID" class="stay-link" target="_blank">Book on Booking.com →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAR RENTAL -->
+    <hr class="section-divider">
+
+    <div class="section-eyebrow">Car Rental</div>
+    <h2 class="section-heading">Your rental car<br><em>at Cape Town Airport</em></h2>
+    <p class="section-sub">A car is non-negotiable for the Peninsula, the Winelands and any day trip. Book ahead — walk-in pricing is painful.</p>
+
+    <div class="car-companies">
+      <div class="car-company">
+        <div class="company-tag">Dirk's Pick</div>
+        <div class="company-name">Sixt</div>
+        <div class="company-desc">Consistently the best cars at competitive prices. Clean vehicles, straightforward process, well-organised airport pickup. Book online for the best rates.</div>
+        <!-- AFFILIATE LINK: Replace with your Sixt affiliate link -->
+        <a href="https://www.sixt.co.za?affiliate=YOUR_SIXT_ID" class="company-link" target="_blank">Book with Sixt →</a>
+      </div>
+      <div class="car-company">
+        <div class="company-tag">Reliable Choice</div>
+        <div class="company-name">Hertz</div>
+        <div class="company-desc">Global reliability with a strong Cape Town presence. Good one-way rental options if you're doing Cape Town to Garden Route. No nasty surprises.</div>
+        <!-- AFFILIATE LINK: Replace with your Hertz affiliate link -->
+        <a href="https://www.hertz.co.za?affiliate=YOUR_HERTZ_ID" class="company-link" target="_blank">Book with Hertz →</a>
+      </div>
+      <div class="car-company">
+        <div class="company-tag">Local Specialist</div>
+        <div class="company-name">Woodford</div>
+        <div class="company-desc">Cape Town's best local operator. Exceptional service, well-maintained fleet, and staff who actually know the routes. A genuine alternative to the international chains.</div>
+        <!-- AFFILIATE LINK: Replace with your Woodford affiliate link -->
+        <a href="https://www.woodfordcarhire.co.za" class="company-link" target="_blank">Book with Woodford →</a>
+      </div>
+      <div class="car-company">
+        <div class="company-tag">Price Comparison</div>
+        <div class="company-name">Sunny Cars</div>
+        <div class="company-desc">European specialist with a transparent full-coverage model — price you see includes all insurance, no excess surprises. Worth checking before committing to any single brand.</div>
+        <!-- AFFILIATE LINK: Replace with your Sunny Cars affiliate link -->
+        <a href="https://www.sunnycars.com?affiliate=YOUR_SUNNYCARS_ID" class="company-link" target="_blank">Book with Sunny Cars →</a>
+      </div>
+    </div>
+
+    <div class="section-eyebrow" style="margin-bottom:16px;">Which Car to Choose</div>
+    <div class="car-types">
+      <div class="car-type">
+        <div class="car-type-photo">
+          <img src="https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Economy car" loading="lazy">
+        </div>
+        <div class="car-type-info">
+          <div class="car-type-label">City driving</div>
+          <div class="car-type-name">Economy</div>
+          <div class="car-type-example">VW Polo · Toyota Yaris</div>
+          <div class="car-type-price">R400–600 / day</div>
+        </div>
+      </div>
+      <div class="car-type">
+        <div class="car-type-photo">
+          <img src="https://images.pexels.com/photos/1638459/pexels-photo-1638459.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Sedan car" loading="lazy">
+        </div>
+        <div class="car-type-info">
+          <div class="car-type-label">Best all-rounder</div>
+          <div class="car-type-name">Sedan</div>
+          <div class="car-type-example">Toyota Corolla · VW Jetta</div>
+          <div class="car-type-price">R600–900 / day</div>
+        </div>
+      </div>
+      <div class="car-type">
+        <div class="car-type-photo">
+          <img src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=400" alt="SUV" loading="lazy">
+        </div>
+        <div class="car-type-info">
+          <div class="car-type-label">Peninsula &amp; day trips</div>
+          <div class="car-type-name">SUV</div>
+          <div class="car-type-example">Hyundai Tucson · Ford Escape</div>
+          <div class="car-type-price">R900–1,400 / day</div>
+        </div>
+      </div>
+      <div class="car-type">
+        <div class="car-type-photo">
+          <img src="https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=400" alt="4x4 luxury car" loading="lazy">
+        </div>
+        <div class="car-type-info">
+          <div class="car-type-label">Garden Route &amp; Cederberg</div>
+          <div class="car-type-name">4x4 / Luxury</div>
+          <div class="car-type-example">Toyota Fortuner · Mercedes C-Class</div>
+          <div class="car-type-price">R1,500+ / day</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rental-note">
+      <strong>On insurance:</strong> CDW (Collision Damage Waiver) is usually included in the base rate — but always check the excess amount. Standard excess can be R10,000–25,000. You can reduce this to near zero for an extra R100–200/day. Worth it if you're doing mountain or coastal drives.
     </div>
 
     <!-- CTA -->
@@ -386,9 +686,9 @@
       <div class="cta-text">
         <div class="cta-label">Build Your Version</div>
         <h3>This was built for someone else.<br><em>Yours will be built for you.</em></h3>
-        <p>Tell Ubuntu your dates, travel style, budget, interests and safety preferences. Get a personalised day-by-day Cape Town trip plan in under 2 minutes.</p>
+        <p>Tell Ubuntu your dates, travel style, budget and interests. Get a personalised day-by-day Cape Town trip plan in under 2 minutes.</p>
       </div>
-      <a href="itinerary.html" class="btn-cta">Build My Own Itinerary ✈️</a>
+      <a href="itinerary.html" class="btn-cta">Build My Own Itinerary →</a>
     </div>
 
   </div>
