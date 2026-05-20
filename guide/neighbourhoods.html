@@ -97,8 +97,54 @@
       border-radius: 16px; overflow: hidden;
       box-shadow: 0 6px 32px rgba(0,0,0,0.32);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
     }
     .neigh-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.42); }
+
+    /* ─── CARD EXPAND MODAL ─── */
+    .card-modal-backdrop {
+      position: fixed; inset: 0; background: rgba(10,24,34,0.88);
+      z-index: 500; display: flex; align-items: center; justify-content: center;
+      padding: 24px; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease; backdrop-filter: blur(6px);
+    }
+    .card-modal-backdrop.open { opacity: 1; pointer-events: all; }
+    .card-modal {
+      background: var(--cream); border-radius: 18px; overflow: hidden;
+      max-width: 680px; width: 100%; max-height: 92vh;
+      display: flex; flex-direction: column;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.3s ease;
+      box-shadow: 0 32px 96px rgba(0,0,0,0.6);
+    }
+    .card-modal-backdrop.open .card-modal { transform: translateY(0) scale(1); }
+    .card-modal-photo {
+      height: 320px; background: center/cover no-repeat; flex-shrink: 0;
+      position: relative;
+    }
+    .card-modal-photo::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(15,36,48,0.7) 100%);
+    }
+    .card-modal-photo-meta {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; padding: 20px 28px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .card-modal-area { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(250,248,244,0.8); }
+    .card-modal-close {
+      position: absolute; top: 14px; right: 14px; z-index: 3;
+      width: 34px; height: 34px; border-radius: 50%; background: rgba(15,36,48,0.75);
+      border: none; color: var(--white); font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .card-modal-close:hover { background: rgba(15,36,48,0.95); }
+    .card-modal-body { padding: 28px 32px 32px; overflow-y: auto; }
+    .card-modal-name { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 400; color: var(--ink); line-height: 1.1; margin-bottom: 12px; }
+    .card-modal-vibe { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .card-modal-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.88; margin-bottom: 20px; }
+    .card-modal-details { border-top: 1px solid rgba(15,36,48,0.1); padding-top: 18px; margin-bottom: 20px; }
+    .card-modal-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 
     /* Photo strip */
     .neigh-photo {
@@ -499,9 +545,9 @@
     <div class="intro-block">
       <p class="intro">Cape Town isn't one city — it's nine cities wearing the same mountain as a backdrop. Where you base yourself shapes everything: what you eat, how far you walk, what kind of mornings you have. Here's Dirk's honest, no-tourist-board take on each.</p>
       <div class="cta-strip">
-        <a href="itinerary.html" class="btn-primary">✈️ Build My Trip</a>
-        <a href="itinerary.html" class="btn-ghost">💬 Ask Ubuntu</a>
-        <a href="myguide.html" class="btn-ghost">📖 Save to My Guide</a>
+        <a href="itinerary.html" class="btn-primary">Build My Trip</a>
+        <a href="itinerary.html" class="btn-ghost">Ask Ubuntu</a>
+        <a href="myguide.html" class="btn-ghost">Save to My Guide</a>
       </div>
     </div>
 
@@ -525,7 +571,7 @@
       <!-- RIGHT: CREAM EDITORIAL PANEL -->
       <div class="mag-panel">
 
-        <a href="myguide.html" class="mag-bookmark">🔖 Save</a>
+        <a href="myguide.html" class="mag-bookmark">Save</a>
         <p class="mag-subhead">The smartest base for first-time Cape Town visitors.</p>
         <p class="mag-intro">Wake up by the ocean, walk the promenade, grab coffee on Main Road and reach almost every Cape Town highlight within minutes.</p>
 
@@ -587,9 +633,9 @@
         </div>
 
         <div class="mag-actions">
-          <a href="itinerary.html" class="mag-btn-gold">✈️ Add to My Itinerary</a>
-          <a href="itinerary.html" class="mag-btn-primary">💬 Ask Ubuntu</a>
-          <a href="#camps-bay" class="mag-btn-primary">⚖️ Compare Areas</a>
+          <a href="itinerary.html" class="mag-btn-gold">Add to My Itinerary</a>
+          <a href="itinerary.html" class="mag-btn-primary">Ask Ubuntu</a>
+          <a href="#camps-bay" class="mag-btn-primary">Compare Areas</a>
         </div>
 
       </div>
@@ -651,7 +697,7 @@
             <div class="detail-row"><span class="detail-label">Walk to</span><span class="detail-val">Green Point, V&A Waterfront (20 min), Camps Bay (25 min)</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=Sea+Point+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=Sea+Point+Cape+Town" target="_blank" class="neigh-map-link">Map →</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -682,7 +728,7 @@
             <div class="detail-row"><span class="detail-label">Warning</span><span class="detail-val">Baboons come down from the mountain — secure your picnic</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=Camps+Bay+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=Camps+Bay+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -712,7 +758,7 @@
             <div class="detail-row"><span class="detail-label">Walk to</span><span class="detail-val">V&A Waterfront (10 min), Sea Point (15 min)</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=De+Waterkant+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=De+Waterkant+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -743,7 +789,7 @@
             <div class="detail-row"><span class="detail-label">Best time</span><span class="detail-val">Before 8am — empty streets, golden morning light</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=Bo-Kaap+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=Bo-Kaap+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -773,7 +819,7 @@
             <div class="detail-row"><span class="detail-label">Tip</span><span class="detail-val">Book restaurants 2–3 weeks ahead for weekends</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=Bree+Street+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=Bree+Street+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -781,7 +827,7 @@
 
       <!-- CONSTANTIA -->
       <div class="neigh-card">
-        <div class="neigh-photo" style="background-image: url('/photos/Groot Constantia.jpeg'); background-position: center 40%;">
+        <div class="neigh-photo" style="background-image: url('/photos/Groot%20Constantia.jpeg'); background-position: center 40%;">
           <div class="neigh-photo-meta">
             <span class="neigh-area">Southern Suburbs · Wine country</span>
             <a href="https://maps.google.com/?q=Constantia+Cape+Town" target="_blank" class="neigh-photo-cta">View on map →</a>
@@ -804,7 +850,7 @@
             <div class="detail-row"><span class="detail-label">Getting here</span><span class="detail-val">20 min from city centre — Uber works fine</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=Constantia+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=Constantia+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -835,7 +881,7 @@
             <div class="detail-row"><span class="detail-label">Tip</span><span class="detail-val">The seals hang around Quay 5 — free entertainment</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=V%26A+Waterfront+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=V%26A+Waterfront+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -866,7 +912,7 @@
             <div class="detail-row"><span class="detail-label">Getting here</span><span class="detail-val">45 min from Sea Point, or scenic train from Cape Town station</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=Kalk+Bay+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=Kalk+Bay+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -897,7 +943,7 @@
             <div class="detail-row"><span class="detail-label">Tip</span><span class="detail-val">Stick to Albert Road and Lower Main — avoid isolated streets at night</span></div>
           </div>
           <div class="neigh-footer">
-            <a href="https://maps.google.com/?q=Woodstock+Cape+Town" target="_blank" class="neigh-map-link">📍 Map</a>
+            <a href="https://maps.google.com/?q=Woodstock+Cape+Town" target="_blank" class="neigh-map-link">Map</a>
             <a href="myguide.html" class="neigh-save">+ Save to My Guide</a>
           </div>
         </div>
@@ -944,14 +990,84 @@
       <h2 class="bottom-cta-title">Tell Ubuntu your trip.<br><em>Get the right neighbourhood.</em></h2>
       <p class="bottom-cta-sub">Ubuntu asks the right questions — dates, travel style, budget, who you're with — and tells you exactly where to stay.</p>
       <div class="bottom-cta-buttons">
-        <a href="itinerary.html" class="btn-primary">✈️ Build My Trip</a>
-        <a href="itinerary.html" class="btn-ghost">💬 Ask Ubuntu</a>
-        <a href="myguide.html" class="btn-ghost">📖 Save to My Guide</a>
+        <a href="itinerary.html" class="btn-primary">Build My Trip</a>
+        <a href="itinerary.html" class="btn-ghost">Ask Ubuntu</a>
+        <a href="myguide.html" class="btn-ghost">Save to My Guide</a>
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- CARD EXPAND MODAL -->
+<div class="card-modal-backdrop" id="cardModalBackdrop">
+  <div class="card-modal" id="cardModal">
+    <div class="card-modal-photo" id="cardModalPhoto">
+      <button class="card-modal-close" id="cardModalClose">✕</button>
+      <div class="card-modal-photo-meta">
+        <span class="card-modal-area" id="cardModalArea"></span>
+      </div>
+    </div>
+    <div class="card-modal-body">
+      <h3 class="card-modal-name" id="cardModalName"></h3>
+      <div class="card-modal-vibe" id="cardModalVibe"></div>
+      <p class="card-modal-desc" id="cardModalDesc"></p>
+      <div class="card-modal-details" id="cardModalDetails"></div>
+      <div class="card-modal-footer" id="cardModalFooter"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Card expand modal
+(function() {
+  const backdrop = document.getElementById('cardModalBackdrop');
+  const modal = document.getElementById('cardModal');
+
+  function openModal(card) {
+    const photo = card.querySelector('.neigh-photo');
+    const bg = photo ? photo.style.backgroundImage : '';
+    const area = card.querySelector('.neigh-area') ? card.querySelector('.neigh-area').textContent : '';
+    const name = card.querySelector('.neigh-name') ? card.querySelector('.neigh-name').innerHTML : '';
+    const vibe = card.querySelector('.neigh-vibe') ? card.querySelector('.neigh-vibe').innerHTML : '';
+    const desc = card.querySelector('.neigh-desc') ? card.querySelector('.neigh-desc').innerHTML : '';
+    const details = card.querySelector('.neigh-details') ? card.querySelector('.neigh-details').innerHTML : '';
+    const footer = card.querySelector('.neigh-footer') ? card.querySelector('.neigh-footer').innerHTML : '';
+
+    document.getElementById('cardModalPhoto').style.backgroundImage = bg;
+    document.getElementById('cardModalArea').textContent = area;
+    document.getElementById('cardModalName').innerHTML = name;
+    document.getElementById('cardModalVibe').innerHTML = vibe;
+    document.getElementById('cardModalDesc').innerHTML = desc;
+    document.getElementById('cardModalDetails').innerHTML = details;
+    document.getElementById('cardModalFooter').innerHTML = footer;
+
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.neigh-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+      // Don't open if clicking a link inside the card
+      if (e.target.closest('a')) return;
+      openModal(card);
+    });
+  });
+
+  document.getElementById('cardModalClose').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', function(e) {
+    if (e.target === backdrop) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+})();
+</script>
 
 <script>lucide.createIcons();</script>
 </body>
