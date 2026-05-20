@@ -120,9 +120,25 @@
 
     @media (max-width: 900px) { .featured-grid { grid-template-columns: 1fr; } .tools-grid { grid-template-columns: 1fr 1fr; } .itinerary-benefits { grid-template-columns: 1fr; } }
     @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero { height: 100svh; } .hero-content { padding: 24px 24px 48px; flex-direction: column; align-items: flex-start; } .content { padding: 24px 20px 60px; } .tools-grid { grid-template-columns: 1fr; } .itinerary-cta { padding: 24px; } }
+
+    /* Sidebar toggle */
+    .sidebar { transition: transform 0.35s ease; }
+    .main { transition: margin-left 0.35s ease; }
+    body.nav-hidden .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+    body.nav-hidden .main { margin-left: 0; }
+    .nav-toggle {
+      position: fixed; top: 16px; left: 16px; z-index: 200;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(15,36,48,0.7); border: 1px solid rgba(201,169,110,0.3);
+      color: var(--gold); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; transition: all 0.2s; backdrop-filter: blur(6px);
+    }
+    .nav-toggle:hover { background: rgba(201,169,110,0.15); border-color: var(--gold); }
+    body.nav-hidden .nav-toggle { left: 16px; }
   </style>
 </head>
 <body>
+<button class="nav-toggle" id="navToggle" title="Toggle navigation" onclick="document.body.classList.toggle('nav-hidden');this.textContent=document.body.classList.contains('nav-hidden')?'☰':'✕'">✕</button>
 
 <div class="sidebar">
   <div class="sidebar-logo">
