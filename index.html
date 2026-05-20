@@ -55,10 +55,10 @@
     .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); }
 
     /* SECTION BASE */
-    section { padding: 80px 5vw; }
-    .section-label { font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
-    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3.2rem); font-weight: 400; color: var(--navy); line-height: 1.15; margin-bottom: 16px; }
-    .section-sub { font-size: 15px; color: var(--muted); max-width: 540px; line-height: 1.8; margin-bottom: 48px; font-weight: 300; }
+    section { padding: 100px 5vw; }
+    .section-label { font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3.2rem); font-weight: 400; color: var(--navy); line-height: 1.15; margin-bottom: 20px; }
+    .section-sub { font-size: 16px; color: var(--muted); max-width: 540px; line-height: 1.85; margin-bottom: 56px; font-weight: 300; }
 
     /* FEATURES */
     .features-section { background: var(--warm); }
@@ -70,10 +70,28 @@
     .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 300; }
 
     /* AI CHAT SECTION */
-    .ai-section { background: var(--navy); }
+    .ai-section { background: #0F2430; }
     .ai-section .section-label { color: var(--gold-l); }
     .ai-section .section-title { color: var(--white); }
     .ai-section .section-sub { color: rgba(255,255,255,.55); }
+    .ubuntu-meet { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 220px 1fr; gap: 60px; align-items: center; }
+    .ubuntu-portrait-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .ubuntu-avatar-wrap { position: relative; display: inline-block; margin-bottom: 16px; }
+    .ubuntu-portrait { width: 170px; height: 170px; border-radius: 50%; object-fit: cover; object-position: center 20%; border: 3px solid rgba(212,165,90,.4); box-shadow: 0 0 0 6px rgba(212,165,90,.08), 0 20px 60px rgba(0,0,0,.5); }
+    .ubuntu-online { position: absolute; bottom: 10px; right: 10px; width: 16px; height: 16px; background: #22c55e; border-radius: 50%; border: 3px solid #0F2430; }
+    .ubuntu-pname { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--white); margin-bottom: 4px; }
+    .ubuntu-prole { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(212,165,90,.65); }
+    .ubuntu-msg-card { background: rgba(255,255,255,.04); border: 1px solid rgba(212,165,90,.14); border-radius: 14px; padding: 22px 24px; margin: 22px 0; }
+    .ubuntu-msg-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .ubuntu-msg-av { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .ubuntu-msg-av img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+    .ubuntu-msg-who { font-size: 13px; font-weight: 500; color: var(--white); }
+    .ubuntu-msg-when { font-size: 11px; color: rgba(255,255,255,.38); margin-top: 2px; }
+    .ubuntu-msg-live { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-left: auto; flex-shrink: 0; }
+    .ubuntu-msg-body p { font-size: 14px; color: rgba(255,255,255,.72); line-height: 1.85; margin-bottom: 12px; font-weight: 300; }
+    .ubuntu-msg-body p:last-child { margin-bottom: 0; }
+    .ubuntu-msg-body strong { color: var(--white); font-weight: 500; }
+    @media (max-width: 700px) { .ubuntu-meet { grid-template-columns: 1fr; gap: 32px; } .ubuntu-portrait-col { flex-direction: row; gap: 20px; text-align: left; align-items: center; } .ubuntu-portrait { width: 80px; height: 80px; } }
     .ai-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
     .chat-widget { background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,.4); border: 1px solid var(--border); }
     .chat-header { background: var(--navy); padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.06); }
@@ -99,29 +117,97 @@
     .chat-send-btn:hover { background: var(--gold-l); }
 
     /* ITINERARY */
-    .itinerary-section { background: var(--warm); }
+    .itinerary-section { background: #0F2430; }
+    .itinerary-section .section-title { color: var(--white); }
+    .itinerary-section .section-label { color: var(--gold-l); }
+    .itinerary-section .section-sub { color: rgba(255,255,255,.55); }
     .itinerary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
-    .itinerary-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh1); border: 1px solid var(--border); }
-    .itin-day { background: var(--navy); color: var(--white); padding: 20px 24px; }
-    .itin-day-num { font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 4px; }
-    .itin-day-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; }
-    .itin-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+    .itinerary-card { position: relative; border-radius: var(--radius); overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,.5); min-height: 420px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; }
+    .itin-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: transform .6s ease; }
+    .itinerary-card:hover .itin-photo { transform: scale(1.04); }
+    .itin-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,27,42,0.0) 0%, rgba(13,27,42,0.72) 50%); z-index: 1; }
+    .itin-expand { position: absolute; top: 16px; right: 16px; z-index: 3; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 14px; color: rgba(255,255,255,0.8); transition: all .2s; }
+    .itinerary-card:hover .itin-expand { background: rgba(184,134,58,0.5); border-color: var(--gold); color: var(--white); }
+    .itin-day { position: relative; z-index: 2; padding: 24px 24px 8px; }
+    .itin-day-num { font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 6px; }
+    .itin-day-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--white); }
+    .itin-body { position: relative; z-index: 2; padding: 12px 24px 24px; display: flex; flex-direction: column; gap: 12px; min-height: 168px; max-height: 168px; overflow: hidden; }
     .itin-item { display: flex; gap: 12px; align-items: flex-start; }
-    .itin-time { font-size: 10px; font-weight: 500; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; margin-top: 3px; min-width: 60px; }
-    .itin-item p { font-size: 13px; color: var(--muted); line-height: 1.6; font-weight: 300; }
-    .itin-item strong { color: var(--navy); font-weight: 500; }
+    .itin-time { font-size: 10px; font-weight: 500; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; margin-top: 3px; min-width: 64px; }
+    .itin-item p { font-size: 13px; color: rgba(255,255,255,0.82); line-height: 1.6; font-weight: 300; }
+    .itin-item strong { color: var(--white); font-weight: 500; }
+
+    /* LIGHTBOX */
+    #itin-lightbox { display: none; position: fixed; inset: 0; z-index: 99990; background: rgba(8,18,28,0.92); backdrop-filter: blur(12px); align-items: center; justify-content: center; padding: 20px; }
+    #itin-lightbox.open { display: flex; }
+    .lbox-inner { position: relative; width: 100%; max-width: min(1160px, 96vw); height: 90vh; border-radius: 16px; overflow: hidden; background: #0c1e2e; box-shadow: 0 40px 120px rgba(0,0,0,.8); display: flex; flex-direction: row; animation: lboxIn .3s cubic-bezier(.175,.885,.32,1.275); }
+    @keyframes lboxIn { from { opacity: 0; transform: scale(.94) translateY(12px); } to { opacity: 1; transform: none; } }
+    /* Left: photo carousel */
+    .lbox-carousel { position: relative; width: 58%; flex-shrink: 0; overflow: hidden; }
+    .lbox-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .45s ease; }
+    .lbox-slide.active { opacity: 1; }
+    .lbox-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .lbox-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,18,28,0.7) 0%, rgba(8,18,28,0) 45%); z-index: 2; pointer-events: none; }
+    .lbox-slide-caption { position: absolute; bottom: 60px; left: 20px; z-index: 4; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.55); }
+    .lbox-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 4; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.14); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.2); color: #fff; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; line-height: 1; }
+    .lbox-nav:hover { background: rgba(255,255,255,.3); }
+    .lbox-nav.prev { left: 12px; }
+    .lbox-nav.next { right: 12px; }
+    .lbox-dots { position: absolute; bottom: 20px; left: 20px; z-index: 4; display: flex; gap: 6px; align-items: center; }
+    .lbox-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); cursor: pointer; transition: all .25s; }
+    .lbox-dot.active { background: var(--gold); width: 18px; border-radius: 3px; }
+    /* Right: text panel */
+    .lbox-right { flex: 1; overflow-y: auto; padding: 40px 36px 36px; display: flex; flex-direction: column; gap: 0; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.1) transparent; }
+    .lbox-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 8px; }
+    .lbox-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: #fff; line-height: 1.1; margin-bottom: 16px; }
+    .lbox-intro { font-size: 15px; color: rgba(255,255,255,.6); line-height: 1.75; margin-bottom: 20px; font-style: italic; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .lbox-items { display: flex; flex-direction: column; gap: 0; margin-bottom: 20px; }
+    .lbox-item { display: flex; gap: 16px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .lbox-item:last-child { border-bottom: none; }
+    .lbox-time { font-size: 10px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; min-width: 68px; padding-top: 2px; flex-shrink: 0; }
+    .lbox-text { font-size: 14px; color: rgba(255,255,255,.78); line-height: 1.75; font-weight: 300; }
+    .lbox-text strong { color: #fff; font-weight: 500; }
+    .lbox-text a { color: var(--gold-l); text-decoration: none; border-bottom: 1px solid rgba(212,165,90,.35); transition: border-color .2s; }
+    .lbox-text a:hover { border-color: var(--gold-l); }
+    .lbox-tip { background: rgba(184,134,58,.07); border: 1px solid rgba(184,134,58,.18); border-left: 3px solid var(--gold); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.7; }
+    .lbox-tip::before { content: '💡 Ubuntu tip: '; color: var(--gold-l); font-weight: 500; }
+    .lbox-close { position: absolute; top: 14px; right: 14px; z-index: 10; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; line-height: 1; }
+    .lbox-close:hover { background: rgba(255,255,255,.22); }
+    @media (max-width: 768px) { .lbox-inner { flex-direction: column; height: 92vh; } .lbox-carousel { width: 100%; height: 260px; flex-shrink: 0; } .lbox-right { padding: 24px 20px; } .lbox-title { font-size: 28px; } }
 
     /* TIPS */
-    .tips-section { background: var(--cream); }
-    .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 20px; }
-    .tip-card { background: var(--white); border-radius: var(--radius); padding: 28px; border: 1px solid var(--border); border-left: 3px solid var(--gold); }
-    .tip-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-    .tip-card p { font-size: 13px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+    .tips-section { background: #162E3F; }
+    .tips-section .section-title { color: var(--white); }
+    .tips-section .section-label { color: var(--gold-l); }
+    .tips-section .section-sub { color: rgba(255,255,255,.55); }
+    .tips-carousel-wrap { position: relative; border-radius: var(--radius); overflow: hidden; height: 500px; cursor: pointer; }
+    .tips-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .55s ease; }
+    .tips-slide.active { opacity: 1; }
+    .tips-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .tips-slide-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(8,18,28,0.90) 0%, rgba(8,18,28,0.45) 55%, rgba(8,18,28,0.08) 100%); }
+    .tips-slide-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 48px; max-width: 560px; }
+    .tips-slide-label { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 12px; font-weight: 500; }
+    .tips-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.12); z-index: 6; }
+    .tips-progress-bar { height: 100%; width: 0%; background: var(--gold-l); transition: none; }
+    .tips-slide-title { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 400; color: #fff; line-height: 1.08; margin-bottom: 16px; font-style: italic; }
+    .tips-slide-text { font-size: 15px; color: rgba(255,255,255,.72); line-height: 1.85; font-weight: 300; max-width: 420px; margin-bottom: 60px; }
+    .tips-nav { position: absolute; top: 20px; right: 36px; display: flex; gap: 8px; z-index: 5; }
+    .tips-nav-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #fff; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; backdrop-filter: blur(6px); line-height: 1; }
+    .tips-nav-btn:hover { background: rgba(255,255,255,.26); }
+    .tips-dots-wrap { position: absolute; bottom: 38px; left: 48px; display: flex; gap: 8px; z-index: 5; align-items: center; }
+    .tips-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); cursor: pointer; transition: all .25s; }
+    .tips-dot.active { background: var(--gold); width: 20px; border-radius: 3px; }
+    @media (max-width: 600px) { .tips-carousel-wrap { height: 440px; } .tips-slide-content { padding: 24px; } .tips-slide-title { font-size: 30px; } .tips-slide-text { font-size: 13px; margin-bottom: 52px; } .tips-dots-wrap { left: 24px; bottom: 32px; } .tips-nav { right: 24px; top: 16px; } }
 
     /* CTA */
-    .cta-section { background: var(--navy); text-align: center; padding: 100px 5vw; }
-    .cta-section h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem,5vw,4.5rem); font-weight: 400; color: var(--white); margin-bottom: 1rem; }
-    .cta-section p { font-size: 16px; color: rgba(255,255,255,.55); max-width: 480px; margin: 0 auto 2.5rem; font-weight: 300; line-height: 1.8; }
+    .cta-section { position: relative; text-align: center; padding: 140px 5vw 220px; overflow: hidden; }
+    .cta-section::before { display: none; }
+    .cta-video { position: absolute !important; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0 !important; }
+    .cta-section::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(8,18,28,0.20) 0%, rgba(8,18,28,0.65) 100%); z-index: 1; }
+    .cta-section > *:not(video) { position: relative; z-index: 2; }
+    .cta-section { background: #0d1b2a; }
+    .cta-section h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem,5.5vw,5rem); font-weight: 300; color: var(--white); margin-bottom: 1rem; text-shadow: 0 2px 20px rgba(0,0,0,.3); }
+    .cta-section p { font-size: 17px; color: rgba(255,255,255,.7); max-width: 480px; margin: 0 auto 2.5rem; font-weight: 300; line-height: 1.8; }
 
     /* FOOTER */
     footer { background: #141412; padding: 4rem 5vw 2rem; }
@@ -135,6 +221,7 @@
 
     /* CAIPY FLOATING WIDGET */
     #caipyWidget { position: fixed; bottom: 28px; right: 28px; z-index: 99999; display: flex !important; visibility: visible !important; flex-direction: column; align-items: flex-end; gap: 12px; }
+    #itin-lightbox.open ~ * #caipyWidget, body:has(#itin-lightbox.open) #caipyWidget { display: none !important; visibility: hidden !important; }
     #caipyBtn { position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; filter: drop-shadow(0 8px 24px rgba(184,134,58,.5)); transition: transform .25s; }
     #caipyBtn:hover { transform: scale(1.05); }
     .caipy-orb { width: 88px; height: 88px; border-radius: 50%; background: var(--gold-dim); display: flex; align-items: center; justify-content: center; border: 3px solid var(--gold); box-shadow: 0 0 0 4px rgba(184,134,58,.2), 0 0 28px 6px rgba(184,134,58,.35); overflow: hidden; }
@@ -163,7 +250,7 @@
     @keyframes pulsate { 0%,100%{box-shadow:0 0 0 0 rgba(184,134,58,.4)} 50%{box-shadow:0 0 0 16px rgba(184,134,58,.0)} }
     .btn-end { background:#1C1C1A; color:#fff; border:none; padding:12px 32px; border-radius:4px; font-family:'Jost',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
     .btn-end:hover { background:#333; }
-    @media (max-width: 760px) { #caipyWidget { bottom:16px; right:16px; } #caipyPanel { width:calc(100vw - 32px); } }
+    @media (max-width: 760px) { #caipyWidget { display:none !important; } #caipyPanel { width:calc(100vw - 32px); } }
 
     /* SCROLL REVEAL */
     .reveal { opacity:0; transform:translateY(28px); transition:opacity .6s ease, transform .6s ease; }
@@ -180,27 +267,39 @@
       .footer-grid { grid-template-columns:1fr; }
       .hero h1 { font-size: 2.8rem; }
     }
+    @media (max-width: 768px) {
+      #video-section { height: 100svh; min-height: 580px; }
+      #video-section h2 { font-size: clamp(2.2rem, 9vw, 3.2rem) !important; }
+      #video-section p { font-size: 0.9rem !important; max-width: 100% !important; }
+      .hero-cta-row { flex-direction: column !important; gap: 10px !important; }
+      .hero-cta-row button { width: 100% !important; padding: 14px 20px !important; box-sizing: border-box; }
+      #sticky-text { display: none !important; }
+      #sticky-price { display: none !important; }
+      #sticky-email { display: none !important; }
+      #sticky-pay { padding: 0 5vw !important; height: auto !important; min-height: 64px !important; justify-content: center !important; flex-wrap: wrap !important; gap: 10px !important; }
+      #sticky-action { flex-direction: column !important; width: 100%; }
+      #sticky-action button { width: 100% !important; padding: 12px !important; font-size: 13px !important; }
+    }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <a class="logo" href="file:///Users/dirkzeevenhooven/theguidecapetownguide/index.html#">
+  <a class="logo" href="/">
     <div>
-      <div class="logo-text">The Cape Town Guide</div>
-      <div class="logo-sub">Cape Town Insider Guide</div>
+      <div class="logo-text">Planet <span style="color:#D4A55A">Curated</span></div>
+      <div class="logo-sub">Cape Town Guide</div>
     </div>
   </a>
   <div class="nav-links">
-    <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/index.html">Home</a>
-    <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/experience.html#how-it-works">How It Works</a>
-    <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/experience.html">The Experience</a>
-    <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/top-10-secrets.html" style="color:#D4A55A">✦ Free Guide</a>
-    <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/about.html">About</a>
-    <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/contact.html">Contact</a>
+    <a href="#ai-chat">Build My Trip</a>
+    <a href="#itinerary">The Guide</a>
+    <a href="#tips">Start Here</a>
+    <a href="guide/about.html">About</a>
+    <a href="guide/contact.html">Contact</a>
   </div>
-  <button onclick="openCaipy()" style="background:#c9a84c;color:#0d1b2a;padding:10px 20px;border-radius:4px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif">Plan My Trip</button>
+  <button onclick="openCaipy()" style="background:#c9a84c;color:#0d1b2a;padding:10px 20px;border-radius:4px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif">Meet Ubuntu →</button>
   <button class="ham-btn" onclick="toggleMobileNav()">☰</button>
 </nav>
 
@@ -209,10 +308,10 @@
   <div class="hero-content reveal">
     <div class="hero-badge">✦ Cape Town Insider Guide 2026</div>
     <h1>Your perfect Cape Town trip.<br><em>Ready in minutes.</em></h1>
-    <p>AI-powered travel guidance built on 10+ years of living in one of the world's most extraordinary cities.</p>
+    <p>AI-powered travel guidance built on 10+ years of deep Cape Town experience.</p>
     <div class="hero-btns">
-      <button class="btn-primary" onclick="openCaipy()">Try Caipy — it's free</button>
-      <button class="btn-ghost" onclick="openCaipy()">Get My Itinerary — €99</button>
+      <button class="btn-primary" onclick="openCaipy()">Talk to Ubuntu for Free</button>
+      <button class="btn-ghost" onclick="openCaipy()">Unlock Full Guide — €49</button>
     </div>
   </div>
 </section>
@@ -222,129 +321,208 @@
 
 <!-- VIDEO SECTION — cinematic crossfade hero -->
 <section id="video-section" style="position:relative;width:100%;height:100vh;min-height:600px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0d1b2a;">
-  <video id="vid-a" muted="" playsinline="" style="position: absolute; inset: 0px; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 1; transition: opacity 1.5s;" src="https://videos.pexels.com/video-files/7109030/7109030-hd_1920_1080_25fps.mp4"></video>
-  <video id="vid-b" muted="" playsinline="" style="position: absolute; inset: 0px; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0; transition: opacity 1.5s;" src="https://videos.pexels.com/video-files/5664983/5664983-hd_1920_1080_25fps.mp4"></video>
+  <video id="vid-a" muted playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;" src="https://videos.pexels.com/video-files/33646247/14298719_1920_1080_24fps.mp4"></video>
+  <video id="vid-b" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="https://videos.pexels.com/video-files/33646748/14298633_1920_1080_24fps.mp4"></video>
+  <video id="vid-c" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="https://videos.pexels.com/video-files/5664984/5664984-hd_1920_1080_25fps.mp4"></video>
+  <video id="vid-d" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="https://videos.pexels.com/video-files/17916042/17916042-hd_1920_1080_30fps.mp4"></video>
   <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,42,0.15) 0%,rgba(13,27,42,0.5) 100%);z-index:1;"></div>
-  <div style="position:relative;z-index:2;text-align:center;padding:0 1.5rem;max-width:780px;">
-    <span style="display:inline-block;font-family:&#39;Jost&#39;,sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#D4A55A;border:1px solid rgba(212,165,90,0.6);padding:0.4rem 1.1rem;border-radius:100px;margin-bottom:1.6rem;backdrop-filter:blur(8px);background:rgba(13,27,42,0.5);">Cape Town · Planet Curated</span>
-    <h2 style="font-family:&#39;Cormorant Garamond&#39;,Georgia,serif;font-size:clamp(2.4rem,6vw,4.8rem);font-weight:400;color:#fff;line-height:1.05;margin-bottom:1rem;">Stop wasting hours<br><em style="color:#D4A55A;font-style:italic;">researching your Cape Town trip.</em></h2>
-    <p style="font-family:&#39;Jost&#39;,sans-serif;font-size:1rem;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.75;max-width:560px;margin:0 auto;">Plan your entire trip in minutes — with a personalized itinerary that adapts in real time to weather, location, and your travel style.</p>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
-      <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">
-        💬 Chat with Caipy
-        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Voice AI · Takes less than 2 minutes</em>
+  <script>
+  (function(){
+    const vids = ['vid-a','vid-b','vid-c','vid-d'].map(id => document.getElementById(id));
+    let cur = 0;
+    function next() {
+      const prev = cur;
+      cur = (cur + 1) % vids.length;
+      vids[cur].currentTime = 0;
+      vids[cur].play();
+      vids[cur].style.opacity = '1';
+      vids[prev].style.opacity = '0';
+      setTimeout(() => { vids[prev].pause(); }, 1500);
+    }
+    vids[0].addEventListener('ended', next);
+    vids[1].addEventListener('ended', next);
+    vids[2].addEventListener('ended', next);
+    vids[3].addEventListener('ended', next);
+  })();
+  </script>
+  <div style="position:relative;z-index:2;text-align:left;padding:0 5vw;max-width:700px;">
+    <span style="display:inline-block;font-family:&#39;Jost&#39;,sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#D4A55A;border:1px solid rgba(212,165,90,0.6);padding:0.4rem 1.1rem;border-radius:100px;margin-bottom:1.6rem;backdrop-filter:blur(8px);background:rgba(13,27,42,0.5);">Cape Town, Curated.</span>
+    <h2 style="font-family:&#39;Cormorant Garamond&#39;,Georgia,serif;font-size:clamp(2.4rem,6vw,4.8rem);font-weight:400;color:#fff;line-height:1.05;margin-bottom:1rem;">Not a guide.<br><em style="color:#D4A55A;font-style:italic;">A local.</em><br>In your pocket.</h2>
+    <p style="font-family:&#39;Jost&#39;,sans-serif;font-size:1rem;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.75;max-width:480px;">Your perfect Cape Town trip — personalised, planned, and ready in minutes.</p>
+    <p style="font-family:&#39;Jost&#39;,sans-serif;font-size:0.85rem;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.7;max-width:480px;margin-top:0.75rem;">Start with a free Ubuntu call. Unlock your full Cape Town Guide + personalised itinerary for €49.</p>
+    <div class="hero-cta-row" style="display:flex;gap:14px;justify-content:flex-start;flex-wrap:wrap;margin-top:2rem;">
+      <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 32px;border-radius:4px;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;" onmouseout="this.style.transform=&#39;&#39;">
+        Talk to Ubuntu for Free
       </button>
-      <button onclick="openTavus()" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;" id="tavus-btn">
-        🎥 Video Call with Caipy
-        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Live video · See Caipy in person</em>
+      <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;padding:16px 32px;border-radius:4px;cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor=&#39;rgba(255,255,255,.7)&#39;" onmouseout="this.style.borderColor=&#39;rgba(255,255,255,.35)&#39;">
+        Unlock Full Guide — €49
       </button>
     </div>
   </div>
 </section>
-<script>
-(function(){
-  var clips = [
-    'cape-town-hero.mp4',
-    'https://videos.pexels.com/video-files/33646748/14298635_2560_1440_24fps.mp4',
-    'https://videos.pexels.com/video-files/9385106/9385106-hd_1920_1080_25fps.mp4',
-    'https://videos.pexels.com/video-files/5664983/5664983-hd_1920_1080_25fps.mp4',
-    'https://videos.pexels.com/video-files/7109030/7109030-hd_1920_1080_25fps.mp4',
-    'https://videos.pexels.com/video-files/32565874/13886609_2560_1440_30fps.mp4',
-    'https://videos.pexels.com/video-files/9334383/9334383-hd_1920_1080_25fps.mp4',
-    'https://videos.pexels.com/video-files/11553330/11553330-hd_1920_1080_60fps.mp4'
-  ];
-  var vidA = document.getElementById('vid-a');
-  var vidB = document.getElementById('vid-b');
-  var idx = 0;
-  var active = vidA, standby = vidB;
-  var PLAY_DURATION = 6000;
-  var FADE_DURATION = 1500;
-
-  function loadAndPlay(vid, src, onReady) {
-    vid.src = src;
-    vid.load();
-    vid.oncanplay = function(){ vid.oncanplay = null; onReady(); };
-    vid.onerror = function(){ vid.onerror = null; onReady(); };
-  }
-
-  function advance() {
-    idx = (idx + 1) % clips.length;
-    standby.style.opacity = '0';
-    loadAndPlay(standby, clips[idx], function(){
-      standby.play().catch(function(){});
-      standby.style.opacity = '1';
-      active.style.opacity = '0';
-      var prev = active;
-      active = standby;
-      standby = prev;
-    });
-  }
-
-  // Start first clip
-  loadAndPlay(active, clips[0], function(){
-    active.play().catch(function(){});
-    setInterval(advance, PLAY_DURATION);
-  });
-})();
-</script>
 
 
 
 <!-- AI CHAT SECTION -->
 <section class="ai-section" id="ai-chat">
-  <div style="max-width:780px;margin:0 auto;text-align:center;">
-    <div class="section-label" style="color:rgba(212,165,90,.8)">Not Another Travel Guide</div>
-    <h2 class="section-title">Meet Caipy.</h2>
-    <p class="section-sub">A smart travel companion that updates your trip as things change — not a static PDF you'll forget by day two.<br><br>
-      <span style="display:block;background:rgba(255,255,255,.06);border:1px solid rgba(212,165,90,.2);border-radius:10px;padding:20px 24px;text-align:left;font-size:13px;color:rgba(255,255,255,.75);line-height:2;max-width:480px;margin:0 auto;">
-        <strong style="color:#D4A85A;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Example — Your Trip Today</strong><br><br>
-        ☀ Perfect beach weather in Clifton → <em>Go now (low wind, clear skies)</em><br>
-        🌬 Wind picking up at 14:00 → <em>Move Table Mountain to tomorrow</em><br>
-        🍷 Ideal conditions in Stellenbosch → <em>Best time to go this afternoon</em><br>
-        🚗 Traffic building in Camps Bay → <em>Sunset alternative: Signal Hill</em>
-      </span>
-    </p>
-    <div style="margin:2.5rem auto 0;display:flex;flex-direction:column;align-items:center;gap:16px;">
-      <div style="width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);box-shadow:0 0 0 6px rgba(184,134,58,.15),0 0 40px 10px rgba(184,134,58,.2);">
-        <img src="file:///Users/dirkzeevenhooven/theguidecapetownguide/caipy-avatar2.png" alt="Caipy" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;">
+  <p style="font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(212,165,90,0.6);text-align:center;margin-bottom:-60px;padding-top:0;">Example: how Ubuntu adapts your day</p>
+  <div class="ubuntu-meet">
+
+    <!-- Ubuntu video -->
+    <div class="ubuntu-portrait-col" style="align-self:start;padding-top:8px;">
+      <div style="position:relative;width:260px;height:320px;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5);border:1px solid rgba(212,165,90,.2);background:#0F2430;">
+        <video id="ubuntu-video" src="photos/ubuntutravelbutler.mp4" playsinline muted style="width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.25);"></video>
+        <div onclick="openUbuntuModal()" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(15,36,48,0.35);transition:background .2s;" onmouseover="this.style.background='rgba(15,36,48,0.2)'" onmouseout="this.style.background='rgba(15,36,48,0.35)'">
+          <div style="width:60px;height:60px;border-radius:50%;background:rgba(201,169,110,0.9);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#0F2430"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
       </div>
-      <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;;this.style.boxShadow=&#39;0 12px 36px rgba(184,134,58,.55)&#39;" onmouseout="this.style.transform=&#39;&#39;;this.style.boxShadow=&#39;0 8px 28px rgba(184,134,58,.4)&#39;">
-        Start Planning My Trip
-        <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Free · No stress · No endless searching.</em>
+    </div>
+
+    <!-- Ubuntu Video Modal -->
+    <div id="ubuntu-modal" onclick="closeUbuntuModal()" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+      <div onclick="event.stopPropagation()" style="position:relative;width:min(520px,90vw);height:min(640px,85vh);border-radius:20px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.8);border:1px solid rgba(201,169,110,.25);background:#0F2430;">
+        <video id="ubuntu-modal-video" src="photos/ubuntutravelbutler.mp4" playsinline style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.35);width:100%;height:100%;object-fit:cover;display:block;"></video>
+        <!-- Pause/Play -->
+        <div id="ubuntu-modal-pause" onclick="toggleUbuntuModal()" style="position:absolute;bottom:16px;right:16px;cursor:pointer;">
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(201,169,110,0.9);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 16px rgba(0,0,0,.5);">
+            <svg id="ubuntu-modal-icon" width="16" height="16" viewBox="0 0 24 24" fill="#0F2430"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+          </div>
+        </div>
+        <!-- Close -->
+        <div onclick="closeUbuntuModal()" style="position:absolute;top:12px;right:12px;cursor:pointer;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;line-height:1;">×</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div>
+      <h2 class="section-title" style="text-align:left">Meet Ubuntu</h2>
+      <div class="section-label" style="color:rgba(212,165,90,.8);text-align:left;margin-bottom:20px">Your Personal Cape Town Travel Guide</div>
+      <p class="section-sub" style="text-align:left;max-width:500px">Ask Ubuntu anything about Cape Town — or let him create a personalised, tailor-made itinerary built around your dates, budget, travel style and dream trip.</p>
+
+      <!-- Morning briefing card -->
+      <div class="ubuntu-msg-card">
+        <div class="ubuntu-msg-header">
+          <div class="ubuntu-msg-av"><img src="ubuntu-avatar.png" alt="Ubuntu"></div>
+          <div>
+            <div class="ubuntu-msg-who">Ubuntu</div>
+            <div class="ubuntu-msg-when">Morning briefing · Today, 08:14</div>
+          </div>
+          <div class="ubuntu-msg-live"></div>
+        </div>
+        <div class="ubuntu-msg-body">
+          <p>Good morning, howzit?</p>
+          <p><strong>Cape Town is showing off again today.</strong> Clear skies, low wind, and Table Mountain is perfect this morning. I'd get to the cable car before 09:00 to beat the queues.</p>
+          <p>The south-easter picks up after 14:00, so I've adjusted your day: mountain first, beach later.</p>
+          <p>Your updated itinerary is ready.</p>
+        </div>
+      </div>
+
+      <button onclick="document.getElementById('itinerary').scrollIntoView({behavior:'smooth'})" style="background:transparent;color:#D4A85A;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 28px;border-radius:4px;border:1.5px solid rgba(212,165,90,.5);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='rgba(212,165,90,.9)';this.style.color='#e8c87a'" onmouseout="this.style.borderColor='rgba(212,165,90,.5)';this.style.color='#D4A85A'">
+        See Sample Itinerary →
       </button>
-      <p style="font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.5px;">Free · No sign-up · Real-time</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section style="background:var(--warm);padding:80px 5vw;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div class="section-label" style="text-align:center;">What you get</div>
+    <h2 class="section-title" style="text-align:center;">Everything for <em style="font-style:italic;color:var(--gold);">€49</em></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:40px;">
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div style="font-size:20px;margin-bottom:10px;">🗓</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Personalised day-by-day itinerary</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Built around your exact dates, travel style, and interests.</p>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div style="font-size:20px;margin-bottom:10px;">🗺</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Interactive Cape Town guide</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Day cards, photos, local tips, and booking links in one place.</p>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div style="font-size:20px;margin-bottom:10px;">🧠</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Live local intelligence</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Weather, crowds, and timing — always current, never outdated.</p>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div style="font-size:20px;margin-bottom:10px;">🛡</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Safety & transport guidance</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Honest advice on where to go, what to avoid, how to get around.</p>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div style="font-size:20px;margin-bottom:10px;">📍</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Google Maps-ready planning</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Every recommendation is location-aware and easy to navigate to.</p>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div style="font-size:20px;margin-bottom:10px;">💬</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Ubuntu access</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Ask follow-up questions anytime. Ubuntu knows your trip.</p>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
+        <div style="font-size:20px;margin-bottom:10px;">🏔</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Dirk's insider layer</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">10+ years of deep Cape Town experience — not scraped from the internet.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 36px;border-radius:4px;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">Unlock Full Guide — €49</button>
     </div>
   </div>
 </section>
 
 <!-- ITINERARY -->
 <section class="itinerary-section" id="itinerary">
-  <div class="section-label">Your Personalized Itinerary</div>
-  <h2 class="section-title">A day-by-day plan built around you.</h2>
-  <p class="section-sub">Not a generic tourist checklist. A real, flexible plan built around your travel style, dates, and interests — that adapts when things change.</p>
+  <div class="section-label">The Itinerary</div>
+  <h2 class="section-title">Four days. Perfectly planned.</h2>
+  <p class="section-sub">This is a sample. Your itinerary is built around your exact trip.</p>
   <div class="itinerary-grid">
-    <div class="itinerary-card reveal">
-      <div class="itin-day"><div class="itin-day-num">Day One</div><div class="itin-day-title">The Icons</div></div>
+    <div class="itinerary-card reveal" onclick="openLightbox(1)">
+      <img class="itin-photo" src="photos/waterfront.jpeg" alt="V&A Waterfront Cape Town">
+      <div class="itin-overlay"></div>
+      <div class="itin-expand">⤢</div>
+      <div class="itin-day"><div class="itin-day-num">Day One · Arrival</div><div class="itin-day-title">Settle In</div></div>
       <div class="itin-body">
-        <div class="itin-item"><div class="itin-time">Morning</div><p><strong>Table Mountain</strong> — arrive at the cable car station by 8am. Spend 90 minutes on top.</p></div>
-        <div class="itin-item"><div class="itin-time">Afternoon</div><p><strong>V&amp;A Waterfront</strong> — walk the harbour, watch the seals, grab a coffee.</p></div>
-        <div class="itin-item"><div class="itin-time">Evening</div><p><strong>Bree Street dinner</strong> — pick any restaurant on the strip. All are excellent.</p></div>
+        <div class="itin-item"><div class="itin-time">Morning</div><p><strong>Cape Town Airport</strong> — collect your rental car. Twenty minutes along the N2 to Green Point, Table Mountain rising on the horizon.</p></div>
+        <div class="itin-item"><div class="itin-time">Midday</div><p><strong>V&amp;A Waterfront</strong> — drop your bags, then lunch at the Watershed. Watch the seals.</p></div>
+        <div class="itin-item"><div class="itin-time">Evening</div><p><strong>Bree Street</strong> — Shortmarket Club for dinner. Book ahead.</p></div>
       </div>
     </div>
-    <div class="itinerary-card reveal">
-      <div class="itin-day"><div class="itin-day-num">Day Two</div><div class="itin-day-title">The Peninsula</div></div>
+    <div class="itinerary-card reveal" onclick="openLightbox(2)">
+      <img class="itin-photo" src="photos/tablemountaincableway.jpeg" alt="Table Mountain Cape Town">
+      <div class="itin-overlay"></div>
+      <div class="itin-expand">⤢</div>
+      <div class="itin-day"><div class="itin-day-num">Day Two · Icons</div><div class="itin-day-title">Table Mountain</div></div>
       <div class="itin-body">
-        <div class="itin-item"><div class="itin-time">Morning</div><p><strong>Chapman's Peak drive</strong> — leave by 8am, stop at every viewpoint.</p></div>
-        <div class="itin-item"><div class="itin-time">Afternoon</div><p><strong>Cape Point + Boulders Beach</strong> — penguins, two oceans, dramatic cliffs.</p></div>
-        <div class="itin-item"><div class="itin-time">Evening</div><p><strong>Kalk Bay harbour</strong> — fish &amp; chips straight from the boats.</p></div>
+        <div class="itin-item"><div class="itin-time">7:30am</div><p><strong>Table Mountain</strong> — cable car at 8am. Ninety minutes on top, two oceans below.</p></div>
+        <div class="itin-item"><div class="itin-time">Afternoon</div><p><strong>Camps Bay</strong> — lunch at The Bungalow. Swim at Clifton 4th.</p></div>
+        <div class="itin-item"><div class="itin-time">Sunset</div><p><strong>Signal Hill</strong> — drive up, bring a bottle. Best sundowner in Cape Town. Every time.</p></div>
       </div>
     </div>
-    <div class="itinerary-card reveal">
-      <div class="itin-day"><div class="itin-day-num">Day Three</div><div class="itin-day-title">Culture &amp; Wine</div></div>
+    <div class="itinerary-card reveal" onclick="openLightbox(3)">
+      <img class="itin-photo" src="photos/Cape-Point.webp" alt="Cape Point Peninsula">
+      <div class="itin-overlay"></div>
+      <div class="itin-expand">⤢</div>
+      <div class="itin-day"><div class="itin-day-num">Day Three · Peninsula</div><div class="itin-day-title">Cape Point</div></div>
       <div class="itin-body">
-        <div class="itin-item"><div class="itin-time">Morning</div><p><strong>Bo-Kaap</strong> walking tour + Neighbourgoods Market (Saturdays).</p></div>
-        <div class="itin-item"><div class="itin-time">Afternoon</div><p><strong>Durbanville Hills</strong> — Diemersdal wine estate. Meet the winemaker.</p></div>
-        <div class="itin-item"><div class="itin-time">Evening</div><p><strong>Signal Hill sundowner</strong> — drive up, bring a bottle, watch the city go golden.</p></div>
+        <div class="itin-item"><div class="itin-time">8:00am</div><p><strong>Chapman's Peak Drive</strong> — leave early. Stop at every viewpoint. One of the world's great coastal roads.</p></div>
+        <div class="itin-item"><div class="itin-time">Midday</div><p><strong>Cape Point + Boulders Beach</strong> — penguins, two oceans, dramatic cliffs.</p></div>
+        <div class="itin-item"><div class="itin-time">Evening</div><p><strong>Kalk Bay</strong> — fish &amp; chips from the boats. Sit on the harbour wall.</p></div>
+      </div>
+    </div>
+    <div class="itinerary-card reveal" onclick="openLightbox(4)">
+      <img class="itin-photo" src="photos/durbanvillehills.jpeg" alt="Durbanville Hills Winelands">
+      <div class="itin-overlay"></div>
+      <div class="itin-expand">⤢</div>
+      <div class="itin-day"><div class="itin-day-num">Day Four · Winelands</div><div class="itin-day-title">Durbanville Hills</div></div>
+      <div class="itin-body">
+        <div class="itin-item"><div class="itin-time">Morning</div><p><strong>Durbanville Hills</strong> — skip the Stellenbosch tourist trail. Smaller estates, you can meet the winemaker.</p></div>
+        <div class="itin-item"><div class="itin-time">Afternoon</div><p><strong>Diemersdal Estate</strong> — the standout in the valley. Lunch on the terrace with mountain views.</p></div>
+        <div class="itin-item"><div class="itin-time">Evening</div><p><strong>Back to the city</strong> — 20 minutes from Cape Town. Sundowner on the way home.</p></div>
       </div>
     </div>
   </div>
@@ -352,47 +530,103 @@
 
 <!-- TIPS -->
 <section class="tips-section" id="tips">
-  <div class="section-label">Local Intelligence</div>
-  <h2 class="section-title">Built on 10+ years of real Cape Town experience.</h2>
-  <p class="section-sub">Not scraped from the internet. Not generated from other guides. This is what a local actually tells you before your trip.</p>
-  <div class="tips-grid">
-    <div class="tip-card reveal">
-      <h3>🛡️ Safety</h3>
-      <p>Tourist areas are very safe. Use Uber exclusively — never unmarked taxis. Don't leave anything visible in a parked car. Take your old phone instead of your new one.</p>
+  <div class="section-label">Start Here</div>
+  <h2 class="section-title">What the guidebooks miss.</h2>
+  <p class="section-sub">Real local knowledge — not scraped from the internet.</p>
+  <div class="tips-carousel-wrap" id="tipsCarousel" onmouseenter="tipsPause()" onmouseleave="tipsResume()" onclick="tipsNav(1)" style="cursor:pointer;">
+
+    <div class="tips-slide active">
+      <img src="photos/bo-kaap-color.jpeg" alt="Bo-Kaap Cape Town">
+      <div class="tips-slide-overlay"></div>
+      <div class="tips-slide-content">
+        <div class="tips-slide-label">Bo-Kaap</div>
+        <div class="tips-slide-title">The colours aren't what you think.</div>
+        <p class="tips-slide-text">Guidebooks say the houses were painted after apartheid. The real story goes deeper: when the Dutch colonial system forbade enslaved residents from owning property, all homes had to be painted white. The moment freed residents could finally buy their homes in the 19th century, they painted them every colour they could find. Freedom, made visible.</p>
+      </div>
     </div>
-    <div class="tip-card reveal">
-      <h3>🏖️ Beaches</h3>
-      <p>Skip Camps Bay (overpriced, crowded). Go to Llandudno instead — same mountain backdrop, a fraction of the people, dramatic granite boulders.</p>
+
+    <div class="tips-slide">
+      <img src="photos/llandudnobeach.jpeg" alt="Llandudno Beach">
+      <div class="tips-slide-overlay"></div>
+      <div class="tips-slide-content">
+        <div class="tips-slide-label">Beaches</div>
+        <div class="tips-slide-title">Skip Camps Bay.</div>
+        <p class="tips-slide-text">Go to Llandudno — same mountain backdrop, far fewer people, dramatic granite boulders. The beach most tourists never find.</p>
+      </div>
     </div>
-    <div class="tip-card reveal">
-      <h3>🍷 Wine</h3>
-      <p>Durbanville Hills is the insider pick. Smaller estates, you can meet the winemaker, no tourist crowds. Diemersdal is the standout. Combine with MTB for the perfect day.</p>
+
+    <div class="tips-slide">
+      <img src="photos/durbanvillehills.jpeg" alt="Durbanville Hills">
+      <div class="tips-slide-overlay"></div>
+      <div class="tips-slide-content">
+        <div class="tips-slide-label">Wine</div>
+        <div class="tips-slide-title">Durbanville Hills, not Stellenbosch.</div>
+        <p class="tips-slide-text">Smaller estates, no tourist crowds. Diemersdal is the standout — combine with mountain biking for the perfect day.</p>
+      </div>
     </div>
-    <div class="tip-card reveal">
-      <h3>🥾 Hiking</h3>
-      <p>Lion's Head before 7am on a weekday. The full moon hike is bucket-list. Don't hike Table Mountain on your first day — rest after the flight first.</p>
+
+    <div class="tips-slide">
+      <img src="photos/tablemountaintop.jpeg" alt="Lion's Head Cape Town">
+      <div class="tips-slide-overlay"></div>
+      <div class="tips-slide-content">
+        <div class="tips-slide-label">Hiking</div>
+        <div class="tips-slide-title">Lion's Head before 7am.</div>
+        <p class="tips-slide-text">On a weekday, before the crowds. The full moon hike is bucket-list. Never on your first day — rest after the flight.</p>
+      </div>
     </div>
-    <div class="tip-card reveal">
-      <h3>🍽️ Food</h3>
-      <p>Bree Street, not the Waterfront. Old Biscuit Mill on Saturdays. The Test Kitchen for a special occasion — book 6 weeks ahead. Kalk Bay for the freshest fish.</p>
+
+    <div class="tips-slide">
+      <img src="photos/breestreet.jpeg" alt="Bree Street Cape Town">
+      <div class="tips-slide-overlay"></div>
+      <div class="tips-slide-content">
+        <div class="tips-slide-label">Food</div>
+        <div class="tips-slide-title">Bree Street, not the Waterfront.</div>
+        <p class="tips-slide-text">Cape Town's best restaurants are on Bree Street — not at the Waterfront. The Test Kitchen for a special occasion (book 6 weeks ahead). Shortmarket Club for your first night. Kalk Bay for the freshest fish you'll ever eat.</p>
+      </div>
     </div>
-    <div class="tip-card reveal">
-      <h3>🚗 Getting Around</h3>
-      <p>Rent a car from Day 2 onwards — it unlocks the Peninsula, wine estates and Cederberg. Chapman's Peak toll (R52) is worth every cent.</p>
+
+    <div class="tips-slide">
+      <img src="photos/chapmanspeak01.jpeg" alt="Chapman's Peak Drive">
+      <div class="tips-slide-overlay"></div>
+      <div class="tips-slide-content">
+        <div class="tips-slide-label">Road Trip</div>
+        <div class="tips-slide-title">The most beautiful scenic route.</div>
+        <p class="tips-slide-text">Chapman's Peak Drive has wound along this cliff face since 1922 — nine kilometres of ancient granite plunging straight into the Atlantic. It's not just a road between Hout Bay and Noordhoek. Push on to Cape Point, loop back via Boulders Beach, and call it the best half-day of your trip.</p>
+      </div>
+    </div>
+
+    <div class="tips-slide">
+      <img src="photos/firstthursday.jpeg" alt="First Thursdays Cape Town">
+      <div class="tips-slide-overlay"></div>
+      <div class="tips-slide-content">
+        <div class="tips-slide-label">Events</div>
+        <div class="tips-slide-title">First Thursday. Every month.</div>
+        <p class="tips-slide-text">On the first Thursday of every month, galleries, studios and restaurants on Bree Street throw open their doors after dark. Cape Town at its most electric — and it's free. <a href="https://www.first-thursdays.co.za/city/cape-town" target="_blank" rel="noopener" style="color:var(--gold-l);text-decoration:none;border-bottom:1px solid rgba(212,165,90,.4);">See what's on →</a></p>
+      </div>
+    </div>
+
+    <div class="tips-progress"><div class="tips-progress-bar" id="tipsProgressBar"></div></div>
+    <div class="tips-dots-wrap" id="tipsDots">
+      <div class="tips-dot active" onclick="tipsGoTo(0)"></div>
+      <div class="tips-dot" onclick="tipsGoTo(1)"></div>
+      <div class="tips-dot" onclick="tipsGoTo(2)"></div>
+      <div class="tips-dot" onclick="tipsGoTo(3)"></div>
+      <div class="tips-dot" onclick="tipsGoTo(4)"></div>
+      <div class="tips-dot" onclick="tipsGoTo(5)"></div>
+      <div class="tips-dot" onclick="tipsGoTo(6)"></div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
 <section class="cta-section">
+  <video class="cta-video" autoplay muted loop playsinline src="photos/capetown.mp4"></video>
   <h2>Stop researching.<br><em style="font-style:italic;color:var(--gold-l)">Start experiencing Cape Town.</em></h2>
-  <p>Your personalized itinerary, ready in minutes. No more endless tabs, no more generic guides, no more wasted hours.</p>
+  <p>Your personalised Cape Town trip, ready in minutes.</p>
   <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
-    <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 8px 28px rgba(184,134,58,.4);">
-      Plan My Perfect Cape Town Trip
-      <em style="font-size:9px;font-weight:300;letter-spacing:1px;text-transform:none;font-style:italic;opacity:.85;">Takes less than 2 minutes</em>
+    <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;" onmouseout="this.style.transform=&#39;&#39;">
+      Talk to Ubuntu for Free
     </button>
-    <button onclick="window.location.href=&#39;guide.html&#39;" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;cursor:pointer;">Get My Personalized Itinerary</button>
   </div>
 </section>
 
@@ -407,21 +641,21 @@
           <div class="logo-sub">Cape Town Insider Guide</div>
         </div>
       </div>
-      <p>Built on 10+ years of real Cape Town experience — not scraped from the internet. Dynamic, personalized travel planning powered by AI.</p>
+      <p>Deep local knowledge of Cape Town. Always live, always personal.</p>
     </div>
     <div class="footer-col">
       <h4>Explore</h4>
-<a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/index.html#itinerary">Itineraries</a>
-      <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/index.html#tips">Local Tips</a>
+<a href="/#itinerary">Itineraries</a>
+      <a href="/#tips">Local Tips</a>
     </div>
     <div class="footer-col">
       <h4>Plan</h4>
-      <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/index.html#ai-chat">Ask Caipy</a>
-      <a href="file:///Users/dirkzeevenhooven/theguidecapetownguide/index.html#features">AI Features</a>
+      <a href="/#ai-chat">Meet Ubuntu</a>
+      <a href="/guide/about.html">About</a>
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
-      <a href="mailto:hello@thecapetownguide.com">hello@thecapetownguide.com</a>
+      <a href="mailto:info@thecapetownguide.com">info@thecapetownguide.com</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -436,11 +670,12 @@
 <!-- Post-call itinerary modal -->
 <div id="itinerary-modal" style="display:none;position:fixed;inset:0;background:rgba(28,28,26,.6);backdrop-filter:blur(4px);z-index:20000;align-items:center;justify-content:center">
   <div style="background:#FAF7F2;border-radius:20px;padding:40px 36px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35)">
-    <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:30px;font-weight:600;margin-bottom:8px;color:#1C1C1A;line-height:1.2">Your Cape Town guide<br>is ready ✦</div>
-    <p style="font-size:13px;color:#6B6560;line-height:1.7;margin-bottom:20px">Enter your email below to receive it.</p>
+    <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:28px;font-weight:600;margin-bottom:8px;color:#1C1C1A;line-height:1.2">Unlock your full Cape Town Guide<br>+ personal itinerary</div>
+    <p style="font-size:13px;color:#6B6560;line-height:1.7;margin-bottom:20px">Enter your email to continue to secure checkout and receive access.</p>
     <input type="email" id="itinerary-email" placeholder="your@email.com" style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,0,0,.12);border-radius:10px;font-family:&#39;Jost&#39;,sans-serif;font-size:14px;outline:none;margin-bottom:14px;background:#fff;box-sizing:border-box;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#B8863A&#39;" onblur="this.style.borderColor=&#39;rgba(0,0,0,.12)&#39;">
-    <button id="pay-btn" onclick="startItineraryPayment()" style="width:100%;background:linear-gradient(135deg,#B8863A,#D4A85A);color:#fff;border:none;padding:18px 28px;border-radius:10px;font-family:&#39;Jost&#39;,sans-serif;font-size:16px;font-weight:600;letter-spacing:.5px;cursor:pointer;margin-bottom:10px;box-shadow:0 6px 24px rgba(184,134,58,.45);transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;;this.style.boxShadow=&#39;0 10px 32px rgba(184,134,58,.55)&#39;" onmouseout="this.style.transform=&#39;&#39;;this.style.boxShadow=&#39;0 6px 24px rgba(184,134,58,.45)&#39;">Get My Guide — €99 →</button>
-    <p style="font-size:11.5px;color:#9B9491;line-height:1.6;margin-bottom:16px;font-style:italic">Personalised day-by-day plan built by Caipy,<br>powered by Dirk's 10+ years of Cape Town knowledge</p>
+    <button id="pay-btn" onclick="startItineraryPayment()" style="width:100%;background:linear-gradient(135deg,#B8863A,#D4A85A);color:#fff;border:none;padding:18px 28px;border-radius:10px;font-family:&#39;Jost&#39;,sans-serif;font-size:16px;font-weight:600;letter-spacing:.5px;cursor:pointer;margin-bottom:10px;box-shadow:0 6px 24px rgba(184,134,58,.45);transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;;this.style.boxShadow=&#39;0 10px 32px rgba(184,134,58,.55)&#39;" onmouseout="this.style.transform=&#39;&#39;;this.style.boxShadow=&#39;0 6px 24px rgba(184,134,58,.45)&#39;">Unlock Full Guide — €49</button>
+    <p style="font-size:11.5px;color:#9B9491;line-height:1.6;margin-bottom:8px;font-style:italic">Personalised day-by-day plan built by Ubuntu,<br>powered by Dirk's 15 years of Cape Town knowledge</p>
+    <p style="font-size:11px;color:#B0A89F;line-height:1.6;margin-bottom:16px;">Not useful? Email us within 7 days and we'll refund you. No drama.</p>
 
     <!-- Voucher toggle -->
     <div style="margin-bottom:16px;">
@@ -463,9 +698,9 @@
   <div id="caipyPanel" class="hidden">
     <button id="caipyCloseBtn" onclick="endCall()">✕</button>
     <div id="voicePanel">
-      <div class="voice-avatar"><img src="file:///Users/dirkzeevenhooven/theguidecapetownguide/caipy-avatar2.png" alt="Caipy"></div>
-      <div class="voice-name">Caipy</div>
-      <div class="voice-sub">Your personal travel agent</div>
+      <div class="voice-avatar"><img src="ubuntu-avatar.png" alt="Ubuntu"></div>
+      <div class="voice-name">Ubuntu</div>
+      <div class="voice-sub">Your personal travel butler</div>
       <div id="voiceStatus">Connecting…</div>
       <div class="voice-pulse" id="voicePulse">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#B8863A" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
@@ -475,10 +710,10 @@
   </div>
 
   <div id="caipyBtn" onclick="openCaipy()">
-    <div class="caipy-bubble" id="caipyBubble" style="opacity: 0; transition: opacity 0.5s; pointer-events: none;">Hi! I'm Caipy — Ask me anything about Cape Town!</div>
-    <div class="caipy-orb"><img src="file:///Users/dirkzeevenhooven/theguidecapetownguide/caipy-avatar2.png" alt="Caipy"></div>
+    <div class="caipy-bubble" id="caipyBubble" style="opacity: 0; transition: opacity 0.5s; pointer-events: none;">Hi! I'm Ubuntu — Ask me anything about Cape Town!</div>
+    <div class="caipy-orb"><img src="ubuntu-avatar.png" alt="Ubuntu"></div>
+    <div class="caipy-name-tag">Ubuntu</div>
     <div class="caipy-pulse"></div>
-    <div class="caipy-name-tag">Speak with Caipy</div>
   </div>
 </div>
 
@@ -530,7 +765,7 @@
   /* ── KNOWLEDGE BASE ── */
   const kb = [
     { keys: ['hello','hi','hey','howzit','hi there','good morning','good afternoon'],
-      answer: `Hello howzit! I'm Caipy, your Cape Town Travel Agent. Tell me about your trip — how many days, who you're travelling with, and what you enjoy — and I'll build you the perfect itinerary!` },
+      answer: `Hello howzit! I'm Ubuntu, your Cape Town Travel Butler. Tell me about your trip — how many days, who you're travelling with, and what you enjoy — and I'll build you the perfect itinerary!` },
     { keys: ['week','weeks','family','daughter','son','children','kids','child','wife','husband','partner','toddler','baby'],
       answer: `Wonderful — Cape Town is brilliant for families! Here's how I'd approach it:<br><br>🏖️ <strong>Kid-friendly beaches:</strong> Boulders Beach (penguins!), Muizenberg (calm warm water, great for small kids), Fish Hoek.<br>🐧 <strong>Must-do with little ones:</strong> Boulders Beach penguins, Two Oceans Aquarium, Kirstenbosch Gardens (huge lawns to run around).<br>🏔️ <strong>Table Mountain:</strong> Cable car is easy with young children — no hiking needed.<br>🍽️ <strong>Family dining:</strong> Willowbridge in Durbanville (big outdoor area), Norval Foundation (sculpture garden + café).<br><br>💡 November is a great month — warm, long days, not too crowded yet. Would you like a day-by-day plan for your stay?` },
     { keys: ['plan','holiday','vacation','trip','visit','november','december','january','february','march','april','may','june','july','august','september','october','3 week','two week','one week','days','itinerary'],
@@ -714,9 +949,36 @@
     } catch (e) {
       alert('Could not start video call. Please try the chat option instead.');
     }
-    btn.textContent = 'Start Video Call with Caipy →';
+    btn.textContent = 'Start Video Call with Ubuntu →';
     btn.disabled = false;
   }
+
+  function openUbuntuModal() {
+    const modal = document.getElementById('ubuntu-modal');
+    const video = document.getElementById('ubuntu-modal-video');
+    modal.style.display = 'flex';
+    video.muted = false;
+    video.currentTime = 0;
+    video.play();
+  }
+  function closeUbuntuModal() {
+    const modal = document.getElementById('ubuntu-modal');
+    const video = document.getElementById('ubuntu-modal-video');
+    video.pause();
+    modal.style.display = 'none';
+  }
+  function toggleUbuntuModal() {
+    const video = document.getElementById('ubuntu-modal-video');
+    const icon = document.getElementById('ubuntu-modal-icon');
+    if (video.paused) {
+      video.play();
+      icon.innerHTML = '<rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/>';
+    } else {
+      video.pause();
+      icon.innerHTML = '<polygon points="5,3 19,12 5,21"/>';
+    }
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeUbuntuModal(); });
 
   async function openCaipy() {
     if (caipyOpen) return;
@@ -769,7 +1031,7 @@
           }, 1200);
         },
         onError: (msg) => { setVoiceStatus('Error: ' + msg); },
-        onModeChange: ({ mode }) => { setVoiceStatus(mode === 'speaking' ? '🔊 Caipy is speaking…' : '🎙️ Listening…'); },
+        onModeChange: ({ mode }) => { setVoiceStatus(mode === 'speaking' ? '🔊 Ubuntu is speaking…' : '🎙️ Listening…'); },
       });
     } catch (err) {
       setVoiceStatus('Could not connect: ' + err.message);
@@ -837,6 +1099,172 @@
     }
   }
 
+  /* ── ITINERARY LIGHTBOX ── */
+  let _currentDay = 1, _lboxSlide = 0;
+
+  const _dayData = {
+    1: {
+      label: 'Day One · Arrival', title: 'Settle In',
+      photos: [
+        { src: 'photos/greenpoint.jpeg',   caption: 'Morning · Green Point' },
+        { src: 'photos/waterfront.jpeg',  caption: 'Midday · V&A Waterfront' },
+        { src: 'photos/bo-kaap-color.jpeg',     caption: 'Afternoon · Bo-Kaap' },
+        { src: 'photos/breestreet.jpeg',  caption: 'Evening · Bree Street' },
+      ],
+      intro: 'Your first Cape Town day sets the tone. Don\'t overdo it — let the city come to you.',
+      items: [
+        { time: 'Morning', text: '<strong>Cape Town Airport</strong> — collect your rental car (Ubuntu recommends Europcar or First Car Rental). Quick 20 min drive along the N2 to Green Point. Watch Table Mountain appear on the horizon as you clear the highway.' },
+        { time: 'Midday', text: '<strong>Check in · Green Point</strong> — drop your bags, freshen up. Walk 10 mins to the V&A Waterfront. Lunch at <a href="https://www.waterfront.co.za/the-watershed/" target="_blank" rel="noopener">The Watershed</a> — brilliant local artisan market with great food stalls. Watch the Cape fur seals from the harbour wall.' },
+        { time: 'Afternoon', text: '<strong>Sea Point Promenade</strong> — 3km ocean walk with Table Mountain as the backdrop. Perfect for clearing jet lag. Stop at the Mouille Point lighthouse. Coffee at any of the cafés along the strip.' },
+        { time: 'Evening', text: '<strong>Bree Street</strong> — <a href="https://shortmarketclub.com/" target="_blank" rel="noopener">Shortmarket Club</a> for dinner. The best restaurant on the strip. Book at least 2 days ahead. If you\'re visiting on the first Thursday of the month, don\'t miss <a href="https://www.first-thursdays.co.za/city/cape-town" target="_blank" rel="noopener">First Thursdays</a> — galleries, studios and restaurants throw open their doors after dark. Cape Town at its most electric, and it\'s free.' },
+      ],
+      tip: 'Don\'t try to see too much on arrival day. Jet lag is real. A relaxed first evening means you\'ll hit Day 2 with full energy.'
+    },
+    2: {
+      label: 'Day Two · Icons', title: 'Table Mountain',
+      photos: [
+        { src: 'photos/tablemountaincableway.jpeg',      caption: 'Morning · Table Mountain' },
+        { src: 'photos/tablemountaintop.jpeg',           caption: 'Morning · Lion\'s Head' },
+        { src: 'photos/campsbayrestaurent.jpeg', caption: 'Afternoon · Camps Bay' },
+        { src: 'photos/thebungalow.jpeg',         caption: 'Lunch · The Bungalow' },
+        { src: 'photos/cliftonbeach.jpeg',          caption: 'Afternoon · Clifton Beach' },
+        { src: 'photos/Signal-Hill.jpeg',         caption: 'Sunset · Signal Hill' },
+      ],
+      intro: 'The centrepiece of Cape Town. Do this right and it will be the standout moment of your entire trip.',
+      items: [
+        { time: '7:30am', text: '<strong>Lower Cable Station</strong> — arrive before opening at 8am to beat the queue. Ubuntu checked this morning\'s wind forecast — conditions are perfect. <a href="https://www.tablemountain.net/plan-your-visit/buy-tickets" target="_blank" rel="noopener">Book your cable car ticket online</a> to skip the queue. If the car is closed for wind, Ubuntu\'s backup: Lion\'s Head instead.' },
+        { time: '8–10am', text: '<strong>90 minutes on the plateau</strong> — walk the marked trails across the top. Views of Cape Point, Robben Island, the Atlantic Seaboard, and the city below. Bring a layer — it\'s cold and windy up top even on a perfect day.' },
+        { time: 'Afternoon', text: '<strong>Camps Bay</strong> — drive via De Waal Drive. Lunch at <a href="https://www.thebungalow.co.za/" target="_blank" rel="noopener">The Bungalow</a> on the beachfront. Best seat in Cape Town, hands down. Swim at Clifton 4th if the wind drops — sheltered, turquoise, and very cold.' },
+        { time: 'Sunset', text: '<strong>Signal Hill</strong> — drive to the top, bring a bottle of wine. Watch the sun drop into the Atlantic Ocean. Every time, without exception. This is the Cape Town sundowner spot.' },
+      ],
+      tip: 'Wind backup plan: if the cable car is closed, hike Lion\'s Head instead. 2.5 hours, equally spectacular views, and far fewer tourists.'
+    },
+    3: {
+      label: 'Day Three · Peninsula', title: 'Cape Point',
+      photos: [
+        { src: 'photos/chapmanspeak01.jpeg',         caption: 'Morning · Chapman\'s Peak' },
+        { src: 'photos/Cape-Point.webp',            caption: 'Midday · Cape Point' },
+        { src: 'photos/boulders-beach.jpeg',       caption: 'Afternoon · Boulders Beach' },
+      ],
+      intro: 'The most dramatic drive in South Africa. Clear a full day — this route rewards you at every single turn.',
+      items: [
+        { time: '8:00am', text: '<strong>Chapman\'s Peak Drive</strong> — one of the world\'s truly great coastal roads. 9km of cliff-hugging tarmac with the Atlantic Ocean below. Stop at every viewpoint. This is exactly what the rental car is for.' },
+        { time: '10:00am', text: '<strong>Cape Point Nature Reserve</strong> — walk up to the old lighthouse (or take the funicular). You\'re standing at the southwestern tip of Africa, where two oceans meet. <a href="https://www.sanparks.org/parks/table_mountain/" target="_blank" rel="noopener">Book entry tickets online</a> to skip the queue.' },
+        { time: '12:30pm', text: '<strong>Boulders Beach</strong> — African penguins waddling around your feet. 20 minutes from Cape Point. <a href="https://www.sanparks.org/parks/table_mountain/tourism/attractions.php" target="_blank" rel="noopener">Book Boulders Beach entry</a> in advance. One of the best wildlife encounters in the country.' },
+        { time: 'Evening', text: '<strong>Kalk Bay</strong> — the most charming fishing village in South Africa. Fish &amp; chips bought directly from the boats, eaten sitting on the harbour wall. The perfect end to the Peninsula day.' },
+      ],
+      tip: 'Fill up petrol before leaving Cape Town — no stations on the Peninsula loop. Book Cape Point entry online to skip the ticket queue on arrival.'
+    },
+    4: {
+      label: 'Day Four · Winelands', title: 'Durbanville Hills',
+      photos: [
+        { src: 'photos/durbanville-mtb.jpg',    caption: 'Morning · Tygerberg MTB', imgStyle: 'object-fit:cover;object-position:center 40%;' },
+        { src: 'photos/durbanvillehills.jpeg', caption: 'Morning · Durbanville Hills' },
+        { src: 'photos/meerendal.jpeg',         caption: 'Lunch · Meerendal Estate' },
+        { src: 'photos/diemersdal.jpeg',        caption: 'Afternoon · Diemersdal Estate' },
+        { src: 'photos/nitidawines.jpeg',        caption: 'Afternoon · Nitida Cellar' },
+        { src: 'photos/nitidawines01.jpeg',      caption: 'Afternoon · Nitida Cellar' },
+      ],
+      intro: 'Skip the Stellenbosch tourist circuit. Durbanville is 20 minutes from the city — mountain biking with Table Mountain views, then wine estates with no crowds and you can actually meet the winemaker.',
+      items: [
+        { time: 'Morning', text: '<strong><a href="https://tygerbergmtb.co.za/" target="_blank" rel="noopener" class="timeline-link">Tygerberg MTB</a></strong> — world-class trails through the Durbanville Hills, with Table Mountain and the Atlantic on the horizon. One of Cape Town\'s best-kept secrets on two wheels.' },
+        { time: 'Lunch', text: '<strong><a href="https://meerendal.co.za/" target="_blank" rel="noopener" class="timeline-link">Meerendal Estate</a></strong> — one of the oldest wine farms in the Cape. Lunch on the estate after your ride, sweeping views, great tasting room, no crowds.' },
+        { time: 'Afternoon', text: '<strong><a href="https://diemersdal.co.za" target="_blank" rel="noopener" class="timeline-link">Diemersdal Estate</a></strong> — the standout producer in the valley. Exceptional Sauvignon Blanc. No booking needed midweek.' },
+        { time: 'Late afternoon', text: '<strong><a href="https://nitida.co.za/" target="_blank" rel="noopener" class="timeline-link">Nitida Cellar</a></strong> — boutique, beautiful, and almost nobody knows about it. Try the Coronata range. The perfect last stop before heading back.' },
+        { time: 'Evening', text: '<strong>Back to Cape Town</strong> — 20 minutes door to door. Sundowner on Signal Hill on the way home.' },
+      ],
+      tip: 'Go on a weekday — wine estates are a different experience without the weekend crowds. Most estates offer free tastings with a bottle purchase.'
+    }
+  };
+
+  function openLightbox(day) {
+    const d = _dayData[day];
+    if (!d) return;
+    _currentDay = day;
+    _lboxSlide = 0;
+
+    // Build slides
+    const carousel = document.getElementById('lbox-carousel');
+    carousel.querySelectorAll('.lbox-slide').forEach(s => s.remove());
+    d.photos.forEach((p, i) => {
+      const s = document.createElement('div');
+      s.className = 'lbox-slide' + (i === 0 ? ' active' : '');
+      s.innerHTML = `<img src="${p.src}" alt="${p.caption}" style="${p.imgStyle || 'object-fit:cover'}">`;
+      carousel.insertBefore(s, carousel.querySelector('.lbox-photo-overlay'));
+    });
+
+    // Build dots
+    document.getElementById('lbox-dots').innerHTML = d.photos.map((_, i) =>
+      `<div class="lbox-dot${i===0?' active':''}" onclick="lboxGoTo(${i})"></div>`).join('');
+
+    // Show/hide nav if only 1 photo
+    const showNav = d.photos.length > 1;
+    carousel.querySelectorAll('.lbox-nav').forEach(b => b.style.display = showNav ? '' : 'none');
+
+    // Set text
+    document.getElementById('lbox-slide-caption').textContent = d.photos[0].caption;
+    document.getElementById('lbox-label').textContent = d.label;
+    document.getElementById('lbox-title').textContent = d.title;
+    document.getElementById('lbox-intro').textContent = d.intro;
+    document.getElementById('lbox-tip').textContent = d.tip;
+    document.getElementById('lbox-items').innerHTML = d.items.map(i =>
+      `<div class="lbox-item"><div class="lbox-time">${i.time}</div><div class="lbox-text">${i.text}</div></div>`).join('');
+
+    document.getElementById('itin-lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function lboxNav(dir) {
+    const len = _dayData[_currentDay].photos.length;
+    lboxGoTo((_lboxSlide + dir + len) % len);
+  }
+  function lboxGoTo(idx) {
+    const d = _dayData[_currentDay];
+    document.querySelectorAll('#lbox-carousel .lbox-slide').forEach((s, i) => s.classList.toggle('active', i === idx));
+    document.querySelectorAll('#lbox-dots .lbox-dot').forEach((dot, i) => dot.classList.toggle('active', i === idx));
+    document.getElementById('lbox-slide-caption').textContent = d.photos[idx].caption;
+    _lboxSlide = idx;
+  }
+  function closeLightbox(e) {
+    if (e.target === document.getElementById('itin-lightbox')) {
+      document.getElementById('itin-lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { document.getElementById('itin-lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+    if (e.key === 'ArrowRight') lboxNav(1);
+    if (e.key === 'ArrowLeft') lboxNav(-1);
+  });
+
+  /* ── TIPS CAROUSEL ── */
+  let _tipsIdx = 0, _tipsTimer = null, _tipsPaused = false, _tipsStart = Date.now();
+  const TIPS_DURATION = 5000;
+  const _tipsBar = document.getElementById('tipsProgressBar');
+  function _tipsAnimateBar() {
+    if (_tipsPaused) { requestAnimationFrame(_tipsAnimateBar); return; }
+    const elapsed = Date.now() - _tipsStart;
+    const pct = Math.min(elapsed / TIPS_DURATION * 100, 100);
+    _tipsBar.style.width = pct + '%';
+    requestAnimationFrame(_tipsAnimateBar);
+  }
+  function _tipsStartTimer() {
+    clearInterval(_tipsTimer);
+    _tipsStart = Date.now();
+    _tipsBar.style.transition = 'none'; _tipsBar.style.width = '0%';
+    _tipsTimer = setInterval(() => { if (!_tipsPaused) tipsGoTo((_tipsIdx + 1) % 7); }, TIPS_DURATION);
+  }
+  function tipsNav(dir) { tipsGoTo((_tipsIdx + dir + 7) % 7); _tipsStartTimer(); }
+  function tipsPause() { _tipsPaused = true; }
+  function tipsResume() { _tipsPaused = false; }
+  _tipsStartTimer();
+  _tipsAnimateBar();
+  function tipsGoTo(idx) {
+    document.querySelectorAll('#tipsCarousel .tips-slide').forEach((s, i) => s.classList.toggle('active', i === idx));
+    document.querySelectorAll('#tipsDots .tips-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    _tipsIdx = idx;
+    _tipsStart = Date.now();
+  }
+
   async function startItineraryPayment() {
     const email = document.getElementById('itinerary-email').value.trim();
     if (!email) { document.getElementById('itinerary-email').focus(); return; }
@@ -865,21 +1293,50 @@
   }
 </script>
 
-<!-- STICKY PAYMENT BAR -->
-<div id="sticky-pay" style="position:fixed;bottom:0;left:0;right:0;z-index:9998;background:rgba(28,28,26,.97);backdrop-filter:blur(20px);border-top:1px solid rgba(184,134,58,.3);padding:14px 5vw;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);">
-  <div>
-    <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:1.1rem;font-weight:500;color:#fff;margin-bottom:2px;">Your adaptive Cape Town itinerary</div>
-    <div style="font-family:&#39;Jost&#39;,sans-serif;font-size:11px;color:rgba(255,255,255,.5);font-weight:300;">Day-by-day plan · Real-time tips · Local intel · Caipy access</div>
+<!-- ITINERARY LIGHTBOX -->
+<div id="itin-lightbox" onclick="closeLightbox(event)">
+  <div class="lbox-inner">
+    <button class="lbox-close" onclick="document.getElementById('itin-lightbox').classList.remove('open');document.body.style.overflow=''">✕</button>
+    <!-- Left: photo carousel -->
+    <div class="lbox-carousel" id="lbox-carousel" onclick="lboxNav(1)" style="cursor:pointer;">
+      <!-- slides injected by JS -->
+      <div class="lbox-photo-overlay"></div>
+      <div class="lbox-slide-caption" id="lbox-slide-caption"></div>
+      <button class="lbox-nav prev" onclick="event.stopPropagation();lboxNav(-1)">&#8249;</button>
+      <button class="lbox-nav next" onclick="event.stopPropagation();lboxNav(1)">&#8250;</button>
+      <div class="lbox-dots" id="lbox-dots"></div>
+    </div>
+    <!-- Right: text panel -->
+    <div class="lbox-right">
+      <div class="lbox-label" id="lbox-label"></div>
+      <div class="lbox-title" id="lbox-title"></div>
+      <div class="lbox-intro" id="lbox-intro"></div>
+      <div class="lbox-items" id="lbox-items"></div>
+      <div class="lbox-tip" id="lbox-tip"></div>
+    </div>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
-    <div style="text-align:right;">
-      <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:1.6rem;font-weight:500;color:#D4A55A;">€99</div>
-      <div style="font-size:9px;color:rgba(255,255,255,.3);letter-spacing:1px;text-transform:uppercase;">one-time</div>
+</div>
+
+<!-- STICKY PAYMENT BAR -->
+<div id="sticky-pay" style="position:fixed;bottom:0;left:0;right:0;z-index:9998;background:rgba(28,28,26,.97);backdrop-filter:blur(20px);border-top:1px solid rgba(184,134,58,.22);padding:0 5vw;height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);">
+  <div id="sticky-text">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:#fff;margin-bottom:2px;">Your adaptive Cape Town itinerary</div>
+    <div style="font-family:'Jost',sans-serif;font-size:10px;color:rgba(255,255,255,.45);font-weight:300;letter-spacing:.3px;">Day-by-day plan · Real-time tips · Local intel · Ubuntu access</div>
+  </div>
+  <div id="sticky-action" style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
+    <div id="sticky-price" style="text-align:center;flex-shrink:0;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:500;color:#D4A55A;line-height:1;">€49</div>
+      <div style="font-size:8px;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;margin-top:2px;">one-time</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:6px;">
-      <input type="email" id="sticky-email" placeholder="your@email.com" style="border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:9px 14px;font-size:13px;font-family:&#39;Jost&#39;,sans-serif;color:#fff;background:rgba(255,255,255,.06);outline:none;width:220px;">
-      <button onclick="window.location.href=&#39;guide.html&#39;" style="background:linear-gradient(135deg,#B8863A,#D4A55A);color:#fff;border:none;padding:10px 24px;border-radius:6px;font-family:&#39;Jost&#39;,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(184,134,58,.4);">Plan My Trip — €99 →</button>
+    <div style="position:relative;">
+      <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);font-size:14px;">✉</span>
+      <input type="email" id="sticky-email" placeholder="your@email.com" style="width:220px;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:10px 14px 10px 36px;font-size:13px;font-family:'Jost',sans-serif;color:#fff;background:rgba(255,255,255,.06);outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='rgba(212,165,90,.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
     </div>
+    <button onclick="stickyPay()" style="background:linear-gradient(135deg,#B8863A,#D4A55A);color:#fff;border:none;padding:11px 24px;border-radius:6px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(184,134,58,.38);white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 28px rgba(184,134,58,.55)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(184,134,58,.38)'">Talk to Ubuntu for Free</button>
+    <button onclick="openTavus()" style="background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.38);font-family:'Jost',sans-serif;font-size:10px;font-weight:400;letter-spacing:1.2px;text-transform:uppercase;transition:color .25s;padding:0;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.color='rgba(212,165,90,.75)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">
+      <span style="width:18px;height:18px;border:1px solid currentColor;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;">→</span>
+      See how it works
+    </button>
   </div>
 </div>
 
@@ -911,7 +1368,7 @@
           <span style="font-size:22px;flex-shrink:0;margin-top:2px;">🔄</span>
           <div>
             <div style="font-size:16px;font-weight:600;color:#1C1C1A;margin-bottom:4px;">Adapts in real time.</div>
-            <div style="font-size:14px;color:#6B6560;line-height:1.6;font-weight:300;">Wind picked up. It's raining. A place is closed. Caipy reroutes your day instantly — no scrambling, no lost hours.</div>
+            <div style="font-size:14px;color:#6B6560;line-height:1.6;font-weight:300;">Wind picked up. It's raining. A place is closed. Ubuntu reroutes your day instantly — no scrambling, no lost hours.</div>
           </div>
         </div>
         <div style="display:flex;gap:18px;align-items:flex-start;">
@@ -947,18 +1404,18 @@
             <div style="font-size:14px;color:rgba(255,255,255,.8);line-height:1.6;font-weight:300;">Bree Street dinner — La Mouette for a special night, Superette for local energy. <span style="color:rgba(255,255,255,.3);font-size:12px;">📍 Book ahead</span></div>
           </div>
         </div>
-        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:12px;color:rgba(255,255,255,.3);font-style:italic;">Plan B: Mountain clouded over? Caipy moves you to Lion's Head and reschedules automatically.</div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);font-size:12px;color:rgba(255,255,255,.3);font-style:italic;">Plan B: Mountain clouded over? Ubuntu moves you to Lion's Head and reschedules automatically.</div>
       </div>
 
       <!-- CTA -->
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
         <div>
-          <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:3rem;font-weight:400;color:#0d1b2a;line-height:1;">€99</div>
+          <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:3rem;font-weight:400;color:#0d1b2a;line-height:1;">€49</div>
           <div style="font-size:10px;color:#6B6560;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">One-time · No subscription</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
-          <a href="https://buy.stripe.com/14A5kE5tk0895Xm5wK5kk01" target="_blank" rel="noopener" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 32px;border-radius:4px;text-decoration:none;display:inline-block;box-shadow:0 6px 20px rgba(184,134,58,.4);">Get your Guide — €99 →</a>
-          <button onclick="closePreviewModal();openCaipy();" style="background:none;border:none;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;color:#B8863A;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;">Speak with Caipy first — it's free</button>
+          <a href="https://buy.stripe.com/7sY00k090g77adCcZc5kk02" target="_blank" rel="noopener" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 32px;border-radius:4px;text-decoration:none;display:inline-block;box-shadow:0 6px 20px rgba(184,134,58,.4);">Get your Guide — €49 →</a>
+          <button onclick="closePreviewModal();openCaipy();" style="background:none;border:none;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;color:#B8863A;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;">Speak with Ubuntu first — it's free</button>
         </div>
       </div>
 
@@ -1045,7 +1502,7 @@ async function stickyPay() {
       </svg>
     </div>
     <!-- Status text -->
-    <p id="itinerary-loader-msg" style="font-family:'Jost',sans-serif; font-size:1rem; font-weight:300; color:rgba(255,255,255,0.75); line-height:1.7; margin-bottom:2rem;">Caipy is crafting your day-by-day itinerary,<br>complete with restaurants, activities & insider tips…</p>
+    <p id="itinerary-loader-msg" style="font-family:'Jost',sans-serif; font-size:1rem; font-weight:300; color:rgba(255,255,255,0.75); line-height:1.7; margin-bottom:2rem;">Ubuntu is crafting your day-by-day itinerary,<br>complete with restaurants, activities & insider tips…</p>
     <!-- Close button (shown on error) -->
     <button id="itinerary-loader-close" onclick="document.getElementById('itinerary-loader').style.display='none'" style="display:none; background:#B8863A; color:#fff; border:none; padding:14px 32px; border-radius:8px; font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer;">Back to Site</button>
   </div>
@@ -1057,11 +1514,11 @@ async function stickyPay() {
   <div style="background:#FAF7F2; border-radius:16px; padding:48px 40px; width:min(480px,92vw); box-shadow:0 32px 80px rgba(0,0,0,.4); position:relative;">
     <button onclick="closeLeadForm()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; color:#6B6560; cursor:pointer;">✕</button>
     <div style="font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; color:#1C1C1A; margin-bottom:8px;">Start your free video call</div>
-    <p style="font-size:14px; color:#6B6560; margin-bottom:28px; line-height:1.6;">Enter your details and Caipy will plan your perfect Cape Town trip — live, in under 5 minutes.</p>
+    <p style="font-size:14px; color:#6B6560; margin-bottom:28px; line-height:1.6;">Enter your details and Ubuntu will plan your perfect Cape Town trip — live, in under 5 minutes.</p>
     <div style="display:flex; flex-direction:column; gap:14px;">
       <input id="lead-name" type="text" placeholder="Your first name" style="padding:14px 16px; border:1.5px solid rgba(0,0,0,.12); border-radius:8px; font-family:'Jost',sans-serif; font-size:14px; color:#1C1C1A; background:#fff; outline:none;">
       <input id="lead-email" type="email" placeholder="Your email address" style="padding:14px 16px; border:1.5px solid rgba(0,0,0,.12); border-radius:8px; font-family:'Jost',sans-serif; font-size:14px; color:#1C1C1A; background:#fff; outline:none;">
-      <button onclick="startTavusWithLead()" id="lead-submit-btn" style="background:#B8863A; color:#fff; border:none; padding:16px; border-radius:8px; font-family:'Jost',sans-serif; font-size:13px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; margin-top:4px;">Start Video Call with Caipy →</button>
+      <button onclick="startTavusWithLead()" id="lead-submit-btn" style="background:#B8863A; color:#fff; border:none; padding:16px; border-radius:8px; font-family:'Jost',sans-serif; font-size:13px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; margin-top:4px;">Start Video Call with Ubuntu →</button>
     </div>
     <p style="font-size:11px; color:#A09990; margin-top:16px; text-align:center;">Your personalised itinerary will be sent to your email after the call.</p>
   </div>
@@ -1074,7 +1531,7 @@ async function stickyPay() {
   <div style="width:min(960px,96vw); display:flex; align-items:center; justify-content:space-between; padding:0 4px 14px;">
     <div style="display:flex; align-items:center; gap:10px;">
       <span style="font-family:'Cormorant Garamond',serif; color:#fff; font-size:17px; font-weight:600; letter-spacing:.3px;">The Cape Town Guide</span>
-      <span style="background:rgba(184,134,58,.2); border:1px solid rgba(184,134,58,.4); color:#D4A85A; font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:20px;">● Live with Caipy</span>
+      <span style="background:rgba(184,134,58,.2); border:1px solid rgba(184,134,58,.4); color:#D4A85A; font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:20px;">● Live with Ubuntu</span>
     </div>
     <button onclick="closeTavus()" title="End call" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.7); font-size:13px; font-weight:400; letter-spacing:1px; text-transform:uppercase; padding:7px 16px; border-radius:6px; cursor:pointer; font-family:'Jost',sans-serif;">End call</button>
   </div>

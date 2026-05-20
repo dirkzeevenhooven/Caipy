@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Guide · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --gold: #C9A96E; --gold-light: #e0c48a;
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-w);
+      height: 100vh; background: var(--ocean-dark);
+      border-right: 1px solid rgba(201,169,110,0.12);
+      display: flex; flex-direction: column; z-index: 100; overflow-y: auto;
+    }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+
+    /* Hero section */
+    .hero {
+      padding: 80px 60px 72px;
+      background: linear-gradient(135deg, rgba(201,169,110,0.07) 0%, rgba(201,169,110,0.02) 100%);
+      border-bottom: 1px solid rgba(201,169,110,0.12);
+      display: flex; align-items: flex-start; gap: 80px;
+    }
+    .hero-left { flex: 1; max-width: 520px; }
+    .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 4vw, 52px); font-weight: 300; line-height: 1.1; margin-bottom: 16px; }
+    h1 em { font-style: italic; color: var(--gold); }
+    .hero-desc { font-size: 15px; color: var(--white-dim); line-height: 1.8; margin-bottom: 0; }
+
+    .resend-card {
+      flex: 0 0 320px; background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 14px; padding: 32px;
+    }
+    .resend-card-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
+    .resend-card-sub { font-size: 13px; color: var(--white-dim); line-height: 1.6; margin-bottom: 20px; }
+    .input-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .email-input {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(201,169,110,0.25);
+      border-radius: 8px; padding: 13px 16px; color: var(--white); font-size: 14px;
+      font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
+    }
+    .email-input::placeholder { color: rgba(250,248,244,0.3); }
+    .email-input:focus { border-color: var(--gold); }
+    .cta-btn {
+      background: var(--gold); color: var(--ocean-dark); padding: 13px 24px;
+      border-radius: 8px; font-size: 13px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; border: none; cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif; width: 100%;
+    }
+    .cta-btn:hover { background: var(--gold-light); }
+    .resend-note { font-size: 11px; color: rgba(250,248,244,0.3); line-height: 1.5; margin-top: 12px; }
+    #resendMsg { font-size: 13px; margin-top: 10px; min-height: 18px; }
+
+    /* What's in your guide */
+    .content { padding: 72px 60px; }
+    h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3vw, 40px); font-weight: 300; line-height: 1.2; margin-bottom: 12px; }
+    h2 em { font-style: italic; color: var(--gold); }
+    .section-intro { font-size: 15px; color: var(--white-dim); line-height: 1.8; max-width: 600px; margin-bottom: 48px; }
+
+    .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 72px; }
+    .guide-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 12px; padding: 28px; transition: all 0.25s;
+    }
+    .guide-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(201,169,110,0.22); }
+    .guide-icon { font-size: 28px; margin-bottom: 14px; }
+    .guide-card-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
+    .guide-card-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+
+    /* How it works */
+    .steps-row { display: flex; gap: 0; margin-bottom: 72px; border: 1px solid rgba(201,169,110,0.12); border-radius: 12px; overflow: hidden; }
+    .step { flex: 1; padding: 32px 28px; border-right: 1px solid rgba(201,169,110,0.12); }
+    .step:last-child { border-right: none; }
+    .step-num { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .step-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+
+    /* CTA strip */
+    .cta-strip {
+      padding: 56px 60px; background: rgba(201,169,110,0.06);
+      border-top: 1px solid rgba(201,169,110,0.12); border-bottom: 1px solid rgba(201,169,110,0.12);
+      display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap;
+    }
+    .cta-strip-text .strip-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-strip-text h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 2.5vw, 34px); font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+    .cta-strip-text h3 em { font-style: italic; color: var(--gold); }
+    .cta-strip-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 500px; }
+    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 15px 36px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    @media (max-width: 900px) { .hero { flex-direction: column; gap: 40px; } .resend-card { flex: unset; width: 100%; } .steps-row { flex-direction: column; } .step { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.12); } .step:last-child { border-bottom: none; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero { padding: 40px 24px; } .content { padding: 40px 24px; } .cta-strip { padding: 40px 24px; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item active"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+
+  <!-- HERO: resend form -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Your Personal Guide</div>
+      <h1>Your <em>personalised</em><br>Cape Town guide</h1>
+      <p class="hero-desc">After your conversation with Ubuntu, we built a custom guide around your trip — your dates, your travel style, your interests. It was sent to your inbox. Can't find it? Resend it in seconds.</p>
+    </div>
+    <div class="resend-card">
+      <div class="resend-card-title">Resend my guide link</div>
+      <div class="resend-card-sub">Enter the email you used when chatting with Ubuntu and we'll resend your personalised guide link instantly.</div>
+      <div class="input-row">
+        <input type="email" class="email-input" id="guideEmail" placeholder="your@email.com" />
+        <button class="cta-btn" onclick="resendGuide()">Send My Guide →</button>
+      </div>
+      <div id="resendMsg"></div>
+      <div class="resend-note">Check your spam folder too — it arrives from hello@thecapetownguide.com</div>
+    </div>
+  </div>
+
+  <!-- WHAT'S IN YOUR GUIDE -->
+  <div class="content">
+    <div class="eyebrow">What You Receive</div>
+    <h2>Everything built around<br><em>your trip</em></h2>
+    <p class="section-intro">Your guide isn't a generic checklist. It's built from your conversation with Ubuntu — your dates, your neighbourhood preference, what you want to do, and how you like to travel.</p>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-icon">🗓️</div>
+        <div class="guide-card-title">Day-by-Day Itinerary</div>
+        <p class="guide-card-desc">A complete day-by-day plan built around your exact travel dates, with morning, afternoon and evening recommendations that actually fit together.</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">📍</div>
+        <div class="guide-card-title">Curated Places</div>
+        <p class="guide-card-desc">Restaurants, beaches, experiences and neighbourhoods chosen for your travel style — not a generic list, but a short selection of the right ones for you.</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🛡️</div>
+        <div class="guide-card-title">Safety & Timing Tips</div>
+        <p class="guide-card-desc">Honest, practical guidance on which areas to visit and when — written for the way you're travelling, with no-nonsense Plan B options built in.</p>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">💡</div>
+        <div class="guide-card-title">Insider Recommendations</div>
+        <p class="guide-card-desc">The kind of advice you'd get from a local friend — specific spots, ideal timing, what to skip, and the hidden gems most visitors miss entirely.</p>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="eyebrow">How It Works</div>
+    <h2>Three steps to your<br><em>perfect Cape Town trip</em></h2>
+    <p class="section-intro" style="margin-bottom:32px;">The whole process takes under two minutes — no forms, no sign-up, just a short conversation.</p>
+
+    <div class="steps-row">
+      <div class="step">
+        <div class="step-num">Step 01</div>
+        <div class="step-title">Talk to Ubuntu</div>
+        <p class="step-desc">Our AI travel guide asks you a few smart questions — your travel dates, where you're staying, what you love doing, and how you like to travel.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 02</div>
+        <div class="step-title">We build your guide</div>
+        <p class="step-desc">Within minutes, Ubuntu builds a personalised guide and itinerary around your answers — curated for you, not adapted from a template.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 03</div>
+        <div class="step-title">It lands in your inbox</div>
+        <p class="step-desc">Your guide is emailed to you as a clean, mobile-friendly page you can save, screenshot, and refer to throughout your trip.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA: haven't got a guide yet -->
+  <div class="cta-strip">
+    <div class="cta-strip-text">
+      <div class="strip-eyebrow">Don't have a guide yet?</div>
+      <h3>Start with a quick chat<br>with <em>Ubuntu</em></h3>
+      <p>Takes less than two minutes. Ubuntu asks the right questions and builds your personalised Cape Town guide on the spot — day-by-day itinerary included.</p>
+    </div>
+    <a href="https://thecapetownguide.com" class="btn-cta">Talk to Ubuntu →</a>
+  </div>
+
+</div>
+
+<script>
+  async function resendGuide() {
+    const email = document.getElementById('guideEmail').value.trim();
+    const msg = document.getElementById('resendMsg');
+    if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email address.'; msg.style.color = '#ff6b6b'; return; }
+    msg.textContent = 'Sending...'; msg.style.color = 'rgba(250,248,244,0.5)';
+    try {
+      const res = await fetch('https://caipy-sfau.onrender.com/resend-guide', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (res.ok) { msg.textContent = '✓ Check your inbox — guide link sent!'; msg.style.color = '#4CAF50'; }
+      else { msg.textContent = 'No guide found for this email. Try chatting with Ubuntu first.'; msg.style.color = '#ff6b6b'; }
+    } catch { msg.textContent = 'Something went wrong. Please try again.'; msg.style.color = '#ff6b6b'; }
+  }
+  document.getElementById('guideEmail').addEventListener('keypress', e => { if (e.key === 'Enter') resendGuide(); });
+</script>
+
+</body>
+</html>

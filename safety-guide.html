@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)file:///Users/dirkzeevenhooven/Downloads/safety-guide.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Cape Town Safety Guide — The Cape Town Guide</title>
+  <meta name="description" content="Download the free Cape Town Safety &amp; Preparation Guide. Everything you need to know before you arrive — from the best areas to stay to how to get around safely.">
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./safety-guide_files/css2" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; font-weight: 300; color: #1C1C1A; background: #FAF7F2; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --navy: #1C1C1A;
+      --gold: #B8863A;
+      --gold-l: #D4A55A;
+      --cream: #FAF7F2;
+      --white: #ffffff;
+      --muted: #6B6560;
+      --border: rgba(184,134,58,0.18);
+      --radius: 14px;
+      --sh1: 0 2px 12px rgba(28,28,26,0.08);
+      --sh2: 0 12px 40px rgba(28,28,26,0.15);
+    }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; height: 68px; background: rgba(28,28,26,.96); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; color: #fff; font-size: 20px; font-weight: 500; }
+    .nav-logo small { display: block; font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.4); font-family: 'Jost', sans-serif; }
+    .nav-back { font-size: 11px; color: rgba(255,255,255,.5); letter-spacing: 1px; text-transform: uppercase; font-weight: 500; transition: color .2s; }
+    .nav-back:hover { color: var(--gold); }
+
+    /* HERO */
+    .hero { min-height: 100vh; background: var(--navy); display: flex; align-items: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url('photos/Signal-Hill.webp') center/cover no-repeat; opacity: 0.12; }
+    .hero-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 100px 5vw 60px; display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: center; }
+    @media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; gap: 48px; } }
+
+    .hero-left {}
+    .free-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(184,134,58,.15); border: 1px solid rgba(184,134,58,.4); border-radius: 100px; padding: 6px 18px; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 1.8rem; }
+    .free-badge::before { content: '✦'; font-size: 9px; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.6rem, 6vw, 4.8rem); font-weight: 400; color: #fff; line-height: 1.05; margin-bottom: 1.2rem; }
+    .hero h1 em { font-style: italic; color: var(--gold-l); }
+    .hero-sub { font-size: 16px; color: rgba(255,255,255,.65); line-height: 1.8; max-width: 480px; margin-bottom: 2rem; font-weight: 300; }
+    .hero-includes { margin-bottom: 2.5rem; }
+    .hero-includes-title { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: block; }
+    .include-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 14px; color: rgba(255,255,255,.75); font-weight: 300; }
+    .include-item::before { content: '✓'; color: var(--gold); font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+    .author-row { display: flex; align-items: center; gap: 14px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.08); }
+    .author-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: #fff; font-weight: 600; flex-shrink: 0; border: 2px solid rgba(184,134,58,.4); }
+    .author-name { font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 2px; }
+    .author-bio { font-size: 11px; color: rgba(255,255,255,.4); font-weight: 300; }
+
+    /* FORM CARD */
+    .form-card { background: var(--white); border-radius: 20px; padding: 36px 32px; box-shadow: 0 24px 80px rgba(0,0,0,.4); border: 1px solid rgba(184,134,58,.15); }
+    .form-card-label { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; display: block; }
+    .form-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 500; color: var(--navy); margin-bottom: 6px; line-height: 1.2; }
+    .form-card p { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 24px; font-weight: 300; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--navy); margin-bottom: 6px; }
+    .form-group input { width: 100%; border: 1px solid rgba(28,28,26,.15); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-family: 'Jost', sans-serif; color: var(--navy); background: var(--cream); outline: none; transition: border-color .2s; font-weight: 300; }
+    .form-group input:focus { border-color: var(--gold); background: #fff; }
+    .form-group input::placeholder { color: var(--muted); }
+    .btn-submit { width: 100%; background: var(--gold); color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all .25s; margin-top: 4px; }
+    .btn-submit:hover { background: var(--gold-l); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(184,134,58,.4); }
+    .form-privacy { font-size: 10px; color: var(--muted); text-align: center; margin-top: 12px; font-weight: 300; }
+    .form-privacy a { color: var(--gold); }
+    .form-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .form-divider::before, .form-divider::after { content: ''; flex: 1; height: 1px; background: rgba(28,28,26,.1); }
+    .form-divider span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .btn-direct { width: 100%; background: transparent; color: var(--navy); border: 1px solid rgba(28,28,26,.2); border-radius: 8px; padding: 14px; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-direct:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* SUCCESS STATE */
+    .success-state { display: none; text-align: center; padding: 20px 0; }
+    .success-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+    .success-state h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 500; color: var(--navy); margin-bottom: 8px; }
+    .success-state p { font-size: 13px; color: var(--muted); margin-bottom: 20px; font-weight: 300; }
+    .btn-download { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: #fff; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 14px 24px; border-radius: 8px; transition: all .2s; }
+    .btn-download:hover { background: var(--gold-l); }
+
+    /* WHAT'S INSIDE */
+    .inside-section { background: var(--white); padding: 80px 5vw; }
+    .inside-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; color: var(--navy); margin-bottom: 12px; }
+    .gold-rule { width: 48px; height: 2px; background: linear-gradient(to right, var(--gold), var(--gold-l)); border-radius: 2px; margin: 12px 0 40px; }
+    .pages-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .pages-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .pages-grid { grid-template-columns: 1fr; } }
+    .page-card { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 20px; }
+    .page-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 400; color: rgba(184,134,58,.25); display: block; margin-bottom: 4px; line-height: 1; }
+    .page-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 500; color: var(--navy); margin-bottom: 8px; }
+    .page-card p { font-size: 12px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+    /* UPSELL */
+    .upsell-section { background: var(--navy); padding: 80px 5vw; }
+    .upsell-inner { max-width: 900px; margin: 0 auto; }
+    .upsell-label { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+    .upsell-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; color: #fff; margin-bottom: 16px; }
+    .upsell-sub { font-size: 15px; color: rgba(255,255,255,.6); max-width: 580px; line-height: 1.8; margin-bottom: 40px; font-weight: 300; }
+    .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 768px) { .tiers { grid-template-columns: 1fr; } }
+    .tier { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 18px; padding: 28px 24px; transition: border-color .3s; }
+    .tier:hover { border-color: rgba(184,134,58,.3); }
+    .tier.featured { background: rgba(184,134,58,.08); border-color: rgba(184,134,58,.35); }
+    .tier-badge { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: block; }
+    .tier-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 500; color: #fff; margin-bottom: 4px; }
+    .tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 400; color: var(--gold-l); margin-bottom: 16px; display: block; }
+    .tier-price small { font-size: 1rem; color: rgba(255,255,255,.4); font-family: 'Jost', sans-serif; font-weight: 300; }
+    .tier-features { list-style: none; margin-bottom: 24px; }
+    .tier-features li { font-size: 12px; color: rgba(255,255,255,.65); padding: 5px 0; display: flex; align-items: flex-start; gap: 8px; font-weight: 300; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .tier-features li:last-child { border-bottom: none; }
+    .tier-features li::before { content: '✓'; color: var(--gold); font-weight: 600; flex-shrink: 0; }
+    .tier-btn { display: block; text-align: center; background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 12px; border-radius: 8px; transition: all .2s; border: 1px solid rgba(255,255,255,.1); }
+    .tier-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .tier.featured .tier-btn { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .tier.featured .tier-btn:hover { background: var(--gold-l); }
+
+    /* FOOTER */
+    footer { background: var(--navy); padding: 32px 5vw; border-top: 1px solid rgba(255,255,255,.06); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 500; color: rgba(255,255,255,.5); }
+    .footer-bottom { font-size: 11px; color: rgba(255,255,255,.25); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://thecapetownguide.com" class="nav-logo">The Cape Town Guide<small>Cape Town Insider Guide</small></a>
+  <a href="https://thecapetownguide.com/guide/home.html" class="nav-back">← Back to guide</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="free-badge">Free Download</div>
+      <h1>Cape Town Safety &amp;<br><em>Preparation Guide</em></h1>
+      <p class="hero-sub">Everything you need to know before you arrive — from the best areas to stay to how to get around safely and travel smarter than 90% of tourists.</p>
+      <div class="hero-includes">
+        <span class="hero-includes-title">What's inside (5 pages)</span>
+        <div class="include-item">The Golden Rules — 4 things that keep you safe anywhere in Cape Town</div>
+        <div class="include-item">Best areas to stay — with honest safety ratings per neighbourhood</div>
+        <div class="include-item">Transport guide — Uber, rental car, MyCiTi, and what to avoid</div>
+        <div class="include-item">Pre-arrival checklist — SIM, maps, cash, and what to pack</div>
+        <div class="include-item">Emergency contacts — all numbers in one place</div>
+        <div class="include-item">6 insider pro tips — what most tourists never figure out</div>
+      </div>
+      <div class="author-row">
+        <div class="author-avatar">D</div>
+        <div>
+          <div class="author-name">Dirk Zeevenhooven</div>
+          <div class="author-bio">Founder, The Cape Town Guide · 10+ years of deep Cape Town experience</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card">
+      <span class="form-card-label">Free Resource</span>
+      <h2>Get the guide — free</h2>
+      <p>Enter your name and email and we'll send you the PDF instantly. No spam, ever.</p>
+      <div id="form-wrap">
+        <div class="form-group">
+          <label>First name</label>
+          <input type="text" id="fname" placeholder="Your first name">
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="femail" placeholder="you@email.com">
+        </div>
+        <button class="btn-submit" onclick="handleSubmit()">Send me the free guide →</button>
+        <p class="form-privacy">No spam. Unsubscribe anytime. We respect your privacy.</p>
+        <div class="form-divider"><span>or</span></div>
+        <a href="https://caipy-sfau.onrender.com/download-safety-guide" download="cape-town-safety-guide.pdf" class="btn-direct">
+          ⬇ Download directly (no email)
+        </a>
+      </div>
+      <div class="success-state" id="success">
+        <span class="success-icon">🎉</span>
+        <h3>Check your inbox!</h3>
+        <p>The guide is on its way. In the meantime, you can download it directly below.</p>
+        <a href="https://caipy-sfau.onrender.com/download-safety-guide" download="cape-town-safety-guide.pdf" class="btn-download">⬇ Download PDF now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INSIDE -->
+<section class="inside-section">
+  <div class="inside-inner">
+    <div class="reveal visible">
+      <span class="section-label">What's Inside</span>
+      <h2 class="section-title">5 pages of real insider knowledge.</h2>
+      <div class="gold-rule"></div>
+    </div>
+    <div class="pages-grid">
+      <div class="page-card reveal reveal-delay-1 visible">
+        <span class="page-num">01</span>
+        <h3>The Reality of Safety</h3>
+        <p>An honest, non-alarmist overview of Cape Town safety. Plus the 4 Golden Rules that keep you safe anywhere in the city.</p>
+      </div>
+      <div class="page-card reveal reveal-delay-2 visible">
+        <span class="page-num">02</span>
+        <h3>Where to Stay</h3>
+        <p>The 4 best areas with safety ratings, honest descriptions, and who each area is best for. Plus the full transport comparison table.</p>
+      </div>
+      <div class="page-card reveal reveal-delay-3 visible">
+        <span class="page-num">03</span>
+        <h3>Essentials Checklist</h3>
+        <p>SIM cards, offline maps, cash vs card, sun protection, and a portable charger. Everything to sort before you land.</p>
+      </div>
+      <div class="page-card reveal reveal-delay-1 visible">
+        <span class="page-num">04</span>
+        <h3>Emergency Contacts</h3>
+        <p>Police, ambulance, mountain rescue, sea rescue — all numbers in one place. Plus pro tips most tourists never figure out.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UPSELL — PRICING TIERS -->
+<section class="upsell-section">
+  <div class="upsell-inner">
+    <div class="reveal">
+      <span class="upsell-label">Go Deeper</span>
+      <h2 class="upsell-title">Ready for the full Cape Town experience?</h2>
+      <p class="upsell-sub">The safety guide is just the start. Upgrade to the complete guide and get everything you need for an extraordinary Cape Town trip.</p>
+    </div>
+    <div class="tiers">
+      <div class="tier reveal reveal-delay-1">
+        <span class="tier-badge">Free</span>
+        <div class="tier-name">Safety Guide</div>
+        <span class="tier-price">€0 <small>forever free</small></span>
+        <ul class="tier-features">
+          <li>Safety &amp; preparation guide (PDF)</li>
+          <li>Golden Rules overview</li>
+          <li>Best areas to stay</li>
+          <li>Emergency contacts</li>
+          <li>6 insider pro tips</li>
+        </ul>
+        <a href="https://caipy-sfau.onrender.com/download-safety-guide" download="" class="tier-btn">Download free →</a>
+      </div>
+      <div class="tier featured reveal reveal-delay-2">
+        <span class="tier-badge">✦ Most Popular</span>
+        <div class="tier-name">Complete Guide</div>
+        <span class="tier-price">€49 <small>one-time</small></span>
+        <ul class="tier-features">
+          <li>Everything in Free tier</li>
+          <li>Complete 7–10 day itinerary</li>
+          <li>Top 10 hotels guide per area</li>
+          <li>Car rental insider guide</li>
+          <li>5 road trip itineraries</li>
+          <li>Restaurant guide</li>
+          <li>Google Maps with all pins</li>
+          <li>Access to Ubuntu AI</li>
+        </ul>
+        <a href="https://thecapetownguide.com/#ai-chat" class="tier-btn">Get the full guide →</a>
+      </div>
+      <div class="tier reveal reveal-delay-3">
+        <span class="tier-badge">Premium</span>
+        <div class="tier-name">VIP + Ubuntu</div>
+        <span class="tier-price">€149 <small>personalised</small></span>
+        <ul class="tier-features">
+          <li>Everything in Complete tier</li>
+          <li>Custom itinerary built for you</li>
+          <li>Based on your exact dates &amp; interests</li>
+          <li>Priority Ubuntu access</li>
+          <li>WhatsApp support from Dirk</li>
+        </ul>
+        <a href="https://thecapetownguide.com/#ai-chat" class="tier-btn">Book VIP →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">The Cape Town Guide</div>
+    <div class="footer-bottom">© 2026 The Cape Town Guide · thecapetownguide.com</div>
+  </div>
+</footer>
+
+<script>
+async function handleSubmit() {
+  var name = document.getElementById('fname').value.trim();
+  var email = document.getElementById('femail').value.trim();
+  if (!name || !email || !email.includes('@')) {
+    alert('Please enter your name and a valid email address.');
+    return;
+  }
+  var btn = document.querySelector('.btn-submit');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  try {
+    await fetch('https://caipy-sfau.onrender.com/safety-guide-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email })
+    });
+  } catch(e) { console.warn('Lead notification failed', e); }
+  document.getElementById('form-wrap').style.display = 'none';
+  document.getElementById('success').style.display = 'block';
+}
+
+if('IntersectionObserver' in window){
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+} else {
+  document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+}
+
+document.getElementById('femail').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') handleSubmit();
+});
+</script>
+
+
+</body></html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photography Guide · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-w);
+      height: 100vh; background: var(--ocean-dark);
+      border-right: 1px solid rgba(201,169,110,0.12);
+      display: flex; flex-direction: column; z-index: 100; overflow-y: auto;
+    }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+    .hero {
+      position: relative; height: 55vh; min-height: 380px;
+      background: url('/photos/rentamercedes.jpeg') center 30%/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 40%, rgba(201,169,110,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 70%, rgba(15,36,48,0.6) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; z-index: 2; padding: 40px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+
+    .content { padding: 60px; max-width: 1100px; }
+    .intro { font-size: 16px; color: var(--white-dim); line-height: 1.8; max-width: 680px; margin-bottom: 56px; }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 300;
+      color: var(--white); margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(201,169,110,0.15);
+    }
+
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 60px; }
+    .market-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 12px; padding: 28px; transition: all 0.25s;
+    }
+    .market-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.25); transform: translateY(-2px); }
+    .market-tag { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .market-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 6px; }
+    .market-when { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .market-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 60px; }
+    .tip-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 12px; padding: 24px; transition: all 0.25s;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .tip-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.25); transform: translateY(-2px); }
+    .tip-icon { font-size: 22px; margin-bottom: 4px; }
+    .tip-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--white); }
+    .tip-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+
+    .cta-block {
+      background: rgba(201,169,110,0.06);
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 12px;
+      padding: 40px 48px;
+      margin-top: 20px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+    }
+    .cta-block p {
+      font-size: 18px; color: var(--white-dim); line-height: 1.7;
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      max-width: 560px;
+    }
+    .cta-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--gold); text-decoration: none;
+      border-bottom: 1px solid rgba(201,169,110,0.3); padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+    .cta-link:hover { border-color: var(--gold); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero-content { padding: 24px; } .content { padding: 24px; } .cta-block { padding: 28px 24px; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <a href="photography.html" class="sidebar-item active"><span class="icon">📷</span> Photography Guide</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Cape Town</div>
+      <h1 class="hero-title">Cape Town Through a <em>Lens</em></h1>
+    </div>
+  </div>
+
+  <div class="content">
+    <p class="intro">Cape Town is one of the most photogenic cities on earth. Golden light, dramatic mountains, colourful streets, wild coastlines. These are the spots that reward you — and the times to be there.</p>
+
+    <h2 class="section-title">Golden Hour Spots</h2>
+    <div class="market-grid">
+
+      <div class="market-card">
+        <div class="market-tag">Signal Hill · Sunrise</div>
+        <div class="market-name">Signal Hill at Dawn</div>
+        <div class="market-when">Be there by 6am</div>
+        <p class="market-desc">Empty roads, Table Mountain glowing in the first light, the city laid out below you. Signal Hill at sunrise is as close to having Cape Town to yourself as you'll get. The elevated angle gives you the full panorama — mountain, city, ocean — all in one frame. Don't be late; the light moves fast.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Camps Bay · Sunset</div>
+        <div class="market-name">Camps Bay Beach</div>
+        <div class="market-when">Arrive 30 min before sunset</div>
+        <p class="market-desc">The Twelve Apostles mountain range turns deep orange, then crimson, as the sun drops behind the Atlantic. Position yourself on the beach or the promenade looking back at the mountains — the light is extraordinary. Arrive 30 minutes early to claim your spot and feel the scene settle.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Bo-Kaap · Dawn</div>
+        <div class="market-name">Bo-Kaap Cobbled Streets</div>
+        <div class="market-when">Go before 8am</div>
+        <p class="market-desc">Before the tourist groups arrive, Bo-Kaap is a photographer's dream. Cobblestoned streets, vibrantly painted houses, soft morning light raking across the facades. The silence of early morning lets you compose properly. Go before 8am on a weekday and you'll have entire streets to yourself.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Chapman's Peak · Mid-morning</div>
+        <div class="market-name">Chapman's Peak Lookout</div>
+        <div class="market-when">Best mid-morning</div>
+        <p class="market-desc">One of the most dramatic coastal viewpoints in the world. The cliffs drop sharply into the Atlantic below, and the winding Chapman's Peak Drive snakes its way along the rock face. Mid-morning gives you warm directional light without the harsh midday contrast. A wide angle lens earns its keep here.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Simon's Town · Any time</div>
+        <div class="market-name">Boulders Beach Penguins</div>
+        <div class="market-when">Overcast days give the softest light</div>
+        <p class="market-desc">African penguins against rounded granite boulders — it works in almost any light, but overcast days are the secret. Clouds act as a giant diffuser, eliminating harsh shadows and letting the textures of the rocks and the penguins' markings come through cleanly. Arrive at opening time to get close before the crowds build.</p>
+      </div>
+
+    </div>
+
+    <h2 class="section-title">Hidden Photo Spots</h2>
+    <div class="market-grid">
+
+      <div class="market-card">
+        <div class="market-tag">Muizenberg · Sunrise</div>
+        <div class="market-name">Muizenberg Beach Huts</div>
+        <div class="market-when">No crowds before 8am</div>
+        <p class="market-desc">The iconic row of candy-coloured changing rooms at Muizenberg is one of Cape Town's most photographed sights — but most people see it with a crowd. Arrive at sunrise and you'll find the huts bathed in warm light, the beach empty, and the whole scene completely yours. The low morning sun creates long shadows that add real drama.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Woodstock · Street photography</div>
+        <div class="market-name">Old Biscuit Mill Doorways</div>
+        <div class="market-when">Any time</div>
+        <p class="market-desc">The side streets and alleyways around the Old Biscuit Mill in Woodstock are covered in murals, textured walls, and industrial character that most visitors never find. This is Cape Town's creative district at its rawest — faded paint, geometric street art, and doorways that look like they were designed to be photographed.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Gardens · Hidden view</div>
+        <div class="market-name">De Waal Park Looking Up</div>
+        <div class="market-when">Morning or late afternoon</div>
+        <p class="market-desc">Stand in De Waal Park and look up towards Devil's Peak — the contrast of the leafy Victorian park in the foreground against the raw mountain behind is a composition you rarely see in Cape Town photography. It's the city meets wilderness in a single frame. Quiet, beautiful, and almost always overlooked.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Kalk Bay · Dawn</div>
+        <div class="market-name">Kalk Bay Harbour at Dawn</div>
+        <div class="market-when">Working boats come in early morning</div>
+        <p class="market-desc">The working fishing boats return to Kalk Bay harbour in the early hours, and the scene — weathered hulls, seabirds, fishermen unloading the catch against the morning sky — is genuinely documentary. It feels like another era. Bring a fast lens if the light is low; the movement of the boats rewards patience.</p>
+      </div>
+
+    </div>
+
+    <h2 class="section-title">Practical Tips</h2>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <div class="tip-icon">☀️</div>
+        <div class="tip-title">Shoot the edges of the day</div>
+        <p class="tip-desc">Cape Town's midday light is intense and flat — the mountains wash out and the ocean glares. The magic happens in the first and last two hours of daylight. Plan your schedule around that.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">💨</div>
+        <div class="tip-title">The Cape Doctor is real</div>
+        <p class="tip-desc">Cape Town's famous south-easterly wind can shake your frame on a long exposure. Bring a tripod if you're shooting waterfalls, seascapes, or night work. On windy days, lower angles and wider apertures help.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🚡</div>
+        <div class="tip-title">Table Mountain Cable Car — go late</div>
+        <p class="tip-desc">Take the last cable car of the afternoon. The rotating cabin gives you 360° of Cape Town in golden light, and the views from the top at sunset are extraordinary. Book ahead — it fills up fast in summer.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🤝</div>
+        <div class="tip-title">Ask before you photograph people</div>
+        <p class="tip-desc">Always ask permission before photographing people in informal settlements or in communities you're passing through. A genuine connection makes for a better portrait anyway — and it's the right thing to do.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🚁</div>
+        <div class="tip-title">Drone rules in Cape Town</div>
+        <p class="tip-desc">You need a SACAA licence to fly commercially in South Africa. Recreational drones are permitted in most open areas outside controlled airspace — but always check the map before you launch. Signal Hill and Chapman's Peak are worth checking in advance.</p>
+      </div>
+
+    </div>
+
+    <h2 class="section-title">Gear Tips</h2>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <div class="tip-icon">🔭</div>
+        <div class="tip-title">Wide angle — non-negotiable</div>
+        <p class="tip-desc">Cape Town's mountain-meets-city compositions are built for wide glass. A 16–35mm or 24mm prime will earn its weight on every single day you're here. The scale of Table Mountain demands it.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🐧</div>
+        <div class="tip-title">A 70–200mm for wildlife</div>
+        <p class="tip-desc">Penguins at Boulders, whales off Hermanus, Cape fur seals at Hout Bay — a telephoto zoom lets you compress the distance and fill the frame. Essential if you're combining wildlife with landscapes on the same trip.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🌊</div>
+        <div class="tip-title">ND filter for water</div>
+        <p class="tip-desc">The waterfalls near Hout Bay and the tidal pools at Kalk Bay reward long exposures — silk-smooth water against sharp rock. A 6-stop ND filter gives you that in bright conditions. Don't leave it at home.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🎒</div>
+        <div class="tip-title">Waterproof your bag</div>
+        <p class="tip-desc">Sea spray at Boulders Beach and Llandudno is genuinely aggressive. A waterproof bag or at minimum a rain cover is essential — not optional. Salt air will find any gap you leave open.</p>
+      </div>
+
+    </div>
+
+    <div class="cta-block">
+      <p>Want a personalised itinerary built around your photography interests? Talk to Ubuntu →</p>
+      <a href="https://thecapetownguide.com" class="cta-link">Talk to Ubuntu →</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

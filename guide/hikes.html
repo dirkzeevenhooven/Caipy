@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hikes & Outdoors · Planet Curated Cape Town</title>
+  <title>Outdoor Activities · Planet Curated Cape Town</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,10 +45,11 @@
     /* ── HERO ── */
     .hero {
       position: relative; height: 85vh; min-height: 540px;
-      background: url('../photos/dirk-lions-head.jpeg') center/cover no-repeat;
+      background: var(--ocean-dark);
       display: flex; align-items: flex-end; overflow: hidden;
     }
-    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.1) 0%, rgba(15,36,48,0.9) 100%); }
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.15) 0%, rgba(15,36,48,0.88) 100%); z-index: 1; }
     .hero-content { position: relative; z-index: 2; padding: 52px 60px; }
     .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 14px; }
     .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 7vw, 86px); font-weight: 300; line-height: 1.0; margin-bottom: 18px; }
@@ -208,6 +209,48 @@
     @media (max-width: 1100px) {
       .hike-grid { grid-template-columns: 1fr 1fr; }
     }
+
+    /* ── ACTIVITY NAV ── */
+    .activity-nav { display: flex; gap: 8px; padding: 16px 60px; overflow-x: auto; border-bottom: 1px solid rgba(74,124,89,0.12); background: rgba(15,36,48,0.96); scrollbar-width: none; }
+    .activity-nav::-webkit-scrollbar { display: none; }
+    .activity-nav-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 14px; border-radius: 10px; border: 1.5px solid rgba(74,124,89,0.2); background: transparent; color: var(--white-dim); cursor: pointer; text-decoration: none; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+    .activity-nav-btn:hover, .activity-nav-btn.active { background: rgba(74,124,89,0.12); border-color: var(--fern-light); color: var(--fern-light); }
+    .activity-nav-icon { font-size: 18px; }
+    .activity-nav-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* ── ACTIVITIES WRAP ── */
+    .activities-wrap { padding: 0 60px 80px; }
+
+    /* ── ACTIVITY SECTION ── */
+    .activity-section { padding: 56px 0; border-top: 1px solid rgba(74,124,89,0.1); }
+    .activity-section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+    .activity-section-icon { font-size: 36px; }
+    .activity-section-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 4px; }
+    .activity-section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3vw, 40px); font-weight: 300; line-height: 1.1; }
+    .activity-section-title em { font-style: italic; color: var(--fern-light); }
+    .activity-section-sub { font-size: 14px; color: var(--white-dim); line-height: 1.75; max-width: 680px; margin-bottom: 32px; }
+
+    /* ── ACTIVITY CARDS ── */
+    .activity-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .activity-card { background: var(--ocean-mid); border: 1px solid rgba(74,124,89,0.15); border-radius: 12px; padding: 24px; transition: all 0.2s; }
+    .activity-card:hover { border-color: rgba(122,184,138,0.35); transform: translateY(-2px); }
+    .activity-card-tag { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 8px; }
+    .activity-card-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
+    .activity-card-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 14px; }
+    .activity-card-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--fern-light); text-decoration: none; border-bottom: 1px solid rgba(122,184,138,0.3); padding-bottom: 2px; transition: border-color 0.2s; }
+    .activity-card-link:hover { border-color: var(--fern-light); }
+
+    /* ── ACTIVITY TIP ── */
+    .activity-tip { padding: 16px 20px; background: rgba(74,124,89,0.07); border-left: 2px solid var(--fern); border-radius: 0 8px 8px 0; margin-bottom: 16px; }
+    .activity-tip-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 5px; }
+    .activity-tip-text { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-style: italic; color: var(--white); line-height: 1.6; }
+
+    /* ── ACTIVITY META ── */
+    .activity-meta { display: flex; gap: 20px; flex-wrap: wrap; }
+    .activity-meta-item { font-size: 12px; color: var(--white-faint); display: flex; align-items: center; gap: 6px; }
+    .activity-meta-item strong { color: var(--white-dim); }
+
+    @media (max-width: 900px) { .activity-nav { padding: 12px 24px; } .activities-wrap { padding: 0 24px 60px; } }
   </style>
 </head>
 <body>
@@ -219,25 +262,34 @@
     <div class="brand">Planet Curated</div>
     <div class="sub">Cape Town Guide</div>
   </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
   <div class="sidebar-section">Dashboard</div>
-  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
   <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
   <div class="sidebar-section">Discover</div>
   <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
   <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
-  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
   <div class="sidebar-section">Eat & Drink</div>
-  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
-  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
   <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
   <div class="sidebar-section">Outdoors</div>
   <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
-  <a href="hikes.html" class="sidebar-item active"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="hikes.html" class="sidebar-item active"><span class="icon">🥾</span> Outdoor Activities</a>
   <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
   <div class="sidebar-section">Plan Your Trip</div>
   <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
-  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
-  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
   <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
 </nav>
 
@@ -246,7 +298,10 @@
 
   <!-- HERO — Dirk on Lion's Head -->
   <div class="hero">
-    <div class="hero-dirk">📸 Dirk on Lion's Head, 6:15am</div>
+    <video class="hero-video" autoplay muted loop playsinline poster="/photos/cederberg-arch.jpeg">
+      <source src="/photos/hikes-hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-dirk" style="z-index:2;position:relative;">📸 Dirk on Lion's Head, 6:15am</div>
     <div class="hero-content">
       <div class="hero-eyebrow">Planet Curated · Outdoors</div>
       <h1 class="hero-title">Hikes &<br><em>Outdoors</em></h1>
@@ -263,6 +318,24 @@
     <div class="stat-item"><div class="stat-val">Free</div><div class="stat-label">Most hikes cost nothing</div></div>
   </div>
 
+  <!-- ACTIVITY NAVIGATOR -->
+  <div class="activity-nav">
+    <a href="#hiking" class="activity-nav-btn active"><span class="activity-nav-icon">🥾</span><span class="activity-nav-label">Hiking</span></a>
+    <a href="#biking" class="activity-nav-btn"><span class="activity-nav-icon">🚵</span><span class="activity-nav-label">Biking</span></a>
+    <a href="#surfing" class="activity-nav-btn"><span class="activity-nav-icon">🏄</span><span class="activity-nav-label">Surfing</span></a>
+    <a href="#climbing" class="activity-nav-btn"><span class="activity-nav-icon">🧗</span><span class="activity-nav-label">Climbing</span></a>
+    <a href="#trail-running" class="activity-nav-btn"><span class="activity-nav-icon">🏃</span><span class="activity-nav-label">Trail Running</span></a>
+    <a href="#kayaking" class="activity-nav-btn"><span class="activity-nav-icon">🚣</span><span class="activity-nav-label">Kayaking</span></a>
+    <a href="#diving" class="activity-nav-btn"><span class="activity-nav-icon">🤿</span><span class="activity-nav-label">Diving</span></a>
+    <a href="#sharks" class="activity-nav-btn"><span class="activity-nav-icon">🦈</span><span class="activity-nav-label">Shark Diving</span></a>
+    <a href="#whales" class="activity-nav-btn"><span class="activity-nav-icon">🐋</span><span class="activity-nav-label">Whale Watching</span></a>
+    <a href="#paragliding" class="activity-nav-btn"><span class="activity-nav-icon">🪂</span><span class="activity-nav-label">Paragliding</span></a>
+    <a href="#skydiving" class="activity-nav-btn"><span class="activity-nav-icon">🎯</span><span class="activity-nav-label">Skydiving</span></a>
+    <a href="#golf" class="activity-nav-btn"><span class="activity-nav-icon">⛳</span><span class="activity-nav-label">Golf</span></a>
+    <a href="#horses" class="activity-nav-btn"><span class="activity-nav-icon">🐎</span><span class="activity-nav-label">Horse Riding</span></a>
+    <a href="#fishing" class="activity-nav-btn"><span class="activity-nav-icon">🎣</span><span class="activity-nav-label">Fishing</span></a>
+  </div>
+
   <!-- INTRO -->
   <div class="intro">
     <div class="intro-label">The hiking guide</div>
@@ -271,7 +344,7 @@
   </div>
 
   <!-- HIKES -->
-  <div class="hikes-wrap">
+  <div class="hikes-wrap" id="hiking">
 
     <!-- FEATURED: LION'S HEAD -->
     <div class="hike-featured" id="hike-1">
@@ -450,14 +523,563 @@
       </div>
     </div>
 
+  </div><!-- /hikes-wrap -->
+
+  <div class="activities-wrap">
+
+    <!-- MOUNTAIN BIKING -->
+    <div class="activity-section" id="biking">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🚵</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title">Mountain <em>Biking</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">From beginner-friendly forest trails to technical mountain singletrack, Cape Town has some of the best mountain biking in Africa. Tokai Forest is the perfect starting point; Jonkershoek will test experienced riders.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Best Trails</div>
+          <div class="activity-card-title">Tokai Forest &amp; Constantia Greenbelt</div>
+          <p class="activity-card-desc">Tokai's pine forest trails are well-maintained, clearly marked, and ideal for all levels. Connect into the Constantia Greenbelt for longer rides with ocean views. Parking at Tokai Arboretum.</p>
+          <a href="https://maps.google.com/?q=Tokai+Forest+Cape+Town" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Advanced · Stellenbosch</div>
+          <div class="activity-card-title">Jonkershoek Valley</div>
+          <p class="activity-card-desc">World-class singletrack through a mountain nature reserve 45 minutes from Cape Town. Technical climbs, fast descents, and spectacular scenery. The Swellendam Trail is a bucket-list ride.</p>
+          <a href="https://www.jonkershoek.co.za" class="activity-card-link" target="_blank">jonkershoek.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Rentals &amp; Guided Rides</div>
+          <div class="activity-card-title">Downhill Adventures</div>
+          <p class="activity-card-desc">Cape Town's most reputable MTB operator. Guided rides from Table Mountain, bike rentals, and a range of routes for all levels. Based at the lower cable car station.</p>
+          <a href="https://www.downhilladventures.com" class="activity-card-link" target="_blank">downhilladventures.com →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"Tokai on a weekday morning is one of Cape Town's great free pleasures — pine forest, mountain air, and almost nobody around. Jonkershoek is worth the drive to Stellenbosch if you're an experienced rider. Take the Swellendam trail and reward yourself with a wine tasting after."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · best Oct–Apr</div>
+        <div class="activity-meta-item">⏱ <strong>Duration:</strong> 1–4 hours</div>
+        <div class="activity-meta-item">💰 <strong>Cost:</strong> Free (own bike) · from R350 rental</div>
+      </div>
+    </div>
+
+    <!-- SURFING -->
+    <div class="activity-section" id="surfing">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🏄</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title">Surfing, Kite &amp; <em>Wind</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Cape Town has world-class conditions for surfing, kitesurfing, windsurfing and wing foiling. Muizenberg is the best beginner surf beach in South Africa. Big Bay is the kitesurfing capital of Africa.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Beginner Surfing · False Bay</div>
+          <div class="activity-card-title">Muizenberg Beach</div>
+          <p class="activity-card-desc">Warm water (by Cape Town standards), long gentle rollers, and a thriving surf school scene. Gary's Surf School has been teaching here for decades. The colourful beach huts are iconic. Best for total beginners and intermediate surfers.</p>
+          <a href="https://www.garysurf.com" class="activity-card-link" target="_blank">garysurf.com →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Kite &amp; Wind · Atlantic</div>
+          <div class="activity-card-title">Big Bay &amp; Bloubergstrand</div>
+          <p class="activity-card-desc">Africa's kitesurfing capital. The Cape Doctor (SE trade wind) delivers consistent 25–35 knot sessions from October to March. Cape Sport Centre offers lessons, gear rental and storage for kitesurfers, windsurfers and wing foilers.</p>
+          <a href="https://www.capesportcentre.co.za" class="activity-card-link" target="_blank">capesportcentre.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Advanced Surfing</div>
+          <div class="activity-card-title">Llandudno &amp; Dungeons</div>
+          <p class="activity-card-desc">Llandudno is a powerful, beautiful beach break for experienced surfers. Dungeons — off Hout Bay — is one of the world's great big wave spots, active in winter swells. Not for the faint-hearted.</p>
+          <a href="https://maps.google.com/?q=Llandudno+Beach+Cape+Town" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"Muizenberg is where every Cape Town surfer learns — warm water, forgiving waves, and a great vibe. If you're into kitesurfing or wing foiling, Big Bay in October–March is world-class. The Cape Doctor blows like clockwork and the Table Mountain backdrop makes it surreal."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>Surfing:</strong> Year-round</div>
+        <div class="activity-meta-item">📅 <strong>Kite/Wind:</strong> Oct–Mar (SE winds)</div>
+        <div class="activity-meta-item">💰 <strong>Lessons from:</strong> R450 per session</div>
+      </div>
+    </div>
+
+    <!-- ROCK CLIMBING & ABSEILING -->
+    <div class="activity-section" id="climbing">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🧗</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title">Rock Climbing &amp; <em>Abseiling</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Table Mountain is one of the world's great climbing destinations — hundreds of routes from beginner to expert. The 112-metre abseil off the top is one of the most dramatic experiences in Africa.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Iconic · Table Mountain</div>
+          <div class="activity-card-title">Table Mountain Abseil</div>
+          <p class="activity-card-desc">A 112-metre controlled abseil off the top of Table Mountain — one of the highest commercial abseil sites in the world. Run by Abseil Africa, who have been operating for over 25 years. No experience needed. Pure nerve.</p>
+          <a href="https://www.abseilafrica.co.za" class="activity-card-link" target="_blank">abseilafrica.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Bouldering · World-Class</div>
+          <div class="activity-card-title">Rocklands &amp; Paarl Rock</div>
+          <p class="activity-card-desc">Rocklands in the Cederberg (3hrs north) is a world-renowned bouldering destination. Paarl Rock is 45 minutes away — enormous granite domes with routes for all levels. City Rock in Cape Town offers indoor climbing year-round.</p>
+          <a href="https://www.cityrock.co.za" class="activity-card-link" target="_blank">cityrock.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Guided Climbing</div>
+          <div class="activity-card-title">Table Mountain Routes</div>
+          <p class="activity-card-desc">Dozens of traditional and sport climbing routes on the mountain itself — India Venster, Nursery Buttress and Platteklip Gorge area. Cape Town Rock Guides offer half-day and full-day guided climbing for all levels.</p>
+          <a href="https://www.capetownrock.co.za" class="activity-card-link" target="_blank">capetownrock.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"Do the Table Mountain abseil. It looks terrifying from the top — and it is — but you'll never forget it. Abseil Africa has an impeccable safety record over 25+ years. Book for sunrise if you can. The light on the City Bowl below is extraordinary."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round (avoid wind days)</div>
+        <div class="activity-meta-item">💰 <strong>Abseil:</strong> from R1,100 per person</div>
+        <div class="activity-meta-item">⏱ <strong>Abseil duration:</strong> ~2.5 hours total</div>
+      </div>
+    </div>
+
+    <!-- TRAIL RUNNING -->
+    <div class="activity-section" id="trail-running">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🏃</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title">Trail <em>Running</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Cape Town is a global trail running destination. The mountain is criss-crossed with world-class routes — from a 5km Lion's Head loop to multi-day epics along the Hoerikwaggo Trail.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Best Route · 5km</div>
+          <div class="activity-card-title">Lion's Head Loop</div>
+          <p class="activity-card-desc">5km, 400m elevation, spectacular views of the Atlantic and City Bowl. Run it at sunrise and you'll have the chains and ladders to yourself. One of the best short trail runs anywhere in the world.</p>
+          <a href="https://maps.google.com/?q=Lion%27s+Head+Cape+Town" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Epic Route</div>
+          <div class="activity-card-title">Two Oceans &amp; Constantia Trails</div>
+          <p class="activity-card-desc">The Two Oceans Ultra (56km, run every Easter) follows the Cape Peninsula — one of the world's most beautiful ultra routes. The Constantia forest trails are ideal for regular training runs: shaded, well-marked, and beautiful.</p>
+          <a href="https://www.twooceansmarathon.org.za" class="activity-card-link" target="_blank">twooceansmarathon.org.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Free · Every Saturday</div>
+          <div class="activity-card-title">Parkrun Cape Town</div>
+          <p class="activity-card-desc">Multiple Parkrun events across Cape Town every Saturday at 8am — free, timed, community-run 5km events. Green Point, Rondebosch, and Constantia are the most scenic. Just register once at parkrun.co.za.</p>
+          <a href="https://www.parkrun.co.za" class="activity-card-link" target="_blank">parkrun.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"The Lion's Head loop at sunrise is a trail runner's dream — 5km, chains and ladders, 360° Atlantic views. Be there by 6:30am in summer to beat the heat and the crowds. Wear trail shoes, take water, and don't rush the chains section."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · best May–Sep (cooler)</div>
+        <div class="activity-meta-item">💰 <strong>Cost:</strong> Free (self-guided)</div>
+        <div class="activity-meta-item">⏱ <strong>Lion's Head loop:</strong> 1.5–2.5 hours</div>
+      </div>
+    </div>
+
+    <!-- SEA KAYAKING & SUP -->
+    <div class="activity-section" id="kayaking">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🚣</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title">Sea Kayaking &amp; <em>SUP</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Paddle with African penguins at Simon's Town, explore the sea caves of Llandudno, or SUP across the glassy waters of False Bay at sunrise. Cape Town's coastline is extraordinary from the water.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Must-Do · Simon's Town</div>
+          <div class="activity-card-title">Kayaking with Penguins</div>
+          <p class="activity-card-desc">Launch from Simon's Town and paddle alongside African penguins in their natural habitat — one of Cape Town's most magical experiences. Real Cape Adventures run guided sunrise and morning sessions with expert guides.</p>
+          <a href="https://www.realcapeadventures.com" class="activity-card-link" target="_blank">realcapeadventures.com →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">SUP &amp; Flat Water</div>
+          <div class="activity-card-title">Milnerton Lagoon &amp; False Bay</div>
+          <p class="activity-card-desc">Milnerton Lagoon is Cape Town's best flat-water SUP spot — sheltered, calm, and with Table Mountain as the backdrop. False Bay sunrise SUP sessions from Simonstown are unforgettable on a still morning.</p>
+          <a href="https://maps.google.com/?q=Milnerton+Lagoon+Cape+Town" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Sea Caves · Atlantic</div>
+          <div class="activity-card-title">Llandudno Sea Cave Kayak</div>
+          <p class="activity-card-desc">Guided sea kayaking tours through the dramatic granite sea caves and kelp forests along the Atlantic Seaboard. Ocean Experiences run small-group guided tours from Camps Bay and Llandudno. Calm day essential.</p>
+          <a href="https://www.oceanexperiences.co.za" class="activity-card-link" target="_blank">oceanexperiences.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"The sunrise kayak with penguins from Simon's Town is one of Cape Town's best-kept secrets. You're on the water before the tourist boats arrive, paddling alongside penguins with the Hottentots Holland mountains turning pink behind you. Book at least 2 days ahead."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · calm mornings best</div>
+        <div class="activity-meta-item">💰 <strong>Guided tours from:</strong> R650 per person</div>
+        <div class="activity-meta-item">⏱ <strong>Duration:</strong> 2–3 hours</div>
+      </div>
+    </div>
+
+    <!-- DIVING & SNORKELLING -->
+    <div class="activity-section" id="diving">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🤿</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title">Diving &amp; <em>Snorkelling</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Cold water (12–18°C), extraordinary kelp forests, and rich marine life make Cape Town a world-class diving destination. A wetsuit is non-negotiable — the reward is extraordinary.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Best Dive Sites</div>
+          <div class="activity-card-title">Boulders Beach &amp; Miller's Point</div>
+          <p class="activity-card-desc">Boulders Beach offers snorkelling with African penguins in the shallows — extraordinary and completely unique. Miller's Point in Simon's Town has excellent shore diving with diverse marine life, caves, and kelp forests.</p>
+          <a href="https://maps.google.com/?q=Miller%27s+Point+Cape+Town" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Kelp Forests · Atlantic</div>
+          <div class="activity-card-title">Camps Bay &amp; Oudekraal</div>
+          <p class="activity-card-desc">The kelp forests off Oudekraal (between Camps Bay and Hout Bay) are among the most biodiverse dive sites in South Africa — catsharks, octopus, klipfish, and rays. Orca Industries operate charters from here.</p>
+          <a href="https://www.orcaindustries.co.za" class="activity-card-link" target="_blank">orcaindustries.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Dive School &amp; Courses</div>
+          <div class="activity-card-title">Pisces Divers</div>
+          <p class="activity-card-desc">One of Cape Town's most established dive schools — PADI open water courses, advanced diver training, guided dives, and equipment rental. Based in Simon's Town, ideally positioned for False Bay diving.</p>
+          <a href="https://www.piscesdivers.co.za" class="activity-card-link" target="_blank">piscesdivers.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"The water is cold — don't let anyone tell you otherwise. A 5mm wetsuit minimum, 7mm if you run cold. The reward is extraordinary: kelp forests that feel like cathedrals, penguins underwater, and marine life that most divers never see. Oudekraal on a calm day is otherworldly."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · Feb–May best visibility</div>
+        <div class="activity-meta-item">🌡 <strong>Water temp:</strong> 12–18°C (wetsuit essential)</div>
+        <div class="activity-meta-item">💰 <strong>Guided dives from:</strong> R550 per person</div>
+      </div>
+    </div>
+
+    <!-- SHARK CAGE DIVING -->
+    <div class="activity-section" id="sharks">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🦈</div>
+        <div>
+          <div class="activity-section-eyebrow">Day Trip · Gansbaai</div>
+          <div class="activity-section-title">Shark Cage <em>Diving</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Two hours from Cape Town, Gansbaai is the great white shark capital of the world. Shark Alley — the narrow channel between Geyser Rock and Dyer Island — is one of the ocean's most dramatic environments.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">World's Best · Gansbaai</div>
+          <div class="activity-card-title">Shark Alley</div>
+          <p class="activity-card-desc">The channel between Geyser Rock (a Cape fur seal colony of 50,000+) and Dyer Island attracts great white sharks year-round. No diving experience needed — the cage is surface-level. You just need to be willing.</p>
+          <a href="https://maps.google.com/?q=Gansbaai+Harbour+South+Africa" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Top Operator</div>
+          <div class="activity-card-title">Marine Dynamics</div>
+          <p class="activity-card-desc">Gansbaai's most respected shark diving operator — conservation-focused, small groups, and genuinely committed to shark welfare. Their onboard marine biologists make the experience educational as well as extraordinary.</p>
+          <a href="https://www.marinedynamics.co.za" class="activity-card-link" target="_blank">marinedynamics.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Alternative</div>
+          <div class="activity-card-title">White Shark Projects</div>
+          <p class="activity-card-desc">Research-based shark diving with a strong conservation focus. Full-day trips from Cape Town including transfer, breakfast, and a full briefing. One of the most reputable operators in Gansbaai for 20+ years.</p>
+          <a href="https://www.whitesharkprojects.co.za" class="activity-card-link" target="_blank">whitesharkprojects.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"Book the earliest boat — sea conditions are calmer in the morning and shark activity is higher. Take seasickness tablets the night before if you're prone. This is genuinely life-changing. Face-to-face with a 4-metre great white through a cage is something you'll be talking about for the rest of your life."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>Best season:</strong> Year-round · May–Sep peak activity</div>
+        <div class="activity-meta-item">🚗 <strong>Distance:</strong> ~2 hours from Cape Town</div>
+        <div class="activity-meta-item">💰 <strong>Full day from:</strong> R2,200 per person</div>
+      </div>
+    </div>
+
+    <!-- WHALE WATCHING -->
+    <div class="activity-section" id="whales">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🐋</div>
+        <div>
+          <div class="activity-section-eyebrow">Seasonal · Jun–Nov</div>
+          <div class="activity-section-title">Whale <em>Watching</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Every year southern right whales migrate from Antarctica to the Cape to calve in the sheltered bays. Hermanus is the whale-watching capital of the world. From June to November, this is one of nature's greatest shows.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Land-Based · World-Class</div>
+          <div class="activity-card-title">Hermanus Cliff Path</div>
+          <p class="activity-card-desc">Walk the 12km cliff path above Walker Bay and watch southern right whales breach, spy-hop and nurse their calves below. September is peak season. No boat needed — the whales come within metres of the shore.</p>
+          <a href="https://maps.google.com/?q=Hermanus+Cliff+Path+South+Africa" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Boat Tours · False Bay</div>
+          <div class="activity-card-title">Simon's Town Boat Company</div>
+          <p class="activity-card-desc">Whale-watching boat tours from Simon's Town into False Bay — southern rights and humpbacks are regularly spotted. Small group sizes, experienced guides, and excellent wildlife viewing from October to December.</p>
+          <a href="https://www.boatcompany.co.za" class="activity-card-link" target="_blank">boatcompany.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Wine + Whales</div>
+          <div class="activity-card-title">Hermanus + Creation Wines</div>
+          <p class="activity-card-desc">The best Cape Town day trip combination: whale watching from the Hermanus cliffs in the morning, then a wine tasting at Creation Wines above Walker Bay in the afternoon. Creation's Hemel-en-Aarde location overlooks the whale nursery.</p>
+          <a href="https://www.creationwines.com" class="activity-card-link" target="_blank">creationwines.com →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"Go to Hermanus in September. The southern rights are at peak numbers, the weather is still cool and clear, and the cliff path is one of the world's great wildlife walks. Combine it with a tasting at Creation Wines overlooking Walker Bay — whales breaching in the bay while you sip Hemel-en-Aarde Pinot Noir is Cape Town at its finest."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>Season:</strong> June–November</div>
+        <div class="activity-meta-item">🚗 <strong>Hermanus:</strong> 1h 20min from Cape Town</div>
+        <div class="activity-meta-item">💰 <strong>Cliff path:</strong> Free · Boat tours from R850</div>
+      </div>
+    </div>
+
+    <!-- PARAGLIDING -->
+    <div class="activity-section" id="paragliding">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🪂</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title"><em>Paragliding</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Signal Hill is one of the world's most spectacular tandem paragliding launch sites — Atlantic Ocean views, the City Bowl below, Table Mountain at eye level. No experience needed for a tandem flight.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Tandem Flights · Signal Hill</div>
+          <div class="activity-card-title">Birdmen Paragliding</div>
+          <p class="activity-card-desc">Cape Town's most established paragliding operator. Tandem flights launch from Signal Hill and land on the Sea Point beachfront — a 15-minute flight over one of the world's great urban panoramas. Professional pilots, small groups.</p>
+          <a href="https://www.birdmen.co.za" class="activity-card-link" target="_blank">birdmen.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Alternative Operator</div>
+          <div class="activity-card-title">Parapax</div>
+          <p class="activity-card-desc">Another reputable tandem paragliding operator flying Signal Hill. Flexible booking, weather-dependent scheduling, and pilots with thousands of hours. Packages include transfer to the launch site from Sea Point.</p>
+          <a href="https://www.parapax.com" class="activity-card-link" target="_blank">parapax.com →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Learn to Fly</div>
+          <div class="activity-card-title">Paragliding Courses</div>
+          <p class="activity-card-desc">Cape Town's consistent winds and varied terrain make it an ideal place to learn paragliding. Both operators offer beginner courses over 5–7 days. By the end you'll be flying solo on Signal Hill.</p>
+          <a href="https://www.birdmen.co.za" class="activity-card-link" target="_blank">birdmen.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"The Signal Hill tandem flight is one of those experiences that completely reframes the city. You're floating at Table Mountain's eye level, the Atlantic stretching to the horizon, the City Bowl spread below you. Book for the late afternoon on a clear day — the light is extraordinary."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · SE wind days (summer)</div>
+        <div class="activity-meta-item">⏱ <strong>Flight duration:</strong> 10–20 minutes</div>
+        <div class="activity-meta-item">💰 <strong>Tandem from:</strong> R1,200 per person</div>
+      </div>
+    </div>
+
+    <!-- SKYDIVING -->
+    <div class="activity-section" id="skydiving">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🎯</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title"><em>Skydiving</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Jump over Stellenbosch with Table Mountain, the Cape Peninsula and the Atlantic Ocean all visible simultaneously. The freefall view is unlike anything else on earth.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Tandem Skydiving</div>
+          <div class="activity-card-title">Skydive Cape Town</div>
+          <p class="activity-card-desc">Tandem skydives from 10,000ft over the Stellenbosch wine valley. Table Mountain, the Cape Peninsula and two oceans visible during freefall. No experience needed — you're attached to an instructor throughout. GoPro video packages available.</p>
+          <a href="https://www.skydivecapetown.com" class="activity-card-link" target="_blank">skydivecapetown.com →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">What to Expect</div>
+          <div class="activity-card-title">The Full Experience</div>
+          <p class="activity-card-desc">Training briefing (30 min), kit-up, flight to altitude (20 min), 30–45 seconds of freefall at 200km/h, then 5 minutes of parachute flight over the vineyards. Total experience is around 3 hours. Minimum age 18, max weight 100kg.</p>
+          <a href="https://www.skydivecapetown.com" class="activity-card-link" target="_blank">Book →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"The freefall view is genuinely one of the best on earth — Table Mountain, the Cape Peninsula, Stellenbosch vineyards, and both oceans simultaneously. Book for a weekday morning to beat the queues and get the calmest wind conditions. Don't skip the video package — you'll want the evidence."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · summer clearest</div>
+        <div class="activity-meta-item">💰 <strong>Tandem from:</strong> R2,100 per person</div>
+        <div class="activity-meta-item">📍 <strong>Location:</strong> Stellenbosch airfield</div>
+      </div>
+    </div>
+
+    <!-- GOLF -->
+    <div class="activity-section" id="golf">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">⛳</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title"><em>Golf</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Cape Town has world-class golf — from courses with Table Mountain as a backdrop to Winelands fairways set among Franschhoek vineyards. Green fees are exceptional value by international standards.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">World-Class · Paarl</div>
+          <div class="activity-card-title">Pearl Valley Golf Estate</div>
+          <p class="activity-card-desc">Jack Nicklaus-designed course in the Franschhoek Valley — one of the most beautiful golf courses in Africa. Mountain backdrop, immaculate fairways, and a clubhouse with outstanding views. Worth the drive from Cape Town.</p>
+          <a href="https://www.pearlvalley.co.za" class="activity-card-link" target="_blank">pearlvalley.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Winery Setting · Stellenbosch</div>
+          <div class="activity-card-title">Steenberg Golf Club</div>
+          <p class="activity-card-desc">18 holes at a 300-year-old wine estate in Constantia Valley — mountain views, mature trees, and wine tasting at the estate after your round. One of the most scenic courses in the Western Cape.</p>
+          <a href="https://www.steenberghotel.com/golf" class="activity-card-link" target="_blank">steenberghotel.com →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">City Course</div>
+          <div class="activity-card-title">Metropolitan Golf Club</div>
+          <p class="activity-card-desc">The Metropolitan in Sea Point is Cape Town's most central golf course — 18 holes walking distance from the city centre, with Table Mountain and Signal Hill as the backdrop. Great value for a city course.</p>
+          <a href="https://www.metropolitangc.co.za" class="activity-card-link" target="_blank">metropolitangc.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"Pearl Valley is worth the trip to Paarl — one of the most beautiful courses in Africa, Jack Nicklaus-designed, and exceptional value compared to European or American green fees. Combine it with a morning at the Franschhoek market and wine tasting at Babylonstoren for a perfect Saturday."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · early morning best</div>
+        <div class="activity-meta-item">💰 <strong>Green fees from:</strong> R450 (city) to R2,500 (Pearl Valley)</div>
+        <div class="activity-meta-item">🚗 <strong>Pearl Valley:</strong> 1hr from Cape Town</div>
+      </div>
+    </div>
+
+    <!-- HORSE RIDING -->
+    <div class="activity-section" id="horses">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🐎</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title">Horse <em>Riding</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Ride along Noordhoek's 8km beach with the Sentinel mountains as a backdrop, or canter through the fynbos above Muizenberg. Cape Town's beach rides are among the best in the world.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Best Beach Ride · Noordhoek</div>
+          <div class="activity-card-title">Sleepy Hollow Horse Riding</div>
+          <p class="activity-card-desc">Ride along Long Beach, Noordhoek — one of the longest and most dramatic beaches on the Cape Peninsula. Sleepy Hollow has been operating here for decades, with horses suited to all experience levels. Sunset rides are magical.</p>
+          <a href="https://www.sleepyhollowhorseriding.co.za" class="activity-card-link" target="_blank">sleepyhollowhorseriding.co.za →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Alternative · Southern Suburbs</div>
+          <div class="activity-card-title">Imhoff Farm</div>
+          <p class="activity-card-desc">Farm rides through fynbos and along Kommetjie beach from the historic Imhoff Farm village. Great for families and beginners. The farm also has a market, restaurants and a snake park for a full day out.</p>
+          <a href="https://www.imhofffarm.co.za" class="activity-card-link" target="_blank">imhofffarm.co.za →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"Noordhoek on horseback at sunset is something I recommend to everyone. The beach is 8km long, almost deserted, and the mountains behind it are extraordinary. Book the 2-hour sunset ride with Sleepy Hollow and take it slow — this isn't a rush."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>When to go:</strong> Year-round · sunset rides Oct–Mar</div>
+        <div class="activity-meta-item">💰 <strong>Rides from:</strong> R500 per person (1 hour)</div>
+        <div class="activity-meta-item">📍 <strong>Location:</strong> Noordhoek Valley</div>
+      </div>
+    </div>
+
+    <!-- FISHING -->
+    <div class="activity-section" id="fishing">
+      <div class="activity-section-header">
+        <div class="activity-section-icon">🎣</div>
+        <div>
+          <div class="activity-section-eyebrow">Outdoors · Cape Town</div>
+          <div class="activity-section-title"><em>Fishing</em></div>
+        </div>
+      </div>
+      <p class="activity-section-sub">Cape Town offers world-class fishing — yellowfin tuna off Cape Point, snoek in the winter, and shore angling along some of the most dramatic coastline on earth.</p>
+      <div class="activity-cards">
+        <div class="activity-card">
+          <div class="activity-card-tag">Deep Sea · Cape Point</div>
+          <div class="activity-card-title">Yellowfin Tuna Charters</div>
+          <p class="activity-card-desc">January to May, yellowfin tuna run off Cape Point in numbers. Deep sea charters from Hout Bay harbour — full-day trips targeting yellowfin, yellowtail, and dorado. The fish are genuine trophy quality and the scenery is extraordinary.</p>
+          <a href="https://maps.google.com/?q=Hout+Bay+Harbour+Cape+Town" class="activity-card-link" target="_blank">Hout Bay Harbour →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Winter Season</div>
+          <div class="activity-card-title">Snoek Fishing</div>
+          <p class="activity-card-desc">Snoek is Cape Town's most iconic local fish — fierce fighters and extraordinary on the braai. The season runs June–August off Hout Bay and Cape Point. Day charters are affordable and genuinely fun — even if you've never fished before.</p>
+          <a href="https://maps.google.com/?q=Hout+Bay+Harbour+Cape+Town" class="activity-card-link" target="_blank">Hout Bay Harbour →</a>
+        </div>
+        <div class="activity-card">
+          <div class="activity-card-tag">Shore Fishing</div>
+          <div class="activity-card-title">Miller's Point &amp; Scarborough</div>
+          <p class="activity-card-desc">Shore angling at Miller's Point in Simon's Town is accessible, scenic, and productive year-round. Scarborough on the Atlantic side offers excellent rock angling with dramatic Cape Point scenery. No charter needed — just a rod and a tide table.</p>
+          <a href="https://maps.google.com/?q=Miller%27s+Point+Cape+Town" class="activity-card-link" target="_blank">Find on Maps →</a>
+        </div>
+      </div>
+      <div class="activity-tip">
+        <div class="activity-tip-label">Dirk's Tip</div>
+        <div class="activity-tip-text">"A yellowfin tuna caught off Cape Point, straight onto the braai the same evening with a cold beer and Table Mountain in the background — this is Cape Town living at its absolute best. Book a January–March charter from Hout Bay. It's worth every rand."</div>
+      </div>
+      <div class="activity-meta">
+        <div class="activity-meta-item">📅 <strong>Tuna season:</strong> Jan–May</div>
+        <div class="activity-meta-item">📅 <strong>Snoek season:</strong> Jun–Aug</div>
+        <div class="activity-meta-item">💰 <strong>Charters from:</strong> R1,200 per person (shared boat)</div>
+      </div>
+    </div>
+
+  </div><!-- /activities-wrap -->
+
     <!-- CTA -->
     <div class="cta-strip">
       <div class="cta-text">
         <h3>Want Dirk to plan your perfect hiking day?</h3>
-        <p>Tell Caipy your fitness level, how much time you have, and what kind of views you want — she'll build the perfect hiking itinerary.</p>
+        <p>Tell Ubuntu your fitness level, how much time you have, and what kind of views you want — Ubuntu will build the perfect hiking itinerary.</p>
       </div>
-      <a href="index.html#caipy" class="btn-cta">Talk to Caipy →</a>
+      <a href="https://thecapetownguide.com" class="btn-cta">Talk to Ubuntu →</a>
     </div>
+
+  <!-- RELATED PAGES -->
+  <div style="padding:48px 60px;border-top:1px solid rgba(201,169,110,0.12);">
+    <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#C9A96E;margin-bottom:24px;">Explore More</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+      <a href="beaches.html" style="display:block;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.12);border-radius:10px;padding:20px 22px;text-decoration:none;color:#FAF8F4;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(201,169,110,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(201,169,110,0.12)'">
+        <div style="font-size:22px;margin-bottom:8px;">🏖️</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:4px;">Beaches</div>
+        <div style="font-size:12px;color:rgba(250,248,244,0.55);">The best beaches after your hike</div>
+      </a>
+      <a href="daytrips.html" style="display:block;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.12);border-radius:10px;padding:20px 22px;text-decoration:none;color:#FAF8F4;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(201,169,110,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(201,169,110,0.12)'">
+        <div style="font-size:22px;margin-bottom:8px;">🚗</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:4px;">Day Trips</div>
+        <div style="font-size:12px;color:rgba(250,248,244,0.55);">Cape Point, Boulders &amp; Cederberg</div>
+      </a>
+      <a href="hidden-gems.html" style="display:block;background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,110,0.12);border-radius:10px;padding:20px 22px;text-decoration:none;color:#FAF8F4;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(201,169,110,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(201,169,110,0.12)'">
+        <div style="font-size:22px;margin-bottom:8px;">💎</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;margin-bottom:4px;">Hidden Gems</div>
+        <div style="font-size:12px;color:rgba(250,248,244,0.55);">Secret spots most visitors miss</div>
+      </a>
+    </div>
+  </div>
 
   </div>
 </div>
@@ -465,7 +1087,7 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
-    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
     <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
     <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
     <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>

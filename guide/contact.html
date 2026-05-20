@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean-dark: #0F2430; --gold: #C9A96E; --gold-light: #e0c48a;
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* NAV */
+    .topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 5vw; height: 68px; display: flex; align-items: center; justify-content: space-between; background: rgba(28,28,26,.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .topnav-brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--white); text-decoration: none; line-height: 1.2; }
+    .topnav-brand span { color: var(--gold); }
+    .topnav-brand-sub { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(250,248,244,0.4); display: block; margin-top: -3px; }
+    .topnav-links { display: flex; align-items: center; gap: 4px; }
+    .topnav-link { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.6); text-decoration: none; padding: 7px 14px; border-radius: 4px; transition: color 0.2s; }
+    .topnav-link:hover { color: var(--white); }
+    .topnav-cta { font-family: 'Jost', sans-serif; background: var(--gold); color: var(--ocean-dark); padding: 10px 20px; border-radius: 4px; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+
+    /* HERO */
+    .hero { height: 80vh; min-height: 500px; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; }
+    .hero-bg { position: absolute; inset: 0; overflow: hidden; }
+    .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 1.5s; }
+    .hero-bg::after { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, rgba(8,18,28,0.2) 0%, rgba(8,18,28,0.5) 100%); }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-eyebrow { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(42px, 6vw, 72px); font-weight: 300; line-height: 1.05; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-email { font-family: 'Jost', sans-serif; font-size: 14px; letter-spacing: 1px; color: var(--white-dim); }
+    .hero-email a { color: var(--gold); text-decoration: none; }
+    .hero-email a:hover { color: var(--gold-light); }
+
+    /* MAIN CONTENT */
+    .content { padding: 80px 8vw; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+
+    /* LEFT — contact options */
+    .contact-options { }
+    .contact-eyebrow { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .contact-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 3vw, 44px); font-weight: 300; line-height: 1.1; margin-bottom: 40px; }
+    .contact-title em { font-style: italic; color: var(--gold); }
+    .contact-item { padding: 28px 0; border-bottom: 1px solid rgba(201,169,110,0.12); }
+    .contact-item:first-of-type { border-top: 1px solid rgba(201,169,110,0.12); }
+    .contact-item-label { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .contact-item-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--white); margin-bottom: 8px; }
+    .contact-item-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 12px; }
+    .contact-link { font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--gold); text-decoration: none; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+    .contact-link:hover { color: var(--gold-light); }
+    .scroll-indicator { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; opacity: 0.6; transition: opacity .2s; animation: bounce 2s infinite; }
+    .scroll-indicator:hover { opacity: 1; }
+    .scroll-indicator span { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--white); }
+    .scroll-indicator svg { color: var(--gold); }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+    /* RIGHT — form */
+    .contact-form { background: rgba(201,169,110,0.04); border: 1px solid rgba(201,169,110,0.1); border-radius: 4px; padding: 48px; }
+    .form-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; margin-bottom: 8px; }
+    .form-title em { font-style: italic; color: var(--gold); }
+    .form-sub { font-size: 14px; color: var(--white-dim); margin-bottom: 32px; line-height: 1.6; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .form-input, .form-textarea, .form-select {
+      width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 4px; padding: 14px 16px; font-size: 14px; color: var(--white);
+      font-family: 'Inter', sans-serif; transition: border-color 0.2s; outline: none;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: rgba(201,169,110,0.4); }
+    .form-textarea { height: 120px; resize: vertical; }
+    .form-select option { background: var(--ocean-dark); }
+    .btn-submit { width: 100%; background: var(--gold); color: var(--ocean-dark); padding: 16px; border: none; border-radius: 4px; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .form-success { display: none; text-align: center; padding: 32px 0; }
+    .form-success .success-icon { font-size: 40px; margin-bottom: 16px; }
+    .form-success p { color: var(--white-dim); font-size: 15px; line-height: 1.7; }
+
+    @media (max-width: 768px) {
+      .content { grid-template-columns: 1fr; gap: 48px; }
+      .topnav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a href="/" class="topnav-brand">Planet <span>Curated</span><em class="topnav-brand-sub">Cape Town Guide</em></a>
+  <div class="topnav-links">
+    <a href="/#ai-chat" class="topnav-link">Build My Trip</a>
+    <a href="/#itinerary" class="topnav-link">The Guide</a>
+    <a href="/#tips" class="topnav-link">Start Here</a>
+    <a href="/guide/about.html" class="topnav-link">About</a>
+    <a href="/guide/contact.html" class="topnav-link">Contact</a>
+  </div>
+  <a href="/" class="topnav-cta">Meet Ubuntu →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <video id="contact-vid-a" muted playsinline autoplay src="https://videos.pexels.com/video-files/32565874/13886608_1920_1080_30fps.mp4"></video>
+    <video id="contact-vid-b" muted playsinline src="https://videos.pexels.com/video-files/20199694/20199694-hd_1920_1080_60fps.mp4" style="opacity:0;"></video>
+    <script>
+    (function(){
+      const vids = [document.getElementById('contact-vid-a'), document.getElementById('contact-vid-b')];
+      let cur = 0;
+      function next() {
+        const prev = cur; cur = (cur + 1) % vids.length;
+        vids[cur].currentTime = 0; vids[cur].play();
+        vids[cur].style.opacity = '1'; vids[prev].style.opacity = '0';
+        setTimeout(() => vids[prev].pause(), 1500);
+      }
+      vids[0].addEventListener('ended', next);
+      vids[1].addEventListener('ended', next);
+    })();
+    </script>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Get in touch</div>
+    <h1 class="hero-title">We'd love to<br><em>hear from you</em></h1>
+    <p class="hero-email">Or email us directly: <a href="mailto:info@thecapetownguide.com">info@thecapetownguide.com</a></p>
+  </div>
+  <div class="scroll-indicator" onclick="document.querySelector('.content').scrollIntoView({behavior:'smooth'})">
+    <span>Scroll</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="content">
+
+  <!-- LEFT -->
+  <div class="contact-options">
+    <div class="contact-eyebrow">How can we help?</div>
+    <h2 class="contact-title">Let's <em>talk</em></h2>
+
+    <div class="contact-item">
+      <div class="contact-item-label">Trip planning</div>
+      <div class="contact-item-title">Got a Cape Town question?</div>
+      <p class="contact-item-desc">Ubuntu answers instantly — which areas, what to skip, how long you need. Faster than email.</p>
+      <a href="/" class="contact-link">Chat with Ubuntu →</a>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-item-label">Partnerships</div>
+      <div class="contact-item-title">Work with us</div>
+      <p class="contact-item-desc">Hotels, tour operators, travel brands — if you want to be part of the guide, let's talk.</p>
+      <a href="mailto:info@thecapetownguide.com" class="contact-link">info@thecapetownguide.com →</a>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-item-label">Press & media</div>
+      <div class="contact-item-title">Writing about us?</div>
+      <p class="contact-item-desc">Writing about AI travel or Planet Curated? We're happy to chat.</p>
+      <a href="mailto:info@thecapetownguide.com" class="contact-link">Get in touch →</a>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-item-label">Feedback</div>
+      <div class="contact-item-title">Something not right?</div>
+      <p class="contact-item-desc">Found outdated info or a broken link? Tell us — we update constantly.</p>
+      <a href="mailto:info@thecapetownguide.com" class="contact-link">Report an issue →</a>
+    </div>
+  </div>
+
+  <!-- RIGHT — FORM -->
+  <div class="contact-form" id="contactForm">
+    <div class="form-title">Send us a<br><em>message</em></div>
+    <p class="form-sub">We read every message and reply within 24 hours.</p>
+
+    <div class="form-group">
+      <label class="form-label" for="name">Your name</label>
+      <input type="text" id="name" class="form-input" placeholder="Jane Smith" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="email">Email address</label>
+      <input type="email" id="email" class="form-input" placeholder="jane@example.com" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="subject">Subject</label>
+      <select id="subject" class="form-select">
+        <option value="">Select a topic...</option>
+        <option value="trip">Trip planning question</option>
+        <option value="feedback">Guide feedback</option>
+        <option value="partnership">Partnership / collaboration</option>
+        <option value="press">Press / media</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="message">Message</label>
+      <textarea id="message" class="form-textarea" placeholder="Tell us what's on your mind..."></textarea>
+    </div>
+    <button class="btn-submit" onclick="submitForm()">Send Message →</button>
+
+    <div class="form-success" id="formSuccess">
+      <div class="success-icon">✅</div>
+      <p><strong>Message sent!</strong><br>Thanks for reaching out. We'll get back to you within 24 hours.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+async function submitForm() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const subject = document.getElementById('subject').value || 'Contact form';
+  if (!name || !email || !message) { alert('Please fill in your name, email, and message.'); return; }
+
+  const btn = document.querySelector('.btn-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://caipy-sfau.onrender.com/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, subject, message })
+    });
+    if (!res.ok) throw new Error('Failed');
+    btn.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  } catch {
+    btn.textContent = 'Send Message →';
+    btn.disabled = false;
+    alert('Something went wrong — please email us at info@thecapetownguide.com');
+  }
+}
+</script>
+
+</body>
+</html>

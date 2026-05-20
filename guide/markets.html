@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markets · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-w);
+      height: 100vh; background: var(--ocean-dark);
+      border-right: 1px solid rgba(201,169,110,0.12);
+      display: flex; flex-direction: column; z-index: 100; overflow-y: auto;
+    }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+    .hero {
+      position: relative; height: 55vh; min-height: 380px;
+      background: url('/photos/oranjezichtmarket.jpeg') center 50%/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.1) 0%, rgba(15,36,48,0.75) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 40px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+
+    .content { padding: 60px; max-width: 1100px; }
+    .intro { font-size: 16px; color: var(--white-dim); line-height: 1.8; max-width: 680px; margin-bottom: 56px; }
+
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .market-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 12px; padding: 28px; transition: all 0.25s;
+    }
+    .market-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.25); transform: translateY(-2px); }
+    .market-tag { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .market-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 6px; }
+    .market-when { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .market-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; margin-bottom: 16px; }
+    .market-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,169,110,0.3); padding-bottom: 2px; transition: border-color 0.2s; }
+    .market-link:hover { border-color: var(--gold); }
+
+    .dirk-tip { margin-top: 16px; padding: 12px 14px; background: rgba(201,169,110,0.06); border-left: 2px solid var(--gold); border-radius: 0 6px 6px 0; }
+    .dirk-tip-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .dirk-tip p { font-size: 12px; color: var(--white-dim); line-height: 1.6; margin: 0; }
+
+    .cta-strip { margin: 72px 0 0; padding: 56px 60px; background: rgba(201,169,110,0.06); border-top: 1px solid rgba(201,169,110,0.12); border-bottom: 1px solid rgba(201,169,110,0.12); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .cta-strip-text .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .cta-strip-text h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
+    .cta-strip-text h2 em { font-style: italic; color: var(--gold); }
+    .cta-strip-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 480px; }
+    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 15px 36px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero-content { padding: 24px; } .content { padding: 24px; } .cta-strip { padding: 40px 24px; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item active"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Cape Town</div>
+      <h1 class="hero-title">Cape Town<br><em>Markets</em></h1>
+    </div>
+  </div>
+
+  <div class="content">
+    <p class="intro">Cape Town's markets are a world of their own — artisan food, design, craft, wine, and live music. These are the ones worth your Saturday morning.</p>
+
+    <div class="market-grid">
+
+      <div class="market-card">
+        <div class="market-tag">Woodstock · Must-visit</div>
+        <div class="market-name">Old Biscuit Mill / Neighbourgoods Market</div>
+        <div class="market-when">Every Saturday · 09:00–14:00</div>
+        <p class="market-desc">The original and the best. The Old Biscuit Mill in Woodstock is Cape Town's most celebrated creative hub — and on Saturdays it transforms into the Neighbourgoods Market, where the city's food scene comes to show off. Sourdough, oysters, craft beer, fresh pasta, local cheese — all under one roof. Gets busy by 10am. Go early, stay late.</p>
+        <a href="https://www.theoldbiscuitmill.co.za/neighbourgoods-market/" class="market-link" target="_blank">Website →</a>
+        <div class="dirk-tip">
+          <div class="dirk-tip-label">Dirk's Tip</div>
+          <p>Arrive by 9:30am to avoid queues at the popular stalls. The duck confit croissant and the fresh oysters are non-negotiable. Grab coffee from Truth first — it's just around the corner.</p>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">City Centre</div>
+        <div class="market-name">Oranjezicht City Farm Market</div>
+        <div class="market-when">Saturday 08:00–13:00 · Sunday 09:00–13:00</div>
+        <p class="market-desc">A community market with soul. Fresh produce from small-scale farmers, artisan bakers, and local food producers — all with Table Mountain as the backdrop. The Saturday market at the Waterfront and the Sunday market at De Waal Park are both excellent.</p>
+        <a href="https://ozcf.co.za/market/" class="market-link" target="_blank">Website →</a>
+        <div class="dirk-tip">
+          <div class="dirk-tip-label">Dirk's Tip</div>
+          <p>The Sunday De Waal Park edition has a calmer, more local feel. Bring a blanket, grab a fresh juice, and sit on the grass with Table Mountain right above you. One of Cape Town's genuinely great free mornings.</p>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Greenpoint · Weekend</div>
+        <div class="market-name">Green Point Market</div>
+        <div class="market-when">Weekends · 09:00–16:00</div>
+        <p class="market-desc">Craft, antiques, and African curios spread across the Green Point Urban Park. The largest outdoor market in Cape Town — great for unique gifts, handmade jewellery, and the occasional rare find. Relaxed atmosphere, easy to spend a few hours here.</p>
+        <a href="https://maps.google.com/?q=Green+Point+Market+Cape+Town" class="market-link" target="_blank">Find on Maps →</a>
+        <div class="dirk-tip">
+          <div class="dirk-tip-label">Dirk's Tip</div>
+          <p>Combine with a run or walk through Green Point Urban Park and Sea Point Promenade. The market is best in the morning before it gets crowded. Good spot to find genuine African crafts at fair prices — just take your time to browse.</p>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Stellenbosch · Day Trip</div>
+        <div class="market-name">Stellenbosch Saturday Market</div>
+        <div class="market-when">Every Saturday · 09:00–14:00</div>
+        <p class="market-desc">Combine a morning market with a wine tour. The Stellenbosch market sits in the heart of the historic university town, surrounded by Cape Dutch architecture and wine estates. Fresh food, local crafts, and easy access to the Winelands.</p>
+        <a href="https://maps.google.com/?q=Stellenbosch+Slow+Market" class="market-link" target="_blank">Find on Maps →</a>
+        <div class="dirk-tip">
+          <div class="dirk-tip-label">Dirk's Tip</div>
+          <p>Make a full Saturday of it — market in the morning, then head to Spier or Tokara for lunch and wine tasting. It's only 45 minutes from Cape Town and one of the best day-trip combinations I know.</p>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Kalk Bay · Local favourite</div>
+        <div class="market-name">Kalk Bay Harbour &amp; Antiques</div>
+        <div class="market-when">Daily · Best on weekends</div>
+        <p class="market-desc">Not a formal market — more a way of life. The strip of antique shops, galleries, and curio dealers along Main Road in Kalk Bay is one of the most rewarding browsing experiences in Cape Town. End with fish &amp; chips at Kalky's on the harbour.</p>
+        <a href="https://maps.google.com/?q=Kalk+Bay+Cape+Town" class="market-link" target="_blank">Find on Maps →</a>
+        <div class="dirk-tip">
+          <div class="dirk-tip-label">Dirk's Tip</div>
+          <p>Go on a weekday if you can — Kalk Bay on weekends gets very busy. Take the train from Cape Town station for a proper local experience. Walk the harbour, watch the seals, then browse the antique shops. Finish at Kalky's for the best fish & chips in the city.</p>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">V&amp;A Waterfront</div>
+        <div class="market-name">V&amp;A Food Market</div>
+        <div class="market-when">Daily · 10:00–20:00</div>
+        <p class="market-desc">A permanent indoor food market inside the Waterfront. Over 40 food stalls covering everything from sushi to South African braai. Great for a quick lunch with harbour views. More polished than the Neighbourgoods crowd, but excellent quality.</p>
+        <a href="https://www.waterfront.co.za/directory/va-food-market/" class="market-link" target="_blank">Website →</a>
+        <div class="dirk-tip">
+          <div class="dirk-tip-label">Dirk's Tip</div>
+          <p>The best option when you're already at the Waterfront and need a proper lunch without committing to a sit-down restaurant. The Cape Malay curry and the wood-fired pizza stalls are my go-to. Open daily — reliable and always busy for good reason.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cta-strip">
+      <div class="cta-strip-text">
+        <div class="eyebrow">Plan Your Visit</div>
+        <h2>Build your perfect<br><em>Cape Town itinerary</em></h2>
+        <p>Tell Ubuntu when you're visiting, what you love, and we'll build a day-by-day plan that includes the right markets, restaurants, and experiences for your trip.</p>
+      </div>
+      <a href="itinerary.html" class="btn-cta">Build My Trip ✈️</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trip What Will It Cost? · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
+      --sidebar-w: 200px;
+      --green: #4A7C59; --green-light: #7ab88a;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* HERO */
+    .hero {
+      position: relative; height: 50vh; min-height: 320px;
+      background: url('/photos/bree-street.jpg') center 50%/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.1) 0%, rgba(15,36,48,0.85) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 40px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 64px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 500px; margin-top: 14px; }
+
+    /* CONTENT */
+    .content { padding: 48px 60px 80px; max-width: 1000px; }
+
+    /* TOOL LAYOUT */
+    .tool-grid { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; }
+
+    /* INPUTS PANEL */
+    .inputs-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.12); border-radius: 16px; padding: 32px; }
+    .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 28px; color: var(--white); }
+
+    .field-group { margin-bottom: 24px; }
+    .field-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; display: block; }
+    .field-sub { font-size: 11px; color: var(--white-faint); margin-bottom: 10px; }
+
+    .number-input { display: flex; align-items: center; gap: 0; }
+    .num-btn { width: 36px; height: 36px; background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.2); color: var(--gold); font-size: 18px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+    .num-btn:first-child { border-radius: 8px 0 0 8px; }
+    .num-btn:last-child { border-radius: 0 8px 8px 0; }
+    .num-btn:hover { background: rgba(201,169,110,0.2); }
+    .num-val { width: 56px; height: 36px; background: rgba(255,255,255,0.06); border: 1px solid rgba(201,169,110,0.2); border-left: none; border-right: none; color: var(--white); font-size: 15px; font-weight: 500; text-align: center; font-family: 'Inter', sans-serif; }
+    .num-val:focus { outline: none; }
+
+    .style-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .style-btn { padding: 12px 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.15); border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .style-btn:hover { border-color: rgba(201,169,110,0.35); background: rgba(201,169,110,0.05); }
+    .style-btn.selected { border-color: var(--gold); background: rgba(201,169,110,0.1); }
+    .style-btn .style-icon { font-size: 20px; margin-bottom: 4px; }
+    .style-btn .style-name { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--white); }
+    .style-btn .style-hint { font-size: 10px; color: var(--white-faint); margin-top: 2px; }
+
+    .toggle-grid { display: flex; flex-direction: column; gap: 10px; }
+    .toggle-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .toggle-item:hover { border-color: rgba(201,169,110,0.25); }
+    .toggle-item.active { border-color: rgba(201,169,110,0.3); background: rgba(201,169,110,0.06); }
+    .toggle-left { display: flex; align-items: center; gap: 10px; }
+    .toggle-icon { font-size: 16px; width: 20px; text-align: center; }
+    .toggle-label { font-size: 13px; color: var(--white-dim); }
+    .toggle-switch { width: 36px; height: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; position: relative; transition: background 0.2s; }
+    .toggle-switch::after { content: ''; position: absolute; width: 14px; height: 14px; background: var(--white-faint); border-radius: 50%; top: 3px; left: 3px; transition: all 0.2s; }
+    .toggle-item.active .toggle-switch { background: var(--gold); }
+    .toggle-item.active .toggle-switch::after { left: 19px; background: var(--ocean-dark); }
+
+    /* RESULTS PANEL */
+    .results-panel { position: sticky; top: 24px; }
+    .results-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.2); border-radius: 16px; padding: 28px; margin-bottom: 16px; }
+    .results-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+
+    .budget-total { text-align: center; padding: 20px 0 24px; border-bottom: 1px solid rgba(201,169,110,0.1); margin-bottom: 20px; }
+    .budget-label { font-size: 11px; color: var(--white-faint); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .budget-amount { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--gold); line-height: 1; }
+    .budget-currency { font-size: 20px; vertical-align: super; }
+    .budget-per { font-size: 12px; color: var(--white-faint); margin-top: 4px; }
+    .budget-range { font-size: 13px; color: var(--white-dim); margin-top: 8px; }
+
+    .line-items { display: flex; flex-direction: column; gap: 2px; }
+    .line-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .line-item:last-child { border-bottom: none; }
+    .line-name { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--white-dim); }
+    .line-emoji { font-size: 14px; width: 18px; text-align: center; }
+    .line-amount { font-size: 13px; font-weight: 500; color: var(--white); }
+    .line-item.disabled .line-name, .line-item.disabled .line-amount { opacity: 0.3; text-decoration: line-through; }
+
+    .tips-card { background: rgba(74,124,89,0.08); border: 1px solid rgba(74,124,89,0.25); border-radius: 12px; padding: 20px; }
+    .tips-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green-light); margin-bottom: 14px; }
+    .tip { font-size: 12px; color: var(--white-dim); line-height: 1.6; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .tip:last-child { border-bottom: none; }
+    .tip strong { color: var(--white); }
+
+    .cta-box { background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.25); border-radius: 12px; padding: 20px; text-align: center; margin-top: 16px; }
+    .cta-text { font-size: 13px; color: var(--white-dim); line-height: 1.6; margin-bottom: 14px; }
+    .cta-btn { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 11px 24px; border-radius: 8px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+    .cta-btn:hover { background: var(--gold-light); }
+
+    .disclaimer { font-size: 11px; color: var(--white-faint); line-height: 1.6; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+    @media (max-width: 900px) { .tool-grid { grid-template-columns: 1fr; } .results-panel { position: static; } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero-content { padding: 24px; } .content { padding: 24px 20px 60px; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item active"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Cape Town</div>
+      <h1 class="hero-title">Trip <em>Budget</em><br>Calculator</h1>
+      <p class="hero-sub">Get a realistic cost estimate for your Cape Town trip — tailored to your travel style, group size, and the experiences you want.</p>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="tool-grid">
+
+      <!-- INPUTS -->
+      <div class="inputs-panel">
+        <div class="panel-title">Tell me about your trip</div>
+
+        <div class="field-group">
+          <label class="field-label">How many nights?</label>
+          <div class="number-input">
+            <button class="num-btn" onclick="change('nights', -1)">−</button>
+            <input class="num-val" id="nights" type="number" value="7" min="1" max="30" oninput="calculate()" />
+            <button class="num-btn" onclick="change('nights', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">How many travellers?</label>
+          <div class="number-input">
+            <button class="num-btn" onclick="change('people', -1)">−</button>
+            <input class="num-val" id="people" type="number" value="2" min="1" max="10" oninput="calculate()" />
+            <button class="num-btn" onclick="change('people', 1)">+</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Travel style</label>
+          <div class="style-grid">
+            <div class="style-btn" id="style-budget" onclick="setStyle('budget')">
+              <div class="style-icon">🎒</div>
+              <div class="style-name">Budget</div>
+              <div class="style-hint">Hostels, local eats</div>
+            </div>
+            <div class="style-btn selected" id="style-mid" onclick="setStyle('mid')">
+              <div class="style-icon">✦</div>
+              <div class="style-name">Mid-range</div>
+              <div class="style-hint">Guesthouses, bistros</div>
+            </div>
+            <div class="style-btn" id="style-luxury" onclick="setStyle('luxury')">
+              <div class="style-icon">🥂</div>
+              <div class="style-name">Luxury</div>
+              <div class="style-hint">Hotels, fine dining</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">What's included?</label>
+          <div class="toggle-grid">
+            <div class="toggle-item active" id="tog-accommodation" onclick="toggle('accommodation')">
+              <div class="toggle-left"><span class="toggle-icon">🏨</span><span class="toggle-label">Accommodation</span></div>
+              <div class="toggle-switch"></div>
+            </div>
+            <div class="toggle-item active" id="tog-food" onclick="toggle('food')">
+              <div class="toggle-left"><span class="toggle-icon">🍽️</span><span class="toggle-label">Food &amp; drinks</span></div>
+              <div class="toggle-switch"></div>
+            </div>
+            <div class="toggle-item active" id="tog-transport" onclick="toggle('transport')">
+              <div class="toggle-left"><span class="toggle-icon">🚗</span><span class="toggle-label">Transport &amp; car rental</span></div>
+              <div class="toggle-switch"></div>
+            </div>
+            <div class="toggle-item active" id="tog-activities" onclick="toggle('activities')">
+              <div class="toggle-left"><span class="toggle-icon">🏔️</span><span class="toggle-label">Activities &amp; experiences</span></div>
+              <div class="toggle-switch"></div>
+            </div>
+            <div class="toggle-item" id="tog-wine" onclick="toggle('wine')">
+              <div class="toggle-left"><span class="toggle-icon">🍷</span><span class="toggle-label">Wine tasting</span></div>
+              <div class="toggle-switch"></div>
+            </div>
+            <div class="toggle-item" id="tog-shopping" onclick="toggle('shopping')">
+              <div class="toggle-left"><span class="toggle-icon">🛍️</span><span class="toggle-label">Shopping &amp; souvenirs</span></div>
+              <div class="toggle-switch"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Day trips?</label>
+          <div class="style-grid">
+            <div class="style-btn selected" id="dt-none" onclick="setDaytrips('none')">
+              <div class="style-icon">🏙️</div>
+              <div class="style-name">City only</div>
+              <div class="style-hint">No day trips</div>
+            </div>
+            <div class="style-btn" id="dt-some" onclick="setDaytrips('some')">
+              <div class="style-icon">🌿</div>
+              <div class="style-name">A few</div>
+              <div class="style-hint">1–2 day trips</div>
+            </div>
+            <div class="style-btn" id="dt-full" onclick="setDaytrips('full')">
+              <div class="style-icon">🗺️</div>
+              <div class="style-name">Explorer</div>
+              <div class="style-hint">3+ day trips</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results-panel">
+        <div class="results-card">
+          <div class="results-title">Your estimated budget</div>
+
+          <div class="budget-total">
+            <div class="budget-label">Total trip cost</div>
+            <div class="budget-amount"><span class="budget-currency">€</span><span id="total">0</span></div>
+            <div class="budget-per" id="per-person"></div>
+            <div class="budget-range" id="budget-range"></div>
+          </div>
+
+          <div class="line-items" id="line-items">
+            <div class="line-item" id="li-accommodation">
+              <div class="line-name"><span class="line-emoji">🏨</span> Accommodation</div>
+              <div class="line-amount" id="la-accommodation">€0</div>
+            </div>
+            <div class="line-item" id="li-food">
+              <div class="line-name"><span class="line-emoji">🍽️</span> Food &amp; drinks</div>
+              <div class="line-amount" id="la-food">€0</div>
+            </div>
+            <div class="line-item" id="li-transport">
+              <div class="line-name"><span class="line-emoji">🚗</span> Transport</div>
+              <div class="line-amount" id="la-transport">€0</div>
+            </div>
+            <div class="line-item" id="li-activities">
+              <div class="line-name"><span class="line-emoji">🏔️</span> Activities</div>
+              <div class="line-amount" id="la-activities">€0</div>
+            </div>
+            <div class="line-item" id="li-wine">
+              <div class="line-name"><span class="line-emoji">🍷</span> Wine tasting</div>
+              <div class="line-amount" id="la-wine">€0</div>
+            </div>
+            <div class="line-item" id="li-shopping">
+              <div class="line-name"><span class="line-emoji">🛍️</span> Shopping</div>
+              <div class="line-amount" id="la-shopping">€0</div>
+            </div>
+            <div class="line-item" id="li-daytrips">
+              <div class="line-name"><span class="line-emoji">🗺️</span> Day trips</div>
+              <div class="line-amount" id="la-daytrips">€0</div>
+            </div>
+          </div>
+
+          <div class="disclaimer">Estimates based on May 2026 prices (€1 ≈ R20). Cape Town is exceptional value for European and US travellers — a luxury dinner for two rarely exceeds €40.</div>
+        </div>
+
+        <div class="tips-card" id="tips-card">
+          <div class="tips-title">💡 Dirk's money tips</div>
+          <div id="tips-content"></div>
+        </div>
+
+        <div class="cta-box">
+          <p class="cta-text">Want a fully personalised itinerary built around your budget and interests?</p>
+          <a href="https://thecapetownguide.com" class="cta-btn">Talk to Ubuntu →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  let style = 'mid';
+  let daytrips = 'none';
+  const toggles = { accommodation: true, food: true, transport: true, activities: true, wine: false, shopping: false };
+
+  // Per person per night rates (€)
+  const rates = {
+    budget: { accommodation: 25, food: 18, transport: 8, activities: 10 },
+    mid:    { accommodation: 70, food: 35, transport: 18, activities: 20 },
+    luxury: { accommodation: 200, food: 80, transport: 35, activities: 45 }
+  };
+
+  const wineCosts = { budget: 20, mid: 50, luxury: 120 };      // per person total
+  const shoppingCosts = { budget: 30, mid: 80, luxury: 200 };   // per person total
+  const daytripCosts = { none: 0, some: 60, full: 140 };        // per person total
+
+  const tipsMap = {
+    budget: [
+      '<strong>ZAR goes far:</strong> €1 = ~R20. A local lunch at a market costs R80–120 (€4–6).',
+      '<strong>Uber is cheap:</strong> City centre to Sea Point ≈ R60 (€3). Skip taxis.',
+      '<strong>Free hikes:</strong> Lion\'s Head, Signal Hill, and most Table Mountain trails cost nothing.',
+      '<strong>OZCF Market:</strong> Best budget breakfast in Cape Town — Saturdays at De Waal Park.',
+    ],
+    mid: [
+      '<strong>Book restaurants early:</strong> The best spots on Bree Street fill up fast, especially weekends.',
+      '<strong>Wine is incredible value:</strong> A bottle of serious Stellenbosch red costs €6–12 at the estate.',
+      '<strong>Rent a car for day trips:</strong> Sixt and Avis have reasonable rates — non-negotiable for the Peninsula.',
+      '<strong>Avoid the Waterfront for dinner:</strong> Walk 10 min and eat better for half the price.',
+    ],
+    luxury: [
+      '<strong>Tintswalo Atlantic:</strong> Worth every cent — ocean-side rooms below Chapman\'s Peak.',
+      '<strong>Test Kitchen returns:</strong> Luke Dale-Roberts is back — book the moment reservations open.',
+      '<strong>Private wine tours:</strong> A guide, a driver, and 4 estates for a day ≈ €150 pp — extraordinary value vs Europe.',
+      '<strong>Helicopter over the Peninsula:</strong> ~€120 pp. The view changes everything.',
+    ]
+  };
+
+  function change(id, delta) {
+    const el = document.getElementById(id);
+    el.value = Math.max(parseInt(el.min), Math.min(parseInt(el.max), parseInt(el.value) + delta));
+    calculate();
+  }
+
+  function setStyle(s) {
+    style = s;
+    ['budget', 'mid', 'luxury'].forEach(x => document.getElementById('style-' + x).classList.toggle('selected', x === s));
+    calculate();
+  }
+
+  function setDaytrips(d) {
+    daytrips = d;
+    ['none', 'some', 'full'].forEach(x => document.getElementById('dt-' + x).classList.toggle('selected', x === d));
+    calculate();
+  }
+
+  function toggle(key) {
+    toggles[key] = !toggles[key];
+    document.getElementById('tog-' + key).classList.toggle('active', toggles[key]);
+    calculate();
+  }
+
+  function fmt(n) { return Math.round(n).toLocaleString('en-EU'); }
+
+  function calculate() {
+    const nights = parseInt(document.getElementById('nights').value) || 7;
+    const people = parseInt(document.getElementById('people').value) || 2;
+    const r = rates[style];
+
+    const costs = {
+      accommodation: toggles.accommodation ? r.accommodation * nights * Math.ceil(people / 2) : 0,
+      food:          toggles.food          ? r.food * nights * people : 0,
+      transport:     toggles.transport     ? r.transport * nights * people : 0,
+      activities:    toggles.activities    ? r.activities * nights * people : 0,
+      wine:          toggles.wine          ? wineCosts[style] * people : 0,
+      shopping:      toggles.shopping      ? shoppingCosts[style] * people : 0,
+      daytrips:      daytripCosts[daytrips] * people,
+    };
+
+    const total = Object.values(costs).reduce((a, b) => a + b, 0);
+    const perPerson = total / people;
+
+    document.getElementById('total').textContent = fmt(total);
+    document.getElementById('per-person').textContent = `€${fmt(perPerson)} per person`;
+    document.getElementById('budget-range').textContent = `roughly €${fmt(total * 0.85)}–€${fmt(total * 1.15)} with variation`;
+
+    // Line items
+    ['accommodation', 'food', 'transport', 'activities', 'wine', 'shopping'].forEach(key => {
+      document.getElementById('la-' + key).textContent = costs[key] > 0 ? '€' + fmt(costs[key]) : '—';
+      document.getElementById('li-' + key).classList.toggle('disabled', costs[key] === 0 && !toggles[key]);
+    });
+    document.getElementById('la-daytrips').textContent = costs.daytrips > 0 ? '€' + fmt(costs.daytrips) : '—';
+    document.getElementById('li-daytrips').classList.toggle('disabled', costs.daytrips === 0);
+
+    // Tips
+    const tips = tipsMap[style];
+    document.getElementById('tips-content').innerHTML = tips.map(t => `<div class="tip">${t}</div>`).join('');
+  }
+
+  calculate();
+</script>
+
+</body>
+</html>

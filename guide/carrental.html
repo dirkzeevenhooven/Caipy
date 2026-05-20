@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Rental Guide · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --sidebar-w: 200px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-w);
+      height: 100vh; background: var(--ocean-dark);
+      border-right: 1px solid rgba(201,169,110,0.12);
+      display: flex; flex-direction: column; z-index: 100; overflow-y: auto;
+    }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold); background: rgba(201,169,110,0.06); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .main { margin-left: var(--sidebar-w); }
+    .hero {
+      position: relative; height: 55vh; min-height: 380px;
+      background: url('/photos/rentamercedes01.jpeg') center 35%/cover no-repeat;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(201,169,110,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(27,58,75,0.8) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 2; padding: 40px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 300; line-height: 1.1; }
+    .hero-title em { font-style: italic; color: var(--gold); }
+
+    .content { padding: 60px; max-width: 1100px; }
+    .intro { font-size: 16px; color: var(--white-dim); line-height: 1.8; max-width: 680px; margin-bottom: 56px; }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400;
+      margin-bottom: 8px; color: var(--white);
+    }
+    .section-sub {
+      font-size: 12px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 64px; }
+    .market-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 12px; padding: 28px; transition: all 0.25s;
+    }
+    .market-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.25); transform: translateY(-2px); }
+    .market-tag { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .market-name { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; margin-bottom: 6px; }
+    .market-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+    .market-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,169,110,0.3); padding-bottom: 2px; transition: border-color 0.2s; margin-top: 16px; }
+    .market-link:hover { border-color: var(--gold); }
+
+    .verdict-badge {
+      display: inline-block; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      background: rgba(201,169,110,0.12); border: 1px solid rgba(201,169,110,0.25);
+      color: var(--gold); padding: 3px 10px; border-radius: 20px; margin-bottom: 10px;
+    }
+
+    .tip-list { list-style: none; margin-bottom: 64px; }
+    .tip-list li {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 18px 0; border-bottom: 1px solid rgba(201,169,110,0.08);
+      font-size: 14px; color: var(--white-dim); line-height: 1.7;
+    }
+    .tip-list li:last-child { border-bottom: none; }
+    .tip-icon { font-size: 16px; min-width: 24px; text-align: center; margin-top: 2px; }
+    .tip-text strong { color: var(--white); display: block; margin-bottom: 2px; font-size: 13px; font-weight: 500; }
+
+    .cost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 64px; }
+    .cost-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
+      border-radius: 12px; padding: 28px 24px; text-align: center; transition: all 0.25s;
+    }
+    .cost-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.25); }
+    .cost-type { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .cost-price { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; color: var(--white); line-height: 1; margin-bottom: 4px; }
+    .cost-unit { font-size: 11px; color: var(--white-dim); }
+    .cost-note { font-size: 12px; color: rgba(250,248,244,0.45); margin-top: 14px; line-height: 1.5; }
+
+    .insurance-note {
+      background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 10px; padding: 20px 24px; margin-top: 24px; margin-bottom: 64px;
+      font-size: 13px; color: var(--white-dim); line-height: 1.7;
+    }
+    .insurance-note strong { color: var(--gold); }
+
+    .cta-block {
+      background: linear-gradient(135deg, rgba(27,58,75,0.8) 0%, rgba(15,36,48,0.9) 100%);
+      border: 1px solid rgba(201,169,110,0.25); border-radius: 16px;
+      padding: 48px 40px; text-align: center; margin-bottom: 40px;
+    }
+    .cta-block h2 { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; margin-bottom: 12px; }
+    .cta-block p { font-size: 14px; color: var(--white-dim); max-width: 440px; margin: 0 auto 28px; line-height: 1.7; }
+    .cta-btn {
+      display: inline-block; background: var(--gold); color: #0F2430;
+      font-size: 13px; font-weight: 600; letter-spacing: 1px;
+      padding: 14px 32px; border-radius: 8px; text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .cta-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero-content { padding: 24px; } .content { padding: 24px; } }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
+  <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">📋</span> Travel Essentials</a>
+  <a href="carrental.html" class="sidebar-item active"><span class="icon">🚗</span> Car Rental</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
+  <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Cape Town</div>
+      <h1 class="hero-title">Renting a Car in<br><em>Cape Town</em></h1>
+    </div>
+  </div>
+
+  <div class="content">
+    <p class="intro">A car is non-negotiable if you want to explore beyond the city. The Peninsula drive, the Winelands, Chapman's Peak — none of it works without wheels. Uber is perfectly fine for getting around town, but rent a car for at least part of your trip. You won't regret it.</p>
+
+    <!-- Section 1: Do you actually need one? -->
+    <div class="section-title">Do you actually need one?</div>
+    <div class="section-sub">It depends entirely on how you're spending your days</div>
+
+    <div class="market-grid">
+
+      <div class="market-card">
+        <div class="verdict-badge">No car needed</div>
+        <div class="market-name">City-only travel</div>
+        <p class="market-desc">If your trip is Sea Point, the Waterfront, Bo-Kaap, and the City Bowl, Uber works brilliantly and is cheap by international standards. Parking in the city is a pain anyway. Save the car rental for when you actually need it.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="verdict-badge">Car essential</div>
+        <div class="market-name">Peninsula &amp; beaches</div>
+        <p class="market-desc">Llandudno, Boulders Beach, Cape Point, Chapman's Peak — there is simply no other way to do this properly. No Uber driver will wait at Cape Point for two hours. This is the single biggest reason to rent a car in Cape Town.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="verdict-badge">Car or tour group</div>
+        <div class="market-name">Winelands day trip</div>
+        <p class="market-desc">You need a car to get to Stellenbosch or Franschhoek — but you can't drink and drive. Either assign a non-drinking driver, or book a dedicated wine tour. Plenty of excellent half-day and full-day options run from Cape Town.</p>
+      </div>
+
+      <div class="market-card">
+        <div class="verdict-badge">Car essential</div>
+        <div class="market-name">Hermanus &amp; day trips</div>
+        <p class="market-desc">Hermanus for whale watching, the Cederberg for landscapes, Langebaan for the lagoon — these are all car trips. None are reachable by public transport in any practical way. Budget a few extra days and go explore.</p>
+      </div>
+
+    </div>
+
+    <!-- Section 2: Which company to use -->
+    <div class="section-title">Which company to use</div>
+    <div class="section-sub">My honest take on the main options</div>
+
+    <div class="market-grid">
+
+      <div class="market-card">
+        <div class="market-tag">Dirk's pick</div>
+        <div class="market-name">Sixt</div>
+        <p class="market-desc">Consistently the best cars at competitive prices. Clean vehicles, straightforward process, and the airport pickup in Cape Town is well-organised. I use Sixt most trips. Book ahead online for the best rates — walk-in pricing is painful.</p>
+        <a href="https://www.sixt.co.za" class="market-link" target="_blank">sixt.co.za →</a>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Reliable choice</div>
+        <div class="market-name">Avis</div>
+        <p class="market-desc">The default choice for a reason — reliable, consistent, and their airport counter at Cape Town International is easy to find. Good for one-way rentals if you're doing Cape Town to Garden Route. Slightly pricier but zero surprises.</p>
+        <a href="https://www.avis.co.za" class="market-link" target="_blank">avis.co.za →</a>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Budget option</div>
+        <div class="market-name">Budget / Europcar</div>
+        <p class="market-desc">Lower rates, but read the fine print carefully. Hidden fees for cross-border travel, GPS, and young driver surcharges can add up fast. Perfectly usable, just know what you're signing. Check excess amounts on the CDW policy.</p>
+        <a href="https://www.budget.co.za" class="market-link" target="_blank">budget.co.za →</a>
+      </div>
+
+      <div class="market-card">
+        <div class="market-tag">Price comparison</div>
+        <div class="market-name">Rentalcars.com</div>
+        <p class="market-desc">The fastest way to see all your options side by side. Good for checking whether booking direct is actually cheaper (sometimes it is, sometimes it isn't). Use it to calibrate your expectations before committing to any single provider.</p>
+        <a href="https://www.rentalcars.com" class="market-link" target="_blank">rentalcars.com →</a>
+      </div>
+
+    </div>
+
+    <!-- Section 3: Driving tips -->
+    <div class="section-title">Driving tips</div>
+    <div class="section-sub">Things worth knowing before you get behind the wheel</div>
+
+    <ul class="tip-list">
+      <li>
+        <span class="tip-icon">🇬🇧</span>
+        <div class="tip-text">
+          <strong>Drive on the left</strong>
+          South Africa follows UK road rules — left-hand traffic, overtake on the right. It catches first-timers off guard at roundabouts. Take the first day slowly and you'll adapt faster than you think.
+        </div>
+      </li>
+      <li>
+        <span class="tip-icon">🗺️</span>
+        <div class="tip-text">
+          <strong>Stick to main routes</strong>
+          Avoid driving through townships — not because it's always dangerous, but because navigating without local knowledge creates unnecessary situations. N1, N2, M3, and the Peninsula routes are all completely fine.
+        </div>
+      </li>
+      <li>
+        <span class="tip-icon">🏔️</span>
+        <div class="tip-text">
+          <strong>Chapman's Peak toll: ~R55. Worth every cent.</strong>
+          One of the most spectacular coastal drives in the world. The toll is a bargain. Go late afternoon with the light coming in from the west — you'll understand why people move to Cape Town.
+        </div>
+      </li>
+      <li>
+        <span class="tip-icon">🅿️</span>
+        <div class="tip-text">
+          <strong>Use guarded parking only</strong>
+          In the city especially — look for official parking garages or lots with an attendant. Many areas have informal car guards (tip R5–10 when you return). Never leave your car on an unlit street overnight.
+        </div>
+      </li>
+      <li>
+        <span class="tip-icon">🚫</span>
+        <div class="tip-text">
+          <strong>Nothing visible in the car</strong>
+          Ever. Bags on seats, cameras on dashboards, sunglasses in the cupholder — all of it out of sight, in the boot or with you. This applies across South Africa, not just Cape Town.
+        </div>
+      </li>
+      <li>
+        <span class="tip-icon">📱</span>
+        <div class="tip-text">
+          <strong>Google Maps works perfectly</strong>
+          Download the Cape Town area for offline use before you leave your accommodation. Data can be patchy on the Peninsula and in the Winelands. Offline maps have saved me more than once.
+        </div>
+      </li>
+      <li>
+        <span class="tip-icon">⛽</span>
+        <div class="tip-text">
+          <strong>Petrol stations: Engen and BP are reliable</strong>
+          Attendants fill your tank for you — that's just how it works here. Tip R5–10. Pay by card wherever possible. Don't let the tank get below a quarter on the Peninsula — stations are further apart than they look.
+        </div>
+      </li>
+      <li>
+        <span class="tip-icon">📸</span>
+        <div class="tip-text">
+          <strong>Speed cameras on the N1 and N2</strong>
+          Common and unforgiving. Speed limits are taken seriously, and fines follow you internationally through the rental company. Set your speed alerts and stay 10km/h below the limit on highways.
+        </div>
+      </li>
+    </ul>
+
+    <!-- Section 4: Estimated costs -->
+    <div class="section-title">What to budget</div>
+    <div class="section-sub">Approximate daily rental rates in South African Rand</div>
+
+    <div class="cost-grid">
+
+      <div class="cost-card">
+        <div class="cost-type">Budget car</div>
+        <div class="cost-price">R400–600</div>
+        <div class="cost-unit">per day</div>
+        <div class="cost-note">Small hatchback. Volkswagen Polo, Toyota Yaris. Fine for the Peninsula and city — struggles on dirt roads.</div>
+      </div>
+
+      <div class="cost-card">
+        <div class="cost-type">Mid-range</div>
+        <div class="cost-price">R700–1000</div>
+        <div class="cost-unit">per day</div>
+        <div class="cost-note">Comfortable sedan or small SUV. The sweet spot for most trips. Plenty of boot space, better on longer drives.</div>
+      </div>
+
+      <div class="cost-card">
+        <div class="cost-type">SUV / Premium</div>
+        <div class="cost-price">R1200–2000</div>
+        <div class="cost-unit">per day</div>
+        <div class="cost-note">Full SUV or luxury vehicle. Worth it if you're heading to the Cederberg or doing a Garden Route trip with rough terrain.</div>
+      </div>
+
+    </div>
+
+    <div class="insurance-note">
+      <strong>On insurance:</strong> CDW (Collision Damage Waiver) is usually included in the base rate — but always check the excess amount. Standard excess can be R10,000–25,000, meaning that's what you pay out of pocket if anything happens before insurance kicks in. You can reduce this to near zero for an extra R100–200/day. Worth considering if you're doing mountain or coastal drives.
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <h2>Need help planning your route?</h2>
+      <p>Not sure which days to rent, where to drive, or how to structure your Peninsula loop? Talk to Ubuntu — get a personalised Cape Town itinerary in seconds.</p>
+      <a href="https://thecapetownguide.com" class="cta-btn">Talk to Ubuntu →</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

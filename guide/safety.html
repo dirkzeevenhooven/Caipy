@@ -182,6 +182,22 @@
     .re-stat-text { font-size: 13px; color: var(--white-dim); line-height: 1.5; }
     .re-stat-text strong { color: var(--white); }
 
+    /* ── CONFIDENCE FRAMEWORK ── */
+    .framework-strip {
+      background: linear-gradient(135deg, rgba(201,169,110,0.07) 0%, rgba(201,169,110,0.02) 100%);
+      border: 1px solid rgba(201,169,110,0.22); border-radius: 16px;
+      padding: 44px; margin-bottom: 40px;
+    }
+    .framework-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .framework-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.5vw, 30px); font-weight: 400; line-height: 1.2; margin-bottom: 28px; }
+    .framework-title em { font-style: italic; color: var(--gold); }
+    .framework-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .framework-item { display: flex; align-items: flex-start; gap: 16px; background: rgba(15,36,48,0.45); border: 1px solid rgba(201,169,110,0.1); border-radius: 10px; padding: 16px 20px; }
+    .framework-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--gold); line-height: 1; flex-shrink: 0; min-width: 28px; }
+    .framework-text { font-size: 14px; color: var(--white); line-height: 1.6; font-weight: 500; display: flex; align-items: center; }
+    .btn-framework { display: inline-flex; align-items: center; gap: 10px; padding: 13px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; transition: background 0.2s; }
+    .btn-framework:hover { background: var(--gold-light); }
+
     /* ── CTA ── */
     .cta-strip { margin-top: 60px; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
     .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
@@ -227,25 +243,34 @@
     <div class="brand">Planet Curated</div>
     <div class="sub">Cape Town Guide</div>
   </div>
+  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
   <div class="sidebar-section">Dashboard</div>
-  <a href="index.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="home.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
   <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <a href="live.html" class="sidebar-item"><span class="icon">🌤️</span> Live Cape Town</a>
+  <div class="sidebar-section">Where to Stay</div>
+  <a href="stay.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
   <div class="sidebar-section">Discover</div>
   <a href="experiences.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
   <a href="hidden-gems.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
-  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <a href="neighbourhoods.html" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
   <div class="sidebar-section">Eat & Drink</div>
-  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Food</a>
-  <a href="food.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
+  <a href="food.html" class="sidebar-item"><span class="icon">🍽️</span> Restaurants & Foodies</a>
+  <a href="markets.html" class="sidebar-item"><span class="icon">🛒</span> Markets</a>
   <a href="wine.html" class="sidebar-item"><span class="icon">🍷</span> Wine & Winelands</a>
   <div class="sidebar-section">Outdoors</div>
   <a href="beaches.html" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
-  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Hikes & Outdoors</a>
+  <a href="hikes.html" class="sidebar-item"><span class="icon">🥾</span> Outdoor Activities</a>
   <a href="daytrips.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
   <div class="sidebar-section">Plan Your Trip</div>
   <a href="safety.html" class="sidebar-item active"><span class="icon">🛡️</span> Safety Guide</a>
-  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
-  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Itinerary Builder</a>
+  <a href="practical.html" class="sidebar-item"><span class="icon">ℹ️</span> Travel Essentials</a>
+  <a href="budget.html" class="sidebar-item"><span class="icon">💰</span> What Will It Cost?</a>
+  <a href="carrental.html" class="sidebar-item"><span class="icon">🚘</span> Do I Need a Car?</a>
+  <a href="slang.html" class="sidebar-item"><span class="icon">🗣️</span> Local Lingo</a>
+  <a href="kids.html" class="sidebar-item"><span class="icon">👨‍👩‍👧‍👦</span> Cape Town with Kids</a>
+  <a href="packing.html" class="sidebar-item"><span class="icon">🎒</span> Packing List</a>
+  <a href="itinerary.html" class="sidebar-item"><span class="icon">✈️</span> Build My Trip</a>
   <a href="myguide.html" class="sidebar-item"><span class="icon">📖</span> My Guide</a>
 </nav>
 
@@ -474,6 +499,35 @@
       </div>
     </div>
 
+    <!-- CONFIDENCE FRAMEWORK -->
+    <div class="framework-strip">
+      <div class="framework-label">Dirk's Approach</div>
+      <h3 class="framework-title">Dirk's Safety <em>Confidence Framework</em></h3>
+      <div class="framework-list">
+        <div class="framework-item">
+          <span class="framework-num">1</span>
+          <span class="framework-text">Stay switched on, not scared</span>
+        </div>
+        <div class="framework-item">
+          <span class="framework-num">2</span>
+          <span class="framework-text">Choose the right areas at the right times</span>
+        </div>
+        <div class="framework-item">
+          <span class="framework-num">3</span>
+          <span class="framework-text">Use Uber or trusted transport at night</span>
+        </div>
+        <div class="framework-item">
+          <span class="framework-num">4</span>
+          <span class="framework-text">Do not flash valuables</span>
+        </div>
+        <div class="framework-item">
+          <span class="framework-num">5</span>
+          <span class="framework-text">Ask local advice before hiking or exploring unfamiliar areas</span>
+        </div>
+      </div>
+      <a href="itinerary.html" class="btn-framework">Plan My Trip Safely ✈️</a>
+    </div>
+
     <!-- REASSURANCE -->
     <div class="reassurance">
       <div>
@@ -494,9 +548,9 @@
     <div class="cta-strip">
       <div class="cta-text">
         <h3>Have a specific safety question?</h3>
-        <p>Ask Caipy anything — which areas to avoid at night, how to get somewhere safely, what to do if something goes wrong. She knows Cape Town inside out.</p>
+        <p>Ask Ubuntu anything — which areas to avoid at night, how to get somewhere safely, what to do if something goes wrong. Ubuntu knows Cape Town inside out.</p>
       </div>
-      <a href="index.html#caipy" class="btn-cta">Ask Caipy →</a>
+      <a href="https://thecapetownguide.com" class="btn-cta">Ask Ubuntu →</a>
     </div>
 
   </div>
@@ -505,7 +559,7 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
-    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
     <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
     <a href="experiences.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
     <a href="itinerary.html" class="bottom-nav-item"><span class="nav-icon">✈️</span>Plan</a>
