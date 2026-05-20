@@ -91,15 +91,16 @@
     .field-note-role { font-size: 11px; color: var(--ink-light); letter-spacing: 0.3px; margin-top: 2px; }
 
     /* ─── NEIGHBOURHOOD GRID ─── */
-    .neigh-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 36px; margin-bottom: 80px; }
+    .neigh-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 80px; }
 
     .neigh-card {
-      border-radius: 16px; overflow: hidden;
-      box-shadow: 0 6px 32px rgba(0,0,0,0.32);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.28);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
       cursor: pointer;
     }
-    .neigh-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.42); }
+    .neigh-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.42); }
+    .neigh-card:hover .neigh-name { color: var(--gold-light); }
 
     /* ─── CARD EXPAND MODAL ─── */
     .card-modal-backdrop {
@@ -146,43 +147,39 @@
     .card-modal-details { border-top: 1px solid rgba(15,36,48,0.1); padding-top: 18px; margin-bottom: 20px; }
     .card-modal-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 
-    /* Photo strip */
+    /* Photo */
     .neigh-photo {
-      height: 248px; background: center/cover no-repeat;
+      height: 160px; background: center/cover no-repeat;
       position: relative; overflow: hidden;
     }
     .neigh-photo::after {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 35%, rgba(15,36,48,0.65) 100%);
+      background: linear-gradient(to bottom, transparent 25%, rgba(15,36,48,0.7) 100%);
     }
     .neigh-photo-meta {
       position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
-      padding: 16px 24px; display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 10px 14px;
     }
-    .neigh-area { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(250,248,244,0.75); }
-    .neigh-photo-cta {
-      font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-      color: rgba(250,248,244,0.6); text-decoration: none;
-      border-bottom: 1px solid rgba(250,248,244,0.25); padding-bottom: 1px;
-      transition: all 0.2s;
-    }
-    .neigh-photo-cta:hover { color: var(--gold); border-color: var(--gold); }
+    .neigh-area { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(250,248,244,0.65); }
+    .neigh-photo-cta { display: none; }
 
-    /* Cream content panel */
-    .neigh-body { background: var(--cream); padding: 32px 32px 28px; }
+    /* Compact name strip */
+    .neigh-body { background: var(--cream); padding: 12px 14px 14px; }
     .neigh-name {
-      font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400;
-      color: var(--ink); line-height: 1.1; margin-bottom: 14px;
+      font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400;
+      color: var(--ink); line-height: 1.15; margin-bottom: 5px;
+      transition: color 0.2s;
     }
-    .neigh-vibe { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .neigh-vibe { display: flex; gap: 4px; flex-wrap: wrap; }
     .vibe-tag {
-      background: rgba(15,36,48,0.07); border: 1px solid rgba(15,36,48,0.14);
-      border-radius: 20px; padding: 4px 13px; font-size: 11px;
-      color: var(--ink); font-weight: 500; letter-spacing: 0.2px;
+      background: rgba(15,36,48,0.06); border: 1px solid rgba(15,36,48,0.1);
+      border-radius: 20px; padding: 2px 8px; font-size: 9px;
+      color: var(--ink-light); font-weight: 500;
     }
-    .neigh-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.88; margin-bottom: 24px; }
+    /* Hidden in compact cards — used in modal only */
+    .neigh-desc, .neigh-details, .neigh-footer { display: none; }
 
-    .neigh-details { border-top: 1px solid rgba(15,36,48,0.1); padding-top: 22px; margin-bottom: 22px; }
+    /* Detail styles (reused inside modal) */
     .detail-row { display: flex; gap: 14px; margin-bottom: 11px; }
     .detail-label {
       font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
@@ -190,8 +187,6 @@
       font-weight: 600; opacity: 0.55; flex-shrink: 0;
     }
     .detail-val { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
-
-    .neigh-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 4px; }
     .neigh-map-link {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 12px; color: var(--ink-light); text-decoration: none;
@@ -447,7 +442,7 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1100px) {
-      .neigh-grid { grid-template-columns: 1fr; max-width: 680px; }
+      .neigh-grid { grid-template-columns: repeat(2, 1fr); }
       .content { padding: 56px; }
       .hero-content { padding: 48px 56px; }
       .field-note { padding: 40px; }
