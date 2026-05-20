@@ -420,15 +420,21 @@
   // Hero video crossfade
   (function(){
     const vs = ['hv-a','hv-b','hv-c','hv-d','hv-e'].map(id => document.getElementById(id));
-    let cur = 0;
-    vs.forEach((v, i) => v.addEventListener('ended', () => {
+    let cur = 0, timer;
+    function advance() {
+      clearTimeout(timer);
       const prev = cur;
       cur = (cur + 1) % vs.length;
       vs[cur].style.opacity = '1';
-      vs[cur].play();
-      vs[prev].style.opacity = '0';
-      setTimeout(() => vs[prev].pause(), 1500);
-    }));
+      const p = vs[cur].play();
+      if (p) p.catch(() => { vs[cur].style.opacity='0'; setTimeout(advance, 100); return; });
+      setTimeout(() => { vs[prev].style.opacity = '0'; setTimeout(() => vs[prev].pause(), 1600); }, 200);
+      // Safety: if next video stalls, advance after 14s
+      timer = setTimeout(advance, 14000);
+    }
+    vs.forEach(v => { v.addEventListener('ended', advance); v.addEventListener('error', advance); });
+    // Start safety timer for first video
+    timer = setTimeout(advance, 14000);
   })();
 </script>
 
