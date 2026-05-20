@@ -420,34 +420,48 @@
 </div>
 
 <script>
-  // Weather travel intelligence
-  function getWeatherAdvice(temp, weatherId, windSpeed) {
-    if (weatherId >= 200 && weatherId < 300) return 'Thunderstorms expected — perfect day for wine tasting indoors';
-    if (weatherId >= 500 && weatherId < 600) return 'Rainy day — head to the Waterfront or a museum';
-    if (windSpeed > 10) return 'South-easter is up — False Bay beaches are calmer today';
-    if (weatherId === 800 && temp > 22) return 'Perfect for Table Mountain — go before noon';
-    if (weatherId === 800 && temp <= 22) return 'Clear skies — great day for the Cape Peninsula drive';
-    if (weatherId >= 801 && weatherId <= 802) return 'Partly cloudy — ideal for Boulders Beach';
-    if (weatherId >= 803) return 'Overcast — a good excuse for a winelands day trip';
-    return 'Good conditions for exploring the city';
+  // Open-Meteo WMO code → label + travel advice
+  function parseWeather(code, temp, wind) {
+    let desc, advice;
+    if (code === 0) { desc = 'Clear sky'; }
+    else if (code <= 2) { desc = 'Partly cloudy'; }
+    else if (code === 3) { desc = 'Overcast'; }
+    else if (code <= 48) { desc = 'Foggy'; }
+    else if (code <= 55) { desc = 'Light drizzle'; }
+    else if (code <= 65) { desc = 'Rain'; }
+    else if (code <= 75) { desc = 'Snow'; }
+    else if (code <= 82) { desc = 'Rain showers'; }
+    else { desc = 'Thunderstorms'; }
+
+    if (code >= 95) advice = 'Thunderstorms expected — perfect day for wine tasting indoors';
+    else if (code >= 61 && code <= 82) advice = 'Rainy day — head to the Waterfront or a V&A café';
+    else if (wind > 10) advice = 'South-easter is up — False Bay beaches are calmer today';
+    else if (code === 0 && temp > 22) advice = 'Perfect for Table Mountain — go before noon';
+    else if (code === 0) advice = 'Clear skies — great day for the Cape Peninsula drive';
+    else if (code <= 2) advice = 'Partly cloudy — ideal for Boulders Beach';
+    else if (code === 3) advice = 'Overcast — a good excuse for a winelands day trip';
+    else advice = 'Good conditions for exploring the city';
+
+    return { desc, advice };
   }
 
   async function loadWeather() {
     try {
-      const res = await fetch('https://api.openweathermap.org/data/2.5/weather?lat=-33.9249&lon=18.4241&units=metric&appid=demo');
+      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.9249&longitude=18.4241&current=temperature_2m,weather_code,wind_speed_10m&wind_speed_unit=ms');
       if (!res.ok) throw new Error();
       const d = await res.json();
-      const temp = Math.round(d.main.temp);
-      const weatherId = d.weather[0].id;
-      const windSpeed = d.wind ? d.wind.speed : 0;
+      const temp = Math.round(d.current.temperature_2m);
+      const wind = d.current.wind_speed_10m;
+      const code = d.current.weather_code;
+      const { desc, advice } = parseWeather(code, temp, wind);
       document.getElementById('hw-temp').textContent = temp + '°C';
-      document.getElementById('hw-desc').textContent = d.weather[0].description;
+      document.getElementById('hw-desc').textContent = desc;
       const adviceEl = document.getElementById('hw-advice');
-      adviceEl.textContent = getWeatherAdvice(temp, weatherId, windSpeed);
+      adviceEl.textContent = advice;
       adviceEl.style.display = 'block';
     } catch(e) {
-      document.getElementById('hw-temp').textContent = '20°C';
-      document.getElementById('hw-desc').textContent = 'Partly cloudy';
+      document.getElementById('hw-temp').textContent = '--°';
+      document.getElementById('hw-desc').textContent = 'Cape Town';
     }
   }
 
