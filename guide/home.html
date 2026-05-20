@@ -127,13 +127,14 @@
     body.nav-hidden .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
     body.nav-hidden .main { margin-left: 0; }
     .nav-toggle {
-      position: fixed; top: 16px; left: 16px; z-index: 200;
+      position: fixed; top: 16px; left: calc(var(--sidebar-w) - 17px); z-index: 200;
       width: 34px; height: 34px; border-radius: 50%;
       background: rgba(15,36,48,0.7); border: 1px solid rgba(201,169,110,0.3);
       color: var(--gold); cursor: pointer; display: flex; align-items: center; justify-content: center;
       font-size: 14px; transition: all 0.2s; backdrop-filter: blur(6px);
     }
     .nav-toggle:hover { background: rgba(201,169,110,0.15); border-color: var(--gold); }
+    .nav-toggle { transition: left 0.35s ease; }
     body.nav-hidden .nav-toggle { left: 16px; }
   </style>
 </head>
