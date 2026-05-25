@@ -503,7 +503,7 @@ app.post('/create-checkout-session', async (req, res) => {
       }],
       mode: 'payment',
       customer_email: email || undefined,
-      success_url: `https://thecapetownguide.com?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `https://www.thecapetownguide.com/access-success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `https://thecapetownguide.com`,
       metadata: {
         product: 'caipy',
