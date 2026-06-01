@@ -774,6 +774,93 @@ app.post('/chat', async (req, res) => {
   }
 });
 
+// Ubuntu in-guide chat — personalised assistant with trip profile context
+app.post('/ubuntu-chat', async (req, res) => {
+  const { messages, tripProfile } = req.body;
+
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: 'Messages required' });
+  }
+
+  const validMessages = messages
+    .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+    .map(m => ({ role: m.role, content: m.content.slice(0, 6000) }));
+
+  if (validMessages.length === 0) {
+    return res.status(400).json({ error: 'No valid messages' });
+  }
+
+  // Build personalised context from trip profile
+  let profileSection = '';
+  if (tripProfile && typeof tripProfile === 'object') {
+    const p = tripProfile;
+    profileSection = '\n\n## THIS CLIENT\'S SAVED TRIP PROFILE\n';
+    if (p.name)       profileSection += `- Name: ${String(p.name).slice(0, 100)}\n`;
+    if (p.days)       profileSection += `- Duration: ${String(p.days).slice(0, 20)} days\n`;
+    if (p.months || p.month) profileSection += `- Travel month: ${String(p.months || p.month).slice(0, 50)}\n`;
+    if (p.group)      profileSection += `- Travelling as: ${String(p.group).slice(0, 50)}\n`;
+    if (p.budget)     profileSection += `- Budget level: ${String(p.budget).slice(0, 50)}\n`;
+    if (p.interests)  profileSection += `- Interests: ${Array.isArray(p.interests) ? p.interests.slice(0,10).map(i => String(i).slice(0,80)).join(', ') : String(p.interests).slice(0, 200)}\n`;
+    if (p.stayArea)   profileSection += `- Staying in: ${String(p.stayArea).slice(0, 100)}\n`;
+    if (Array.isArray(p.savedPlaces) && p.savedPlaces.length > 0) {
+      const names = p.savedPlaces.map(pl => String(pl.name || pl.title || '').slice(0, 80)).filter(Boolean).slice(0, 15);
+      if (names.length > 0) profileSection += `- Saved places: ${names.join(', ')}\n`;
+    }
+    profileSection += '\nUse this profile to personalise every answer. Reference their specific details naturally.';
+  }
+
+  const UBUNTU_SYSTEM = `You are Ubuntu, a warm and knowledgeable Cape Town travel assistant embedded inside a client's personal Planet Curated Cape Town Guide. You were created by Dirk Zeevenhooven, who has lived in Cape Town for over 10 years.
+
+Your personality: friendly, direct, slightly witty, genuinely passionate about Cape Town. You speak like a trusted local friend — not a brochure.
+
+Your role: help this client get the most out of their Cape Town trip. Answer questions about their itinerary, help them prioritise bookings, recommend restaurants near their stay, suggest rainy-day options, explain safety rules, plan day trips, advise on wine estates, local beaches, family activities, transport, and anything within roughly 200km of Cape Town.
+
+## RESPONSE STYLE
+- Keep responses conversational and concise — 3 to 6 sentences max unless they ask for a detailed itinerary
+- Use plain prose, no excessive bullet lists
+- Be specific — name actual places, streets, times, and insider tips
+- If they ask you to build or improve their itinerary, create a structured day-by-day plan using their saved preferences
+- Always end with a natural follow-up or offer to help further
+
+## KEY LOCAL KNOWLEDGE
+- Table Mountain: go early (7-9am) or late afternoon to avoid crowds. Cable car is best. Platteklip Gorge for hikers.
+- Cape of Good Hope: full day, drive via Chapman's Peak, stop at Boulders Beach for penguins. Don't feed the baboons.
+- Robben Island: book weeks ahead, morning ferry, 3-4 hours total.
+- Restaurants: The Black Sheep (Vredehoek), Kloofstreet House (Gardens), The Pot Luck Club (Bree St, book far ahead), Oranjezicht City Farm Market (Saturday mornings).
+- Hidden gems: Beta Beach and Bali Beach (Bakoven), Durbanville Hills wine route, Noordhoek Beach, Bo-Kaap at dawn.
+- Wine: Constantia Valley (closest - Buitenverwachting, Steenberg), Franschhoek (most beautiful), Stellenbosch (biggest), Durbanville (hidden gem).
+- Safety: no visible phones or watches in public. Lock car doors at lights. Uber over metered taxis. Safe areas: Waterfront, De Waterkant, Sea Point, Camps Bay, Kloof Street.
+- Getting around: Uber reliable and cheap. Car rental essential for Peninsula and Winelands.
+- Best time: November-March. December/January peak - book everything early.${profileSection}`;
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+
+  try {
+    const stream = anthropic.messages.stream({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 600,
+      system: UBUNTU_SYSTEM,
+      messages: validMessages,
+    });
+
+    for await (const chunk of stream) {
+      if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+        res.write(`data: ${JSON.stringify({ text: chunk.delta.text })}\n\n`);
+      }
+    }
+
+    res.write('data: [DONE]\n\n');
+    res.end();
+  } catch (err) {
+    console.error('Ubuntu chat error:', err);
+    res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
+    res.end();
+  }
+});
+
 // Send itinerary via email
 app.post('/send-email', async (req, res) => {
   const { token, itinerary, email } = req.body;
