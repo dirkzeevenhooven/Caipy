@@ -9,6 +9,7 @@ const PDFDocument = require('pdfkit');
 const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
+const cron = require('node-cron');
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -1255,6 +1256,214 @@ app.post('/contact', async (req, res) => {
 
 // ─── Health check (used by UptimeRobot to keep server warm) ──────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+// ─── Bookable-item monitoring ───────────────────────────────────────────────
+// Daily check that every bookable item in the guide is still live & operating.
+// Reads bookable-items.json from the project root, checks each URL, escalates
+// uncertain cases to Claude, and emails an alert via Brevo if anything is flagged.
+
+const CLOSED_KEYWORDS = [
+  'closed', 'permanently closed', 'no longer', 'out of business', 'we have closed'
+];
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+async function classifyWithClaude(name, bodyText) {
+  try {
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 10,
+      messages: [{
+        role: 'user',
+        content: `I am checking if this business is still open and operating. Here is the homepage content: ${bodyText.slice(0, 2000)}. Is there any indication this business is closed, temporarily closed, or no longer operating? Reply with only: OPEN, CLOSED, or UNCERTAIN`
+      }]
+    });
+    const txt = (message.content?.[0]?.text || '').trim().toUpperCase();
+    if (txt.includes('CLOSED')) return 'CLOSED';
+    if (txt.includes('OPEN')) return 'OPEN';
+    return 'UNCERTAIN';
+  } catch (err) {
+    console.error(`[booking-check] Claude classification failed for "${name}":`, err.message);
+    return 'UNCERTAIN';
+  }
+}
+
+async function checkBookableItems() {
+  const startedAt = new Date();
+  const filePath = path.join(__dirname, 'bookable-items.json');
+  let items;
+  try {
+    items = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (err) {
+    console.error('[booking-check] Could not read bookable-items.json:', err.message);
+    return { ok: false, error: `Could not read bookable-items.json: ${err.message}`, checked: 0, flagged: [] };
+  }
+  if (!Array.isArray(items)) {
+    return { ok: false, error: 'bookable-items.json must contain a JSON array', checked: 0, flagged: [] };
+  }
+
+  console.log(`[booking-check] Starting check of ${items.length} item(s) at ${startedAt.toISOString()}`);
+  const flagged = [];
+  const results = [];
+
+  for (const item of items) {
+    const name = item.name || '(unnamed)';
+    const url = item.url;
+    const result = { name, type: item.type || '', url: url || '', status: null, verdict: 'OK', reason: '' };
+
+    const flag = (reason) => {
+      result.verdict = 'FLAG';
+      result.reason = reason;
+      flagged.push({ name, type: item.type || '', url: url || '', booking_url: item.booking_url || '', guide_page: item.guide_page || '', reason });
+      console.log(`[booking-check] ${name}: FLAG — ${reason}`);
+    };
+
+    if (!url) {
+      flag('No URL provided in bookable-items.json');
+      results.push(result);
+      continue;
+    }
+
+    let res, body = '';
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      res = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        signal: controller.signal,
+        headers: { 'User-Agent': 'CapeTownGuide-BookingMonitor/1.0' }
+      });
+      clearTimeout(timeout);
+      result.status = res.status;
+      body = await res.text();
+    } catch (err) {
+      flag(`Request failed: ${err.message}`);
+      results.push(result);
+      continue;
+    }
+
+    // 1. HTTP status check
+    if (res.status !== 200) {
+      flag(`HTTP status ${res.status}`);
+      results.push(result);
+      continue;
+    }
+
+    // 2. Keyword check (case-insensitive)
+    const lower = body.toLowerCase();
+    const matched = CLOSED_KEYWORDS.find(k => lower.includes(k));
+    if (matched) {
+      flag(`Body contains closure keyword: "${matched}"`);
+      results.push(result);
+      continue;
+    }
+
+    // 3. Inconclusive → ask Claude
+    const cleanText = body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const verdict = await classifyWithClaude(name, cleanText);
+    if (verdict === 'CLOSED') {
+      flag('Claude assessment: CLOSED');
+    } else {
+      result.reason = `Claude assessment: ${verdict}`;
+      console.log(`[booking-check] ${name}: OK — ${result.reason}`);
+    }
+    results.push(result);
+  }
+
+  console.log(`[booking-check] Done. ${flagged.length} of ${items.length} item(s) flagged.`);
+
+  if (flagged.length > 0) {
+    try {
+      await sendBookingAlertEmail(flagged, startedAt);
+    } catch (err) {
+      console.error('[booking-check] Failed to send alert email:', err.message);
+    }
+  }
+
+  return {
+    ok: true,
+    checkedAt: startedAt.toISOString(),
+    checked: items.length,
+    flaggedCount: flagged.length,
+    flagged,
+    results
+  };
+}
+
+async function sendBookingAlertEmail(flagged, when) {
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) {
+    console.error('[booking-check] BREVO_API_KEY not configured — skipping alert email');
+    return;
+  }
+  const dateStr = when.toLocaleDateString('en-ZA', { timeZone: 'Africa/Johannesburg' });
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || 'alerts@thecapetownguide.com';
+
+  const rows = flagged.map(f => `
+    <tr>
+      <td style="padding:8px;border:1px solid #ddd;">${escapeHtml(f.name)}</td>
+      <td style="padding:8px;border:1px solid #ddd;">${escapeHtml(f.type)}</td>
+      <td style="padding:8px;border:1px solid #ddd;"><a href="${escapeHtml(f.url)}">${escapeHtml(f.url)}</a></td>
+      <td style="padding:8px;border:1px solid #ddd;">${escapeHtml(f.reason)}</td>
+    </tr>`).join('');
+
+  const htmlContent = `
+    <h2>Cape Town Guide — Booking Alert</h2>
+    <p>${flagged.length} bookable item(s) need attention (checked ${escapeHtml(dateStr)}):</p>
+    <table style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;">
+      <thead><tr>
+        <th style="padding:8px;border:1px solid #ddd;text-align:left;">Name</th>
+        <th style="padding:8px;border:1px solid #ddd;text-align:left;">Type</th>
+        <th style="padding:8px;border:1px solid #ddd;text-align:left;">URL</th>
+        <th style="padding:8px;border:1px solid #ddd;text-align:left;">Reason</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+  const textContent = flagged.map(f =>
+    `- ${f.name} (${f.type || 'n/a'})\n  URL: ${f.url || 'n/a'}\n  Reason: ${f.reason || 'n/a'}`
+  ).join('\n\n');
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      sender: { name: 'Cape Town Guide Monitor', email: senderEmail },
+      to: [{ email: 'dirk@bloubergconsultancy.com' }],
+      subject: `Cape Town Guide — Booking Alert ${dateStr}`,
+      htmlContent,
+      textContent
+    })
+  });
+
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error(`Brevo API error ${res.status}: ${errBody}`);
+  }
+  console.log(`[booking-check] Alert email sent to dirk@bloubergconsultancy.com (${flagged.length} item(s))`);
+}
+
+// Manual trigger for testing — returns the full report as JSON
+app.get('/check-bookings', async (req, res) => {
+  try {
+    const report = await checkBookableItems();
+    res.json(report);
+  } catch (err) {
+    console.error('[booking-check] /check-bookings failed:', err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Daily scheduled run at 07:00 Cape Town time (Africa/Johannesburg, UTC+2, no DST)
+cron.schedule('0 7 * * *', () => {
+  console.log('[booking-check] Triggered by daily 07:00 SAST schedule');
+  checkBookableItems().catch(err => console.error('[booking-check] Scheduled run failed:', err));
+}, { timezone: 'Africa/Johannesburg' });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;

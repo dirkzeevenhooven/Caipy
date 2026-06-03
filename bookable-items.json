@@ -1,0 +1,387 @@
+[
+  {
+    "name": "Mojo Hotel",
+    "type": "Accommodation",
+    "url": "https://www.mojohotel.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "Ashanti Gardens",
+    "type": "Accommodation",
+    "url": "https://www.ashanti.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "Pepper Club Hotel",
+    "type": "Accommodation",
+    "url": "https://www.pepperclub.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "POD Boutique Hotel",
+    "type": "Accommodation",
+    "url": "https://www.podhotel.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "Kalk Bay House",
+    "type": "Accommodation",
+    "url": "https://www.kalkbayhouse.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "One&Only Cape Town",
+    "type": "Accommodation",
+    "url": "https://www.oneandonlyresorts.com/",
+    "booking_url": "https://www.oneandonlyresorts.com/cape-town",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "The Silo Hotel",
+    "type": "Accommodation",
+    "url": "https://www.theroyalportfolio.com/",
+    "booking_url": "https://www.theroyalportfolio.com/the-silo/",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "12 Apostles Hotel",
+    "type": "Accommodation",
+    "url": "https://www.12apostleshotel.com/",
+    "booking_url": "",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "Belmond Mount Nelson",
+    "type": "Accommodation",
+    "url": "https://www.belmond.com/",
+    "booking_url": "https://www.belmond.com/hotels/africa/south-africa/cape-town/belmond-mount-nelson-hotel/",
+    "guide_page": "guide/stay.html"
+  },
+  {
+    "name": "Compact City Car",
+    "type": "Rental Car",
+    "url": "https://www.firstcarrental.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "Compact SUV",
+    "type": "Rental Car",
+    "url": "https://www.europcar.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "Premium SUV",
+    "type": "Rental Car",
+    "url": "https://www.avis.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "Large Family SUV",
+    "type": "Rental Car",
+    "url": "https://www.europcar.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "4x4 Adventure Vehicle",
+    "type": "Rental Car",
+    "url": "https://www.sixt.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "Convertible / Cabrio",
+    "type": "Rental Car",
+    "url": "https://www.avis.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "Private Driver / Full Day",
+    "type": "Rental Car",
+    "url": "",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "Uber & Bolt — No Rental Car",
+    "type": "Rental Car",
+    "url": "",
+    "booking_url": "",
+    "guide_page": "guide/carrental.html"
+  },
+  {
+    "name": "Table Mountain Cableway",
+    "type": "Experience",
+    "url": "https://www.tablemountain.net/",
+    "booking_url": "https://www.tablemountain.net/buy-tickets",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Cape Point & Peninsula Drive",
+    "type": "Experience",
+    "url": "https://www.sanparks.org/",
+    "booking_url": "https://www.sanparks.org/parks/table_mountain/",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Boulders Beach Penguins",
+    "type": "Experience",
+    "url": "https://www.sanparks.org/",
+    "booking_url": "https://www.sanparks.org/parks/table_mountain/",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Robben Island Tour",
+    "type": "Experience",
+    "url": "https://www.robben-island.org.za/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Stellenbosch & Franschhoek Wine Day",
+    "type": "Experience",
+    "url": "https://www.wineroute.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Sunset Catamaran Sail",
+    "type": "Experience",
+    "url": "https://www.waterfrontcharters.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Lion's Head Sunrise Hike",
+    "type": "Experience",
+    "url": "",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Whale Watching from Hermanus",
+    "type": "Experience",
+    "url": "https://www.hermanuswhalewatching.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Shark Cage Diving",
+    "type": "Experience",
+    "url": "https://www.whitesharkprojects.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Helicopter Flight over Cape Town",
+    "type": "Experience",
+    "url": "https://www.nachelicopters.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Surf Lesson at Muizenberg",
+    "type": "Experience",
+    "url": "https://www.garysurf.com/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Wine Tasting — Constantia Valley",
+    "type": "Experience",
+    "url": "https://www.constantia.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "Kayaking with Cape Fur Seals",
+    "type": "Experience",
+    "url": "",
+    "booking_url": "",
+    "guide_page": "guide/experiences.html"
+  },
+  {
+    "name": "The Test Kitchen",
+    "type": "Restaurant",
+    "url": "https://www.thetestkitchen.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "La Colombe",
+    "type": "Restaurant",
+    "url": "https://lacolombe.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "FYN Restaurant",
+    "type": "Restaurant",
+    "url": "https://www.fynrestaurant.com/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "The Pot Luck Club",
+    "type": "Restaurant",
+    "url": "https://www.thepotluckclub.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Kloof Street House",
+    "type": "Restaurant",
+    "url": "https://www.kloofstreet.com/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Harbour House",
+    "type": "Restaurant",
+    "url": "https://www.harbourhouse.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Olympia Café",
+    "type": "Restaurant",
+    "url": "",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "La Parada",
+    "type": "Restaurant",
+    "url": "https://www.laparada.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Superette",
+    "type": "Restaurant",
+    "url": "",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "The Bungalow",
+    "type": "Restaurant",
+    "url": "https://www.thebungalow.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Grand Africa Café & Beach",
+    "type": "Restaurant",
+    "url": "https://www.grandafrica.com/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Upper Union",
+    "type": "Restaurant",
+    "url": "https://upperunion.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Oranjezicht City Farm Market",
+    "type": "Restaurant",
+    "url": "https://ozcf.co.za/",
+    "booking_url": "https://ozcf.co.za/market/",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Athletic Club & Social",
+    "type": "Restaurant",
+    "url": "",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Chef's Warehouse at Beau Constantia",
+    "type": "Restaurant",
+    "url": "https://www.chefswarehouserestaurants.com/",
+    "booking_url": "",
+    "guide_page": "guide/food.html"
+  },
+  {
+    "name": "Groot Constantia",
+    "type": "Wine Estate",
+    "url": "https://www.grootconstantia.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Beau Constantia",
+    "type": "Wine Estate",
+    "url": "https://www.beauconstantia.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Constantia Glen",
+    "type": "Wine Estate",
+    "url": "https://www.constantiaglen.com/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Buitenverwachting",
+    "type": "Wine Estate",
+    "url": "https://www.buitenverwachting.com/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Babylonstoren",
+    "type": "Wine Estate",
+    "url": "https://babylonstoren.com/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Delaire Graff Estate",
+    "type": "Wine Estate",
+    "url": "https://delaire.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Tokara",
+    "type": "Wine Estate",
+    "url": "https://www.tokara.com/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Boschendal",
+    "type": "Wine Estate",
+    "url": "https://www.boschendal.com/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "La Petite Ferme",
+    "type": "Wine Estate",
+    "url": "https://www.lapetiteferme.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  },
+  {
+    "name": "Haute Cabrière",
+    "type": "Wine Estate",
+    "url": "https://www.cabriere.co.za/",
+    "booking_url": "",
+    "guide_page": "guide/wine.html"
+  }
+]
