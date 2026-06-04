@@ -1262,9 +1262,28 @@ app.get('/health', (req, res) => res.json({ status: 'ok' }));
 // Reads bookable-items.json from the project root, checks each URL, escalates
 // uncertain cases to Claude, and emails an alert via Brevo if anything is flagged.
 
-const CLOSED_KEYWORDS = [
-  'closed', 'permanently closed', 'no longer', 'out of business', 'we have closed'
-];
+// A technical outage (timeout, 403 bot-block, etc.) is only escalated to an
+// alert once an item has been unreachable for this many consecutive checks.
+const UNREACHABLE_ALERT_THRESHOLD = 3;
+const STATE_FILE = path.join(__dirname, 'booking-monitor-state.json');
+
+// Persisted streak of consecutive failed checks per URL, so transient
+// technical errors don't alert but a multi-day outage does.
+function loadMonitorState() {
+  try {
+    return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function saveMonitorState(state) {
+  try {
+    fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+  } catch (err) {
+    console.error('[booking-check] Could not write monitor state:', err.message);
+  }
+}
 
 function escapeHtml(str) {
   return String(str)
@@ -1279,7 +1298,7 @@ async function classifyWithClaude(name, bodyText) {
       max_tokens: 10,
       messages: [{
         role: 'user',
-        content: `I am checking if this business is still open and operating. Here is the homepage content: ${bodyText.slice(0, 2000)}. Is there any indication this business is closed, temporarily closed, or no longer operating? Reply with only: OPEN, CLOSED, or UNCERTAIN`
+        content: `I am checking whether this business is still open and operating at the same location. Here is the homepage content: ${bodyText.slice(0, 2000)}. Reply CLOSED only if there is a clear, explicit statement that the business has permanently closed, gone out of business, or relocated (e.g. "we have closed", "permanently closed", "no longer open", "now located at..."). Ignore ordinary things like opening hours, "closed on Mondays", "never closed", maintenance notices, or cookie banners. If the page looks like a normal operating business, reply OPEN. If you truly cannot tell, reply UNCERTAIN. Reply with only one word: OPEN, CLOSED, or UNCERTAIN`
       }]
     });
     const txt = (message.content?.[0]?.text || '').trim().toUpperCase();
@@ -1307,7 +1326,9 @@ async function checkBookableItems() {
   }
 
   console.log(`[booking-check] Starting check of ${items.length} item(s) at ${startedAt.toISOString()}`);
-  const flagged = [];
+  const state = loadMonitorState();
+  const closures = [];     // Claude judged the business closed/relocated — always alerts
+  const unreachable = [];  // technical failures this run (timeout, 403, non-200, etc.)
   const results = [];
 
   for (const item of items) {
@@ -1315,18 +1336,33 @@ async function checkBookableItems() {
     const url = item.url;
     const result = { name, type: item.type || '', url: url || '', status: null, verdict: 'OK', reason: '' };
 
-    const flag = (reason) => {
-      result.verdict = 'FLAG';
-      result.reason = reason;
-      flagged.push({ name, type: item.type || '', url: url || '', booking_url: item.booking_url || '', guide_page: item.guide_page || '', reason });
-      console.log(`[booking-check] ${name}: FLAG — ${reason}`);
-    };
-
+    // Items without a URL aren't checkable and must never alert.
     if (!url) {
-      flag('No URL provided in bookable-items.json');
+      result.verdict = 'SKIP';
+      result.reason = 'No URL — not checkable';
+      console.log(`[booking-check] ${name}: SKIP — no URL`);
       results.push(result);
       continue;
     }
+
+    // Mark a check as a technical failure: bump the consecutive-failure streak.
+    const markUnreachable = (reason) => {
+      const entry = state[url] || {};
+      entry.unreachableStreak = (entry.unreachableStreak || 0) + 1;
+      entry.lastResult = 'unreachable';
+      entry.updatedAt = startedAt.toISOString();
+      state[url] = entry;
+      result.verdict = 'UNREACHABLE';
+      result.streak = entry.unreachableStreak;
+      result.reason = `Could not check (${reason}) — ${entry.unreachableStreak} consecutive failure(s)`;
+      console.log(`[booking-check] ${name}: UNREACHABLE — ${reason} (streak ${entry.unreachableStreak})`);
+      unreachable.push({ name, type: item.type || '', url, booking_url: item.booking_url || '', guide_page: item.guide_page || '', reason, streak: entry.unreachableStreak });
+    };
+
+    // Mark a check as successful: reset the failure streak.
+    const markReachable = () => {
+      state[url] = { unreachableStreak: 0, lastResult: 'reachable', updatedAt: startedAt.toISOString() };
+    };
 
     let res, body = '';
     try {
@@ -1342,32 +1378,28 @@ async function checkBookableItems() {
       result.status = res.status;
       body = await res.text();
     } catch (err) {
-      flag(`Request failed: ${err.message}`);
+      // fetch failed / timeout = technical error, NOT a closure.
+      markUnreachable(`request failed: ${err.message}`);
       results.push(result);
       continue;
     }
 
-    // 1. HTTP status check
+    // Any non-200 (incl. 403 bot-blocking) = technical error, NOT a closure.
     if (res.status !== 200) {
-      flag(`HTTP status ${res.status}`);
+      markUnreachable(`HTTP ${res.status}`);
       results.push(result);
       continue;
     }
 
-    // 2. Keyword check (case-insensitive)
-    const lower = body.toLowerCase();
-    const matched = CLOSED_KEYWORDS.find(k => lower.includes(k));
-    if (matched) {
-      flag(`Body contains closure keyword: "${matched}"`);
-      results.push(result);
-      continue;
-    }
-
-    // 3. Inconclusive → ask Claude
+    // Reachable: reset streak, then let Claude be the sole judge of closure.
+    markReachable();
     const cleanText = body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     const verdict = await classifyWithClaude(name, cleanText);
     if (verdict === 'CLOSED') {
-      flag('Claude assessment: CLOSED');
+      result.verdict = 'CLOSED';
+      result.reason = 'Claude assessment: CLOSED or relocated';
+      console.log(`[booking-check] ${name}: CLOSED (Claude)`);
+      closures.push({ name, type: item.type || '', url, booking_url: item.booking_url || '', guide_page: item.guide_page || '', reason: 'Claude assessment: closed or relocated' });
     } else {
       result.reason = `Claude assessment: ${verdict}`;
       console.log(`[booking-check] ${name}: OK — ${result.reason}`);
@@ -1375,22 +1407,41 @@ async function checkBookableItems() {
     results.push(result);
   }
 
-  console.log(`[booking-check] Done. ${flagged.length} of ${items.length} item(s) flagged.`);
+  saveMonitorState(state);
 
-  if (flagged.length > 0) {
+  // A technical outage only counts once it has persisted for several runs.
+  const persistentOutages = unreachable
+    .filter(u => u.streak >= UNREACHABLE_ALERT_THRESHOLD)
+    .map(u => ({ ...u, reason: `Unreachable ${u.streak} consecutive checks (${u.reason})` }));
+
+  console.log(`[booking-check] Done. ${closures.length} closure(s), ${unreachable.length} unreachable (${persistentOutages.length} persistent), ${items.length} checked.`);
+
+  // Email only when there is a genuine closure or a persistent (multi-day) outage.
+  // Transient technical errors are logged but never emailed.
+  const alertItems = [
+    ...closures.map(c => ({ ...c, category: 'CLOSED / MOVED' })),
+    ...persistentOutages.map(u => ({ ...u, category: 'UNREACHABLE' }))
+  ];
+  if (alertItems.length > 0) {
     try {
-      await sendBookingAlertEmail(flagged, startedAt);
+      await sendBookingAlertEmail(alertItems, startedAt);
     } catch (err) {
       console.error('[booking-check] Failed to send alert email:', err.message);
     }
+  } else {
+    console.log('[booking-check] No closures or persistent outages — no email sent.');
   }
 
   return {
     ok: true,
     checkedAt: startedAt.toISOString(),
     checked: items.length,
-    flaggedCount: flagged.length,
-    flagged,
+    closuresCount: closures.length,
+    unreachableCount: unreachable.length,
+    persistentOutageCount: persistentOutages.length,
+    emailSent: alertItems.length > 0,
+    closures,
+    unreachable,
     results
   };
 }
@@ -1406,6 +1457,7 @@ async function sendBookingAlertEmail(flagged, when) {
 
   const rows = flagged.map(f => `
     <tr>
+      <td style="padding:8px;border:1px solid #ddd;">${escapeHtml(f.category || '')}</td>
       <td style="padding:8px;border:1px solid #ddd;">${escapeHtml(f.name)}</td>
       <td style="padding:8px;border:1px solid #ddd;">${escapeHtml(f.type)}</td>
       <td style="padding:8px;border:1px solid #ddd;"><a href="${escapeHtml(f.url)}">${escapeHtml(f.url)}</a></td>
@@ -1417,6 +1469,7 @@ async function sendBookingAlertEmail(flagged, when) {
     <p>${flagged.length} bookable item(s) need attention (checked ${escapeHtml(dateStr)}):</p>
     <table style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;">
       <thead><tr>
+        <th style="padding:8px;border:1px solid #ddd;text-align:left;">Issue</th>
         <th style="padding:8px;border:1px solid #ddd;text-align:left;">Name</th>
         <th style="padding:8px;border:1px solid #ddd;text-align:left;">Type</th>
         <th style="padding:8px;border:1px solid #ddd;text-align:left;">URL</th>
@@ -1426,7 +1479,7 @@ async function sendBookingAlertEmail(flagged, when) {
     </table>`;
 
   const textContent = flagged.map(f =>
-    `- ${f.name} (${f.type || 'n/a'})\n  URL: ${f.url || 'n/a'}\n  Reason: ${f.reason || 'n/a'}`
+    `- [${f.category || 'ALERT'}] ${f.name} (${f.type || 'n/a'})\n  URL: ${f.url || 'n/a'}\n  Reason: ${f.reason || 'n/a'}`
   ).join('\n\n');
 
   const res = await fetch('https://api.brevo.com/v3/smtp/email', {

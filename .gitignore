@@ -4,3 +4,4 @@ node_modules/
 public/guides/
 *.MOV
 *.mov
+booking-monitor-state.json

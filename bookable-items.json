@@ -105,20 +105,6 @@
     "guide_page": "guide/carrental.html"
   },
   {
-    "name": "Private Driver / Full Day",
-    "type": "Rental Car",
-    "url": "",
-    "booking_url": "",
-    "guide_page": "guide/carrental.html"
-  },
-  {
-    "name": "Uber & Bolt — No Rental Car",
-    "type": "Rental Car",
-    "url": "",
-    "booking_url": "",
-    "guide_page": "guide/carrental.html"
-  },
-  {
     "name": "Table Mountain Cableway",
     "type": "Experience",
     "url": "https://www.tablemountain.net/",
@@ -161,13 +147,6 @@
     "guide_page": "guide/experiences.html"
   },
   {
-    "name": "Lion's Head Sunrise Hike",
-    "type": "Experience",
-    "url": "",
-    "booking_url": "",
-    "guide_page": "guide/experiences.html"
-  },
-  {
     "name": "Whale Watching from Hermanus",
     "type": "Experience",
     "url": "https://www.hermanuswhalewatching.co.za/",
@@ -199,13 +178,6 @@
     "name": "Wine Tasting — Constantia Valley",
     "type": "Experience",
     "url": "https://www.constantia.co.za/",
-    "booking_url": "",
-    "guide_page": "guide/experiences.html"
-  },
-  {
-    "name": "Kayaking with Cape Fur Seals",
-    "type": "Experience",
-    "url": "",
     "booking_url": "",
     "guide_page": "guide/experiences.html"
   },
@@ -252,23 +224,9 @@
     "guide_page": "guide/food.html"
   },
   {
-    "name": "Olympia Café",
-    "type": "Restaurant",
-    "url": "",
-    "booking_url": "",
-    "guide_page": "guide/food.html"
-  },
-  {
     "name": "La Parada",
     "type": "Restaurant",
     "url": "https://www.laparada.co.za/",
-    "booking_url": "",
-    "guide_page": "guide/food.html"
-  },
-  {
-    "name": "Superette",
-    "type": "Restaurant",
-    "url": "",
     "booking_url": "",
     "guide_page": "guide/food.html"
   },
@@ -298,13 +256,6 @@
     "type": "Restaurant",
     "url": "https://ozcf.co.za/",
     "booking_url": "https://ozcf.co.za/market/",
-    "guide_page": "guide/food.html"
-  },
-  {
-    "name": "Athletic Club & Social",
-    "type": "Restaurant",
-    "url": "",
-    "booking_url": "",
     "guide_page": "guide/food.html"
   },
   {
