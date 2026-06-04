@@ -5,3 +5,4 @@ public/guides/
 *.MOV
 *.mov
 booking-monitor-state.json
+.data/

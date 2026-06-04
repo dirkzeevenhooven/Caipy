@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const cron = require('node-cron');
+const storage = require('./storage');
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -647,6 +648,12 @@ ${finalTranscript}`,
   try {
     guideUrl = await generateAndSaveGuide(itinerary, tripData, guideId);
     console.log('Guide saved:', guideUrl);
+    // Index the guide by email so /resend-guide can find it later.
+    try {
+      storage.saveGuideRecord(email, guideId, guideUrl);
+    } catch (e) {
+      console.error('Could not record guide for email:', e.message);
+    }
   } catch (e) {
     console.error('Guide generation error:', e.message);
   }
@@ -1251,6 +1258,70 @@ app.post('/contact', async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ─── Resend an existing guide link by email ──────────────────────────────────
+// myguide.html POSTs { email } here. Look up the guide(s) indexed for that email
+// and re-send the link(s). A missing record is a clean 200 "not found", not an error.
+app.post('/resend-guide', async (req, res) => {
+  try {
+    const email = String(req.body?.email || '').trim();
+    if (!email) return res.status(400).json({ ok: false, message: 'Please enter your email address.' });
+
+    const guides = storage.getGuideByEmail(email).filter(g => g.guideUrl);
+    if (guides.length === 0) {
+      return res.json({ ok: false, message: "We couldn't find a guide for this email." });
+    }
+
+    const token = process.env.RESEND_API_KEY;
+    if (!token) return res.status(500).json({ ok: false, message: 'Email is not configured right now.' });
+    const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
+
+    const linksHtml = guides.map(g =>
+      `<p style="margin:0 0 12px;"><a href="${g.guideUrl}" style="color:#B8863A;">Open my guide →</a></p>`
+    ).join('');
+    const linksText = guides.map(g => g.guideUrl).join('\n');
+    const payload = {
+      to: [email],
+      subject: 'Your Cape Town Guide link ✈️',
+      html: `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+        <body style="font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 24px;color:#1C1C1A;line-height:1.7;">
+          <div style="border-bottom:2px solid #B8863A;padding-bottom:20px;margin-bottom:36px;">
+            <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#B8863A;margin:0 0 8px 0;">The Cape Town Guide</p>
+            <h1 style="font-size:30px;font-weight:400;margin:0;line-height:1.2;">Here's your guide link.</h1>
+          </div>
+          <p style="font-size:17px;margin:0 0 28px 0;">As requested, here ${guides.length > 1 ? 'are your guide links' : 'is your guide link'} — bookmark ${guides.length > 1 ? 'them' : 'it'}, ${guides.length > 1 ? "they're" : "it's"} yours to keep.</p>
+          ${linksHtml}
+          <div style="border-top:1px solid #EDE5D8;padding-top:24px;margin-top:32px;color:#6B6560;font-size:13px;font-family:sans-serif;">
+            <p style="margin:0;">With warmth,<br><strong style="color:#1C1C1A;">Dirk Zeevenhooven</strong><br>The Cape Town Guide · thecapetownguide.com</p>
+          </div>
+        </body></html>`,
+      text: `Here's your Cape Town guide link:\n${linksText}\n\nBookmark it — it's yours to keep.\n\n— Dirk`,
+    };
+
+    let r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: `Caipy — Cape Town Guide <${from}>`, ...payload })
+    });
+    if (!r.ok && from !== 'onboarding@resend.dev') {
+      r = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: 'Caipy — Cape Town Guide <onboarding@resend.dev>', ...payload })
+      });
+    }
+    if (!r.ok) {
+      const detail = await r.text();
+      console.error('[resend-guide] Email send failed:', detail);
+      return res.status(500).json({ ok: false, message: "We found your guide but couldn't send the email. Please try again." });
+    }
+
+    res.json({ ok: true, message: 'Check your inbox — your guide link is on its way.' });
+  } catch (err) {
+    console.error('[resend-guide] Error:', err.message);
+    res.status(500).json({ ok: false, message: 'Something went wrong. Please try again.' });
   }
 });
 
