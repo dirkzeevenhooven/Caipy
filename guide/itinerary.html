@@ -119,6 +119,49 @@
     .interest-chip.mix.selected { background: rgba(201,169,110,0.12); }
     .interests-hint { font-size: 11px; color: var(--white-faint); font-style: italic; }
 
+    /* TRIP BUILDER FORM */
+    .trip-builder { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.18); border-radius: 16px; padding: 40px 44px; margin-bottom: 40px; }
+    .tb-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; margin: 6px 0 8px; }
+    .tb-header h2 em { font-style: italic; color: var(--gold); }
+    .tb-header p { font-size: 13px; color: var(--white-faint); margin-bottom: 28px; }
+    .tb-progress { display: flex; gap: 8px; margin-bottom: 32px; }
+    .tb-dot { flex: 1; height: 4px; border-radius: 2px; background: rgba(201,169,110,0.15); transition: background 0.3s; }
+    .tb-dot.active { background: var(--gold); }
+    .tb-step { display: none; }
+    .tb-step.active { display: block; animation: tbFade 0.3s ease; }
+    @keyframes tbFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .tb-step-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(90,180,232,0.85); margin-bottom: 4px; }
+    .tb-step h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; margin-bottom: 20px; }
+    .tb-step h3 em { font-style: italic; color: var(--gold); }
+    .tb-field { margin-bottom: 20px; }
+    .tb-field label { display: block; font-size: 12px; color: var(--white-dim); margin-bottom: 8px; }
+    .tb-field input { width: 100%; padding: 13px 16px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(201,169,110,0.2); color: var(--white); transition: border-color 0.2s; }
+    .tb-field input::placeholder { color: var(--white-faint); }
+    .tb-field input:focus { outline: none; border-color: var(--gold); }
+    .tb-options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tb-error { font-size: 12px; color: #e08a8a; margin-top: 4px; min-height: 16px; }
+    .tb-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 28px; }
+    .tb-nav .tb-spacer { flex: 1; }
+    .tb-btn { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; cursor: pointer;
+      border-radius: 8px; padding: 13px 28px; transition: all 0.2s; border: 1px solid transparent; }
+    .tb-btn.primary { background: var(--gold); color: var(--ocean-dark); }
+    .tb-btn.primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .tb-btn.primary:disabled { opacity: 0.55; cursor: default; transform: none; }
+    .tb-btn.ghost { background: transparent; color: var(--white-dim); border-color: rgba(201,169,110,0.25); }
+    .tb-btn.ghost:hover { color: var(--white); border-color: rgba(201,169,110,0.5); }
+    .tb-success { display: none; text-align: center; padding: 16px 0 8px; }
+    .tb-success.active { display: block; animation: tbFade 0.3s ease; }
+    .tb-success .tb-tick { font-size: 44px; margin-bottom: 12px; }
+    .tb-success h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; margin-bottom: 10px; }
+    .tb-success h3 em { font-style: italic; color: var(--gold); }
+    .tb-success p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 420px; margin: 0 auto; }
+
+    /* VOICE DIVIDER */
+    .path-divider { display: flex; align-items: center; gap: 16px; margin: 8px 0 36px; }
+    .path-divider::before, .path-divider::after { content: ''; flex: 1; height: 1px; background: rgba(201,169,110,0.18); }
+    .path-divider span { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--white-faint); }
+
     /* CTA */
     .cta-box { text-align: center; padding: 48px 40px; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.15); border-radius: 16px; margin-bottom: 32px; }
     .cta-box h2 { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; margin-bottom: 12px; }
@@ -224,6 +267,122 @@
 
   <div class="content">
 
+    <!-- TRIP BUILDER FORM -->
+    <div class="trip-builder" id="tripBuilder">
+      <div class="tb-header">
+        <div class="section-label">Build your trip</div>
+        <h2>Tell us about <em>your trip</em></h2>
+        <p>Four quick steps. We'll build your personalised day-by-day itinerary and email it to you.</p>
+      </div>
+
+      <div class="tb-progress">
+        <div class="tb-dot active" data-dot="1"></div>
+        <div class="tb-dot" data-dot="2"></div>
+        <div class="tb-dot" data-dot="3"></div>
+        <div class="tb-dot" data-dot="4"></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="tb-step active" data-step="1">
+        <div class="tb-step-label">Step 1 of 4</div>
+        <h3>First, the <em>basics</em></h3>
+        <div class="tb-field">
+          <label for="tb-name">Your first name</label>
+          <input type="text" id="tb-name" placeholder="e.g. Sam" autocomplete="given-name" />
+        </div>
+        <div class="tb-field">
+          <label for="tb-email">Email (where we'll send your itinerary)</label>
+          <input type="email" id="tb-email" placeholder="you@email.com" autocomplete="email" />
+          <div class="tb-error" id="tb-err-1"></div>
+        </div>
+        <div class="tb-nav">
+          <div class="tb-spacer"></div>
+          <button class="tb-btn primary" onclick="tbNext(1)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="tb-step" data-step="2">
+        <div class="tb-step-label">Step 2 of 4</div>
+        <h3>When are you <em>visiting?</em></h3>
+        <div class="tb-field">
+          <label for="tb-dates">Your dates or timing</label>
+          <input type="text" id="tb-dates" placeholder="e.g. 12–19 December, or 'next March'" />
+        </div>
+        <div class="tb-field">
+          <label for="tb-days">How many days in Cape Town?</label>
+          <input type="number" id="tb-days" min="1" max="60" placeholder="e.g. 7" />
+        </div>
+        <div class="tb-nav">
+          <button class="tb-btn ghost" onclick="tbGoTo(1)">← Back</button>
+          <button class="tb-btn primary" onclick="tbNext(2)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="tb-step" data-step="3">
+        <div class="tb-step-label">Step 3 of 4</div>
+        <h3>Your <em>style &amp; budget</em></h3>
+        <div class="tb-field">
+          <label>Who's travelling?</label>
+          <div class="tb-options" id="tb-group">
+            <div class="interest-chip" onclick="tbPick(this,'group','Solo')">🧍 Solo</div>
+            <div class="interest-chip" onclick="tbPick(this,'group','Couple')">💑 Couple</div>
+            <div class="interest-chip" onclick="tbPick(this,'group','Family')">👨‍👩‍👧 Family</div>
+            <div class="interest-chip" onclick="tbPick(this,'group','Friends')">👯 Friends</div>
+          </div>
+        </div>
+        <div class="tb-field">
+          <label>Budget feel</label>
+          <div class="tb-options" id="tb-budget">
+            <div class="interest-chip" onclick="tbPick(this,'budget','Budget-Friendly')">💸 Budget-Friendly</div>
+            <div class="interest-chip" onclick="tbPick(this,'budget','Mid-Range')">⚖️ Mid-Range</div>
+            <div class="interest-chip" onclick="tbPick(this,'budget','Luxury')">✨ Luxury</div>
+          </div>
+        </div>
+        <div class="tb-nav">
+          <button class="tb-btn ghost" onclick="tbGoTo(2)">← Back</button>
+          <button class="tb-btn primary" onclick="tbNext(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="tb-step" data-step="4">
+        <div class="tb-step-label">Step 4 of 4</div>
+        <h3>What do you <em>love most?</em></h3>
+        <p style="font-size:13px;color:var(--white-faint);margin:-8px 0 18px;">Pick as many as you like — we'll build your itinerary around these.</p>
+        <div class="interest-chips">
+          <div class="interest-chip" onclick="toggleInterest(this)">🥾 Hiking &amp; Outdoors</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🍽️ Food &amp; Restaurants</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🍷 Wine &amp; Winelands</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🏖️ Beaches</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🎨 Culture &amp; Art</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🌙 Nightlife</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">💎 Hidden Gems</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🚗 Day Trips</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">📸 Photography</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🛒 Markets</div>
+          <div class="interest-chip" onclick="toggleInterest(this)">🐧 Wildlife &amp; Nature</div>
+          <div class="interest-chip mix" onclick="toggleMix(this)">✨ Mix of Everything</div>
+        </div>
+        <div class="interests-hint" id="interests-hint">Select what excites you most about Cape Town.</div>
+        <div class="tb-error" id="tb-err-4"></div>
+        <div class="tb-nav">
+          <button class="tb-btn ghost" onclick="tbGoTo(3)">← Back</button>
+          <button class="tb-btn primary" id="tb-submit" onclick="tbSubmit()">Build my itinerary →</button>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="tb-success" id="tbSuccess">
+        <div class="tb-tick">✅</div>
+        <h3>Your itinerary is <em>on its way</em></h3>
+        <p id="tbSuccessMsg">Check your inbox in a few minutes. Can't find it? Head to My Guide to resend the link.</p>
+      </div>
+    </div>
+
+    <div class="path-divider"><span>or talk it through instead</span></div>
+
     <!-- HOW IT WORKS -->
     <div class="steps-section">
       <div class="section-label">How it works</div>
@@ -298,27 +457,6 @@
       </div>
     </div>
 
-    <!-- INTERESTS -->
-    <div class="interests-box">
-      <h3>What do you <em>love most?</em></h3>
-      <p>Pick as many as you like — Ubuntu will build your itinerary around these.</p>
-      <div class="interest-chips">
-        <div class="interest-chip" onclick="toggleInterest(this)">🥾 Hiking & Outdoors</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🍽️ Food & Restaurants</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🍷 Wine & Winelands</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🏖️ Beaches</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🎨 Culture & Art</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🌙 Nightlife</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">💎 Hidden Gems</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🚗 Day Trips</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">📸 Photography</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🛒 Markets</div>
-        <div class="interest-chip" onclick="toggleInterest(this)">🐧 Wildlife & Nature</div>
-        <div class="interest-chip mix" onclick="toggleMix(this)">✨ Mix of Everything</div>
-      </div>
-      <div class="interests-hint" id="interests-hint">Select what excites you most about Cape Town.</div>
-    </div>
-
     <!-- CTA -->
     <div class="cta-box">
       <h2>Ready? Let's build<br><em>your Cape Town trip</em></h2>
@@ -388,7 +526,75 @@
     } else if (selected.length === 1) {
       hint.textContent = '1 interest selected — feel free to add more!';
     } else {
-      hint.textContent = selected.length + ' interests selected — lekker! Ubuntu will work with all of these.';
+      hint.textContent = selected.length + ' interests selected — lekker! We\'ll work with all of these.';
+    }
+  }
+
+  // ── Trip Builder form ──────────────────────────────────────────────────────
+  const SAVE_TRIP_URL = 'https://caipy-sfau.onrender.com/save-trip';
+  const trip = { name: '', email: '', dates: '', days: '', group: '', budget: '', interests: [] };
+
+  function tbGoTo(step) {
+    document.querySelectorAll('.tb-step').forEach(s => s.classList.toggle('active', +s.dataset.step === step));
+    document.querySelectorAll('.tb-dot').forEach(d => d.classList.toggle('active', +d.dataset.dot <= step));
+    document.getElementById('tripBuilder').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function tbNext(current) {
+    if (current === 1) {
+      trip.name = document.getElementById('tb-name').value.trim();
+      trip.email = document.getElementById('tb-email').value.trim();
+      const err = document.getElementById('tb-err-1');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trip.email)) {
+        err.textContent = 'Please enter a valid email address so we can send your itinerary.';
+        return;
+      }
+      err.textContent = '';
+    }
+    if (current === 2) {
+      trip.dates = document.getElementById('tb-dates').value.trim();
+      trip.days = document.getElementById('tb-days').value.trim();
+    }
+    tbGoTo(current + 1);
+  }
+
+  function tbPick(el, field, value) {
+    el.parentElement.querySelectorAll('.interest-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    trip[field] = value;
+  }
+
+  async function tbSubmit() {
+    trip.interests = Array.from(document.querySelectorAll('#tripBuilder .interest-chips .interest-chip.selected'))
+      .map(c => c.textContent.trim());
+    const btn = document.getElementById('tb-submit');
+    const err = document.getElementById('tb-err-4');
+    err.textContent = '';
+    if (!trip.email) { tbGoTo(1); document.getElementById('tb-err-1').textContent = 'We need your email first.'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Building…';
+    try {
+      const res = await fetch(SAVE_TRIP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(trip),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        if (data.message) document.getElementById('tbSuccessMsg').textContent = data.message;
+        document.querySelectorAll('.tb-step').forEach(s => s.classList.remove('active'));
+        document.querySelector('.tb-progress').style.display = 'none';
+        document.getElementById('tbSuccess').classList.add('active');
+      } else {
+        err.textContent = (data && data.message) || 'Something went wrong. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Build my itinerary →';
+      }
+    } catch (e) {
+      err.textContent = 'Could not reach the server. Please check your connection and try again.';
+      btn.disabled = false;
+      btn.textContent = 'Build my itinerary →';
     }
   }
 </script>

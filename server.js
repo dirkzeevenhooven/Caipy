@@ -45,6 +45,22 @@ const tavusConversations = new Map();
 // Tracks conversation_ids already processed for itinerary — prevents double generation
 const processedConversations = new Set();
 
+// Light per-email rate limit for the Trip Builder form. Maps email → [timestamps].
+// In-memory only (resets on restart) — sufficient to block cheap cost abuse of the
+// unauthenticated /save-trip endpoint without adding persistence overhead.
+const tripGenThrottle = new Map();
+const TRIP_GEN_MAX = 2;                        // max generations per email…
+const TRIP_GEN_WINDOW_MS = 60 * 60 * 1000;     // …per rolling hour
+function canGenerateItinerary(email) {
+  const key = String(email || '').toLowerCase();
+  const now = Date.now();
+  const hits = (tripGenThrottle.get(key) || []).filter(t => now - t < TRIP_GEN_WINDOW_MS);
+  if (hits.length >= TRIP_GEN_MAX) { tripGenThrottle.set(key, hits); return false; }
+  hits.push(now);
+  tripGenThrottle.set(key, hits);
+  return true;
+}
+
 // Clean up pending itineraries older than 2 hours
 setInterval(() => {
   const cutoff = Date.now() - 2 * 60 * 60 * 1000;
@@ -1321,6 +1337,66 @@ app.post('/resend-guide', async (req, res) => {
     res.json({ ok: true, message: 'Check your inbox — your guide link is on its way.' });
   } catch (err) {
     console.error('[resend-guide] Error:', err.message);
+    res.status(500).json({ ok: false, message: 'Something went wrong. Please try again.' });
+  }
+});
+
+// ─── Save trip profile from the Trip Builder form ────────────────────────────
+// itinerary.html POSTs the structured form here. Always persist the profile,
+// then (subject to a light per-email throttle) generate + email the itinerary
+// via the same path the Tavus voice tool uses — no change to the generator.
+app.post('/save-trip', async (req, res) => {
+  try {
+    const { name, email, dates, days, group, budget, interests } = req.body || {};
+    const cleanEmail = String(email || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return res.status(400).json({ ok: false, message: 'Please enter a valid email address.' });
+    }
+
+    const interestList = Array.isArray(interests) ? interests : (interests ? [interests] : []);
+    const profile = {
+      name: String(name || '').trim(),
+      dates: String(dates || '').trim(),
+      days: String(days || '').trim(),
+      group: String(group || '').trim(),
+      budget: String(budget || '').trim(),
+      interests: interestList,
+      source: 'trip-builder-form',
+    };
+
+    // 1. Always persist the profile first — even if generation is throttled or fails.
+    try {
+      storage.saveTripProfile(cleanEmail, profile);
+    } catch (e) {
+      console.error('[save-trip] Could not save profile:', e.message);
+    }
+
+    // 2. Light per-email throttle to protect the unauthenticated cost path.
+    if (!canGenerateItinerary(cleanEmail)) {
+      console.log('[save-trip] Throttled generation for', cleanEmail);
+      return res.json({
+        ok: true, generating: false, throttled: true,
+        message: "We've saved your trip. You've requested a couple of itineraries recently — please check your inbox, or try again a little later.",
+      });
+    }
+
+    // 3. Build a transcript-style string (same shape the Tavus voice tool uses).
+    const transcript = `Visitor is planning a Cape Town trip.
+Name: ${profile.name || 'not specified'}
+Travel dates / timing: ${profile.dates || 'not specified'}
+Duration: ${profile.days ? profile.days + ' days' : 'not specified'}
+Travelling with: ${profile.group || 'not specified'}
+Budget: ${profile.budget || 'not specified'}
+Interests: ${interestList.length ? interestList.join(', ') : 'not specified'}`;
+
+    // 4. Fire-and-forget generation; respond immediately.
+    generateAndEmailItinerary(cleanEmail, transcript, null).catch(err =>
+      console.error('[save-trip] Itinerary generation error:', err.message)
+    );
+
+    res.json({ ok: true, generating: true, message: 'Your itinerary is being created and will arrive by email shortly.' });
+  } catch (err) {
+    console.error('[save-trip] Error:', err.message);
     res.status(500).json({ ok: false, message: 'Something went wrong. Please try again.' });
   }
 });
