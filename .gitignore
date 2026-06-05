@@ -6,3 +6,5 @@ public/guides/
 *.mov
 booking-monitor-state.json
 .data/
+.claude/worktrees/
+guide/backup bestanden/
