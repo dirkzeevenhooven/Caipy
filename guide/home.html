@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Cape Town Trip Hub · Planet Curated</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>var GUIDE_PAGE = 'home';</script>
+  <link rel="stylesheet" href="/guide/sidebar.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -16,17 +18,7 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
 
-    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: #1a3245; border-right: 1px solid rgba(201,169,110,0.18); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
-    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
-    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
-    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: rgba(250,248,244,0.45); text-transform: uppercase; }
-    .sidebar-section { padding: 16px 12px 6px; font-size: 10px; letter-spacing: 2px; color: rgba(90,180,232,0.85); text-transform: uppercase; font-weight: 600; }
-    .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 14px; color: rgba(250,248,244,0.96); font-weight: 400; cursor: pointer; transition: all 0.2s; text-decoration: none; }
-    .sidebar-item:hover { color: rgba(250,248,244,0.96); background: rgba(90,180,232,0.06); }
-    .sidebar-item.active { border-left: 2px solid rgba(90,180,232,0.8); color: rgba(90,180,232,0.95); background: rgba(90,180,232,0.06); }
-    .sidebar-item .icon { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 1.75; }
-
-    .main { margin-left: var(--sidebar-w); }
+    /* Sidebar styles now provided by /guide/sidebar.css (shared component) */
 
     /* HERO */
     .hero {
@@ -132,62 +124,16 @@
     .itinerary-benefit::before { content: '✓'; color: var(--gold); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
 
     @media (max-width: 900px) { .featured-grid { grid-template-columns: 1fr; } .tools-grid { grid-template-columns: 1fr 1fr; } .itinerary-benefits { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero { height: 100svh; } .hero-content { padding: 24px 24px 48px; flex-direction: column; align-items: flex-start; } .content { padding: 28px 20px 60px; } .tools-grid { grid-template-columns: 1fr; } .itinerary-cta { padding: 24px; } }
+    @media (max-width: 768px) { .hero { height: 100svh; } .hero-content { padding: 24px 24px 48px; flex-direction: column; align-items: flex-start; } .content { padding: 28px 20px 60px; } .tools-grid { grid-template-columns: 1fr; } .itinerary-cta { padding: 24px; } }
 
-    /* Sidebar toggle */
-    .sidebar { transition: transform 0.35s ease; }
-    .main { transition: margin-left 0.35s ease; }
-    body.nav-hidden .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
-    body.nav-hidden .main { margin-left: 0; }
-    .nav-toggle {
-      position: fixed; top: 16px; left: calc(var(--sidebar-w) + 12px); z-index: 200;
-      height: 32px; padding: 0 14px 0 10px; border-radius: 20px;
-      background: rgba(15,36,48,0.75); border: 1px solid rgba(90,180,232,0.35);
-      color: rgba(90,180,232,0.9); cursor: pointer; display: flex; align-items: center; gap: 7px;
-      font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-      backdrop-filter: blur(6px); white-space: nowrap;
-    }
-    .nav-toggle:hover { background: rgba(90,180,232,0.12); border-color: rgba(90,180,232,0.7); }
-    .nav-toggle .toggle-icon { font-size: 13px; }
-    .nav-toggle { transition: left 0.35s ease; }
-    body.nav-hidden .nav-toggle { left: 16px; }
+    /* Sidebar + toggle styles now provided by /guide/sidebar.css (shared component) */
   </style>
 <script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
+<script src="/guide/sidebar.js" defer></script>
 </head>
 <body>
-<button class="nav-toggle" id="navToggle" title="Toggle navigation" onclick="const h=document.body.classList.toggle('nav-hidden');this.innerHTML=h?'<span class=\'toggle-icon\'>☰</span> Menu':'<span class=\'toggle-icon\'>✕</span> Close'"><span class="toggle-icon">✕</span> Close</button>
-
-<div class="sidebar">
-  <div class="sidebar-logo">
-    <div class="brand">Planet <span style="color:rgba(90,180,232,0.95)">Curated</span></div>
-    <div class="sub">Cape Town Guide</div>
-  </div>
-  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
-      <div class="sidebar-section">Dashboard</div>
-  <a href="home.html" class="sidebar-item active"><i data-lucide="home" class="icon"></i> Home</a>
-  <a href="sample-itinerary.html" class="sidebar-item"><i data-lucide="file-text" class="icon"></i> Sample Itinerary</a>
-  <a href="map.html" class="sidebar-item"><i data-lucide="map" class="icon"></i> Interactive Map</a>
-  <a href="live.html" class="sidebar-item"><i data-lucide="sun" class="icon"></i> Live Cape Town</a>
-  <div class="sidebar-section">Explore</div>
-  <a href="experiences.html" class="sidebar-item"><i data-lucide="star" class="icon"></i> Iconic Experiences</a>
-  <a href="hidden-gems.html" class="sidebar-item"><i data-lucide="gem" class="icon"></i> Hidden Gems</a>
-  <a href="neighbourhoods.html" class="sidebar-item"><i data-lucide="map-pin" class="icon"></i> Neighbourhoods</a>
-  <a href="beaches.html" class="sidebar-item"><i data-lucide="waves" class="icon"></i> Beaches & Outdoors</a>
-  <a href="daytrips.html" class="sidebar-item"><i data-lucide="car" class="icon"></i> Day Trips</a>
-  <div class="sidebar-section">Eat & Drink</div>
-  <a href="food.html" class="sidebar-item"><i data-lucide="utensils" class="icon"></i> Where to Eat</a>
-  <a href="wine.html" class="sidebar-item"><i data-lucide="wine" class="icon"></i> Wine & Winelands</a>
-  <div class="sidebar-section">Stay & Get Around</div>
-  <a href="stay.html" class="sidebar-item"><i data-lucide="bed-double" class="icon"></i> Where to Stay</a>
-  <a href="carrental.html" class="sidebar-item"><i data-lucide="key" class="icon"></i> Car Rental</a>
-  <div class="sidebar-section">Trip Prep</div>
-  <a href="budget.html" class="sidebar-item"><i data-lucide="wallet" class="icon"></i> Budget & Costs</a>
-  <a href="safety.html" class="sidebar-item"><i data-lucide="shield" class="icon"></i> Safety Guide</a>
-  <a href="packing.html" class="sidebar-item"><i data-lucide="luggage" class="icon"></i> Packing & Essentials</a>
-  <div class="sidebar-section">My Trip</div>
-  <a href="itinerary.html" class="sidebar-item"><i data-lucide="plane" class="icon"></i> Build My Trip</a>
-  <a href="myguide.html" class="sidebar-item"><i data-lucide="book-open" class="icon"></i> My Guide</a>
-</div>
+<!-- Shared sidebar (injected by /guide/sidebar.js) -->
+<div id="guide-sidebar"></div>
 
 <div class="main">
   <div class="hero">
