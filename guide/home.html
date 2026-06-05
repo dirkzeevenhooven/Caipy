@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="/guide/guard.js"></script>
+  <script>var GUIDE_PAGE = 'home';</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Cape Town Trip Hub · Planet Curated</title>
+  <title>Welcome to Your Cape Town Guide · Planet Curated</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <script>var GUIDE_PAGE = 'home';</script>
   <link rel="stylesheet" href="/guide/sidebar.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,437 +14,375 @@
       --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-mid: #1e3f52;
       --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
       --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.35);
-      --sidebar-w: 200px;
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
 
-    /* Sidebar styles now provided by /guide/sidebar.css (shared component) */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: #1a3245; border-right: 1px solid rgba(201,169,110,0.18); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: rgba(250,248,244,0.45); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 6px; font-size: 10px; letter-spacing: 2px; color: rgba(90,180,232,0.85); text-transform: uppercase; font-weight: 600; }
+    .sidebar-cta { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 12px 8px; padding: 13px 16px; background: var(--gold); color: #0F2430; border-radius: 8px; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; text-decoration: none; transition: background 0.2s; text-align: center; }
+    .sidebar-cta:hover { background: #e0c48a; }
+    .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 14px; color: rgba(250,248,244,0.96); font-weight: 400; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: rgba(250,248,244,0.96); background: rgba(90,180,232,0.06); }
+    .sidebar-item.active { border-left: 2px solid rgba(90,180,232,0.8); color: rgba(90,180,232,0.95); background: rgba(90,180,232,0.06); }
+    .sidebar-item .icon { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 1.75; }
 
     /* HERO */
     .hero {
-      position: relative; height: 100vh; min-height: 560px;
-      display: flex; align-items: flex-end; overflow: hidden;
+      position: relative; min-height: 90vh;
+      display: flex; align-items: center; overflow: hidden;
       background: var(--ocean-dark);
     }
     .hero-video {
       position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; object-position: center; z-index: 0; transition: opacity 1.5s;
+      object-fit: cover; object-position: center; z-index: 0;
     }
-    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.05) 0%, rgba(15,36,48,0.45) 60%, rgba(15,36,48,0.85) 100%); z-index: 1; }
-    .hero-content { position: relative; z-index: 2; padding: 60px 60px 80px; width: 100%; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
-    .hero-text .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .hero-text h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4.5vw, 56px); font-weight: 300; line-height: 1.1; }
-    .hero-text h1 em { font-style: italic; color: var(--gold); }
-    .hero-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 420px; margin-top: 14px; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.30) 0%, rgba(15,36,48,0.55) 55%, rgba(15,36,48,0.92) 100%); z-index: 1; }
+    .hero-content { position: relative; z-index: 2; padding: 60px; width: 100%; max-width: 1160px; margin: 0 auto; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .hero-content h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 5vw, 60px); font-weight: 300; line-height: 1.08; }
+    .hero-content h1 em { font-style: italic; color: var(--gold); }
+    .hero-lead { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 600px; margin-top: 16px; }
 
-    /* WEATHER MINI */
-    .hero-weather { background: rgba(15,36,48,0.75); border: 1px solid rgba(201,169,110,0.2); border-radius: 12px; padding: 16px 20px; min-width: 180px; text-align: center; flex-shrink: 0; }
-    .hw-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-    .hw-temp { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; line-height: 1; color: var(--white); }
-    .hw-desc { font-size: 12px; color: var(--white-dim); margin-top: 4px; text-transform: capitalize; }
-    .hw-advice { font-size: 11px; color: rgba(90,180,232,0.85); margin-top: 8px; line-height: 1.4; font-style: italic; border-top: 1px solid rgba(90,180,232,0.15); padding-top: 8px; }
-    .hw-live { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: rgba(74,188,100,0.8); margin-top: 6px; }
-    .live-dot { width: 6px; height: 6px; background: #4abc64; border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-    .hw-link { display: block; font-size: 10px; color: rgba(201,169,110,0.6); text-decoration: none; margin-top: 8px; }
-    .hw-link:hover { color: var(--gold); }
+    /* UBUNTU VOICE — compact launcher pill (sits under the CTAs) */
+    .ubuntu-voice { scroll-margin-top: 24px; outline: none; max-width: 600px; }
+    .ubuntu-voice--focus .uv-launcher { box-shadow: 0 0 0 2px rgba(201,169,110,0.6), 0 14px 44px rgba(0,0,0,0.45); transition: box-shadow 0.3s ease; }
+    .uv-launcher {
+      display: inline-flex; align-items: center; gap: 16px;
+      margin-top: 30px; padding: 12px 18px 12px 12px;
+      background: rgba(15,36,48,0.32);
+      backdrop-filter: blur(16px) saturate(120%);
+      -webkit-backdrop-filter: blur(16px) saturate(120%);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.26);
+    }
+    .uv-portrait-wrap { display: block; flex-shrink: 0; line-height: 0; }
+    .uv-portrait {
+      width: 52px; height: 52px; border-radius: 50%; object-fit: cover; object-position: center top;
+      border: 2px solid rgba(201,169,110,0.5); display: block;
+    }
+    .uv-portrait-wrap.uv-live .uv-portrait { border-color: rgba(90,180,232,0.9); animation: uvLivePulse 1.8s ease-in-out infinite; }
+    @keyframes uvLivePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(90,180,232,0.45); }
+      50%      { box-shadow: 0 0 0 12px rgba(90,180,232,0); }
+    }
+    .uv-text { display: flex; flex-direction: column; gap: 2px; padding-right: 4px; }
+    .uv-name { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+    .uv-line { font-size: 13.5px; color: var(--white-dim); white-space: nowrap; }
+    .uv-start-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; background: transparent; color: var(--gold); border: 1px solid rgba(201,169,110,0.55); border-radius: 999px; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
+    .uv-start-btn:hover { background: rgba(201,169,110,0.12); color: var(--gold-light); }
+    .uv-script { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; line-height: 1.7; color: var(--white-dim); text-align: left; }
 
-    /* CONTENT */
-    .content { padding: 56px 60px 80px; }
-
-    /* DIRK NOTE */
-    .dirk-note { display: flex; gap: 20px; align-items: flex-start; background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.18); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; }
-    .dirk-avatar { width: 52px; height: 52px; border-radius: 50%; background: url('/photos/dirk-jumping-seapoint.jpeg') center/cover; flex-shrink: 0; border: 2px solid rgba(201,169,110,0.3); }
-    .dirk-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; }
-    .dirk-text strong { color: var(--white); }
-    .dirk-name { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
-
-    /* UBUNTU COMPANION */
-    .ubuntu-block { display: flex; align-items: center; gap: 16px; background: rgba(90,180,232,0.05); border: 1px solid rgba(90,180,232,0.18); border-radius: 14px; padding: 18px 24px; margin-bottom: 48px; }
-    .ubuntu-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(90,180,232,0.12); border: 1.5px solid rgba(90,180,232,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .ubuntu-avatar .icon { width: 18px; height: 18px; color: rgba(90,180,232,0.9); stroke-width: 1.5; }
-    .ubuntu-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(90,180,232,0.7); margin-bottom: 3px; }
-    .ubuntu-text { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
-    .ubuntu-text a { color: rgba(90,180,232,0.85); text-decoration: none; }
-    .ubuntu-text a:hover { color: rgba(90,180,232,1); }
-
-    /* SECTION GRID */
-    .section-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 40px; }
-    .dash-card { display: flex; flex-direction: column; background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.1); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.2s; }
-    .dash-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(201,169,110,0.3); transform: translateY(-2px); }
-    .dash-card .card-icon { margin-bottom: 12px; }
-    .dash-card .card-icon .icon { width: 20px; height: 20px; color: var(--gold); stroke-width: 1.5; }
-    .dash-card .card-name { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 5px; }
-    .dash-card .card-desc { font-size: 12px; color: var(--white-faint); line-height: 1.5; }
-    .dash-card .card-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: rgba(90,180,232,0.6); margin-top: 8px; }
-
-    /* FEATURED (wide cards) */
-    .featured-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 56px; }
-    .feat-card { position: relative; border-radius: 14px; overflow: hidden; min-height: 180px; display: flex; align-items: flex-end; text-decoration: none; transition: transform 0.25s; }
-    .feat-card:hover { transform: translateY(-3px); }
-    .feat-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
-    .feat-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,36,48,0.9) 0%, rgba(15,36,48,0.2) 60%); }
-    .feat-content { position: relative; z-index: 2; padding: 20px 22px; }
-    .feat-tag { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
-    .feat-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--white); line-height: 1.2; }
-    .feat-hint { font-size: 12px; color: var(--white-dim); margin-top: 4px; }
-
-    /* TOOLS ROW */
-    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 48px; }
-    .tool-card { background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.2); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; gap: 14px; }
-    .tool-card:hover { background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.35); }
-    .tool-icon { flex-shrink: 0; }
-    .tool-icon .icon { width: 22px; height: 22px; color: var(--gold); stroke-width: 1.5; }
-    .tool-name { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
-    .tool-desc { font-size: 11px; color: var(--white-faint); line-height: 1.4; }
-
-    /* WHALE BANNER */
-    .whale-banner { display: none; background: rgba(42,100,150,0.12); border: 1px solid rgba(42,100,200,0.25); border-radius: 12px; padding: 16px 22px; margin-bottom: 48px; align-items: center; gap: 14px; text-decoration: none; }
-    .whale-banner.visible { display: flex; }
-    .whale-banner:hover { background: rgba(42,100,150,0.2); }
-    .wb-text .wb-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
-    .wb-text .wb-sub { font-size: 12px; color: var(--white-dim); }
-    .wb-arrow { font-size: 16px; color: var(--gold); margin-left: auto; }
-
-    /* HERO BUTTONS */
-    .hero-btns { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
-    .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--gold); color: var(--ocean-dark); border-radius: 7px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s; white-space: nowrap; }
+    /* BUTTONS */
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s; white-space: nowrap; border: none; cursor: pointer; }
     .btn-primary:hover { background: var(--gold-light); }
-    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: transparent; color: var(--white); border: 1px solid rgba(250,248,244,0.4); border-radius: 7px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: transparent; color: var(--white); border: 1px solid rgba(250,248,244,0.4); border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
     .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
 
-    /* ITINERARY CTA CARD */
-    .itinerary-cta { background: linear-gradient(135deg, rgba(201,169,110,0.09) 0%, rgba(201,169,110,0.03) 100%); border: 1px solid rgba(201,169,110,0.28); border-radius: 16px; padding: 32px 36px; margin-bottom: 56px; }
-    .itinerary-cta-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .itinerary-cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.5vw, 30px); font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
-    .itinerary-cta-desc { font-size: 14px; color: var(--white-dim); line-height: 1.75; margin-bottom: 20px; max-width: 620px; }
-    .itinerary-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 32px; margin-bottom: 24px; }
-    .itinerary-benefit { font-size: 13px; color: var(--white-dim); display: flex; align-items: flex-start; gap: 8px; }
-    .itinerary-benefit::before { content: '✓'; color: var(--gold); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+    /* PRIMARY CTA ROW */
+    .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
 
-    @media (max-width: 900px) { .featured-grid { grid-template-columns: 1fr; } .tools-grid { grid-template-columns: 1fr 1fr; } .itinerary-benefits { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .hero { height: 100svh; } .hero-content { padding: 24px 24px 48px; flex-direction: column; align-items: flex-start; } .content { padding: 28px 20px 60px; } .tools-grid { grid-template-columns: 1fr; } .itinerary-cta { padding: 24px; } }
-
-    /* Sidebar + toggle styles now provided by /guide/sidebar.css (shared component) */
+    @media (max-width: 900px) {
+      .hero { min-height: auto; }
+    }
+    @media (max-width: 768px) {
+      .hero-content { padding: 48px 22px; }
+      .uv-launcher { flex-wrap: wrap; border-radius: 18px; padding: 16px; }
+      .uv-line { white-space: normal; }
+    }
   </style>
-<script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
-<script src="/guide/sidebar.js" defer></script>
+  <script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/@daily-co/daily-js"></script>
+  <!-- ElevenLabs Conversational AI client SDK — exposes window.client.Conversation (website-style voice) -->
+  <script src="/index_files/client" defer></script>
+  <script src="/guide/sidebar.js" defer></script>
 </head>
 <body>
-<!-- Shared sidebar (injected by /guide/sidebar.js) -->
+
 <div id="guide-sidebar"></div>
 
 <div class="main">
+
+  <!-- HERO / WELCOME -->
   <div class="hero">
-    <video id="hv-a" class="hero-video" autoplay muted playsinline src="/photos/hero-capetown.mp4"></video>
-    <video id="hv-b" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/33646247/14298719_1920_1080_24fps.mp4" style="opacity:0;"></video>
-    <video id="hv-c" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/33646748/14298633_1920_1080_24fps.mp4" style="opacity:0;"></video>
-    <video id="hv-d" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/5664984/5664984-hd_1920_1080_25fps.mp4" style="opacity:0;"></video>
-    <video id="hv-e" class="hero-video" muted playsinline src="https://videos.pexels.com/video-files/17916042/17916042-hd_1920_1080_30fps.mp4" style="opacity:0;"></video>
+    <video class="hero-video" autoplay muted loop playsinline src="/photos/hero-capetown.mp4"></video>
     <div class="hero-content">
-      <div class="hero-text">
-        <div class="eyebrow">Welcome · Your Cape Town Guide</div>
-        <h1>Your Cape Town<br><em>Trip Hub</em></h1>
-        <p>Everything you need for an exceptional Cape Town trip — curated places, smart maps, honest safety guidance and a personalised itinerary built around the way you travel.</p>
-        <div class="hero-btns">
-          <a href="itinerary.html" class="btn-primary">Build My Trip</a>
-          <a href="map.html" class="btn-secondary">Explore the Map</a>
+      <div class="hero-eyebrow">Planet Curated · Cape Town</div>
+      <h1>Welcome to your<br><em>Cape Town Guide</em></h1>
+      <p class="hero-lead">Choose smarter, plan safer, and travel better.</p>
+      <div class="cta-row">
+        <a href="itinerary.html" class="btn-primary">Build My Trip &rarr;</a>
+        <a href="myguide.html" class="btn-secondary">Explore the Guide &rarr;</a>
+      </div>
+
+      <!-- UBUNTU VOICE — compact launcher -->
+      <div class="ubuntu-voice" id="ubuntu-voice" tabindex="-1">
+        <div class="uv-launcher">
+          <div class="uv-portrait-wrap">
+            <img class="uv-portrait" src="/ubuntu-avatar.png" alt="Ubuntu — your Personal Cape Town Travel Butler" />
+          </div>
+          <div class="uv-text">
+            <div class="uv-name">Ubuntu · Travel Butler</div>
+            <div class="uv-line">Ask anything about Cape Town &mdash; live, by voice.</div>
+          </div>
+          <button type="button" class="uv-start-btn" id="uv-start-btn" onclick="startUbuntuGuide()">Talk to Ubuntu &rarr;</button>
         </div>
-      </div>
-      <div class="hero-weather">
-        <div class="hw-label">Cape Town · Now</div>
-        <div class="hw-temp" id="hw-temp">--°</div>
-        <div class="hw-desc" id="hw-desc">Loading...</div>
-        <div class="hw-advice" id="hw-advice" style="display:none;"></div>
-        <div class="hw-live"><span class="live-dot"></span> Live data</div>
-        <a href="live.html" class="hw-link">Full forecast →</a>
-      </div>
-    </div>
-  </div>
 
-  <div class="content">
-
-    <!-- DIRK'S NOTE -->
-    <div class="dirk-note">
-      <div class="dirk-avatar"></div>
-      <div>
-        <div class="dirk-text"><strong>Welcome.</strong> I've spent years exploring every corner of Cape Town — the iconic spots, the hidden gems, the places only locals know. This guide is my honest, opinionated take on the best the city has to offer. No sponsored content. No generic lists. Just what I'd tell a close friend visiting for the first time.</div>
-        <div class="dirk-name">Dirk Zeevenhooven · Planet Curated</div>
-      </div>
-    </div>
-
-    <!-- UBUNTU COMPANION -->
-    <div class="ubuntu-block">
-      <div class="ubuntu-avatar">
-        <i data-lucide="bot" class="icon"></i>
-      </div>
-      <div>
-        <div class="ubuntu-label">Ubuntu · Your AI Trip Companion</div>
-        <div class="ubuntu-text">Ready to plan your trip? <a href="itinerary.html">Build your personalised itinerary</a> — or browse the guide to discover what Cape Town has waiting for you.</div>
+        <!-- Ubuntu GUIDE MODE voice — website-style voice/avatar (ElevenLabs, Ubuntu's photo). No Tavus/Caipy video. No name/email intake. -->
+        <!-- Voice stage: hidden until a conversation starts, then expands below the launcher. -->
+        <p class="uv-script" id="uv-script" style="display:none;">&ldquo;Hi there, howzit &mdash; welcome inside your Cape Town Guide. I&rsquo;m Ubuntu, your personal Cape Town Travel Butler. You can ask me anything about the Mother City and the areas around it. Where to stay, which car rental company to recommend, everything with regards to safety and where you can find the best restaurants. I can also guide you to the finest wine estates, nicest beaches, roadtrips, hidden gems or how to build your perfect itinerary with your family. So, what would you like to know first about Cape Town?&rdquo;</p>
+        <p class="uv-script" id="uv-placeholder" style="display:none; color:var(--gold-light);">Ubuntu voice is being prepared for the soft launch. Soon you&rsquo;ll be able to ask Ubuntu anything about Cape Town directly inside your guide.</p>
+        <div id="ubuntu-voice-stage" style="display:none; margin-top:18px; max-width:560px;">
+          <p id="uv-status" class="uv-script" style="color:var(--gold-light); margin-top:6px;"></p>
+          <div id="uv-transcript" style="display:none; margin-top:16px; max-height:320px; overflow-y:auto; text-align:left; border:1px solid rgba(201,169,110,0.25); border-radius:12px; padding:14px 16px; background:rgba(0,0,0,0.12);"></div>
+          <button type="button" class="btn-secondary" onclick="endUbuntuGuide()" style="margin-top:16px;">End conversation</button>
+        </div>
+        <p id="uv-error" style="display:none; font-size:13px; color:#e0a0a0; margin-top:14px;">Ubuntu couldn&rsquo;t connect right now. Please allow microphone access, then try again.</p>
       </div>
     </div>
-
-    <!-- ITINERARY CTA -->
-    <div class="itinerary-cta">
-      <div class="itinerary-cta-label">Plan Your Trip</div>
-      <div class="itinerary-cta-title">Create Your Personal Cape Town Itinerary</div>
-      <div class="itinerary-cta-desc">Answer a few smart questions and get a curated Cape Town trip plan based on your dates, travel style, budget, location, interests and safety preferences.</div>
-      <div class="itinerary-benefits">
-        <div class="itinerary-benefit">Built around your travel style</div>
-        <div class="itinerary-benefit">Includes insider tips and map pins</div>
-        <div class="itinerary-benefit">Helps with safety, transport and timing</div>
-        <div class="itinerary-benefit">Gives you Plan B options for weather and wind</div>
-      </div>
-      <a href="itinerary.html" class="btn-primary">Build My Trip</a>
-      <a href="sample-itinerary.html" style="display:inline-block;margin-top:14px;margin-left:16px;font-size:12px;color:rgba(201,169,110,0.6);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,1)'" onmouseout="this.style.color='rgba(201,169,110,0.6)'">See a sample itinerary first →</a>
-    </div>
-
-    <!-- WHALE BANNER (seasonal) -->
-    <a href="live.html" class="whale-banner" id="whale-banner">
-      <span style="font-size:28px;">🐋</span>
-      <div class="wb-text">
-        <div class="wb-title" id="wb-title">Whale season is active</div>
-        <div class="wb-sub">Southern right whales are in False Bay — see the viewing guide</div>
-      </div>
-      <span class="wb-arrow">→</span>
-    </a>
-
-    <!-- FEATURED -->
-    <div class="section-label">Start Here</div>
-    <div class="featured-grid">
-      <a href="experiences.html" class="feat-card">
-        <div class="feat-bg" style="background-image:url('/photos/dirk-jumping-seapoint.jpeg');"></div>
-        <div class="feat-content">
-          <div class="feat-tag">Best for first-timers</div>
-          <div class="feat-name">Iconic Experiences</div>
-          <div class="feat-hint">The non-negotiables — Table Mountain, Cape Point &amp; more</div>
-        </div>
-      </a>
-      <a href="stay.html" class="feat-card">
-        <div class="feat-bg" style="background-image:url('/photos/twelve-apostles-hotel.jpeg');"></div>
-        <div class="feat-content">
-          <div class="feat-tag">13 hand-picked hotels · every budget</div>
-          <div class="feat-name">Where to Stay</div>
-          <div class="feat-hint">From boutique guesthouses to clifftop luxury</div>
-        </div>
-      </a>
-      <a href="beaches.html" class="feat-card">
-        <div class="feat-bg" style="background-image:url('/photos/llandudno-beach.jpg'); background-position: center 40%;"></div>
-        <div class="feat-content">
-          <div class="feat-tag">Atlantic vs False Bay — which is right for you</div>
-          <div class="feat-name">Beaches</div>
-          <div class="feat-hint">Cold, dramatic and beautiful on both sides</div>
-        </div>
-      </a>
-      <a href="wine.html" class="feat-card">
-        <div class="feat-bg" style="background-image:url('/photos/winelands.webp'); background-position: center 50%;"></div>
-        <div class="feat-content">
-          <div class="feat-tag">Day trip from Cape Town</div>
-          <div class="feat-name">Wine &amp; Winelands</div>
-          <div class="feat-hint">Stellenbosch, Franschhoek &amp; the best estates</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- DISCOVER -->
-    <div class="section-label">Discover</div>
-    <div class="card-grid">
-      <a href="hidden-gems.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="gem" class="icon"></i></div>
-        <div class="card-name">Hidden Gems</div>
-        <div class="card-desc">Spots most visitors never find</div>
-        <div class="card-label">Off the beaten track</div>
-      </a>
-      <a href="neighbourhoods.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="map-pin" class="icon"></i></div>
-        <div class="card-name">Neighbourhoods</div>
-        <div class="card-desc">9 areas, honest takes, map links</div>
-        <div class="card-label">Where to base yourself</div>
-      </a>
-      <a href="photography.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="camera" class="icon"></i></div>
-        <div class="card-name">Photography Guide</div>
-        <div class="card-desc">Best spots &amp; golden hour timing</div>
-        <div class="card-label">Sunrise to sunset</div>
-      </a>
-      <a href="food.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="utensils" class="icon"></i></div>
-        <div class="card-name">Restaurants</div>
-        <div class="card-desc">Where Cape Town actually eats</div>
-        <div class="card-label">No tourist traps</div>
-      </a>
-      <a href="wine.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="wine" class="icon"></i></div>
-        <div class="card-name">Wine &amp; Winelands</div>
-        <div class="card-desc">Stellenbosch, Franschhoek &amp; beyond</div>
-        <div class="card-label">45 min from the city</div>
-      </a>
-      <a href="markets.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="shopping-bag" class="icon"></i></div>
-        <div class="card-name">Markets</div>
-        <div class="card-desc">The best Saturday morning in Africa</div>
-        <div class="card-label">Local favourites</div>
-      </a>
-      <a href="beaches.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="waves" class="icon"></i></div>
-        <div class="card-name">Beaches</div>
-        <div class="card-desc">Atlantic vs False Bay — which to pick</div>
-        <div class="card-label">Know the difference</div>
-      </a>
-      <a href="hikes.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="mountain" class="icon"></i></div>
-        <div class="card-name">Outdoor Activities</div>
-        <div class="card-desc">6 hikes before most people wake up</div>
-        <div class="card-label">Active travellers</div>
-      </a>
-      <a href="daytrips.html" class="dash-card">
-        <div class="card-icon"><i data-lucide="car" class="icon"></i></div>
-        <div class="card-name">Day Trips</div>
-        <div class="card-desc">Hermanus, Franschhoek &amp; the Peninsula</div>
-        <div class="card-label">Worth the drive</div>
-      </a>
-    </div>
-
-    <!-- START HERE -->
-    <a href="starthere.html" class="tool-card" style="background:rgba(201,169,110,0.1);border-color:rgba(201,169,110,0.35);margin-bottom:14px;display:flex;">
-      <div class="tool-icon"><i data-lucide="compass" class="icon"></i></div>
-      <div>
-        <div class="tool-name" style="color:var(--gold);">Start Here — Find Your Trip</div>
-        <div class="tool-desc">3 quick questions → your personalised guide recommendations</div>
-      </div>
-    </a>
-
-    <!-- TOOLS -->
-    <div class="section-label">Plan Your Trip</div>
-    <div class="tools-grid">
-      <a href="budget.html" class="tool-card">
-        <div class="tool-icon"><i data-lucide="wallet" class="icon"></i></div>
-        <div>
-          <div class="tool-name">What Will It Cost?</div>
-          <div class="tool-desc">Get a personalised cost estimate for your trip</div>
-        </div>
-      </a>
-      <a href="live.html" class="tool-card">
-        <div class="tool-icon"><i data-lucide="sun" class="icon"></i></div>
-        <div>
-          <div class="tool-name">Live Cape Town</div>
-          <div class="tool-desc">Weather, webcams, whale season &amp; currency</div>
-        </div>
-      </a>
-      <a href="carrental.html" class="tool-card">
-        <div class="tool-icon"><i data-lucide="key" class="icon"></i></div>
-        <div>
-          <div class="tool-name">Car Rental Guide</div>
-          <div class="tool-desc">Do you need one? Which company? Dirk's tips</div>
-        </div>
-      </a>
-      <a href="safety.html" class="tool-card">
-        <div class="tool-icon"><i data-lucide="shield" class="icon"></i></div>
-        <div>
-          <div class="tool-name">Safety Guide</div>
-          <div class="tool-desc">How to enjoy the city confidently</div>
-        </div>
-      </a>
-      <a href="practical.html" class="tool-card">
-        <div class="tool-icon"><i data-lucide="clipboard-list" class="icon"></i></div>
-        <div>
-          <div class="tool-name">Travel Essentials</div>
-          <div class="tool-desc">SIM cards, transport, tipping &amp; more</div>
-        </div>
-      </a>
-      <a href="myguide.html" class="tool-card">
-        <div class="tool-icon"><i data-lucide="book-open" class="icon"></i></div>
-        <div>
-          <div class="tool-name">My Guide</div>
-          <div class="tool-desc">Retrieve your personalised Ubuntu guide</div>
-        </div>
-      </a>
-    </div>
-
   </div>
 </div>
 
+<script>lucide.createIcons();</script>
 <script>
-  // Open-Meteo WMO code → label + travel advice
-  function parseWeather(code, temp, wind) {
-    let desc, advice;
-    if (code === 0) { desc = 'Clear sky'; }
-    else if (code <= 2) { desc = 'Partly cloudy'; }
-    else if (code === 3) { desc = 'Overcast'; }
-    else if (code <= 48) { desc = 'Foggy'; }
-    else if (code <= 55) { desc = 'Light drizzle'; }
-    else if (code <= 65) { desc = 'Rain'; }
-    else if (code <= 75) { desc = 'Snow'; }
-    else if (code <= 82) { desc = 'Rain showers'; }
-    else { desc = 'Thunderstorms'; }
-
-    if (code >= 95) advice = 'Thunderstorms expected — perfect day for wine tasting indoors';
-    else if (code >= 61 && code <= 82) advice = 'Rainy day — head to the Waterfront or a V&A café';
-    else if (wind > 10) advice = 'South-easter is up — False Bay beaches are calmer today';
-    else if (code === 0 && temp > 22) advice = 'Perfect for Table Mountain — go before noon';
-    else if (code === 0) advice = 'Clear skies — great day for the Cape Peninsula drive';
-    else if (code <= 2) advice = 'Partly cloudy — ideal for Boulders Beach';
-    else if (code === 3) advice = 'Overcast — a good excuse for a winelands day trip';
-    else advice = 'Good conditions for exploring the city';
-
-    return { desc, advice };
-  }
-
-  async function loadWeather() {
-    try {
-      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.9249&longitude=18.4241&current=temperature_2m,weather_code,wind_speed_10m&wind_speed_unit=ms');
-      if (!res.ok) throw new Error();
-      const d = await res.json();
-      const temp = Math.round(d.current.temperature_2m);
-      const wind = d.current.wind_speed_10m;
-      const code = d.current.weather_code;
-      const { desc, advice } = parseWeather(code, temp, wind);
-      document.getElementById('hw-temp').textContent = temp + '°C';
-      document.getElementById('hw-desc').textContent = desc;
-      const adviceEl = document.getElementById('hw-advice');
-      adviceEl.textContent = advice;
-      adviceEl.style.display = 'block';
-    } catch(e) {
-      document.getElementById('hw-temp').textContent = '--°';
-      document.getElementById('hw-desc').textContent = 'Cape Town';
+  // Talk to Ubuntu → scroll to and visually focus the voice area
+  (function () {
+    var section = document.getElementById('ubuntu-voice');
+    if (!section) return;
+    var triggers = document.querySelectorAll('a[href="#ubuntu-voice"]');
+    for (var i = 0; i < triggers.length; i++) {
+      triggers[i].addEventListener('click', function () {
+        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        section.classList.add('ubuntu-voice--focus');
+        try { section.focus({ preventScroll: true }); } catch (e) {}
+        setTimeout(function () { section.classList.remove('ubuntu-voice--focus'); }, 1600);
+      });
     }
-  }
-
-  // Whale banner (Jun–Nov)
-  const month = new Date().getMonth();
-  if (month >= 5 && month <= 10) {
-    document.getElementById('whale-banner').classList.add('visible');
-    const peakMonths = [7, 8, 9];
-    if (peakMonths.includes(month)) {
-      document.getElementById('wb-title').textContent = '🐋 Peak whale season — sightings almost guaranteed';
-    }
-  }
-
-  loadWeather();
-
-  // Hero video crossfade
-  (function(){
-    const vs = ['hv-a','hv-b','hv-c','hv-d','hv-e'].map(id => document.getElementById(id));
-    let cur = 0, timer;
-    function advance() {
-      clearTimeout(timer);
-      const prev = cur;
-      cur = (cur + 1) % vs.length;
-      vs[cur].style.opacity = '1';
-      const p = vs[cur].play();
-      if (p) p.catch(() => { vs[cur].style.opacity='0'; setTimeout(advance, 100); return; });
-      setTimeout(() => { vs[prev].style.opacity = '0'; setTimeout(() => vs[prev].pause(), 1600); }, 200);
-      // Safety: if next video stalls, advance after 14s
-      timer = setTimeout(advance, 14000);
-    }
-    vs.forEach(v => { v.addEventListener('ended', advance); v.addEventListener('error', advance); });
-    // Start safety timer for first video
-    timer = setTimeout(advance, 14000);
   })();
 </script>
+<script>
+  // ── Ubuntu GUIDE MODE voice ───────────────────────────────────────────────
+  // Website-style voice/avatar experience using Ubuntu's photo (ElevenLabs
+  // Conversational AI). NOT Tavus live video. NOT Caipy video.
+  // No name/email intake and no public-website lead modal — the user has
+  // already unlocked the guide. Uses a dedicated GUIDE-MODE system prompt that
+  // is separate from the public website agent behaviour.
+  (function () {
+    var activeConvo = null;
+    // Becomes true once the user has asked a real question. Used to gate the
+    // "Save to My Guide" button so it never appears on Ubuntu's opening message.
+    var userHasAsked = false;
 
-<script>lucide.createIcons();</script>
+    // Full Ubuntu System Prompt — GUIDE MODE (kept separate from public website mode).
+    var UBUNTU_GUIDE_PROMPT = [
+      "Critical voice rule: Never use square brackets. Never output stage directions, tone labels, emotion labels or performance cues. Do not write or say words like [Warmly], [Confidently], [Patiently], [excited], [Great], [Understood] or anything inside brackets. Start every answer directly with the useful answer.",
+      "You are Ubuntu — Your Personal Cape Town Travel Butler.",
+      "You are the voice and intelligence inside The Cape Town Guide by Planet Curated. Your role is to help travellers plan, understand and enjoy Cape Town and the surrounding areas with clarity and local-style guidance.",
+      "You are not a generic chatbot. You are a premium, practical, safety-aware Cape Town travel butler.",
+      "Your purpose: Help travellers make smarter decisions about their Cape Town trip — where to stay, what to book first, how to move around safely, what to do with their travel days, which areas fit their style, which restaurants, wine estates, beaches, day trips and hidden gems are worth their time, and how to build a trip that truly fits them.",
+      "Core identity: Name: Ubuntu. Official title: Your Personal Cape Town Travel Butler. Brand: Planet Curated / The Cape Town Guide. Area of expertise: Cape Town, the Cape Peninsula, Constantia, Stellenbosch, Franschhoek, Hermanus, West Coast, Cederberg, Garden Route planning when relevant, and surrounding areas within roughly 200 km of Cape Town. Speak like a trusted, experienced local: clear, direct, reassuring and practical. Start directly with the answer. Do not label your tone. You help travellers feel guided, safe, inspired and in control.",
+      "Opening line: \"Hi there, howzit — welcome inside your Cape Town Guide. I'm Ubuntu, your personal Cape Town Travel Butler. You can ask me anything about the Mother City and the areas around it. Where to stay, which car rental company to recommend, everything with regards to safety and where you can find the best restaurants. I can also guide you to the finest wine estates, nicest beaches, roadtrips, hidden gems or how to build your perfect itinerary with your family. So, what would you like to know first about Cape Town?\"",
+      "Important behaviour: Answer the user's question directly first. Keep answers useful and not too long. Ask only one smart follow-up question when needed. Give clear recommendations with reasoning. Use \"best for\" and \"avoid if\" logic when comparing options. Be honest when something depends on season, weather, budget, age of children, travel style, safety, opening hours or personal preference. Do not overwhelm the user with too many options. When useful, suggest the next practical step. Prioritise clarity over cleverness.",
+      "You can help with: where to stay in Cape Town; neighbourhood comparisons; safety and practical logistics; car rental versus Uber; airport arrival advice; family travel with young children; romantic trips for couples; trips with friends or groups; restaurants, cafés, food markets and bars; wine estates and wine regions; beaches and scenic drives; hikes and outdoor activities; Cape Peninsula day trips; Stellenbosch, Franschhoek and Constantia wine days; Hermanus, West Coast, Cederberg and Garden Route planning when relevant; what to book first; what to avoid; realistic route planning; day-by-day itinerary structure; travel pacing; Plan B ideas for wind, rain, closures or safety concerns; budget choices; packing and travel preparation; how to use The Cape Town Guide.",
+      "Safety behaviour: Be safety-aware without fearmongering. Cape Town is extraordinary, but users should travel smart. Give practical safety advice around neighbourhoods, transport, hiking, beaches, nightlife, driving and valuables. Do not tell users that every area is safe at all times. Avoid panic-based language. Encourage Uber or private transfer at night when relevant. Recommend checking current local conditions for hikes, road closures, fires, protests, weather, beach safety or safety-sensitive plans. If a user asks about a risky plan, suggest a safer alternative.",
+      "Recommendation style: When recommending places, use practical decision support: Best for; Avoid if; Why go; Best time; Booking priority; Safety/logistics note; Nearby alternative; Dirk's take, when relevant. Do not list endless options. Curate.",
+      "Decision principles: Do not give generic top-10 answers unless asked. Do not say everything is amazing. It is okay to say something is overrated, touristy, only worth it in certain conditions, or better replaced by another option. Prioritise trusted filtering, practical routing and local judgement. Every recommendation should earn its place.",
+      "Recommendation examples: Instead of \"Cape Town has many beautiful areas.\" say \"If it's your first time and you want easy logistics, I'd start with the Waterfront, Sea Point or Green Point. If you want a more local, stylish feel, look at De Waterkant or Gardens. If beach luxury matters more, Camps Bay can be great — but it's pricier and more exposed to wind.\" Instead of \"There are many wine estates.\" say \"For a first wine day, I'd keep it simple: Stellenbosch if you want classic Cape Dutch estates and strong reds, Franschhoek if you want a more polished food-and-wine day, and Constantia if you want something beautiful without leaving Cape Town.\"",
+      "Family travel: When users travel with children, especially young kids: Keep plans realistic. Avoid overloaded days. Mention nap/rest windows where relevant. Recommend shorter drives, safe beaches, child-friendly restaurants and easy logistics. Help parents avoid constant packing/unpacking. Make safety, comfort and flexibility central. Suggest family-friendly places such as the V&A Waterfront, Two Oceans Aquarium, Green Point Urban Park, Kirstenbosch, Boulders Beach, Muizenberg, Constantia, child-friendly wine estates and selected Garden Route stops when relevant.",
+      "Itinerary behaviour: If users ask for an itinerary: First ask for the minimum information needed: travel dates or number of days; who they travel with; travel style; budget level; key interests; whether they want Cape Town only or also Winelands/Garden Route. Then suggest a clear structure. Do not overpack the itinerary. Include travel time logic. Include weather/safety flexibility. Mention what should be booked first.",
+      "If the user is inside The Cape Town Guide: Do not run the public website lead intake. Do not ask for name and email. Do not behave like a sales funnel. The user already has guide access. Help them use the guide and build their trip.",
+      "If the user is on the public website: You may briefly explain the value of The Cape Town Guide. You may invite them to start building their trip. Do not be pushy.",
+      "Do not say: \"I am just an AI\"; \"I cannot help with travel advice\"; \"The server is being deployed\"; \"Live chat is coming soon\"; \"Please answer all of these questions first\"; \"As a language model\"; \"I recommend checking TripAdvisor\" as your main answer; \"Everything is safe\"; \"Everything is worth visiting\".",
+      "Uncertainty rules: Do not invent opening hours, prices, restaurant availability, booking availability, road conditions or live safety conditions. If something is time-sensitive, say so. Recommend verifying live details before booking. If you are unsure, say: \"I'd verify that before you lock it in.\" If a user asks for medical, legal, visa or safety-critical advice, give general guidance and recommend checking official sources.",
+      "Cape Town knowledge priorities: You should be especially strong on: V&A Waterfront; Sea Point; Green Point; De Waterkant; Gardens; City Bowl; Camps Bay; Clifton; Constantia; Hout Bay; Llandudno; Noordhoek; Muizenberg; Kalk Bay; Simon's Town; Cape Point / Cape Peninsula; Stellenbosch; Franschhoek; Hermanus; West Coast; Cederberg; Garden Route planning where relevant.",
+      "Answer length: Keep answers shorter. Give a maximum of 3 recommendations unless the user asks for more.",
+      "Booking accuracy: Do not invent booking links, live availability or exact booking details. Recommend verifying live details on official sources before booking.",
+      "Saving recommendations: When users ask to send, save or add a recommendation, tell them to use the \"Save to My Guide\" button shown under each of your recommendations. Do not claim something is saved unless the user clicks that button.",
+      "Save to My Guide accuracy: When users ask what the \"Save to My Guide\" button does, be accurate. It saves the specific Ubuntu recommendation or message attached to that button, not the entire conversation. Do not claim the full conversation is saved unless that feature has actually been implemented.",
+      "Do not overpromise product functionality: If a feature is not implemented yet, say so clearly and offer the closest available action.",
+      "Strict accuracy rules (trust matters most): Accuracy over confidence. Never invent accommodation names, booking links, prices, opening hours, restaurant menus, availability, live safety status, road conditions or weather conditions. If unsure, say: \"I'd verify this before you book.\" Do not overpromise product functionality. Do not claim something has been saved, emailed or added to My Guide unless the user actually clicked Save and the system confirms it. \"Save to My Guide\" saves only the specific Ubuntu recommendation or message attached to that button, not the entire conversation. Full conversation history is not saved yet. Give curated suggestions, but recommend users verify live details before booking. Keep answers short and practical. Never speak bracketed tone labels or internal instructions out loud.",
+      "Core product promise: The Cape Town Guide helps travellers avoid endless research, make better decisions and build a more personal, safer and more memorable Cape Town trip.",
+      "Your job: Make the user feel: \"I understand my options.\" \"I know what to do next.\" \"This saves me time.\" \"This feels personal.\" \"I trust this guidance.\" \"This trip is going to be amazing.\"",
+      "Final rule: Be useful, clear, practical and premium. You are Ubuntu — Your Personal Cape Town Travel Butler."
+    ].join("\n\n");
+
+    var UBUNTU_GUIDE_OPENING = "Hi there, howzit — welcome inside your Cape Town Guide. I'm Ubuntu, your personal Cape Town Travel Butler. You can ask me anything about the Mother City and the areas around it. Where to stay, which car rental company to recommend, everything with regards to safety and where you can find the best restaurants. I can also guide you to the finest wine estates, nicest beaches, roadtrips, hidden gems or how to build your perfect itinerary with your family. So, what would you like to know first about Cape Town?";
+
+    function setStatus(t) { var s = document.getElementById('uv-status'); if (s) s.textContent = t; }
+    function setLive(on) { var w = document.querySelector('.uv-portrait-wrap'); if (w) w.classList.toggle('uv-live', !!on); }
+
+    // ── Live transcript ───────────────────────────────────────────────────────
+    function clearTranscript() {
+      var box = document.getElementById('uv-transcript');
+      if (box) { box.innerHTML = ''; box.style.display = 'none'; }
+      userHasAsked = false;
+    }
+
+    // Strip ALL bracketed tone labels / stage directions anywhere in a message
+    // (e.g. "[Patiently]", "[Warmly]", "[excited]") before display or save.
+    function stripBracketLabels(text) {
+      return String(text).replace(/\s*\[[^\]]+\]\s*/g, ' ').trim();
+    }
+
+    function addTranscriptLine(who, text) {
+      var box = document.getElementById('uv-transcript');
+      if (!box) return;
+      // Sanitize Ubuntu messages: remove all bracketed labels before display/save.
+      if (who === 'ai') text = stripBracketLabels(text);
+      box.style.display = 'block';
+
+      var row = document.createElement('div');
+      row.style.cssText = 'margin:0 0 12px; font-size:14px; line-height:1.5;';
+
+      // A user message means a real question has been asked.
+      if (who === 'user') userHasAsked = true;
+
+      var label = document.createElement('span');
+      label.textContent = who === 'user' ? 'You: ' : 'Ubuntu: ';
+      label.style.cssText = 'font-weight:700; color:' + (who === 'user' ? 'var(--white)' : 'var(--gold-light)') + ';';
+
+      var body = document.createElement('span');
+      body.textContent = text;
+      body.style.color = 'var(--white)';
+
+      row.appendChild(label);
+      row.appendChild(body);
+
+      // Only Ubuntu/AI responses AFTER the first real user question get a
+      // "+ Save to My Guide" button — never the opening message, never user lines.
+      if (who === 'ai' && userHasAsked) {
+        var save = document.createElement('button');
+        save.type = 'button';
+        save.textContent = '+ Save to My Guide';
+        save.style.cssText = 'display:inline-block; margin-top:8px; font-size:12px; padding:5px 12px; border:1px solid rgba(201,169,110,0.5); border-radius:999px; background:transparent; color:var(--gold-light); cursor:pointer;';
+        save.addEventListener('click', function () {
+          saveUbuntuRecommendation(text);
+          save.textContent = '\u2713 Saved to My Guide';
+          save.disabled = true;
+          save.style.opacity = '0.6';
+          save.style.cursor = 'default';
+        });
+        var wrap = document.createElement('div');
+        wrap.appendChild(save);
+        row.appendChild(wrap);
+      }
+
+      box.appendChild(row);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    // ── Save a recommendation to ubuntuTripProfile.savedPlaces ─────────────────
+    // Matches the existing save-to-trip.js schema exactly (name, category,
+    // sourcePage, location, notes, url) and dedups by name + sourcePage.
+    // save-to-trip.js is NOT loaded on this page, so we write the same shape here.
+    function saveUbuntuRecommendation(message) {
+      var profile = {};
+      try {
+        var raw = localStorage.getItem('ubuntuTripProfile');
+        if (raw) profile = JSON.parse(raw) || {};
+      } catch (e) {}
+      if (!Array.isArray(profile.savedPlaces)) profile.savedPlaces = [];
+
+      var name = message.length > 80 ? message.slice(0, 80).trim() + '\u2026' : message.trim();
+      var sourcePage = 'ubuntu-voice';
+
+      var exists = profile.savedPlaces.some(function (p) {
+        return p.name === name && p.sourcePage === sourcePage;
+      });
+
+      if (!exists) {
+        profile.savedPlaces.push({
+          name: name,
+          category: 'Ubuntu recommendation',
+          sourcePage: sourcePage,
+          location: '',
+          notes: message,
+          url: ''
+        });
+        try { localStorage.setItem('ubuntuTripProfile', JSON.stringify(profile)); } catch (e) {}
+      }
+    }
+
+    window.startUbuntuGuide = async function () {
+      var btn = document.getElementById('uv-start-btn');
+      var script = document.getElementById('uv-script');
+      var stage = document.getElementById('ubuntu-voice-stage');
+      var err = document.getElementById('uv-error');
+      var ph = document.getElementById('uv-placeholder');
+      if (err) err.style.display = 'none';
+      if (ph) ph.style.display = 'none';
+      var original = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = 'Connecting to Ubuntu\u2026';
+      try {
+        try { await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (_) {}
+
+        // Wait up to ~5s for the ElevenLabs SDK (window.client.Conversation) to load.
+        var Conversation = window.client && window.client.Conversation;
+        if (!Conversation) {
+          for (var i = 0; i < 10; i++) {
+            await new Promise(function (r) { setTimeout(r, 500); });
+            Conversation = window.client && window.client.Conversation;
+            if (Conversation) break;
+          }
+        }
+        if (!Conversation) throw new Error('SDK not loaded');
+
+        // Hide the static opening quote — the opening line now appears in the
+        // live transcript, so showing both would duplicate it.
+        if (script) script.style.display = 'none';
+        if (stage) stage.style.display = 'block';
+        setStatus('Connecting\u2026');
+
+        activeConvo = await Conversation.startSession({
+          agentId: 'agent_0501kpzmqy56e3saj586hkn7kanq',
+          // GUIDE-MODE override: full Ubuntu System Prompt + guide opening line.
+          // Keeps guide behaviour separate from the public website agent.
+          overrides: {
+            agent: {
+              prompt: { prompt: UBUNTU_GUIDE_PROMPT },
+              firstMessage: UBUNTU_GUIDE_OPENING,
+              language: 'en'
+            }
+          },
+          onConnect: function () { setStatus('\uD83C\uDF99\uFE0F Listening\u2026 ask Ubuntu anything.'); setLive(true); },
+          onDisconnect: function () { setStatus(''); setLive(false); },
+          onError: function (msg) { setStatus('Error: ' + msg); },
+          onModeChange: function (o) { setStatus(o && o.mode === 'speaking' ? '\uD83D\uDD0A Ubuntu is speaking\u2026' : '\uD83C\uDF99\uFE0F Listening\u2026'); },
+          onMessage: function (m) { if (m && m.message) addTranscriptLine(m.source === 'user' ? 'user' : 'ai', String(m.message)); }
+        });
+
+        btn.innerHTML = original;
+        btn.disabled = false;
+      } catch (e) {
+        btn.innerHTML = original;
+        btn.disabled = false;
+        setLive(false);
+        if (err) err.style.display = 'block';
+      }
+    };
+
+    window.endUbuntuGuide = async function () {
+      try { if (activeConvo && activeConvo.endSession) { await activeConvo.endSession(); } } catch (e) {}
+      activeConvo = null;
+      setLive(false);
+      var stage = document.getElementById('ubuntu-voice-stage');
+      if (stage) stage.style.display = 'none';
+      clearTranscript();
+      setStatus('');
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        var stage = document.getElementById('ubuntu-voice-stage');
+        if (stage && stage.style.display !== 'none') window.endUbuntuGuide();
+      }
+    });
+  })();
+</script>
 </body>
 </html>
