@@ -1,0 +1,302 @@
+/* ─────────────────────────────────────────────────────────────
+   Planet Curated · Shared Sidebar — Hardened CSS
+   All selectors namespaced under .pc-sidebar / .pc-nav-open
+   to prevent page-specific CSS from leaking in.
+   Do not use generic selectors (.sidebar, a, button, .active, etc.)
+───────────────────────────────────────────────────────────── */
+
+:root {
+  --pc-sidebar-w: 200px;
+}
+
+/* ── BOX-SIZING RESET (scoped to sidebar) ────────────────── */
+.pc-sidebar,
+.pc-sidebar * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── SIDEBAR SHELL ───────────────────────────────────────── */
+.pc-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--pc-sidebar-w);
+  height: 100vh;
+  background: #1a3245;
+  border-right: 1px solid rgba(201,169,110,0.18);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform 0.35s ease;
+  /* Base typography — overrides any inherited page styles */
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  color: rgba(250,248,244,0.85);
+  text-decoration: none;
+}
+
+/* ── LOGO ────────────────────────────────────────────────── */
+.pc-sidebar__logo {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid rgba(201,169,110,0.1);
+  flex-shrink: 0;
+}
+
+.pc-sidebar__brand {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-transform: none;
+  color: #FAF8F4;
+  text-decoration: none;
+}
+
+.pc-sidebar__sub {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(250,248,244,0.45);
+  text-decoration: none;
+}
+
+/* ── CTA BUTTON ──────────────────────────────────────────── */
+.pc-sidebar__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 12px 8px;
+  padding: 13px 16px;
+  background: #C9A96E;
+  color: #0F2430;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  text-decoration: none;
+  text-align: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pc-sidebar__cta:hover,
+.pc-sidebar__cta:focus {
+  background: #e0c48a;
+  color: #0F2430;
+  text-decoration: none;
+}
+
+/* Talk to Ubuntu — secondary gold-outline CTA */
+.pc-sidebar__cta--ubuntu {
+  margin-top: 0;
+  background: transparent;
+  color: #C9A96E;
+  border: 1px solid rgba(201,169,110,0.5);
+}
+.pc-sidebar__cta--ubuntu:hover,
+.pc-sidebar__cta--ubuntu:focus {
+  background: rgba(201,169,110,0.12);
+  color: #e0c48a;
+}
+
+/* ── SECTION HEADERS ─────────────────────────────────────── */
+.pc-sidebar__section {
+  display: block;
+  padding: 16px 12px 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(90,180,232,0.85);
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+/* ── NAV LINKS ───────────────────────────────────────────── */
+.pc-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  min-height: 36px;
+  border-left: 2px solid transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-transform: none;
+  color: rgba(250,248,244,0.85);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.pc-sidebar__link:hover,
+.pc-sidebar__link:focus {
+  color: rgba(250,248,244,0.96);
+  background: rgba(90,180,232,0.06);
+  text-decoration: none;
+}
+.pc-sidebar__link--active {
+  border-left-color: rgba(90,180,232,0.8);
+  color: rgba(90,180,232,0.95);
+  background: rgba(90,180,232,0.06);
+}
+.pc-sidebar__link--active:hover,
+.pc-sidebar__link--active:focus {
+  color: rgba(90,180,232,0.95);
+  text-decoration: none;
+}
+
+/* ── LINK ICON ───────────────────────────────────────────── */
+.pc-sidebar__link-icon {
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  flex-shrink: 0;
+  stroke-width: 1.75;
+  display: inline-block;
+}
+
+/* ── IN-SIDEBAR CLOSE BUTTON (lives inside the nav, near the top) ── */
+.pc-sidebar__close {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-end;
+  margin: 12px 12px 0;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 16px;
+  color: #FAF8F4;            /* white text */
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.pc-sidebar__close:hover,
+.pc-sidebar__close:focus {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.45);
+  color: #FAF8F4;
+}
+.pc-sidebar__close-icon {
+  font-size: 12px;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* ── FLOATING OPEN BUTTON (only shown when the sidebar is closed/collapsed) ── */
+.pc-nav-open {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 300;
+  height: 32px;
+  padding: 0 14px 0 10px;
+  border-radius: 20px;
+  background: rgba(15,36,48,0.85);
+  border: 1px solid rgba(90,180,232,0.35);
+  color: rgba(90,180,232,0.95);
+  cursor: pointer;
+  display: none;             /* hidden while the sidebar is open */
+  align-items: center;
+  gap: 7px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: background 0.2s;
+}
+.pc-nav-open:hover {
+  background: rgba(90,180,232,0.18);
+  border-color: rgba(90,180,232,0.7);
+}
+.pc-nav-open__icon {
+  font-size: 13px;
+  line-height: 1;
+  display: inline-block;
+}
+/* Desktop: reveal the open button only when the sidebar is collapsed */
+body.nav-hidden .pc-nav-open { display: flex; }
+
+/* ── MOBILE OVERLAY ──────────────────────────────────────── */
+#sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 199;
+  cursor: pointer;
+}
+
+/* ── MAIN CONTENT OFFSET ─────────────────────────────────── */
+.main {
+  margin-left: var(--pc-sidebar-w);
+  transition: margin-left 0.35s ease;
+}
+
+/* ── DESKTOP: SIDEBAR COLLAPSED ──────────────────────────── */
+body.nav-hidden .pc-sidebar {
+  transform: translateX(calc(-1 * var(--pc-sidebar-w)));
+}
+body.nav-hidden .main    { margin-left: 0; }
+
+/* ── TABLET + MOBILE: DRAWER MODE (≤900px) ───────────────── */
+@media (max-width: 900px) {
+  /* Sidebar slides off-screen by default */
+  .pc-sidebar {
+    transform: translateX(calc(-1 * var(--pc-sidebar-w)));
+    box-shadow: 4px 0 32px rgba(0,0,0,0.4);
+  }
+  /* Drawer open */
+  body.nav-open .pc-sidebar   { transform: translateX(0); }
+  body.nav-open #sidebar-overlay { display: block; }
+
+  /* Main always fills full width on mobile */
+  .main { margin-left: 0 !important; }
+
+  /* Floating open ("Menu") button: shown whenever the drawer is closed,
+     hidden while the drawer is open */
+  .pc-nav-open { display: flex; }
+  body.nav-open .pc-nav-open { display: none; }
+
+  /* Override desktop collapse state on mobile */
+  body.nav-hidden .pc-sidebar {
+    transform: translateX(calc(-1 * var(--pc-sidebar-w)));
+  }
+  body.nav-hidden .main { margin-left: 0; }
+}
