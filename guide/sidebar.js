@@ -61,7 +61,7 @@
     html += '<a href="itinerary.html" class="pc-sidebar__cta"' + ctaStyle + '>&#9992;&#65039; Build My Trip</a>';
 
     // Talk to Ubuntu CTA (secondary, gold-outline)
-    html += '<a href="home.html#ubuntu-voice" class="pc-sidebar__cta pc-sidebar__cta--ubuntu">&#128172; Talk to Ubuntu</a>';
+    html += '<a href="https://thecapetownguide.com" class="pc-sidebar__cta pc-sidebar__cta--ubuntu">&#128172; Talk to Ubuntu</a>';
 
     // Nav items
     for (var i = 0; i < NAV.length; i++) {
