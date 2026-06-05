@@ -315,6 +315,10 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
   const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
   if (!token) throw new Error('RESEND_API_KEY not configured');
 
+  // Emergency step B: point the email's "Open My Guide" link at a stable page
+  // instead of the generated Render guideUrl (standalone guide had wrong images).
+  const guideLink = 'https://www.thecapetownguide.com/guide/home.html';
+
   const htmlBody = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
     <body style="font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 24px;color:#1C1C1A;line-height:1.7;">
 
@@ -329,8 +333,8 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
         <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#B8863A;margin:0 0 12px 0;">Your Interactive Cape Town Guide</p>
         <p style="font-size:16px;color:#1C1C1A;margin:0 0 8px 0;">Day-by-day itinerary · Photos · Local tips · Maps</p>
         <p style="font-size:13px;color:#6B6560;margin:0 0 24px 0;">Bookmark this link — it's yours to keep.</p>
-        <a href="${guideUrl}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:16px 40px;border-radius:100px;text-decoration:none;">Open My Guide →</a>
-        <p style="margin:20px 0 0;font-size:11px;color:#9B9491;">Or copy this link: <a href="${guideUrl}" style="color:#B8863A;">${guideUrl}</a></p>
+        <a href="${guideLink}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:16px 40px;border-radius:100px;text-decoration:none;">Open My Guide →</a>
+        <p style="margin:20px 0 0;font-size:11px;color:#9B9491;">Or copy this link: <a href="${guideLink}" style="color:#B8863A;">${guideLink}</a></p>
       </div>` : ''}
 
       <p style="font-size:15px;margin:0 0 36px 0;">Enjoy every moment. Cape Town is going to blow your mind.</p>
@@ -348,7 +352,7 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
       from: `Caipy — Cape Town Guide <${fromAddr}>`,
       to: [email],
       subject: 'Your Cape Town Guide is ready ✈️',
-      text: `Your personalised Cape Town guide is ready! Open it here: ${guideUrl || ''}\n\nBookmark this link — it's yours to keep.\n\n— Dirk`,
+      text: `Your personalised Cape Town guide is ready! Open it here: ${guideLink}\n\nBookmark this link — it's yours to keep.\n\n— Dirk`,
       html: htmlBody,
     }),
   });
