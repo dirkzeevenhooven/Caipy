@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/guide/guard.js"></script>
+  <script>var GUIDE_PAGE = 'outdoor-activities';</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outdoor Activities · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/guide/sidebar.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --fern: #4A7C59;
+      --fern-light: #7ab88a;
+      --fern-dim: rgba(74,124,89,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.88);
+      --surface: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: clip; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 78vh; min-height: 520px;
+      background: var(--ocean-dark);
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,36,48,0.12) 0%, rgba(15,36,48,0.85) 100%); z-index: 1; }
+    .hero-content { position: relative; z-index: 2; padding: 52px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 14px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 7vw, 86px); font-weight: 300; line-height: 1.0; margin-bottom: 18px; }
+    .hero-title em { font-style: italic; color: var(--fern-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 540px; }
+    /* top:64px keeps this badge clear of the fixed Close/Menu toggle (sidebar.css .pc-nav-toggle sits at top:16px, height 32px) in both open and collapsed states */
+    .hero-dirk { position: absolute; top: 64px; left: 60px; z-index: 2; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(122,184,138,0.3); border-radius: 10px; padding: 10px 16px; font-size: 11px; color: var(--fern-light); letter-spacing: 1px; }
+
+    /* ── QUICK STATS ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); background: rgba(15,36,48,0.95); border-bottom: 1px solid rgba(74,124,89,0.15); }
+    .stat-item { padding: 18px 20px; text-align: center; border-right: 1px solid rgba(74,124,89,0.1); }
+    .stat-item:last-child { border-right: none; }
+    .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--fern-light); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 9px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--white-faint); }
+
+    /* ── ACTIVITY NAV (pills = main interaction) ── */
+    /* padding-left clears the fixed Close/Menu toggle (sidebar.css .pc-nav-toggle) so the first pill is never overlapped */
+    .activity-nav { display: flex; gap: 8px; padding: 14px 60px 14px 124px; overflow-x: auto; border-bottom: 1px solid rgba(74,124,89,0.12); background: rgba(15,36,48,0.97); backdrop-filter: blur(8px); scrollbar-width: none; position: sticky; top: 0; z-index: 30; -webkit-overflow-scrolling: touch; }
+    .activity-nav::-webkit-scrollbar { display: none; }
+    /* subtle right-edge fade pinned to the scroll viewport: signals more pills off-screen. Negative margin = overlay only, adds no scroll width; trailing padding-right keeps the last pill (Fishing) fully reachable */
+    .activity-nav::after { content: ''; position: sticky; right: 0; align-self: stretch; flex: 0 0 44px; margin-left: -44px; background: linear-gradient(to right, rgba(15,36,48,0) 0%, rgba(15,36,48,0.97) 80%); pointer-events: none; }
+    .activity-nav-btn { display: flex; align-items: center; padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(74,124,89,0.22); background: transparent; color: var(--white-dim); cursor: pointer; text-decoration: none; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+    .activity-nav-btn:hover { background: rgba(74,124,89,0.1); border-color: rgba(122,184,138,0.5); color: var(--white); }
+    .activity-nav-btn.active { background: rgba(122,184,138,0.16); border-color: var(--fern-light); color: var(--fern-light); box-shadow: 0 0 0 1px rgba(122,184,138,0.25); }
+    .activity-nav-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+    /* ── INTRO ── */
+    .intro { padding: 46px 60px 14px; }
+    .intro-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 12px; }
+    .intro-heading { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; line-height: 1.3; max-width: 720px; margin-bottom: 14px; }
+    .intro-text { font-size: 14px; color: var(--white-dim); line-height: 1.8; max-width: 680px; }
+
+    /* ── PANEL ── */
+    .panel-wrap { padding: 36px 60px 80px; min-height: 72vh; }
+    .ax-panel { opacity: 0; transform: translateY(14px); animation: axFade 0.45s ease forwards; }
+    @keyframes axFade { to { opacity: 1; transform: translateY(0); } }
+
+    .ax-panel-head { max-width: 760px; margin-bottom: 26px; }
+    .ax-panel-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 10px; }
+    .ax-panel-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 48px); font-weight: 400; line-height: 1.05; margin-bottom: 14px; }
+    .ax-panel-name em { font-style: italic; color: var(--fern-light); }
+    .ax-panel-intro { font-size: 14px; color: var(--white-dim); line-height: 1.8; }
+
+    /* meta chips */
+    .ax-meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 4px; }
+    .ax-meta-chip { background: var(--surface); border: 1px solid rgba(201,169,110,0.14); border-radius: 12px; padding: 10px 16px; min-width: 130px; }
+    .ax-meta-chip-label { font-size: 9px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 4px; }
+    .ax-meta-chip-val { font-size: 13px; color: var(--white); line-height: 1.4; }
+
+    /* dirk take */
+    .ax-dirk { margin: 22px 0 30px; padding: 18px 22px; background: rgba(74,124,89,0.08); border-left: 2px solid var(--fern); border-radius: 0 10px 10px 0; max-width: 820px; }
+    .ax-dirk-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 6px; }
+    .ax-dirk-text { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; color: var(--white); line-height: 1.55; }
+
+    /* cards grid */
+    .ax-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .ax-card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid rgba(201,169,110,0.14); border-radius: 16px; overflow: hidden; transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+    .ax-card:hover { transform: translateY(-3px); border-color: rgba(122,184,138,0.4); box-shadow: 0 14px 34px -18px rgba(0,0,0,0.6); }
+
+    .ax-card-media { position: relative; height: 188px; background-size: cover; background-position: center; }
+    .ax-card-media.is-placeholder { display: flex; align-items: center; justify-content: center; padding: 0 18px; background: linear-gradient(135deg, #1d3a4b 0%, #0F2430 55%, rgba(74,124,89,0.4) 100%); }
+    .ax-card-media.is-placeholder::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 25%, rgba(201,169,110,0.12), transparent 60%); }
+    .ax-card-media-label { position: relative; z-index: 1; font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: rgba(250,248,244,0.32); text-align: center; line-height: 1.2; letter-spacing: 0.5px; }
+    .ax-card-tag { position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--glass); backdrop-filter: blur(10px); border: 1px solid rgba(122,184,138,0.35); border-radius: 999px; padding: 4px 12px; font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--fern-light); }
+
+    .ax-card-body { padding: 20px 22px 22px; flex: 1; display: flex; flex-direction: column; }
+    .ax-card-title { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+    .ax-card-summary { font-size: 13px; color: var(--white-dim); line-height: 1.65; margin-bottom: 12px; }
+    .ax-card-meta { font-size: 11px; letter-spacing: 0.4px; color: var(--white-faint); margin-top: auto; }
+
+    .ax-card-details { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s ease, opacity 0.3s ease; }
+    .ax-card.is-open .ax-card-details { max-height: 360px; opacity: 1; }
+    .ax-card-details p { padding-top: 14px; font-size: 13px; color: var(--white-dim); line-height: 1.75; }
+
+    .ax-card-cta { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .ax-cta { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; line-height: 1; color: var(--white-dim); background: none; border: none; cursor: pointer; text-decoration: none; padding: 0; transition: color 0.2s; font-family: inherit; }
+    .ax-cta:hover { color: var(--fern-light); }
+    .ax-cta--primary { color: var(--fern-light); font-weight: 500; }
+    .ax-cta i { width: 14px; height: 14px; stroke-width: 1.9; }
+    .ax-cta--details i { transition: transform 0.3s ease; }
+    .ax-card.is-open .ax-cta--details i { transform: rotate(180deg); }
+
+    /* ── HIKING EXTRAS (preserved valuable content) ── */
+    .hike-extras { margin-top: 56px; }
+    .fullmoon-strip { position: relative; overflow: hidden; border-radius: 16px; min-height: 250px; background: url('/photos/signal-hill.webp') center/cover no-repeat; }
+    .fullmoon-strip::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,36,48,0.94) 55%, rgba(15,36,48,0.5)); }
+    .fullmoon-content { position: relative; z-index: 2; padding: 44px; max-width: 600px; }
+    .fm-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 12px; }
+    .fm-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; }
+    .fm-title em { font-style: italic; color: var(--gold); }
+    .fm-text { font-size: 13px; color: var(--white-dim); line-height: 1.8; margin-bottom: 18px; }
+    .fm-tips { display: flex; flex-direction: column; gap: 8px; }
+    .fm-tip { display: flex; gap: 10px; font-size: 12px; color: var(--white-dim); }
+    .fm-tip-arrow { color: var(--gold); flex-shrink: 0; }
+
+    .essentials { margin-top: 40px; }
+    .essentials-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--fern-light); margin-bottom: 20px; }
+    .essentials-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .essential-card { background: var(--surface); border: 1px solid rgba(74,124,89,0.14); border-radius: 12px; padding: 22px; }
+    .essential-icon { color: var(--fern-light); margin-bottom: 12px; }
+    .essential-icon i { width: 24px; height: 24px; stroke-width: 1.6; }
+    .essential-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+    .essential-text { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+
+    .safety-strip { margin-top: 16px; background: rgba(201,169,110,0.05); border: 1px solid var(--gold-dim); border-radius: 12px; padding: 24px 28px; display: flex; gap: 16px; align-items: flex-start; }
+    .safety-icon { color: var(--gold); flex-shrink: 0; }
+    .safety-icon i { width: 22px; height: 22px; stroke-width: 1.8; }
+    .safety-title { font-size: 13px; font-weight: 600; color: var(--gold); margin-bottom: 6px; }
+    .safety-text { font-size: 12px; color: var(--white-dim); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-strip { margin: 60px 60px 0; background: linear-gradient(135deg, var(--ocean-mid), var(--ocean-dark)); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+    .cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.6; max-width: 560px; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ocean-dark); border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: background 0.2s; }
+    .btn-cta:hover { background: var(--gold-light); }
+
+    /* ── RELATED ── */
+    .related { padding: 48px 60px; border-top: 1px solid rgba(201,169,110,0.12); }
+    .related-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .related-card { display: block; background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12); border-radius: 10px; padding: 20px 22px; text-decoration: none; color: var(--white); transition: all 0.2s; }
+    .related-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(201,169,110,0.25); }
+    .related-card i { width: 22px; height: 22px; color: var(--fern-light); stroke-width: 1.6; margin-bottom: 10px; }
+    .related-card-title { font-family: 'Cormorant Garamond', serif; font-size: 17px; margin-bottom: 4px; }
+    .related-card-sub { font-size: 12px; color: var(--white-faint); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--fern-light); }
+    .bottom-nav-item i { width: 20px; height: 20px; stroke-width: 1.7; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .main { padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .hero-dirk { left: 24px; }
+      .stats-bar { grid-template-columns: repeat(3, 1fr); }
+      .activity-nav { padding: 12px 24px 12px 116px; }
+      .intro { padding: 36px 24px 8px; }
+      .panel-wrap { padding: 28px 24px 60px; }
+      .ax-meta-chip { min-width: calc(50% - 5px); flex: 1; }
+      .essentials-grid { grid-template-columns: 1fr 1fr; }
+      .fullmoon-content { padding: 32px 24px; }
+      .cta-strip { flex-direction: column; align-items: flex-start; margin: 48px 24px 0; padding: 32px 24px; }
+      .related { padding: 40px 24px; }
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
+  <script src="/guide/sidebar.js" defer></script>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="guide-sidebar"></div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <img class="hero-video" src="/photos/cederberg-arch.jpeg" alt="Dirk standing beneath the Wolfberg Arch in the Cederberg" />
+    <div class="hero-dirk">Dirk at Wolfberg Arch, Cederberg</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Outdoors</div>
+      <h1 class="hero-title">Outdoor <em>Activities</em></h1>
+      <p class="hero-sub">Cape Town is built for outdoor adventure — mountains, ocean, wind, trails, wildlife and big-sky experiences all within easy reach. Choose what fits your time, energy, budget, skill level and the weather.</p>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val">14</div><div class="stat-label">Activities</div></div>
+    <div class="stat-item"><div class="stat-val">Mountain · Ocean · Air</div><div class="stat-label">Every element</div></div>
+    <div class="stat-item"><div class="stat-val">Free to premium</div><div class="stat-label">All budgets</div></div>
+    <div class="stat-item"><div class="stat-val">Before 9am</div><div class="stat-label">Best time to go</div></div>
+    <div class="stat-item"><div class="stat-val">Weather matters</div><div class="stat-label">Always check first</div></div>
+  </div>
+
+  <!-- ACTIVITY NAVIGATOR (pills) -->
+  <div class="activity-nav" id="activityNav"></div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div class="intro-label">The outdoor activities guide</div>
+    <h2 class="intro-heading">Cape Town is one of the world's great outdoor cities — mountains, ocean, wind, trails and big-sky adventure all within easy reach.</h2>
+    <p class="intro-text">Pick an activity above — from sunrise hikes and surf lessons to shark cage diving and skydiving. Each one is chosen for the experience, not the brochure, with Dirk's honest local take on when and how to do it.</p>
+  </div>
+
+  <!-- ACTIVITY PANEL (rendered by JS) -->
+  <div class="panel-wrap"><div id="activityPanel"></div></div>
+
+  <!-- CTA -->
+  <div class="cta-strip">
+    <div class="cta-text">
+      <h3>Want Ubuntu to plan your perfect outdoor day?</h3>
+      <p>Tell Ubuntu your fitness level, budget, weather, time available and adventure style — and let him build the right outdoor plan for your Cape Town trip.</p>
+    </div>
+    <a href="/guide/itinerary.html" class="btn-cta">Start the Trip Builder</a>
+  </div>
+
+  <!-- RELATED PAGES -->
+  <div class="related">
+    <div class="related-label">Explore More</div>
+    <div class="related-grid">
+      <a href="beaches.html" class="related-card">
+        <i data-lucide="waves"></i>
+        <div class="related-card-title">Beaches</div>
+        <div class="related-card-sub">The best beaches after your hike</div>
+      </a>
+      <a href="daytrips.html" class="related-card">
+        <i data-lucide="compass"></i>
+        <div class="related-card-title">Day Trips</div>
+        <div class="related-card-sub">Cape Point, Boulders &amp; Cederberg</div>
+      </a>
+      <a href="hidden-gems.html" class="related-card">
+        <i data-lucide="gem"></i>
+        <div class="related-card-title">Hidden Gems</div>
+        <div class="related-card-sub">Secret spots most visitors miss</div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="home.html" class="bottom-nav-item"><i data-lucide="home"></i>Home</a>
+    <a href="map.html" class="bottom-nav-item"><i data-lucide="map"></i>Map</a>
+    <a href="experiences.html" class="bottom-nav-item"><i data-lucide="star"></i>Explore</a>
+    <a href="itinerary.html" class="bottom-nav-item"><i data-lucide="plane"></i>Plan</a>
+    <a href="myguide.html" class="bottom-nav-item"><i data-lucide="book-open"></i>My Guide</a>
+  </div>
+</nav>
+
+<script src="/guide/save-to-trip.js"></script>
+<script>
+/* ─────────────────────────────────────────────────────────────
+   Outdoor Activities — unified data-driven hub
+   One panel visible at a time, driven by the pill navigation.
+   Blueprint: to add a city, swap the ACTIVITIES data only.
+───────────────────────────────────────────────────────────── */
+(function () {
+  var P = '/photos/';
+
+  // Hiking supporting content (preserved): full moon, essentials, safety.
+  var HIKING_EXTRAS =
+    '<div class="hike-extras">' +
+      '<div class="fullmoon-strip"><div class="fullmoon-content">' +
+        '<div class="fm-label">Bucket List Experience</div>' +
+        '<h2 class="fm-title">The Full Moon Hike<br>on <em>Lion\u2019s Head</em></h2>' +
+        '<p class="fm-text">Once a month, hundreds of Cape Town locals hike Lion\u2019s Head by moonlight. No torches needed — the full moon lights the entire mountain. The views of the city at night from the summit are extraordinary. This is one of the great free experiences anywhere on earth.</p>' +
+        '<div class="fm-tips">' +
+          '<div class="fm-tip"><span class="fm-tip-arrow">\u2192</span> Free — no booking required, just show up at Signal Hill Road parking</div>' +
+          '<div class="fm-tip"><span class="fm-tip-arrow">\u2192</span> Start at sunset — reach the summit as the moon rises</div>' +
+          '<div class="fm-tip"><span class="fm-tip-arrow">\u2192</span> Bring a headtorch as backup and wear warm layers — it gets cold at the top</div>' +
+          '<div class="fm-tip"><span class="fm-tip-arrow">\u2192</span> Check full moon dates: next ones are always listed on the City of Cape Town website</div>' +
+        '</div>' +
+      '</div></div>' +
+      '<div class="essentials">' +
+        '<div class="essentials-label">What to bring on every hike</div>' +
+        '<div class="essentials-grid">' +
+          '<div class="essential-card"><div class="essential-icon"><i data-lucide="droplet"></i></div><div class="essential-title">Water</div><div class="essential-text">Minimum 1.5L per person. Table Mountain dehydrates fast in summer. There is no water on the mountain.</div></div>' +
+          '<div class="essential-card"><div class="essential-icon"><i data-lucide="sun"></i></div><div class="essential-title">Sunscreen</div><div class="essential-text">SPF 50 minimum. The UV index in Cape Town summer regularly hits 10+. You will burn faster than you think.</div></div>' +
+          '<div class="essential-card"><div class="essential-icon"><i data-lucide="footprints"></i></div><div class="essential-title">Proper Shoes</div><div class="essential-text">Trail shoes or hiking boots for Lion\u2019s Head and Table Mountain. Flip flops have caused serious accidents on the mountain.</div></div>' +
+          '<div class="essential-card"><div class="essential-icon"><i data-lucide="wind"></i></div><div class="essential-title">Wind Layer</div><div class="essential-text">Even in summer, the summit can be 10–15°C colder than the city. A light windproof jacket is essential.</div></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="safety-strip"><div class="safety-icon"><i data-lucide="alert-triangle"></i></div><div>' +
+        '<div class="safety-title">Mountain Safety — Non-Negotiable</div>' +
+        '<div class="safety-text">Table Mountain claims lives every year from unprepared hikers. Never hike alone. Always tell someone your route and expected return time. Check the weather forecast — the mountain creates its own weather and conditions change fast. If you see the tablecloth forming, descend immediately. Emergency: Cape Town Mountain Rescue — 021 937 0300.</div>' +
+      '</div></div>' +
+    '</div>';
+
+  var ACTIVITIES = [
+    {
+      id: 'hiking', name: 'Hiking', emName: '<em>Hiking</em>',
+      eyebrow: 'Planet Curated · Outdoors',
+      intro: 'Cape Town\u2019s mountains rise straight out of the city — from a 30-minute sunset stroll up Signal Hill to multi-day wilderness in the Cederberg. These are the six routes Dirk returns to again and again.',
+      bestFor: 'Sunrise views · All fitness', skill: 'Easy to challenging', time: 'Year-round · before 9am', cost: 'Free to R220 entry', weather: 'High — descend if cloud forms',
+      dirk: 'Before 7am on a weekday you\u2019ll have Lion\u2019s Head almost to yourself, and the full moon hike is bucket-list. But Table Mountain claims lives every year: never hike alone, always check the weather, and turn back the moment cloud forms.',
+      extras: HIKING_EXTRAS,
+      cards: [
+        { img: P+'dirk-lions-head.jpeg', tag: 'Iconic · Dirk\u2019s Favourite', title: 'Lion\u2019s Head', summary: 'Cape Town\u2019s iconic 360° summit — chains, ladders and Atlantic views.', meta: '2 hrs circular · 5km loop · 669m · Free', full: 'Cape Town\u2019s most iconic hike — a circular trail around and over a distinctive 669m peak between Table Mountain and the Atlantic. The 360° views take in the city, Camps Bay, the Twelve Apostles, and on clear days the Cape Peninsula. Chains and ladders help on the steeper summit sections. Start before 7am on weekdays and go clockwise for the most dramatic arrival.', op: null },
+        { img: P+'table-mountain.jpeg', tag: 'Iconic', title: 'Table Mountain — Platteklip Gorge', summary: 'The classic, clearly-marked route up the mountain\u2019s face.', meta: '2 hrs up · 4.5km · 1,086m · Free to hike', full: 'The classic route — clearly marked, around 2 hours up, with extraordinary views from the top. Go early or take the cable car down. Never hike down Platteklip in the afternoon heat.', op: null },
+        { img: P+'signal-hill.webp', tag: 'Easy · Sunset', title: 'Signal Hill Sunset Walk', summary: 'Drive or walk up for the easiest sunset in the city.', meta: '30 min · 2km · Easy · Free', full: 'Drive or walk to the top — 30 minutes either way. Bring a bottle of wine and watch the sun drop into the Atlantic. The easiest and most rewarding sunset in Cape Town.', op: null },
+        { img: P+'chapmans-peak.jpeg', tag: 'Coastal', title: 'Chapman\u2019s Peak Trail', summary: 'Clifftop Atlantic views the whole way along.', meta: '2–4 hrs · 8km · 593m · R57 toll', full: 'The hiking trail runs parallel to the famous drive — clifftop views of the Atlantic the entire way. Leave before 8am to beat the heat and the tour buses.', op: null },
+        { img: P+'kirstenbosch.webp', tag: 'Mountain · Challenging', title: 'Skeleton Gorge via Kirstenbosch', summary: 'Through the botanical gardens and up into the gorge.', meta: '3–4 hrs · 7km · Challenging · R220 entry', full: 'Up through the botanical gardens, into the gorge, up ladders and wooden steps to the Table Mountain plateau. One of the most beautiful and challenging routes on the mountain.', op: null },
+        { img: P+'cederberg-arch.jpeg', tag: 'Wilderness · Epic', title: 'Wolfberg Arch, Cederberg', summary: 'Ancient sandstone arches, wild Cederberg landscapes and one of South Africa\u2019s most iconic hiking views.', meta: 'Multi-day · Wilderness · 2,028m · R200/night', full: '2 hours north. Ancient sandstone rock arches, San Bushman paintings, and the darkest skies in South Africa. A minimum of two nights. This is the wilderness.', op: null }
+      ]
+    },
+    {
+      id: 'biking', name: 'Biking', emName: 'Mountain <em>Biking</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'From beginner-friendly forest trails to technical mountain singletrack, Cape Town has some of the best mountain biking in Africa. Tokai Forest is the perfect starting point; Jonkershoek will test experienced riders.',
+      bestFor: 'Fitness · Adventure', skill: 'Beginner to advanced', time: 'Year-round · best Oct–Apr', cost: 'Free · from R350 rental', weather: 'Moderate — avoid after heavy rain',
+      dirk: 'Tokai on a weekday morning is one of Cape Town\u2019s great free pleasures — pine forest, mountain air, and almost nobody around. Jonkershoek is worth the drive to Stellenbosch if you\u2019re an experienced rider. Take the Swellendam trail and reward yourself with a wine tasting after.',
+      cards: [
+        { img: P+'cycling.jpeg', tag: 'Best Trails', title: 'Tokai Forest & Constantia Greenbelt', summary: 'Well-marked pine forest trails for every level.', meta: 'All levels · Tokai Forest · Free', full: 'Tokai\u2019s pine forest trails are well-maintained, clearly marked, and ideal for all levels. Connect into the Constantia Greenbelt for longer rides with ocean views. Parking at Tokai Arboretum.', op: null },
+        { img: null, tag: 'Advanced · Stellenbosch', title: 'Jonkershoek Valley', summary: 'World-class singletrack in a mountain reserve.', meta: 'Advanced · Stellenbosch · 45 min drive', full: 'World-class singletrack through a mountain nature reserve 45 minutes from Cape Town. Technical climbs, fast descents, and spectacular scenery. The Swellendam Trail is a bucket-list ride.', op: null },
+        { img: null, tag: 'Rentals & Guided', title: 'Downhill Adventures', summary: 'Cape Town\u2019s most reputable MTB operator and rentals.', meta: 'Guided · Table Mountain · from R350', full: 'Cape Town\u2019s most reputable MTB operator. Guided rides from Table Mountain, bike rentals, and a range of routes for all levels. Based at the lower cable car station.', op: { l: 'downhilladventures.com', h: 'https://www.downhilladventures.com' } }
+      ]
+    },
+    {
+      id: 'surfing', name: 'Surfing', emName: 'Surfing, Kite &amp; <em>Wind</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Cape Town has world-class conditions for surfing, kitesurfing, windsurfing and wing foiling. Muizenberg is the best beginner surf beach in South Africa. Big Bay is the kitesurfing capital of Africa.',
+      bestFor: 'Beginners to advanced', skill: 'Lessons to expert', time: 'Surf year-round · kite Oct–Mar', cost: 'Lessons from R450', weather: 'High — wind & swell dependent',
+      dirk: 'Muizenberg is where every Cape Town surfer learns — warm water, forgiving waves, and a great vibe. If you\u2019re into kitesurfing or wing foiling, Big Bay in October–March is world-class. The Cape Doctor blows like clockwork and the Table Mountain backdrop makes it surreal.',
+      cards: [
+        { img: P+'muizenberg-huts.jpeg', tag: 'Beginner Surfing · False Bay', title: 'Muizenberg Beach', summary: 'The best beginner surf beach in South Africa.', meta: 'Beginner · False Bay · Lessons from R450', full: 'Warm water (by Cape Town standards), long gentle rollers, and a thriving surf school scene. Gary\u2019s Surf School has been teaching here for decades. The colourful beach huts are iconic. Best for total beginners and intermediate surfers.', op: { l: 'garysurf.com', h: 'https://www.garysurf.com' } },
+        { img: null, tag: 'Kite & Wind · Atlantic', title: 'Big Bay & Bloubergstrand', summary: 'Africa\u2019s kitesurfing capital, October to March.', meta: 'Kite & wind · Atlantic · Oct–Mar', full: 'Africa\u2019s kitesurfing capital. The Cape Doctor (SE trade wind) delivers consistent 25–35 knot sessions from October to March. Cape Sport Centre offers lessons, gear rental and storage for kitesurfers, windsurfers and wing foilers.', op: null },
+        { img: P+'llandudno-beach.jpg', tag: 'Advanced Surfing', title: 'Llandudno & Dungeons', summary: 'A powerful, beautiful break for experienced surfers.', meta: 'Advanced · Atlantic · Experienced only', full: 'Llandudno is a powerful, beautiful beach break for experienced surfers. Dungeons — off Hout Bay — is one of the world\u2019s great big wave spots, active in winter swells. Not for the faint-hearted.', op: null }
+      ]
+    },
+    {
+      id: 'climbing', name: 'Climbing', emName: 'Rock Climbing &amp; <em>Abseiling</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Table Mountain is one of the world\u2019s great climbing destinations — hundreds of routes from beginner to expert. The 112-metre abseil off the top is one of the most dramatic experiences in Africa.',
+      bestFor: 'Adrenaline · No experience needed', skill: 'Beginner to expert', time: 'Year-round · avoid wind days', cost: 'Abseil from R1,100', weather: 'High — cancelled on windy days',
+      dirk: 'Do the Table Mountain abseil. It looks terrifying from the top — and it is — but you\u2019ll never forget it. Abseil Africa has an impeccable safety record over 25+ years. Book for sunrise if you can. The light on the City Bowl below is extraordinary.',
+      cards: [
+        { img: P+'rock-ledge.jpeg', tag: 'Iconic · Table Mountain', title: 'Table Mountain Abseil', summary: 'A 112m controlled abseil off the top of Table Mountain.', meta: 'No experience · Table Mountain · from R1,100', full: 'A 112-metre controlled abseil off the top of Table Mountain — one of the highest commercial abseil sites in the world. Run by Abseil Africa, who have been operating for over 25 years. No experience needed. Pure nerve.', op: { l: 'abseilafrica.co.za', h: 'https://www.abseilafrica.co.za' } },
+        { img: null, tag: 'Bouldering · World-Class', title: 'Rocklands & Paarl Rock', summary: 'World-renowned bouldering north of the city.', meta: 'Bouldering · Cederberg & Paarl · All levels', full: 'Rocklands in the Cederberg (3hrs north) is a world-renowned bouldering destination. Paarl Rock is 45 minutes away — enormous granite domes with routes for all levels. City Rock in Cape Town offers indoor climbing year-round.', op: { l: 'cityrock.co.za', h: 'https://www.cityrock.co.za' } },
+        { img: null, tag: 'Guided Climbing', title: 'Table Mountain Routes', summary: 'Guided trad and sport routes on the mountain itself.', meta: 'Guided climbs · Table Mountain · Half/full day', full: 'Dozens of traditional and sport climbing routes on the mountain itself — India Venster, Nursery Buttress and the Platteklip Gorge area. Cape Town Rock Guides offer half-day and full-day guided climbing for all levels.', op: null }
+      ]
+    },
+    {
+      id: 'trail-running', name: 'Trail Running', emName: 'Trail <em>Running</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Cape Town is a global trail running destination. The mountain is criss-crossed with world-class routes — from a 5km Lion\u2019s Head loop to multi-day epics along the Hoerikwaggo Trail.',
+      bestFor: 'Fitness · Self-guided', skill: 'Intermediate to advanced', time: 'Year-round · best May–Sep', cost: 'Mostly free', weather: 'Moderate — heat & wind matter',
+      dirk: 'The Lion\u2019s Head loop at sunrise is a trail runner\u2019s dream — 5km, chains and ladders, 360° Atlantic views. Be there by 6:30am in summer to beat the heat and the crowds. Wear trail shoes, take water, and don\u2019t rush the chains section.',
+      cards: [
+        { img: P+'dirk-lions-head.jpeg', tag: 'Best Route · 5km', title: 'Lion\u2019s Head Loop', summary: '5km of chains, ladders and 360° views at sunrise.', meta: '5km · 400m · 1.5–2.5 hrs · Free', full: '5km, 400m elevation, spectacular views of the Atlantic and City Bowl. Run it at sunrise and you\u2019ll have the chains and ladders to yourself. One of the best short trail runs anywhere in the world.', op: null },
+        { img: null, tag: 'Epic Route', title: 'Two Oceans & Constantia Trails', summary: 'One of the world\u2019s most beautiful ultra routes.', meta: 'Ultra · 56km · Easter', full: 'The Two Oceans Ultra (56km, run every Easter) follows the Cape Peninsula — one of the world\u2019s most beautiful ultra routes. The Constantia forest trails are ideal for regular training runs: shaded, well-marked, and beautiful.', op: { l: 'twooceansmarathon.org.za', h: 'https://www.twooceansmarathon.org.za' } },
+        { img: null, tag: 'Free · Every Saturday', title: 'Parkrun Cape Town', summary: 'Free, timed, community 5km every Saturday.', meta: '5km · Saturdays 8am · Free', full: 'Multiple Parkrun events across Cape Town every Saturday at 8am — free, timed, community-run 5km events. Green Point, Rondebosch, and Constantia are the most scenic. Just register once at parkrun.co.za.', op: { l: 'parkrun.co.za', h: 'https://www.parkrun.co.za' } }
+      ]
+    },
+    {
+      id: 'kayaking', name: 'Kayaking', emName: 'Sea Kayaking &amp; <em>SUP</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Paddle with African penguins at Simon\u2019s Town, explore the sea caves of Llandudno, or SUP across the glassy waters of False Bay at sunrise. Cape Town\u2019s coastline is extraordinary from the water.',
+      bestFor: 'Families · Couples', skill: 'Beginner-friendly · guided', time: 'Year-round · calm mornings', cost: 'Guided from R650', weather: 'High — calm water essential',
+      dirk: 'The sunrise kayak with penguins from Simon\u2019s Town is one of Cape Town\u2019s best-kept secrets. You\u2019re on the water before the tourist boats arrive, paddling alongside penguins with the Hottentots Holland mountains turning pink behind you. Book at least 2 days ahead.',
+      cards: [
+        { img: P+'boulders-beach.jpeg', tag: 'Must-Do · Simon\u2019s Town', title: 'Kayaking with Penguins', summary: 'Paddle alongside African penguins from Simon\u2019s Town.', meta: 'Guided · Simon\u2019s Town · from R650', full: 'Launch from Simon\u2019s Town and paddle alongside African penguins in their natural habitat — one of Cape Town\u2019s most magical experiences. Real Cape Adventures run guided sunrise and morning sessions with expert guides.', op: null },
+        { img: null, tag: 'SUP & Flat Water', title: 'Milnerton Lagoon & False Bay', summary: 'Cape Town\u2019s best flat-water SUP, Table Mountain behind.', meta: 'Flat-water SUP · Milnerton Lagoon · Calm days', full: 'Milnerton Lagoon is Cape Town\u2019s best flat-water SUP spot — sheltered, calm, and with Table Mountain as the backdrop. False Bay sunrise SUP sessions from Simon\u2019s Town are unforgettable on a still morning.', op: null },
+        { img: P+'llandudno-beach.jpg', tag: 'Sea Caves · Atlantic', title: 'Llandudno Sea Cave Kayak', summary: 'Guided paddles through granite sea caves and kelp.', meta: 'Sea caves · Camps Bay & Llandudno · Calm days', full: 'Guided sea kayaking tours through the dramatic granite sea caves and kelp forests along the Atlantic Seaboard. Ocean Experiences run small-group guided tours from Camps Bay and Llandudno. A calm day is essential.', op: { l: 'oceanexperiences.co.za', h: 'https://www.oceanexperiences.co.za' } }
+      ]
+    },
+    {
+      id: 'diving', name: 'Diving', emName: 'Diving &amp; <em>Snorkelling</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Cold water (12–18°C), extraordinary kelp forests, and rich marine life make Cape Town a world-class diving destination. A wetsuit is non-negotiable — the reward is extraordinary.',
+      bestFor: 'Ocean · Marine life', skill: 'Snorkel to certified', time: 'Year-round · Feb–May clearest', cost: 'Guided dives from R550', weather: 'High — swell & visibility dependent',
+      dirk: 'The water is cold — don\u2019t let anyone tell you otherwise. A 5mm wetsuit minimum, 7mm if you run cold. The reward is extraordinary: kelp forests that feel like cathedrals, penguins underwater, and marine life that most divers never see. Oudekraal on a calm day is otherworldly.',
+      cards: [
+        { img: P+'boulders-beach.jpeg', tag: 'Best Dive Sites', title: 'Boulders Beach & Miller\u2019s Point', summary: 'Snorkel with penguins; shore dive Miller\u2019s Point.', meta: 'Shore dive · Simon\u2019s Town · Wetsuit essential', full: 'Boulders Beach offers snorkelling with African penguins in the shallows — extraordinary and completely unique. Miller\u2019s Point in Simon\u2019s Town has excellent shore diving with diverse marine life, caves, and kelp forests.', op: null },
+        { img: P+'camps-bay.webp', tag: 'Kelp Forests · Atlantic', title: 'Camps Bay & Oudekraal', summary: 'Among the most biodiverse kelp dive sites in SA.', meta: 'Kelp forests · Atlantic · from R550', full: 'The kelp forests off Oudekraal (between Camps Bay and Hout Bay) are among the most biodiverse dive sites in South Africa — catsharks, octopus, klipfish, and rays. Orca Industries operate charters from here.', op: null },
+        { img: null, tag: 'Dive School & Courses', title: 'Pisces Divers', summary: 'One of the city\u2019s most established dive schools.', meta: 'PADI courses · Simon\u2019s Town · All levels', full: 'One of Cape Town\u2019s most established dive schools — PADI open water courses, advanced diver training, guided dives, and equipment rental. Based in Simon\u2019s Town, ideally positioned for False Bay diving.', op: { l: 'piscesdivers.co.za', h: 'https://www.piscesdivers.co.za' } }
+      ]
+    },
+    {
+      id: 'sharks', name: 'Shark Diving', emName: 'Shark Cage <em>Diving</em>',
+      eyebrow: 'Day Trip · Gansbaai',
+      intro: 'Two hours from Cape Town, Gansbaai is the great white shark capital of the world. Shark Alley — the narrow channel between Geyser Rock and Dyer Island — is one of the ocean\u2019s most dramatic environments.',
+      bestFor: 'Adrenaline · Bucket list', skill: 'No experience needed', time: 'Year-round · May–Sep peak', cost: 'Full day from R2,200', weather: 'High — sea conditions decide sailing',
+      dirk: 'Book the earliest boat — sea conditions are calmer in the morning and shark activity is higher. Take seasickness tablets the night before if you\u2019re prone. This is genuinely life-changing. Face-to-face with a 4-metre great white through a cage is something you\u2019ll be talking about for the rest of your life.',
+      cards: [
+        { img: null, tag: 'World\u2019s Best · Gansbaai', title: 'Shark Alley', summary: 'Great whites in the channel off Gansbaai.', meta: 'Surface cage · Gansbaai · ~2 hrs away', full: 'The channel between Geyser Rock (a Cape fur seal colony of 50,000+) and Dyer Island attracts great white sharks year-round. No diving experience needed — the cage is surface-level. You just need to be willing.', op: null },
+        { img: null, tag: 'Top Operator', title: 'Marine Dynamics', summary: 'Gansbaai\u2019s most respected, conservation-led operator.', meta: 'Conservation-led · Gansbaai · Full day', full: 'Gansbaai\u2019s most respected shark diving operator — conservation-focused, small groups, and genuinely committed to shark welfare. Their onboard marine biologists make the experience educational as well as extraordinary.', op: { l: 'marinedynamics.co.za', h: 'https://www.marinedynamics.co.za' } },
+        { img: null, tag: 'Alternative', title: 'White Shark Projects', summary: 'Research-based diving, full day from Cape Town.', meta: 'Research-based · Gansbaai · from Cape Town', full: 'Research-based shark diving with a strong conservation focus. Full-day trips from Cape Town including transfer, breakfast, and a full briefing. One of the most reputable operators in Gansbaai for 20+ years.', op: { l: 'whitesharkprojects.co.za', h: 'https://www.whitesharkprojects.co.za' } }
+      ]
+    },
+    {
+      id: 'whales', name: 'Whale Watching', emName: 'Whale <em>Watching</em>',
+      eyebrow: 'Seasonal · Jun–Nov',
+      intro: 'Every year southern right whales migrate from Antarctica to the Cape to calve in the sheltered bays. Hermanus is the whale-watching capital of the world. From June to November, this is one of nature\u2019s greatest shows.',
+      bestFor: 'Families · Wildlife', skill: 'All ages', time: 'June–November', cost: 'Free (cliff) to R850 boat', weather: 'Low on land · boats weather-dependent',
+      dirk: 'Go to Hermanus in September. The southern rights are at peak numbers, the weather is still cool and clear, and the cliff path is one of the world\u2019s great wildlife walks.',
+      cards: [
+        { img: null, tag: 'Land-Based · World-Class', title: 'Hermanus Cliff Path', summary: 'Watch southern rights from a 12km cliff path.', meta: 'Land-based · Hermanus · Free · Jun–Nov', full: 'Walk the 12km cliff path above Walker Bay and watch southern right whales breach, spy-hop and nurse their calves below. September is peak season. No boat needed — the whales come within metres of the shore.', op: null },
+        { img: null, tag: 'Boat Tours · False Bay', title: 'Simon\u2019s Town Boat Company', summary: 'Boat tours into False Bay for rights and humpbacks.', meta: 'Boat tour · False Bay · from R850', full: 'Whale-watching boat tours from Simon\u2019s Town into False Bay — southern rights and humpbacks are regularly spotted. Small group sizes, experienced guides, and excellent wildlife viewing from October to December.', op: { l: 'boatcompany.co.za', h: 'https://www.boatcompany.co.za' } }
+      ]
+    },
+    {
+      id: 'paragliding', name: 'Paragliding', emName: '<em>Paragliding</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Signal Hill is one of the world\u2019s most spectacular tandem paragliding launch sites — Atlantic Ocean views, the City Bowl below, Table Mountain at eye level. No experience needed for a tandem flight.',
+      bestFor: 'Adrenaline · No experience needed', skill: 'Tandem or learn', time: 'Year-round · SE wind days', cost: 'Tandem from R1,200', weather: 'High — wind must be right',
+      dirk: 'The Signal Hill tandem flight is one of those experiences that completely reframes the city. You\u2019re floating at Table Mountain\u2019s eye level, the Atlantic stretching to the horizon, the City Bowl spread below you. Book for the late afternoon on a clear day — the light is extraordinary.',
+      cards: [
+        { img: P+'signal-hill.webp', tag: 'Tandem · Signal Hill', title: 'Birdmen Paragliding', summary: 'Tandem flight from Signal Hill to the Sea Point beachfront.', meta: 'Tandem · Signal Hill → Sea Point · from R1,200', full: 'Cape Town\u2019s most established paragliding operator. Tandem flights launch from Signal Hill and land on the Sea Point beachfront — a 15-minute flight over one of the world\u2019s great urban panoramas. Professional pilots, small groups.', op: { l: 'birdmen.co.za', h: 'https://www.birdmen.co.za' } },
+        { img: P+'sea-point.jpeg', tag: 'Alternative Operator', title: 'Parapax', summary: 'A reputable alternative flying Signal Hill.', meta: 'Tandem · Signal Hill · Weather-dependent', full: 'Another reputable tandem paragliding operator flying Signal Hill. Flexible booking, weather-dependent scheduling, and pilots with thousands of hours. Packages include transfer to the launch site from Sea Point.', op: { l: 'parapax.com', h: 'https://www.parapax.com' } },
+        { img: null, tag: 'Learn to Fly', title: 'Paragliding Courses', summary: 'Learn to fly solo over 5–7 days.', meta: 'Learn to fly · Signal Hill · 5–7 days', full: 'Cape Town\u2019s consistent winds and varied terrain make it an ideal place to learn paragliding. Both operators offer beginner courses over 5–7 days. By the end you\u2019ll be flying solo on Signal Hill.', op: { l: 'birdmen.co.za', h: 'https://www.birdmen.co.za' } }
+      ]
+    },
+    {
+      id: 'skydiving', name: 'Skydiving', emName: '<em>Skydiving</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Jump over Stellenbosch with Table Mountain, the Cape Peninsula and the Atlantic Ocean all visible simultaneously. The freefall view is unlike anything else on earth.',
+      bestFor: 'Adrenaline · Bucket list', skill: 'No experience needed', time: 'Year-round · summer clearest', cost: 'Tandem from R2,100', weather: 'High — cancelled in high wind/cloud',
+      dirk: 'The freefall view is genuinely one of the best on earth — Table Mountain, the Cape Peninsula, Stellenbosch vineyards, and both oceans simultaneously. Book for a weekday morning to beat the queues and get the calmest wind conditions. Don\u2019t skip the video package — you\u2019ll want the evidence.',
+      cards: [
+        { img: null, tag: 'Tandem Skydiving', title: 'Skydive Cape Town', summary: 'Tandem jump over Stellenbosch with two oceans in view.', meta: 'Tandem · 10,000ft · Stellenbosch · from R2,100', full: 'Tandem skydives from 10,000ft over the Stellenbosch wine valley. Table Mountain, the Cape Peninsula and two oceans visible during freefall. No experience needed — you\u2019re attached to an instructor throughout. GoPro video packages available.', op: { l: 'skydivecapetown.com', h: 'https://www.skydivecapetown.com' } },
+        { img: null, tag: 'What to Expect', title: 'The Full Experience', summary: 'What to expect from briefing to canopy.', meta: '~3 hrs total · 30–45s freefall · Age 18+', full: 'Training briefing (30 min), kit-up, flight to altitude (20 min), 30–45 seconds of freefall at 200km/h, then 5 minutes of parachute flight over the vineyards. Total experience is around 3 hours. Minimum age 18, max weight 100kg.', op: { l: 'skydivecapetown.com', h: 'https://www.skydivecapetown.com' } }
+      ]
+    },
+    {
+      id: 'golf', name: 'Golf', emName: '<em>Golf</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Cape Town has world-class golf — from courses with Table Mountain as a backdrop to Winelands fairways set among Franschhoek vineyards. Green fees are exceptional value by international standards.',
+      bestFor: 'Leisure · Premium', skill: 'All handicaps', time: 'Year-round · early morning best', cost: 'Green fees from R450', weather: 'Moderate — wind affects play',
+      dirk: 'Pearl Valley is worth the trip to Paarl — one of the most beautiful courses in Africa, Jack Nicklaus-designed, and exceptional value compared to European or American green fees. Combine it with a morning at the Franschhoek market and wine tasting at Babylonstoren for a perfect Saturday.',
+      cards: [
+        { img: null, tag: 'World-Class · Paarl', title: 'Pearl Valley Golf Estate', summary: 'A Jack Nicklaus course in the Franschhoek Valley.', meta: 'Nicklaus design · Paarl · from R2,500', full: 'Jack Nicklaus-designed course in the Franschhoek Valley — one of the most beautiful golf courses in Africa. Mountain backdrop, immaculate fairways, and a clubhouse with outstanding views. Worth the drive from Cape Town.', op: { l: 'pearlvalley.co.za', h: 'https://www.pearlvalley.co.za' } },
+        { img: null, tag: 'Winery Setting · Constantia', title: 'Steenberg Golf Club', summary: '18 holes at a 300-year-old wine estate.', meta: 'Wine estate · Constantia · Mountain views', full: '18 holes at a 300-year-old wine estate in Constantia Valley — mountain views, mature trees, and wine tasting at the estate after your round. One of the most scenic courses in the Western Cape.', op: { l: 'steenberggolfclub.co.za', h: 'https://www.steenberggolfclub.co.za' } },
+        { img: null, tag: 'City Course', title: 'Metropolitan Golf Club', summary: 'Cape Town\u2019s most central course, Table Mountain behind.', meta: 'City course · Sea Point · from R450', full: 'The Metropolitan in Sea Point is Cape Town\u2019s most central golf course — 18 holes walking distance from the city centre, with Table Mountain and Signal Hill as the backdrop. Great value for a city course.', op: null }
+      ]
+    },
+    {
+      id: 'horses', name: 'Horse Riding', emName: 'Horse <em>Riding</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Ride along Noordhoek\u2019s 8km beach with the Sentinel mountains as a backdrop, or canter through the fynbos above Muizenberg. Cape Town\u2019s beach rides are among the best in the world.',
+      bestFor: 'Families · Couples', skill: 'All experience levels', time: 'Year-round · sunset Oct–Mar', cost: 'Rides from R500', weather: 'Low to moderate',
+      dirk: 'Noordhoek on horseback at sunset is something I recommend to everyone. The beach is 8km long, almost deserted, and the mountains behind it are extraordinary. Book the 2-hour sunset ride with Sleepy Hollow and take it slow — this isn\u2019t a rush.',
+      cards: [
+        { img: null, tag: 'Best Beach Ride · Noordhoek', title: 'Sleepy Hollow Horse Riding', summary: 'Sunset rides along Noordhoek\u2019s 8km beach.', meta: 'Beach ride · Noordhoek · from R500', full: 'Ride along Long Beach, Noordhoek — one of the longest and most dramatic beaches on the Cape Peninsula. Sleepy Hollow has been operating here for decades, with horses suited to all experience levels. Sunset rides are magical.', op: null },
+        { img: null, tag: 'Alternative · Southern Suburbs', title: 'Imhoff Farm', summary: 'Family farm rides through fynbos to Kommetjie beach.', meta: 'Farm & beach · Kommetjie · Families', full: 'Farm rides through fynbos and along Kommetjie beach from the historic Imhoff Farm village. Great for families and beginners. The farm also has a market, restaurants and a snake park for a full day out.', op: { l: 'imhofffarm.co.za', h: 'https://www.imhofffarm.co.za' } }
+      ]
+    },
+    {
+      id: 'fishing', name: 'Fishing', emName: '<em>Fishing</em>',
+      eyebrow: 'Outdoors · Cape Town',
+      intro: 'Cape Town offers world-class fishing — yellowfin tuna off Cape Point, snoek in the winter, and shore angling along some of the most dramatic coastline on earth.',
+      bestFor: 'Adventure · Patience', skill: 'Beginner-friendly · guided', time: 'Tuna Jan–May · snoek Jun–Aug', cost: 'Shore free · charters from R1,200', weather: 'High — sea state dependent',
+      dirk: 'A yellowfin tuna caught off Cape Point, straight onto the braai the same evening with a cold beer and Table Mountain in the background — this is Cape Town living at its absolute best. Book a January–March charter from Hout Bay. It\u2019s worth every rand.',
+      cards: [
+        { img: P+'Hout-Bay.webp', tag: 'Deep Sea · Cape Point', title: 'Yellowfin Tuna Charters', summary: 'Deep-sea tuna charters off Cape Point.', meta: 'Deep sea · Hout Bay · Jan–May · from R1,200', full: 'January to May, yellowfin tuna run off Cape Point in numbers. Deep sea charters from Hout Bay harbour — full-day trips targeting yellowfin, yellowtail, and dorado. The fish are genuine trophy quality and the scenery is extraordinary.', op: null },
+        { img: null, tag: 'Winter Season', title: 'Snoek Fishing', summary: 'Cape Town\u2019s iconic winter fish off Hout Bay.', meta: 'Winter · Hout Bay · Jun–Aug', full: 'Snoek is Cape Town\u2019s most iconic local fish — fierce fighters and extraordinary on the braai. The season runs June–August off Hout Bay and Cape Point. Day charters are affordable and genuinely fun — even if you\u2019ve never fished before.', op: null },
+        { img: P+'Cape-Point.webp', tag: 'Shore Fishing', title: 'Miller\u2019s Point & Scarborough', summary: 'Scenic, productive shore angling year-round.', meta: 'Shore angling · Simon\u2019s Town & Scarborough · Free', full: 'Shore angling at Miller\u2019s Point in Simon\u2019s Town is accessible, scenic, and productive year-round. Scarborough on the Atlantic side offers excellent rock angling with dramatic Cape Point scenery. No charter needed — just a rod and a tide table.', op: null }
+      ]
+    }
+  ];
+
+  // ── Build pill nav ──────────────────────────────────────
+  var navEl = document.getElementById('activityNav');
+  var panelEl = document.getElementById('activityPanel');
+  var panelWrap = document.querySelector('.panel-wrap');
+
+  ACTIVITIES.forEach(function (a) {
+    var btn = document.createElement('button');
+    btn.className = 'activity-nav-btn';
+    btn.setAttribute('data-id', a.id);
+    btn.setAttribute('type', 'button');
+    btn.innerHTML = '<span class="activity-nav-label">' + a.name + '</span>';
+    btn.addEventListener('click', function () { select(a.id, true); });
+    navEl.appendChild(btn);
+  });
+
+  function esc(s) { return s; } // content is trusted, authored in this file
+
+  function cardHTML(c, activityName) {
+    var media;
+    if (c.img) {
+      media = '<div class="ax-card-media" style="background-image:url(\'' + c.img + '\')">' +
+                '<span class="ax-card-tag">' + c.tag + '</span></div>';
+    } else {
+      media = '<div class="ax-card-media is-placeholder">' +
+                '<span class="ax-card-tag">' + c.tag + '</span>' +
+                '<span class="ax-card-media-label">' + c.title + '</span></div>';
+    }
+    var cta = '<button type="button" class="ax-cta ax-cta--primary ax-cta--details"><i data-lucide="chevron-down"></i>View details</button>' +
+              '<a class="ax-cta" href="/guide/map.html"><i data-lucide="map"></i>View on Guide Map</a>';
+    if (c.op) {
+      cta += '<a class="ax-cta" href="' + c.op.h + '" target="_blank" rel="noopener"><i data-lucide="arrow-up-right"></i>' + c.op.l + '</a>';
+    }
+    cta += '<button type="button" class="ax-cta-save btn-add-trip" data-save-name="' + c.title + '" data-save-cat="' + activityName + '">+ Add to My Trip</button>';
+    return '<article class="ax-card">' +
+      media +
+      '<div class="ax-card-body">' +
+        '<h3 class="ax-card-title">' + c.title + '</h3>' +
+        '<p class="ax-card-summary">' + c.summary + '</p>' +
+        '<div class="ax-card-meta">' + c.meta + '</div>' +
+        '<div class="ax-card-details"><p>' + c.full + '</p></div>' +
+        '<div class="ax-card-cta">' + cta + '</div>' +
+      '</div>' +
+    '</article>';
+  }
+
+  function panelHTML(a) {
+    var chips = [
+      ['Best for', a.bestFor],
+      ['Skill level', a.skill],
+      ['Best time', a.time],
+      ['Cost', a.cost],
+      ['Weather', a.weather]
+    ].map(function (p) {
+      return '<div class="ax-meta-chip"><div class="ax-meta-chip-label">' + p[0] + '</div><div class="ax-meta-chip-val">' + p[1] + '</div></div>';
+    }).join('');
+
+    var cards = a.cards.map(function (c) { return cardHTML(c, a.name); }).join('');
+
+    return '<div class="ax-panel">' +
+      '<div class="ax-panel-head">' +
+        '<div class="ax-panel-eyebrow">' + a.eyebrow + '</div>' +
+        '<h2 class="ax-panel-name">' + a.emName + '</h2>' +
+        '<p class="ax-panel-intro">' + a.intro + '</p>' +
+      '</div>' +
+      '<div class="ax-meta-row">' + chips + '</div>' +
+      '<div class="ax-dirk"><div class="ax-dirk-label">Dirk\u2019s Take</div><div class="ax-dirk-text">\u201C' + a.dirk + '\u201D</div></div>' +
+      '<div class="ax-cards">' + cards + '</div>' +
+      (a.extras || '') +
+    '</div>';
+  }
+
+  function select(id, userInitiated) {
+    var a = null;
+    for (var i = 0; i < ACTIVITIES.length; i++) { if (ACTIVITIES[i].id === id) { a = ACTIVITIES[i]; break; } }
+    if (!a) return;
+
+    // active pill
+    var btns = navEl.querySelectorAll('.activity-nav-btn');
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].classList.toggle('active', btns[j].getAttribute('data-id') === id);
+    }
+
+    panelEl.innerHTML = panelHTML(a);
+    if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+
+    // card "View details" toggles (event delegation)
+    panelEl.querySelectorAll('.ax-cta--details').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var card = b.closest('.ax-card');
+        var open = card.classList.toggle('is-open');
+        b.childNodes[b.childNodes.length - 1].textContent = open ? 'Hide details' : 'View details';
+      });
+    });
+
+    // "+ Add to My Trip" buttons (shared save-to-trip pattern)
+    panelEl.querySelectorAll('.ax-cta-save').forEach(function (b) {
+      var name = b.getAttribute('data-save-name');
+      var cat = b.getAttribute('data-save-cat');
+      if (typeof markSavedTrip === 'function') markSavedTrip(name, 'outdoor-activities.html', b);
+      b.addEventListener('click', function () {
+        if (typeof addToMyTrip === 'function') {
+          addToMyTrip({ name: name, category: cat, sourcePage: 'outdoor-activities.html', location: '', url: '' }, b);
+        }
+      });
+    });
+
+    if (userInitiated) {
+      var navH = navEl.offsetHeight;
+      var y = panelWrap.getBoundingClientRect().top + window.pageYOffset - navH - 12;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  }
+
+  // Default selection: Hiking
+  select('hiking', false);
+})();
+</script>
+<script>if (typeof lucide !== 'undefined') lucide.createIcons();</script>
+</body>
+</html>
