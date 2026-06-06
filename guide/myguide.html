@@ -1,271 +1,2136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="/guide/guard.js"></script>
+  <script>var GUIDE_PAGE = 'myguide';</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Guide · Planet Curated Cape Town</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/guide/sidebar.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --ocean: #1B3A4B; --ocean-dark: #0F2430; --gold: #C9A96E; --gold-light: #e0c48a;
-      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --sidebar-w: 200px;
+      /* Brand */
+      --ocean: #1B3A4B; --ocean-dark: #122535; --gold: #C9A96E; --gold-light: #e0c48a;
+      --gold-dark: #9A7228;
+      /* Light content surface */
+      --page-bg: #F3EDE0;
+      --card-bg: #FFFFFF;
+      --card-alt: #FAF7F1;
+      --border: rgba(27,58,75,0.1);
+      --border-gold: rgba(201,169,110,0.3);
+      --ink: #1B3A4B;
+      --ink-mid: rgba(27,58,75,0.68);
+      --ink-faint: rgba(27,58,75,0.42);
+      /* Legacy — keep for any residual references */
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.78); --white-faint: rgba(250,248,244,0.55);
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+    body { font-family: 'Inter', sans-serif; background: var(--page-bg); color: var(--ink); overflow-x: hidden; }
 
-    .sidebar {
-      position: fixed; top: 0; left: 0; width: var(--sidebar-w);
-      height: 100vh; background: var(--ocean-dark);
-      border-right: 1px solid rgba(201,169,110,0.12);
-      display: flex; flex-direction: column; z-index: 100; overflow-y: auto;
+    /* PAGE HEADER — dark navy band */
+    .page-header {
+      padding: 24px 0 22px;
+      background: var(--ocean-dark);
+      border-bottom: 3px solid var(--gold);
     }
-    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
-    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
-    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: rgba(250,248,244,0.45); text-transform: uppercase; }
-    .sidebar-section { padding: 16px 12px 6px; font-size: 10px; letter-spacing: 2px; color: rgba(90,180,232,0.85); text-transform: uppercase; font-weight: 600; }
-    .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 14px; color: rgba(250,248,244,0.96); font-weight: 400; cursor: pointer; transition: all 0.2s; text-decoration: none; }
-    .sidebar-item:hover { color: rgba(250,248,244,0.96); background: rgba(90,180,232,0.06); }
-    .sidebar-item.active { border-left: 2px solid rgba(90,180,232,0.8); color: rgba(90,180,232,0.95); background: rgba(90,180,232,0.06); }
-    .sidebar-item .icon { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 1.75; }
+    .mg-header-flex { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .page-header-left {}
+    .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,169,110,0.75); margin-bottom: 6px; }
+    .page-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.5vw, 32px); font-weight: 300; line-height: 1.1; color: var(--white); }
+    .page-header h1 em { font-style: italic; color: var(--gold); }
 
-    .main { margin-left: var(--sidebar-w); }
+    /* 4 DASHBOARD CARDS */
+    .dash-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 24px 0 0; }
+    .dash-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(27,58,75,0.06);
+    }
+    .dash-card-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin-bottom: 10px; }
+    .dash-card-value { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+    .dash-card-sub { font-size: 11px; color: var(--ink-mid); margin-bottom: 10px; }
+    .dash-card-bar { height: 4px; border-radius: 4px; background: rgba(27,58,75,0.08); overflow: hidden; }
+    .dash-card-bar-fill { height: 100%; border-radius: 4px; background: var(--gold); transition: width 0.7s ease; }
+    .dash-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; }
+    .dash-status.pending { color: var(--gold-dark); }
+    .dash-status.ready { color: #3A7A4B; }
+    .dash-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dash-status-dot.pending { background: var(--gold); }
+    .dash-status-dot.ready { background: #4A9B5F; }
 
-    /* Hero section */
-    .hero {
-      padding: 80px 60px 72px;
-      background: linear-gradient(135deg, rgba(201,169,110,0.07) 0%, rgba(201,169,110,0.02) 100%);
-      border-bottom: 1px solid rgba(201,169,110,0.12);
-      display: flex; align-items: flex-start; gap: 80px;
-    }
-    .hero-left { flex: 1; max-width: 520px; }
-    .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 4vw, 52px); font-weight: 300; line-height: 1.1; margin-bottom: 16px; }
-    h1 em { font-style: italic; color: var(--gold); }
-    .hero-desc { font-size: 15px; color: var(--white-dim); line-height: 1.8; margin-bottom: 0; }
+    /* COCKPIT */
+    .cockpit { padding: 0 0 100px; }
 
-    .resend-card {
-      flex: 0 0 320px; background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.2);
-      border-radius: 14px; padding: 32px;
+    .section {
+      padding: 36px 0;
+      border-bottom: 1px solid rgba(27,58,75,0.08);
     }
-    .resend-card-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
-    .resend-card-sub { font-size: 13px; color: var(--white-dim); line-height: 1.6; margin-bottom: 20px; }
-    .input-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-    .email-input {
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(201,169,110,0.25);
-      border-radius: 8px; padding: 13px 16px; color: var(--white); font-size: 14px;
-      font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
+    .section:last-of-type { border-bottom: none; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: var(--ink); }
+    .section-title em { font-style: italic; color: var(--gold-dark); }
+    .section-link { font-size: 12px; color: var(--gold-dark); text-decoration: none; letter-spacing: 0.5px; transition: color 0.2s; }
+    .section-link:hover { color: var(--gold); }
+
+    /* ── STAT CARDS ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .stat-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 16px;
+      box-shadow: 0 1px 3px rgba(27,58,75,0.05);
     }
-    .email-input::placeholder { color: rgba(250,248,244,0.3); }
+    .stat-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; font-weight: 600; }
+    .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--ink); line-height: 1.2; }
+    .stat-value.small { font-size: 14px; font-family: 'Inter', sans-serif; font-weight: 500; }
+    .stat-unit { font-size: 13px; font-family: 'Inter', sans-serif; color: var(--ink-mid); }
+
+    /* ── STYLE PILLS ── */
+    .style-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .style-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 22px; flex: 1; min-width: 160px;
+      box-shadow: 0 1px 3px rgba(27,58,75,0.05);
+    }
+    .style-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; font-weight: 600; }
+    .style-value { font-size: 13px; color: var(--ink); line-height: 1.5; }
+
+    /* ── INTEREST TAGS ── */
+    .interest-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .interest-tag {
+      padding: 7px 16px; border-radius: 40px; font-size: 12px;
+      border: 1px solid var(--border-gold); color: var(--gold-dark);
+      background: rgba(201,169,110,0.1);
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      background: var(--card-alt); border: 1px dashed rgba(27,58,75,0.12);
+      border-radius: 12px; padding: 40px 36px; text-align: center;
+    }
+    .empty-icon { font-size: 28px; margin-bottom: 14px; opacity: 0.45; }
+    .empty-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; color: var(--ink); margin-bottom: 8px; }
+    .empty-sub { font-size: 13px; color: var(--ink-mid); line-height: 1.6; margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .empty-link { display: inline-block; font-size: 12px; color: var(--gold-dark); text-decoration: none; letter-spacing: 0.5px; border: 1px solid var(--border-gold); padding: 8px 20px; border-radius: 20px; transition: all 0.2s; }
+    .empty-link:hover { background: rgba(201,169,110,0.1); }
+
+    /* ── PLACEHOLDER BOX ── */
+    .placeholder-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; }
+    .placeholder-box p { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── SAFETY NOTES ── */
+    .safety-list { list-style: none; display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card-bg); }
+    .safety-item { display: flex; align-items: flex-start; gap: 14px; padding: 15px 20px; border-bottom: 1px solid var(--border); }
+    .safety-item:last-child { border-bottom: none; }
+    .safety-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .safety-text strong { font-size: 13px; color: var(--ink); display: block; margin-bottom: 2px; }
+    .safety-text span { font-size: 12px; color: var(--ink-mid); line-height: 1.6; }
+
+    /* ── ASK UBUNTU CTA ── */
+    .ubuntu-cta {
+      background: var(--ocean-dark); border-radius: 16px; padding: 40px 48px;
+      display: flex; flex-direction: column; gap: 28px;
+    }
+    .ubuntu-cta-text .cta-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,169,110,0.8); margin-bottom: 8px; }
+    .ubuntu-cta-text h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.2vw, 30px); font-weight: 300; line-height: 1.2; margin-bottom: 8px; color: var(--white); }
+    .ubuntu-cta-text h3 em { font-style: italic; color: var(--gold); }
+    .ubuntu-cta-text p { font-size: 13px; color: var(--white-dim); line-height: 1.7; max-width: 480px; }
+    /* Chat panel */
+    .ubuntu-chat-panel { display: flex; flex-direction: column; gap: 0; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
+    .ubuntu-chat-history { min-height: 260px; max-height: 420px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; background: rgba(0,0,0,0.18); scroll-behavior: smooth; }
+    .ubuntu-chat-history::-webkit-scrollbar { width: 4px; }
+    .ubuntu-chat-history::-webkit-scrollbar-track { background: transparent; }
+    .ubuntu-chat-history::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+    .ubuntu-msg { display: flex; gap: 10px; align-items: flex-start; max-width: 86%; }
+    .ubuntu-msg--ubuntu { align-self: flex-start; }
+    .ubuntu-msg--user { align-self: flex-end; flex-direction: row-reverse; }
+    .ubuntu-msg-avatar { width: 28px; height: 28px; border-radius: 50%; background: rgba(201,169,110,0.2); border: 1px solid rgba(201,169,110,0.4); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--gold); font-family: 'Cormorant Garamond', serif; }
+    .ubuntu-msg-bubble { padding: 11px 14px; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+    .ubuntu-msg--ubuntu .ubuntu-msg-bubble { background: rgba(255,255,255,0.08); color: var(--white-dim); border-radius: 4px 12px 12px 12px; }
+    .ubuntu-msg--user .ubuntu-msg-bubble { background: rgba(201,169,110,0.18); color: var(--white); border-radius: 12px 4px 12px 12px; border: 1px solid rgba(201,169,110,0.25); }
+    .ubuntu-typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: rgba(250,248,244,0.5); margin: 0 2px; animation: ubuntuBlink 1.2s infinite; }
+    .ubuntu-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .ubuntu-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes ubuntuBlink { 0%,80%,100% { opacity: 0.3; } 40% { opacity: 1; } }
+
+    /* Chips + input */
+    .ubuntu-chat-bottom { background: rgba(0,0,0,0.12); padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .ubuntu-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ubuntu-chip { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.13); border-radius: 20px; padding: 6px 14px; font-size: 11.5px; color: rgba(250,248,244,0.7); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.18s; }
+    .ubuntu-chip:hover { background: rgba(201,169,110,0.12); border-color: rgba(201,169,110,0.4); color: var(--gold); }
+    .ubuntu-input-row { display: flex; gap: 10px; align-items: stretch; }
+    .ubuntu-input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--white); font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+    .ubuntu-input::placeholder { color: rgba(250,248,244,0.38); }
+    .ubuntu-input:focus { border-color: rgba(201,169,110,0.5); }
+
+    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 13px 32px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ── RESEND SECONDARY ── */
+    .resend-secondary { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); text-align: center; }
+    .resend-secondary-title { font-size: 13px; color: var(--ink-mid); margin-bottom: 14px; }
+    .resend-row { display: flex; gap: 10px; max-width: 400px; margin: 0 auto; }
+    .email-input { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 11px 16px; color: var(--ink); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+    .email-input::placeholder { color: var(--ink-faint); }
     .email-input:focus { border-color: var(--gold); }
-    .cta-btn {
-      background: var(--gold); color: var(--ocean-dark); padding: 13px 24px;
-      border-radius: 8px; font-size: 13px; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase; border: none; cursor: pointer; transition: all 0.2s;
-      font-family: 'Inter', sans-serif; width: 100%;
+    .resend-btn { background: transparent; border: 1px solid var(--border-gold); color: var(--gold-dark); padding: 11px 20px; border-radius: 8px; font-size: 12px; font-weight: 500; letter-spacing: 0.5px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
+    .resend-btn:hover { background: rgba(201,169,110,0.1); }
+    #resendMsg { font-size: 12px; margin-top: 10px; min-height: 16px; color: var(--ink-mid); }
+
+    /* ── NO PROFILE ── */
+    .no-profile-wrap { padding: 80px 60px; text-align: center; max-width: 560px; margin: 0 auto; }
+    .no-profile-icon { font-size: 48px; margin-bottom: 22px; opacity: 0.45; }
+    .no-profile-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px, 3.5vw, 44px); font-weight: 300; line-height: 1.15; margin-bottom: 14px; color: var(--ink); }
+    .no-profile-title em { font-style: italic; color: var(--gold-dark); }
+    .no-profile-sub { font-size: 15px; color: var(--ink-mid); line-height: 1.8; margin-bottom: 36px; }
+    .no-profile-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--gold); color: var(--ocean-dark); padding: 16px 44px; border-radius: 8px; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; transition: all 0.25s; }
+    .no-profile-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 36px rgba(201,169,110,0.25); }
+
+    @media (max-width: 900px) {
+      .stat-grid { grid-template-columns: repeat(3, 1fr); }
+      .dash-row { grid-template-columns: repeat(2, 1fr); }
     }
-    .cta-btn:hover { background: var(--gold-light); }
-    .resend-note { font-size: 11px; color: rgba(250,248,244,0.3); line-height: 1.5; margin-top: 12px; }
-    #resendMsg { font-size: 13px; margin-top: 10px; min-height: 18px; }
+    @media (max-width: 768px) {
+      .page-header { padding: 20px 0; }
+      .cockpit { padding: 0 0 60px; }
+      .dash-row { padding: 16px 0 0; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .ubuntu-cta { padding: 24px 20px; }
 
-    /* What's in your guide */
-    .content { padding: 72px 60px; }
-    h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 3vw, 40px); font-weight: 300; line-height: 1.2; margin-bottom: 12px; }
-    h2 em { font-style: italic; color: var(--gold); }
-    .section-intro { font-size: 15px; color: var(--white-dim); line-height: 1.8; max-width: 600px; margin-bottom: 48px; }
-
-    .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 72px; }
-    .guide-card {
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);
-      border-radius: 12px; padding: 28px; transition: all 0.25s;
+      .ubuntu-chat-history { min-height: 220px; max-height: 320px; }
+      .resend-row { flex-direction: column; }
+      .no-profile-wrap { padding: 60px 24px; }
     }
-    .guide-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(201,169,110,0.22); }
-    .guide-icon { font-size: 28px; margin-bottom: 14px; }
-    .guide-card-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
-    .guide-card-desc { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
 
-    /* How it works */
-    .steps-row { display: flex; gap: 0; margin-bottom: 72px; border: 1px solid rgba(201,169,110,0.12); border-radius: 12px; overflow: hidden; }
-    .step { flex: 1; padding: 32px 28px; border-right: 1px solid rgba(201,169,110,0.12); }
-    .step:last-child { border-right: none; }
-    .step-num { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .step-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; margin-bottom: 8px; }
-    .step-desc { font-size: 13px; color: var(--white-dim); line-height: 1.6; }
+    /* ── RECOMMENDATION CARDS (image-first) ── */
+    .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .rec-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 2px 12px rgba(27,58,75,0.07); transition: box-shadow 0.2s, transform 0.2s; }
+    .rec-card:hover { box-shadow: 0 6px 24px rgba(27,58,75,0.12); transform: translateY(-2px); }
+    .rc-img-wrap { position: relative; height: 192px; overflow: hidden; background: linear-gradient(135deg, #e8e0d0, #d0c8b6); flex-shrink: 0; }
+    .rc-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .rc-img-placeholder { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; font-size: 36px; }
+    .rc-img-wrap--fallback .rc-img-placeholder { display: flex; }
+    .rc-body { padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .rc-cat { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); font-weight: 600; }
+    .rc-name { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; color: var(--ink); line-height: 1.2; }
+    .rc-teaser { font-size: 12px; color: var(--ink-mid); line-height: 1.6; font-style: italic; }
+    .rc-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--ink-faint); margin-top: 2px; }
+    .rc-tip { margin-top: 2px; }
+    .rc-tip-toggle { background: none; border: none; padding: 0; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-dark); cursor: pointer; font-family: Inter, sans-serif; font-weight: 600; }
+    .rc-tip-body { font-size: 12px; color: var(--ink-mid); line-height: 1.65; margin-top: 6px; padding: 10px 12px; background: rgba(201,169,110,0.08); border-left: 2px solid rgba(201,169,110,0.45); border-radius: 0 6px 6px 0; }
+    .rc-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding-top: 12px; }
+    .rc-btn-primary { flex: 1; padding: 10px 16px; background: var(--ocean); color: #FAF8F4; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: Inter, sans-serif; transition: background 0.2s; text-align: center; white-space: nowrap; min-width: 0; }
+    .rc-btn-primary:hover { background: var(--ocean-dark); }
+    .rc-btn-primary.saved { background: rgba(27,58,75,0.12); color: var(--ink-faint); cursor: default; }
+    .rc-btn-secondary { display: inline-flex; align-items: center; padding: 10px 14px; background: transparent; border: 1px solid var(--border-gold); color: var(--gold-dark); border-radius: 8px; font-size: 12px; font-weight: 500; text-decoration: none; transition: all 0.2s; white-space: nowrap; font-family: Inter, sans-serif; }
+    .rc-btn-secondary:hover { background: rgba(201,169,110,0.08); }
+    .rec-subsection { margin-bottom: 36px; }
+    .rec-subsection-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 16px; font-weight: 600; }
+    .rec-loading { text-align: center; padding: 40px 0; }
+    .rec-error { font-size: 13px; color: var(--ink-mid); line-height: 1.7; padding: 28px; background: var(--card-alt); border: 1px dashed var(--border); border-radius: 10px; text-align: center; }
 
-    /* CTA strip */
-    .cta-strip {
-      padding: 56px 60px; background: rgba(201,169,110,0.06);
-      border-top: 1px solid rgba(201,169,110,0.12); border-bottom: 1px solid rgba(201,169,110,0.12);
-      display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap;
+    /* ── PERSONALISED ITINERARY CARDS ── */
+    .pi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .pi-card { position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,.5); min-height: 380px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; }
+    .pi-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: transform .6s ease; }
+    .pi-card:hover .pi-photo { transform: scale(1.04); }
+    .pi-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(13,27,42,0.0) 0%, rgba(13,27,42,0.72) 50%); z-index: 1; }
+    .pi-day { position: relative; z-index: 2; padding: 24px 24px 8px; }
+    .pi-day-num { font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .pi-day-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--white); }
+    .pi-body { position: relative; z-index: 2; padding: 12px 24px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .pi-item { display: flex; gap: 12px; align-items: flex-start; }
+    .pi-time { font-size: 10px; font-weight: 500; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; margin-top: 3px; min-width: 64px; }
+    .pi-item p { font-size: 13px; color: rgba(250,248,244,0.82); line-height: 1.6; font-weight: 300; }
+    .pi-item strong { color: var(--white); font-weight: 500; }
+    .pi-hint { position: relative; z-index: 2; display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding: 0 24px 16px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(201,169,110,0.6); transition: color 0.2s; }
+    .pi-card:hover .pi-hint { color: rgba(201,169,110,0.95); }
+    .pi-hint-arrow { font-size: 14px; transition: transform 0.25s; }
+    .pi-card:hover .pi-hint-arrow { transform: translateY(-2px); }
+    .pi-card--final { grid-column: 1 / -1; min-height: 300px; }
+
+    /* ── PERSONALISED DAY MODAL ── */
+    .pi-modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(10,20,32,0.82); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; }
+    .pi-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .pi-modal { background: #0F2430; border: 1px solid rgba(201,169,110,0.25); border-radius: 16px; max-width: 760px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; transform: translateY(24px) scale(0.97); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+    .pi-modal-overlay.open .pi-modal { transform: translateY(0) scale(1); }
+    .pi-modal-photo { width: 100%; height: 240px; object-fit: cover; border-radius: 16px 16px 0 0; }
+    .pi-modal-body { padding: 36px 40px 40px; }
+    .pi-modal-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .pi-modal-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; margin-bottom: 24px; line-height: 1.1; }
+    .pi-modal-title em { font-style: italic; color: var(--gold); }
+    .pi-modal-schedule { display: flex; flex-direction: column; gap: 0; border: 1px solid rgba(201,169,110,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+    .pi-modal-slot { display: flex; gap: 20px; padding: 18px 22px; border-bottom: 1px solid rgba(201,169,110,0.07); }
+    .pi-modal-slot:last-child { border-bottom: none; }
+    .pi-modal-time { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); white-space: nowrap; margin-top: 3px; min-width: 72px; font-weight: 500; }
+    .pi-modal-slot p { font-size: 14px; color: var(--white-dim); line-height: 1.65; }
+    .pi-modal-slot strong { color: var(--white); font-weight: 500; }
+    .pi-modal-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+    .pi-modal-meta-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12); border-radius: 8px; padding: 12px 16px; flex: 1; min-width: 140px; }
+    .pi-modal-meta-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .pi-modal-meta-val { font-size: 13px; color: var(--white-dim); line-height: 1.5; }
+    .pi-modal-tip { background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.15); border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; }
+    .pi-modal-tip-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .pi-modal-tip p { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+    .pi-modal-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(15,36,48,0.85); border: 1px solid rgba(201,169,110,0.2); color: var(--white-dim); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .pi-modal-close:hover { background: rgba(201,169,110,0.15); color: var(--white); }
+
+    /* ── ITINERARY PENDING STATE ── */
+    .itin-pending { border: 1px solid var(--border-gold); border-radius: 16px; padding: 44px 36px; background: var(--card-bg); text-align: center; }
+    .itin-pending-pulse { width: 48px; height: 48px; border-radius: 50%; background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.3); margin: 0 auto 22px; display: flex; align-items: center; justify-content: center; font-size: 20px; animation: pulse-glow 2.5s ease-in-out infinite; }
+    @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(201,169,110,0.0); } 50% { box-shadow: 0 0 0 12px rgba(201,169,110,0.07); } }
+    .itin-pending-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; margin-bottom: 10px; color: var(--ink); line-height: 1.2; }
+    .itin-pending-title em { font-style: italic; color: var(--gold-dark); }
+    .itin-pending-sub { font-size: 13px; color: var(--ink-mid); line-height: 1.8; max-width: 460px; margin: 0 auto 26px; }
+    .itin-pending-single-card { max-width: 460px; margin: 0 auto; border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; background: var(--card-alt); text-align: left; }
+    .itin-pending-days-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(201,169,110,0.1); border: 1px solid var(--border-gold); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 12px; }
+    .itin-pending-card-title { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; color: var(--ink); margin-bottom: 8px; }
+    .itin-pending-card-body { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── NEXT BEST ACTIONS ── */
+    .completion-wrap { margin-bottom: 16px; }
+    .completion-bar-bg { background: rgba(27,58,75,0.1); border-radius: 6px; height: 6px; overflow: hidden; margin-bottom: 7px; }
+    .completion-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width 0.7s ease; }
+    .completion-label { font-size: 12px; color: var(--ink-mid); }
+    .action-list { display: flex; flex-direction: column; gap: 7px; }
+    .action-item { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 3px rgba(27,58,75,0.04); }
+    .action-item:hover { background: var(--card-alt); border-color: var(--border-gold); }
+    .action-item.done { opacity: 0.36; pointer-events: none; }
+    .action-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .action-dot.pending { background: transparent; border: 2px solid rgba(154,114,40,0.45); }
+    .action-dot.complete { background: var(--gold); border: 2px solid var(--gold); }
+    .action-item-text { flex: 1; }
+    .action-arrow { font-size: 12px; color: rgba(154,114,40,0.45); flex-shrink: 0; }
+
+    /* ── CURATED BOOKABLE EXPERIENCES ── */
+    .cbe-intro { font-size: 13px; color: var(--ink-mid); line-height: 1.7; max-width: 580px; margin-bottom: 22px; }
+    .cbe-cat { border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); margin-bottom: 12px; overflow: hidden; }
+    .cbe-cat[open] { border-color: var(--border-gold); }
+    .cbe-summary { cursor: pointer; list-style: none; padding: 16px 20px; font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--ink); display: flex; align-items: center; justify-content: space-between; transition: color 0.2s; }
+    .cbe-summary::-webkit-details-marker { display: none; }
+    .cbe-summary::after { content: '+'; font-family: 'Inter', sans-serif; font-size: 18px; color: var(--gold-dark); margin-left: 16px; }
+    .cbe-cat[open] .cbe-summary::after { content: '\2013'; }
+    .cbe-summary:hover { color: var(--gold-dark); }
+    .cbe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; padding: 0 20px 20px; }
+    .cbe-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 16px 18px; background: var(--card-alt); display: flex; flex-direction: column; gap: 7px; }
+    .cbe-card-title { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--ink); line-height: 1.25; margin-bottom: 2px; }
+    .cbe-row { font-size: 12px; color: var(--ink-mid); line-height: 1.55; }
+    .cbe-label { display: block; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); font-weight: 600; margin-bottom: 1px; }
+    .cbe-cta { margin-top: 9px; display: inline-block; text-align: center; padding: 9px 14px; border: 1px solid var(--border-gold); border-radius: 8px; color: var(--gold-dark); font-size: 12px; font-weight: 500; text-decoration: none; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    .cbe-cta:hover { background: rgba(201,169,110,0.1); border-color: var(--gold-dark); }
+    .cbe-note { font-size: 11px; color: var(--ink-faint); line-height: 1.6; margin-top: 14px; font-style: italic; }
+
+    @media (max-width: 768px) {
+      .pi-grid { grid-template-columns: 1fr; }
+      .pi-modal-overlay { padding: 0; align-items: flex-end; }
+      .pi-modal { border-radius: 20px 20px 0 0; max-height: 85vh; }
+      .pi-modal-photo { height: 180px; border-radius: 20px 20px 0 0; }
+      .pi-modal-body { padding: 24px 24px 32px; }
     }
-    .cta-strip-text .strip-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .cta-strip-text h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 2.5vw, 34px); font-weight: 300; line-height: 1.2; margin-bottom: 10px; }
-    .cta-strip-text h3 em { font-style: italic; color: var(--gold); }
-    .cta-strip-text p { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 500px; }
-    .btn-cta { display: inline-block; background: var(--gold); color: var(--ocean-dark); padding: 15px 36px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
-    .btn-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
 
-    @media (max-width: 900px) { .hero { flex-direction: column; gap: 40px; } .resend-card { flex: unset; width: 100%; } .steps-row { flex-direction: column; } .step { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.12); } .step:last-child { border-bottom: none; } }
-    @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } .hero { padding: 40px 24px; } .content { padding: 40px 24px; } .cta-strip { padding: 40px 24px; } }
-  /* Sidebar toggle */
-    .sidebar { transition: transform 0.35s ease; }
-    .main { transition: margin-left 0.35s ease; }
-    body.nav-hidden .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
-    body.nav-hidden .main { margin-left: 0; }
-    .nav-toggle {
-      position: fixed; top: 16px; left: calc(var(--sidebar-w) + 12px); z-index: 200;
-      height: 32px; padding: 0 14px 0 10px; border-radius: 20px;
-      background: rgba(15,36,48,0.75); border: 1px solid rgba(90,180,232,0.35);
-      color: rgba(90,180,232,0.9); cursor: pointer; display: flex; align-items: center; gap: 7px;
-      font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-      backdrop-filter: blur(6px); white-space: nowrap;
+    /* ── YOUR TRIP PREVIEW CAROUSEL ── */
+    .preview-section { padding: 32px 0 8px; }
+    .preview-section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 18px; gap: 16px; }
+    .preview-section-titles {}
+    .preview-eyebrow { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-dark); font-weight: 600; margin-bottom: 6px; }
+    .preview-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--ink); line-height: 1.1; }
+    .preview-title em { font-style: italic; color: var(--gold-dark); }
+    .preview-subtitle { font-size: 13px; color: var(--ink-mid); margin-top: 4px; max-width: 520px; }
+
+    /* Nav arrows */
+    .preview-nav { display: flex; align-items: center; gap: 6px; flex-shrink: 0; padding-bottom: 4px; }
+    .preview-nav-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--card-bg);
+      color: var(--ink-mid); font-size: 14px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0; font-family: 'Inter', sans-serif;
     }
-    .nav-toggle:hover { background: rgba(90,180,232,0.12); border-color: rgba(90,180,232,0.7); }
-    .nav-toggle .toggle-icon { font-size: 13px; }
-    .nav-toggle { transition: left 0.35s ease; }
-    body.nav-hidden .nav-toggle { left: 16px; }
+    .preview-nav-btn:hover { border-color: var(--border-gold); color: var(--gold-dark); background: var(--card-alt); }
+    .preview-nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* Carousel track */
+    .preview-carousel-wrap { position: relative; }
+    .preview-carousel {
+      display: flex; gap: 16px;
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      padding-bottom: 8px;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .preview-carousel::-webkit-scrollbar { display: none; }
+
+    /* Cards */
+    .preview-card {
+      flex: 0 0 290px; scroll-snap-align: start;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 2px 12px rgba(27,58,75,0.07);
+      display: flex; flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .preview-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(27,58,75,0.13); }
+
+    .preview-card-img-wrap { position: relative; height: 176px; overflow: hidden; flex-shrink: 0; background: var(--card-alt); }
+    .preview-card-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+    .preview-card:hover .preview-card-img { transform: scale(1.04); }
+    .preview-card-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(15,36,48,0) 40%, rgba(15,36,48,0.42) 100%);
+    }
+    /* Placeholder when no image */
+    .preview-card-img-placeholder {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px;
+      background: linear-gradient(135deg, #e8e0d0 0%, #d6ccb8 100%);
+    }
+    .preview-card-img-placeholder span { font-size: 32px; opacity: 0.55; }
+    .preview-card-img-placeholder p { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-faint); }
+
+    /* Video play button overlay */
+    .preview-play-btn {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(201,169,110,0.88); border: 2px solid rgba(255,255,255,0.6);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; z-index: 2; text-decoration: none;
+    }
+    .preview-play-btn:hover { background: var(--gold); transform: translate(-50%, -50%) scale(1.08); }
+    .preview-play-btn::after { content: '▶'; font-size: 14px; color: var(--ocean-dark); margin-left: 2px; }
+
+    .preview-card-badge {
+      position: absolute; top: 12px; right: 12px;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 9px; font-weight: 600; letter-spacing: 0.5px;
+      backdrop-filter: blur(6px);
+    }
+    .preview-card-badge.saved { background: rgba(201,169,110,0.9); color: var(--ocean-dark); }
+    .preview-card-badge.suggested { background: rgba(27,58,75,0.78); color: rgba(250,248,244,0.9); }
+
+    .preview-card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+    .preview-card-cat { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); font-weight: 600; margin-bottom: 5px; }
+    .preview-card-title { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; color: var(--ink); line-height: 1.2; margin-bottom: 6px; }
+    .preview-card-desc { font-size: 12px; color: var(--ink-mid); line-height: 1.6; margin-bottom: 8px; font-style: italic; flex: 1; }
+    .preview-card-detail { font-size: 11px; color: var(--ink-faint); margin-bottom: 14px; }
+    .preview-card-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: auto; }
+    .preview-btn-primary {
+      display: inline-block; padding: 8px 16px;
+      background: var(--gold); color: var(--ocean-dark);
+      border-radius: 6px; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.4px; text-decoration: none;
+      border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: background 0.2s; white-space: nowrap;
+    }
+    .preview-btn-primary:hover { background: var(--gold-light); }
+    .preview-btn-ghost {
+      display: inline-block; padding: 7px 12px;
+      background: transparent; color: var(--ink-mid);
+      border: 1px solid var(--border); border-radius: 6px;
+      font-size: 11px; font-weight: 500; text-decoration: none;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .preview-btn-ghost:hover { border-color: var(--border-gold); color: var(--gold-dark); }
+    .preview-btn-remove {
+      font-size: 11px; color: var(--ink-faint); background: transparent;
+      border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+      padding: 0; text-decoration: underline; transition: color 0.2s;
+    }
+    .preview-btn-remove:hover { color: var(--ink); }
+
+    /* Empty state */
+    .preview-empty {
+      background: var(--card-bg); border: 1px dashed var(--border);
+      border-radius: 14px; padding: 32px 28px;
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    }
+    .preview-empty-icon { font-size: 36px; opacity: 0.4; flex-shrink: 0; }
+    .preview-empty-text {}
+    .preview-empty-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; color: var(--ink); margin-bottom: 5px; }
+    .preview-empty-sub { font-size: 13px; color: var(--ink-mid); margin-bottom: 14px; }
+
+    @media (max-width: 768px) {
+      .preview-card { flex: 0 0 260px; }
+      .preview-card-img-wrap { height: 152px; }
+      .preview-section-header { flex-wrap: wrap; }
+    }
+    /* ── CONTENT WRAPPER ── */
+    .mg-content { max-width: 1320px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 900px) { .mg-content { padding: 0 24px; } }
+    @media (max-width: 600px) { .mg-content { padding: 0 18px; } }
+
+    /* ── REC CAROUSEL ROWS ── */
+    .rec-row { margin-bottom: 44px; scroll-margin-top: 80px; }
+    .rec-row-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; gap: 16px; flex-wrap: wrap; }
+    .rec-row-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--ink); }
+    .rec-row-sub { font-size: 12px; color: var(--ink-mid); margin-top: 4px; }
+    .rec-row-nav { display: flex; gap: 6px; flex-shrink: 0; }
+    .rec-nav-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--card-bg); color: var(--ink-mid); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    .rec-nav-btn:hover { border-color: var(--border-gold); color: var(--gold-dark); background: var(--card-alt); }
+    .rec-carousel { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none; }
+    .rec-carousel::-webkit-scrollbar { display: none; }
+    .rec-carousel .rec-card { flex: 0 0 280px; scroll-snap-align: start; }
+    @media (max-width: 600px) { .rec-carousel .rec-card { flex: 0 0 260px; } }
   </style>
-<script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
+  <script src="/guide/sidebar.js" defer></script>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </head>
 <body>
-<button class="nav-toggle" id="navToggle" title="Toggle navigation" onclick="const h=document.body.classList.toggle('nav-hidden');this.innerHTML=h?'<span class=\'toggle-icon\'>☰<\/span> Menu':'<span class=\'toggle-icon\'>✕<\/span> Close'"><span class="toggle-icon">✕</span> Close</button>
 
-<div class="sidebar">
-  <div class="sidebar-logo">
-    <div class="brand">Planet <span style="color:rgba(90,180,232,0.95)">Curated</span></div>
-    <div class="sub">Cape Town Guide</div>
-  </div>
-  <a href="https://thecapetownguide.com" style="display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:11px;color:rgba(250,248,244,0.4);text-decoration:none;border-bottom:1px solid rgba(201,169,110,0.08);transition:color .2s;" onmouseover="this.style.color='rgba(201,169,110,0.8)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">← thecapetownguide.com</a>
-      <div class="sidebar-section">Dashboard</div>
-  <a href="home.html" class="sidebar-item"><i data-lucide="home" class="icon"></i> Home</a>
-  <a href="sample-itinerary.html" class="sidebar-item"><i data-lucide="file-text" class="icon"></i> Sample Itinerary</a>
-  <a href="map.html" class="sidebar-item"><i data-lucide="map" class="icon"></i> Interactive Map</a>
-  <a href="live.html" class="sidebar-item"><i data-lucide="sun" class="icon"></i> Live Cape Town</a>
-  <div class="sidebar-section">Explore</div>
-  <a href="experiences.html" class="sidebar-item"><i data-lucide="star" class="icon"></i> Iconic Experiences</a>
-  <a href="hidden-gems.html" class="sidebar-item"><i data-lucide="gem" class="icon"></i> Hidden Gems</a>
-  <a href="neighbourhoods.html" class="sidebar-item"><i data-lucide="map-pin" class="icon"></i> Neighbourhoods</a>
-  <a href="beaches.html" class="sidebar-item"><i data-lucide="waves" class="icon"></i> Beaches & Outdoors</a>
-  <a href="daytrips.html" class="sidebar-item"><i data-lucide="car" class="icon"></i> Day Trips</a>
-  <div class="sidebar-section">Eat & Drink</div>
-  <a href="food.html" class="sidebar-item"><i data-lucide="utensils" class="icon"></i> Where to Eat</a>
-  <a href="wine.html" class="sidebar-item"><i data-lucide="wine" class="icon"></i> Wine & Winelands</a>
-  <div class="sidebar-section">Stay & Get Around</div>
-  <a href="stay.html" class="sidebar-item"><i data-lucide="bed-double" class="icon"></i> Where to Stay</a>
-  <a href="carrental.html" class="sidebar-item"><i data-lucide="key" class="icon"></i> Car Rental</a>
-  <div class="sidebar-section">Trip Prep</div>
-  <a href="budget.html" class="sidebar-item"><i data-lucide="wallet" class="icon"></i> Budget & Costs</a>
-  <a href="safety.html" class="sidebar-item"><i data-lucide="shield" class="icon"></i> Safety Guide</a>
-  <a href="packing.html" class="sidebar-item"><i data-lucide="luggage" class="icon"></i> Packing & Essentials</a>
-  <div class="sidebar-section">My Trip</div>
-  <a href="itinerary.html" class="sidebar-item"><i data-lucide="plane" class="icon"></i> Build My Trip</a>
-  <a href="myguide.html" class="sidebar-item active"><i data-lucide="book-open" class="icon"></i> My Guide</a>
-</div>
+<div id="guide-sidebar"></div>
 
-<div class="main">
-
-  <!-- HERO: resend form -->
-  <div class="hero">
-    <div class="hero-left">
-      <div class="eyebrow">Your Personal Guide</div>
-      <h1>Your <em>personalised</em><br>Cape Town guide</h1>
-      <p class="hero-desc">After your conversation with Ubuntu, we built a custom guide around your trip — your dates, your travel style, your interests. It was sent to your inbox. Can't find it? Resend it in seconds.</p>
-    </div>
-    <div class="resend-card">
-      <div class="resend-card-title">Resend my guide link</div>
-      <div class="resend-card-sub">Enter the email you used when chatting with Ubuntu and we'll resend your personalised guide link instantly.</div>
-      <div class="input-row">
-        <input type="email" class="email-input" id="guideEmail" placeholder="your@email.com" />
-        <button class="cta-btn" onclick="resendGuide()">Send My Guide →</button>
-      </div>
-      <div id="resendMsg"></div>
-      <div class="resend-note">Check your spam folder too — it arrives from hello@thecapetownguide.com</div>
-    </div>
-  </div>
-
-  <!-- WHAT'S IN YOUR GUIDE -->
-  <div class="content">
-    <div class="eyebrow">What You Receive</div>
-    <h2>Everything built around<br><em>your trip</em></h2>
-    <p class="section-intro">Your guide isn't a generic checklist. It's built from your conversation with Ubuntu — your dates, your neighbourhood preference, what you want to do, and how you like to travel.</p>
-
-    <div class="guide-grid">
-      <div class="guide-card">
-        <div class="guide-icon">🗓️</div>
-        <div class="guide-card-title">Day-by-Day Itinerary</div>
-        <p class="guide-card-desc">A complete day-by-day plan built around your exact travel dates, with morning, afternoon and evening recommendations that actually fit together.</p>
-      </div>
-      <div class="guide-card">
-        <div class="guide-icon">📍</div>
-        <div class="guide-card-title">Curated Places</div>
-        <p class="guide-card-desc">Restaurants, beaches, experiences and neighbourhoods chosen for your travel style — not a generic list, but a short selection of the right ones for you.</p>
-      </div>
-      <div class="guide-card">
-        <div class="guide-icon">🛡️</div>
-        <div class="guide-card-title">Safety & Timing Tips</div>
-        <p class="guide-card-desc">Honest, practical guidance on which areas to visit and when — written for the way you're travelling, with no-nonsense Plan B options built in.</p>
-      </div>
-      <div class="guide-card">
-        <div class="guide-icon">💡</div>
-        <div class="guide-card-title">Insider Recommendations</div>
-        <p class="guide-card-desc">The kind of advice you'd get from a local friend — specific spots, ideal timing, what to skip, and the hidden gems most visitors miss entirely.</p>
-      </div>
-    </div>
-
-    <!-- HOW IT WORKS -->
-    <div class="eyebrow">How It Works</div>
-    <h2>Three steps to your<br><em>perfect Cape Town trip</em></h2>
-    <p class="section-intro" style="margin-bottom:32px;">The whole process takes under two minutes — no forms, no sign-up, just a short conversation.</p>
-
-    <div class="steps-row">
-      <div class="step">
-        <div class="step-num">Step 01</div>
-        <div class="step-title">Talk to Ubuntu</div>
-        <p class="step-desc">Our AI travel guide asks you a few smart questions — your travel dates, where you're staying, what you love doing, and how you like to travel.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">Step 02</div>
-        <div class="step-title">We build your guide</div>
-        <p class="step-desc">Within minutes, Ubuntu builds a personalised guide and itinerary around your answers — curated for you, not adapted from a template.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">Step 03</div>
-        <div class="step-title">It lands in your inbox</div>
-        <p class="step-desc">Your guide is emailed to you as a clean, mobile-friendly page you can save, screenshot, and refer to throughout your trip.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- CTA: haven't got a guide yet -->
-  <div class="cta-strip">
-    <div class="cta-strip-text">
-      <div class="strip-eyebrow">Don't have a guide yet?</div>
-      <h3>Start with a quick chat<br>with <em>Ubuntu</em></h3>
-      <p>Takes less than two minutes. Ubuntu asks the right questions and builds your personalised Cape Town guide on the spot — day-by-day itinerary included.</p>
-    </div>
-    <a href="https://thecapetownguide.com" class="btn-cta">Talk to Ubuntu →</a>
-  </div>
-
+<div class="main" id="mainContent" data-guide-start="true">
+  <!-- Rendered by JS below -->
 </div>
 
 <script>
-  async function resendGuide() {
-    const email = document.getElementById('guideEmail').value.trim();
-    const msg = document.getElementById('resendMsg');
-    if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email address.'; msg.style.color = '#ff6b6b'; return; }
-    msg.textContent = 'Sending...'; msg.style.color = 'rgba(250,248,244,0.5)';
-    try {
-      const res = await fetch('https://caipy-sfau.onrender.com/resend-guide', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      if (res.ok) { msg.textContent = '✓ Check your inbox — guide link sent!'; msg.style.color = '#4CAF50'; }
-      else { msg.textContent = 'No guide found for this email. Try chatting with Ubuntu first.'; msg.style.color = '#ff6b6b'; }
-    } catch { msg.textContent = 'Something went wrong. Please try again.'; msg.style.color = '#ff6b6b'; }
-  }
-  document.getElementById('guideEmail').addEventListener('keypress', e => { if (e.key === 'Enter') resendGuide(); });
-</script>
+// ─── Helpers ─────────────────────────────────────────────
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function formatDate(str) {
+  if (!str) return '—';
+  var d = new Date(str + 'T12:00:00');
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
 
+// ─── Personalised itinerary rendering ────────────────────
+var piDaysData = [];
+
+function renderPersonalisedItinerary(days) {
+  piDaysData = days;
+  var fallbackImgs = [
+    '/photos/sea-point.jpeg', '/photos/table-mountain.jpeg', '/photos/Cape-Point.webp',
+    '/photos/winelands.webp', '/photos/waterfront.jpeg', '/photos/hero-aerial.jpg'
+  ];
+  var html = '<div class="pi-grid">';
+  days.forEach(function(d, i) {
+    var isLast = i === days.length - 1 && days.length > 1;
+    var cardClass = 'pi-card' + (isLast ? ' pi-card--final' : '');
+    var img = d.image || fallbackImgs[i % fallbackImgs.length];
+    var label = d.label || ('Day ' + d.dayNumber);
+    var previewSlots = [];
+    if (d.morning) previewSlots.push({ time: 'Morning', text: d.morning });
+    if (d.afternoon) previewSlots.push({ time: 'Afternoon', text: d.afternoon });
+    if (d.evening) previewSlots.push({ time: 'Evening', text: d.evening });
+    var previewHtml = previewSlots.slice(0, 3).map(function(s) {
+      return '<div class="pi-item"><div class="pi-time">' + escHtml(s.time) + '</div><p>' + escHtml(s.text) + '</p></div>';
+    }).join('');
+    html += '<div class="' + cardClass + '" onclick="openPiDay(' + i + ')">' +
+      '<img class="pi-photo" src="' + escHtml(img) + '" alt="' + escHtml(label) + '">' +
+      '<div class="pi-overlay"></div>' +
+      '<div class="pi-day">' +
+        '<div class="pi-day-num">' + escHtml(label) + '</div>' +
+        '<div class="pi-day-title">' + escHtml(d.title || d.area || '') + '</div>' +
+      '</div>' +
+      '<div class="pi-body">' + previewHtml + '</div>' +
+      '<div class="pi-hint"><span>Expand day</span><span class="pi-hint-arrow">↑</span></div>' +
+    '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function openPiDay(n) {
+  var d = piDaysData[n];
+  if (!d) return;
+  var fallbackImgs = ['/photos/sea-point.jpeg', '/photos/table-mountain.jpeg', '/photos/Cape-Point.webp', '/photos/winelands.webp', '/photos/waterfront.jpeg', '/photos/hero-aerial.jpg'];
+  var img = d.image || fallbackImgs[n % fallbackImgs.length];
+  document.getElementById('piModalPhoto').src = img;
+  document.getElementById('piModalPhoto').alt = d.title || '';
+  document.getElementById('piModalEyebrow').textContent = d.label || ('Day ' + d.dayNumber);
+  document.getElementById('piModalTitle').textContent = d.title || d.area || '';
+
+  var slots = [];
+  if (Array.isArray(d.slots)) {
+    slots = d.slots;
+  } else {
+    if (d.morning) slots.push({ time: 'Morning', text: d.morning });
+    if (d.afternoon) slots.push({ time: 'Afternoon', text: d.afternoon });
+    if (d.evening) slots.push({ time: 'Evening', text: d.evening });
+  }
+  document.getElementById('piModalSchedule').innerHTML = slots.map(function(s) {
+    return '<div class="pi-modal-slot"><div class="pi-modal-time">' + escHtml(s.time) + '</div><p>' + escHtml(s.text || s.html || '') + '</p></div>';
+  }).join('');
+
+  var metaHtml = '';
+  if (d.estimatedCost) metaHtml += '<div class="pi-modal-meta-item"><div class="pi-modal-meta-label">Est. Cost</div><div class="pi-modal-meta-val">' + escHtml(d.estimatedCost) + '</div></div>';
+  if (d.transport) metaHtml += '<div class="pi-modal-meta-item"><div class="pi-modal-meta-label">Getting Around</div><div class="pi-modal-meta-val">' + escHtml(d.transport) + '</div></div>';
+  if (Array.isArray(d.restaurants) && d.restaurants.length) metaHtml += '<div class="pi-modal-meta-item"><div class="pi-modal-meta-label">Eat & Drink</div><div class="pi-modal-meta-val">' + d.restaurants.map(escHtml).join(' &middot; ') + '</div></div>';
+  if (d.planB) metaHtml += '<div class="pi-modal-meta-item"><div class="pi-modal-meta-label">Plan B</div><div class="pi-modal-meta-val">' + escHtml(d.planB) + '</div></div>';
+  var metaEl = document.getElementById('piModalMeta');
+  metaEl.innerHTML = metaHtml;
+  metaEl.style.display = metaHtml ? '' : 'none';
+
+  var tipContent = d.safetyNote || d.tip || '';
+  var tipLabel = d.safetyNote ? 'Safety Note' : 'Insider Tip';
+  var tipEl = document.getElementById('piModalTip');
+  tipEl.innerHTML = tipContent ? '<div class="pi-modal-tip-label">' + tipLabel + '</div><p>' + escHtml(tipContent) + '</p>' : '';
+  tipEl.style.display = tipContent ? '' : 'none';
+
+  document.getElementById('piModalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('piModal').scrollTop = 0;
+}
+
+function closePiDay() {
+  document.getElementById('piModalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handlePiOverlayClick(e) {
+  if (e.target === document.getElementById('piModalOverlay')) closePiDay();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePiDay();
+});
+
+// ─── MVP Itinerary builder ───────────────────────────────
+function buildMvpItinerary(p) {
+  var places = Array.isArray(p.savedPlaces) ? p.savedPlaces : [];
+  var numDays = Math.min(parseInt(p.days, 10) || 5, 5);
+
+  var stay    = places.find(function(pl) { return pl.category === 'Accommodation'; });
+  var car     = places.find(function(pl) { return pl.category === 'Rental Car'; });
+  var exps    = places.filter(function(pl) { return pl.category === 'Experience'; });
+  var rests   = places.filter(function(pl) { return pl.category === 'Restaurant'; });
+  var wines   = places.filter(function(pl) { return pl.category === 'Wine Estate'; });
+
+  var stayName = stay  ? stay.name  : null;
+  var carName  = car   ? car.name   : null;
+  var exp1     = exps[0]  ? exps[0].name  : null;
+  var exp2     = exps[1]  ? exps[1].name  : null;
+  var rest1    = rests[0] ? rests[0].name : null;
+  var rest2    = rests[1] ? rests[1].name : null;
+  var wine1    = wines[0] ? wines[0].name : null;
+
+  var days = [];
+
+  // Day 1 — Arrival
+  days.push({
+    dayNumber: 1, label: 'Day 1', title: 'Arrival & Settle In',
+    image: '/photos/waterfront.jpeg',
+    morning:   carName  ? 'Pick up your ' + carName + ' and drive into the city.' : 'Arrange your transfer or rental car and head into the city.',
+    afternoon: stayName ? 'Check in at ' + stayName + '. Drop your bags and take in the views.' : 'Check in at your Cape Town base and get your bearings.',
+    evening:   'First meal in Cape Town — head to the V&A Waterfront or explore the neighbourhood near your hotel.'
+  });
+
+  if (numDays >= 2) {
+    days.push({
+      dayNumber: 2, label: 'Day 2', title: 'Iconic Cape Town',
+      image: '/photos/table-mountain.jpeg',
+      morning:   exp1 ? exp1 + ' — your first iconic Cape Town moment.' : 'Table Mountain — take the cableway up for sunrise views over the peninsula.',
+      afternoon: 'Explore the City Bowl, the Bo-Kaap neighbourhood and the V&A Waterfront.',
+      evening:   rest1 ? 'Dinner at ' + rest1 + '.' : 'Dinner in the City Bowl or along the Sea Point strip.'
+    });
+  }
+
+  if (numDays >= 3) {
+    days.push({
+      dayNumber: 3, label: 'Day 3', title: 'Peninsula & Coast',
+      image: '/photos/Cape-Point.webp',
+      morning:   exp2 ? exp2 + ' — make a day of it.' : 'Drive the Cape Peninsula — Chapman\'s Peak, Cape Point and Boulders Beach penguins.',
+      afternoon: 'Stop at Kalk Bay for lunch and explore the antique shops and harbour.',
+      evening:   'Sundowners at Camps Bay beach, then dinner in Camps Bay or Clifton.'
+    });
+  }
+
+  if (numDays >= 4) {
+    days.push({
+      dayNumber: 4, label: 'Day 4', title: 'Wine & Winelands',
+      image: '/photos/winelands.webp',
+      morning:   'Drive to the Constantia Valley — 20 minutes from the city centre.',
+      afternoon: wine1 ? 'Afternoon tasting at ' + wine1 + '. Take your time.' : 'Explore the winelands — Constantia, Stellenbosch or Franschhoek.',
+      evening:   rest2 ? 'Dinner at ' + rest2 + '.' : 'Dinner in the winelands or back in Cape Town.'
+    });
+  }
+
+  if (numDays >= 5) {
+    days.push({
+      dayNumber: 5, label: 'Day 5', title: 'Neighbourhood & Last Day',
+      image: '/photos/sea-point.jpeg',
+      morning:   'Explore Sea Point promenade or Woodstock\'s creative district at your own pace.',
+      afternoon: 'Hout Bay harbour and market, or a last swim at Camps Bay.',
+      evening:   rest2 ? 'Farewell dinner at ' + rest2 + '.' : (rest1 ? 'Farewell dinner — try somewhere new or revisit a favourite.' : 'Ask Ubuntu for a farewell dinner recommendation based on your taste.')
+    });
+  }
+
+  return days;
+}
+
+function rebuildItinerary() {
+  renderCockpit();
+  setTimeout(function() {
+    var el = document.getElementById('my-itinerary-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// ─── Remove saved place ──────────────────────────────────
+function removeSavedPlace(name, sourcePage) {
+  var profile = {};
+  try { var raw = localStorage.getItem('ubuntuTripProfile'); if (raw) profile = JSON.parse(raw) || {}; } catch(e) {}
+  if (Array.isArray(profile.savedPlaces)) {
+    profile.savedPlaces = profile.savedPlaces.filter(function(p) {
+      return !(p.name === name && p.sourcePage === sourcePage);
+    });
+    try { localStorage.setItem('ubuntuTripProfile', JSON.stringify(profile)); } catch(e) {}
+  }
+  // Re-render
+  document.getElementById('mainContent').innerHTML = '';
+  renderCockpit();
+}
+
+// ─── Reset My Trip ───────────────────────────────────────
+function resetMyTrip() {
+  var ok = confirm('Are you sure you want to reset your trip? This will delete your saved trip profile and saved places, but keep your guide access.');
+  if (!ok) return;
+  localStorage.removeItem('ubuntuTripProfile');
+  location.reload();
+}
+
+// ─── Resend ──────────────────────────────────────────────
+async function resendGuide() {
+  var emailEl = document.getElementById('guideEmail');
+  var msg = document.getElementById('resendMsg');
+  if (!emailEl || !msg) return;
+  var email = emailEl.value.trim();
+  if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email address.'; msg.style.color = '#ff6b6b'; return; }
+  msg.textContent = 'Sending…'; msg.style.color = 'rgba(250,248,244,0.5)';
+  try {
+    var res = await fetch('https://caipy-sfau.onrender.com/resend-guide', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    });
+    if (res.ok) { msg.textContent = '✓ Check your inbox — guide link sent!'; msg.style.color = '#4CAF50'; }
+    else { msg.textContent = 'No guide found for this email. Try the Trip Builder first.'; msg.style.color = '#ff6b6b'; }
+  } catch(e) { msg.textContent = 'Something went wrong. Please try again.'; msg.style.color = '#ff6b6b'; }
+}
+
+// ─── Next Best Actions helpers ────────────────────────────
+
+function computeCompletion(p) {
+  var score = 1; // profile exists
+  var max = 6;
+  var places = Array.isArray(p.savedPlaces) ? p.savedPlaces : [];
+  if (places.some(function(pl) { return pl.category === 'Rental Car'; })) score++;
+  if (places.some(function(pl) { return pl.category === 'Accommodation'; })) score++;
+  if (places.filter(function(pl) { return pl.category === 'Experience'; }).length >= 2) score++;
+  var mc = (p.costs && p.costs.manualCosts) ? p.costs.manualCosts : {};
+  if (Object.keys(mc).some(function(k) { return parseFloat(mc[k]) > 0; })) score++;
+  if (Array.isArray(p.generatedItinerary) && p.generatedItinerary.length > 0) score++;
+  return Math.round((score / max) * 100);
+}
+
+function renderNextActions(p) {
+  var places = Array.isArray(p.savedPlaces) ? p.savedPlaces : [];
+  var hasCar   = places.some(function(pl) { return pl.category === 'Rental Car'; });
+  var hasStay  = places.some(function(pl) { return pl.category === 'Accommodation'; });
+  var expCount = places.filter(function(pl) { return pl.category === 'Experience'; }).length;
+  var mc = (p.costs && p.costs.manualCosts) ? p.costs.manualCosts : {};
+  var hasCosts = Object.keys(mc).some(function(k) { return parseFloat(mc[k]) > 0; });
+  var hasItinerary = Array.isArray(p.generatedItinerary) && p.generatedItinerary.length > 0;
+  var pct = computeCompletion(p);
+
+  var actions = [
+    { done: hasCar,        label: 'Choose a rental car',                   sub: 'Select your Cape Town vehicle from recommendations below', link: '#rental-car-options' },
+    { done: hasStay,       label: 'Choose where to stay',                  sub: 'Pick your ideal Cape Town base from the options below',   link: '#places-to-stay-options' },
+    { done: expCount >= 2, label: 'Add at least 2 experiences to pre-book',sub: 'Table Mountain, Robben Island, winelands and more',       link: '#experiences-to-prebook' },
+    { done: hasCosts,      label: 'Add your flight and transfer costs',     sub: 'Your budget level is saved — update via Edit My Trip',   link: 'budget.html' },
+    { done: hasItinerary,  label: 'Generate your day-by-day itinerary',     sub: 'Build your personalised Cape Town plan with Ubuntu',      link: '#my-itinerary-section' }
+  ];
+
+  var barHtml =
+    '<div class="completion-wrap">' +
+      '<div class="completion-bar-bg"><div class="completion-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="completion-label">Trip setup: <strong style="color:var(--ink);">' + pct + '% complete</strong></div>' +
+    '</div>';
+
+  var listHtml = '<div class="action-list">' +
+    actions.map(function(a) {
+      return '<a href="' + escHtml(a.link) + '" class="action-item' + (a.done ? ' done' : '') + '">' +
+        '<div class="action-dot ' + (a.done ? 'complete' : 'pending') + '"></div>' +
+        '<div class="action-item-text">' +
+          '<strong style="font-size:13px;color:var(--ink);display:block;margin-bottom:2px;">' + (a.done ? '✓ ' : '') + escHtml(a.label) + '</strong>' +
+          '<span style="font-size:12px;color:var(--ink-mid);">' + escHtml(a.sub) + '</span>' +
+        '</div>' +
+        '<div class="action-arrow">→</div>' +
+      '</a>';
+    }).join('') +
+  '</div>';
+
+  return barHtml + listHtml;
+}
+
+// ─── Trip Preview ────────────────────────────────────────
+
+var PREVIEW_IMAGES = {
+  // Stays
+  'stay-mojo':           '/photos/signal-hill.webp',
+  'stay-ashanti':        '/photos/hero-aerial.jpg',
+  'stay-pepper-club':    '/photos/bree-street.jpg',
+  'stay-pod':            '/photos/camps-bay.webp',
+  'stay-kalk-bay':       '/photos/Hout-Bay.webp',
+  'stay-one-only':       '/photos/waterfront.jpeg',
+  'stay-silo':           '/photos/waterfront.jpeg',
+  'stay-twelve-apostles':'/photos/camps-bay.webp',
+  'stay-mount-nelson':   '/photos/table-mountain.jpeg',
+  // Cars
+  'car-budget-compact':  '/photos/chapmans-peak.jpeg',
+  'car-mid-suv':         '/photos/chapmans-peak.jpeg',
+  'car-premium-suv':     '/photos/camps-bay.webp',
+  'car-family-suv':      '/photos/chapmans-peak.jpeg',
+  'car-4x4-adventure':   '/photos/Cape-Point.webp',
+  // Experiences
+  'exp-table-mountain':  '/photos/table-mountain.jpeg',
+  'exp-cape-point':      '/photos/Cape-Point.webp',
+  'exp-boulders-beach':  '/photos/boulders-beach.jpeg',
+  'exp-robben-island':   '/photos/robben-island.jpeg',
+  'exp-winelands':       '/photos/winelands.webp',
+  'exp-sunset-sail':     '/photos/waterfront.jpeg',
+  'exp-lions-head':      '/photos/signal-hill.webp',
+  'exp-whale-watching':  '/photos/rock-ledge.jpeg',
+  'exp-shark-cage':      '/photos/Cape-Point.webp',
+  'exp-helicopter':      '/photos/hero-aerial.jpg',
+  'exp-surf':            '/photos/muizenberg-huts.jpeg',
+  'exp-constantia-wine': '/photos/winelands.webp',
+  'exp-kayaking':        '/photos/Hout-Bay.webp',
+  // Wine estates
+  'wine-groot-constantia': '/photos/winelands.webp',
+  'wine-beau-constantia':  '/photos/winelands.webp',
+  'wine-constantia-glen':  '/photos/winelands.webp',
+  'wine-buitenverwachting':'/photos/winelands.webp',
+  'wine-babylonstoren':    '/photos/winelands.webp',
+  'wine-delaire-graff':    '/photos/winelands.webp',
+  'wine-tokara':           '/photos/winelands.webp',
+  'wine-boschendal':       '/photos/winelands.webp',
+  'wine-la-petite-ferme':  '/photos/winelands.webp',
+  'wine-haute-cabriere':   '/photos/winelands.webp',
+  // Restaurants
+  'rest-grand-africa':     '/photos/waterfront.jpeg',
+  'rest-upper-union':      '/photos/bree-street.jpg',
+  'rest-ozcf-market':      '/photos/neighbourgoods-market.jpg',
+  'rest-athletic-club':    '/photos/bree-street.jpg',
+  'rest-chefs-warehouse-beau': '/photos/winelands.webp',
+  'car-convertible':     '/photos/chapmans-peak.jpeg',
+  'car-private-driver':  '/photos/chapmans-peak.jpeg',
+  'car-uber-only':       '/photos/Cape-Point.webp',
+  // Restaurants
+  'rest-test-kitchen':   '/photos/woodstock.webp',
+  'rest-la-colombe':     '/photos/winelands.webp',
+  'rest-fyn':            '/photos/bree-street.jpg',
+  'rest-pot-luck-club':  '/photos/neighbourgoods-market.jpg',
+  'rest-kloof-street':   '/photos/bree-street.jpg',
+  'rest-harbour-house':  '/photos/Hout-Bay.webp',
+  'rest-olympia':        '/photos/Hout-Bay.webp',
+  'rest-la-parada':      '/photos/camps-bay.webp',
+  'rest-superette':      '/photos/bree-street.jpg',
+  'rest-bungalow':       '/photos/camps-bay.webp'
+};
+
+var PREVIEW_FALLBACKS = {
+  'Accommodation': '/photos/signal-hill.webp',
+  'Rental Car':    '/photos/chapmans-peak.jpeg',
+  'Experience':    '/photos/table-mountain.jpeg',
+  'Restaurant':    '/photos/restaurant.jpeg',
+  'Wine Estate':   '/photos/winelands.webp',
+  'Day Trip':      '/photos/Cape-Point.webp',
+  'Beach':         '/photos/llandudno-beach.jpg',
+  'default':       '/photos/hero-aerial.jpg'
+};
+
+var PREVIEW_EMOTIONS = {
+  'Accommodation': 'Where you wake up shapes everything — mornings, meals, the whole mood of your trip.',
+  'Rental Car':    'The open road, mountain passes, and a car that fits the adventure.',
+  'Experience':    'The moment you\'ll talk about long after you\'re home.',
+  'Restaurant':    'Great food in a city that takes its restaurants seriously.',
+  'Wine Estate':   'Valley views, cool cellars, and a glass of something exceptional.',
+  'Day Trip':      'One of those days that makes the whole trip feel worth it.',
+  'Beach':         'Salt air, cold Atlantic, and nowhere else you\'d rather be.',
+  'default':       'One of the highlights waiting for you in Cape Town.'
+};
+
+function buildPreviewCards(p) {
+  var cards = [];
+  var places = Array.isArray(p.savedPlaces) ? p.savedPlaces : [];
+  var usedIds = {};
+
+  // ── 1. Build from saved places ──
+  var catPriority = ['Accommodation', 'Rental Car', 'Experience', 'Experience', 'Restaurant', 'Day Trip'];
+  var savedBycat = {};
+  places.forEach(function(pl) {
+    var cat = pl.category || 'default';
+    if (!savedBycat[cat]) savedBycat[cat] = [];
+    savedBycat[cat].push(pl);
+  });
+
+  // Add up to 2 experiences, 1 of each other category
+  var catCounts = {};
+  places.forEach(function(pl) {
+    var cat = pl.category || 'default';
+    var limit = cat === 'Experience' ? 2 : 1;
+    catCounts[cat] = catCounts[cat] || 0;
+    if (catCounts[cat] >= limit) return;
+    catCounts[cat]++;
+    var img = PREVIEW_IMAGES[pl.id] || PREVIEW_FALLBACKS[cat] || PREVIEW_FALLBACKS['default'];
+    var emotion = PREVIEW_EMOTIONS[cat] || PREVIEW_EMOTIONS['default'];
+    var detail = pl.location ? pl.location : (pl.notes ? pl.notes.slice(0, 60) : '');
+    var saveItem = JSON.stringify({ name: pl.name, category: pl.category, sourcePage: pl.sourcePage || '', location: pl.location || '', notes: pl.notes || '', url: pl.url || '' });
+    cards.push({
+      id: pl.id || (pl.name + pl.category),
+      category: cat,
+      title: pl.name,
+      image: img,
+      description: emotion,
+      detail: detail,
+      primaryLabel: pl.url ? 'View →' : 'Details',
+      primaryUrl: pl.url || ('#recSection'),
+      secondaryLabel: 'Remove',
+      secondaryAction: 'removeSavedPlace(\'' + escHtml(pl.name).replace(/'/g,"\\'") + '\',\'' + (pl.sourcePage||'').replace(/'/g,"\\'") + '\')',
+      isSaved: true
+    });
+    usedIds[pl.name + cat] = true;
+  });
+
+  // ── 2. Fill empty slots from recommendations (max 6 total, one per category except 2 experiences) ──
+  if (cards.length < 6 && p) {
+    var recs = matchRecommendations(p);
+    // Interleave by priority: 1 stay, 1 car, 2 experiences, 1 restaurant, 1 day trip
+    var slotOrder = [
+      { cat: 'Accommodation', pool: recs.placesToStay || [],        limit: 1 },
+      { cat: 'Rental Car',    pool: recs.rentalCars || [],          limit: 1 },
+      { cat: 'Experience',    pool: recs.experiencesToBook || [],   limit: 2 },
+      { cat: 'Restaurant',    pool: recs.restaurantsToReserve || [],limit: 1 },
+      { cat: 'Experience',    pool: recs.experiencesToBook || [],   limit: 2 }  // second experience slot
+    ];
+
+    var recCatCounts = {};
+    slotOrder.forEach(function(slot) {
+      if (cards.length >= 6) return;
+      recCatCounts[slot.cat] = recCatCounts[slot.cat] || 0;
+      for (var i = 0; i < slot.pool.length; i++) {
+        if (cards.length >= 6) break;
+        if (recCatCounts[slot.cat] >= slot.limit) break;
+        var item = slot.pool[i];
+        var key = item.name + item.category;
+        if (usedIds[key]) continue;
+        usedIds[key] = true;
+        recCatCounts[slot.cat]++;
+        var img = PREVIEW_IMAGES[item.id] || PREVIEW_FALLBACKS[item.category] || PREVIEW_FALLBACKS['default'];
+        var emotion = item.whyItFits ? item.whyItFits.slice(0, 80) + (item.whyItFits.length > 80 ? '…' : '') : (PREVIEW_EMOTIONS[item.category] || PREVIEW_EMOTIONS['default']);
+        var detail = item.estimatedPriceRange ? 'From ' + item.estimatedPriceRange : (item.area || '');
+        var saveItemObj = { name: item.name, category: item.category, sourcePage: item.category === 'Restaurant' ? 'food.html' : item.category === 'Accommodation' ? 'stay.html' : item.category === 'Rental Car' ? 'carrental.html' : 'experiences.html', location: item.area || '', notes: item.whyItFits || '', url: item.bookingUrl || '' };
+        cards.push({
+          id: item.id,
+          category: item.category,
+          title: item.name,
+          image: img,
+          description: emotion,
+          detail: detail,
+          primaryLabel: item.bookingUrl ? (item.category === 'Restaurant' ? 'Reserve →' : item.category === 'Rental Car' ? 'Check Rates →' : 'Book →') : 'Learn more',
+          primaryUrl: item.bookingUrl || '#recSection',
+          secondaryLabel: '+ Add to My Trip',
+          secondaryAction: 'addRecToTrip(\'' + JSON.stringify(saveItemObj).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;') + '\', this)',
+          isSaved: false
+        });
+        break; // one per slot iteration
+      }
+    });
+  }
+
+  return cards.slice(0, 6);
+}
+
+function renderPreviewSection(p) {
+  var places = Array.isArray(p.savedPlaces) ? p.savedPlaces : [];
+  // Hide entirely if no profile data at all
+  if (!p || (!p.budget && !p.days && places.length === 0)) return '';
+
+  var cards = buildPreviewCards(p);
+  var carouselId = 'previewCarousel';
+
+  // Empty state
+  if (cards.length === 0) {
+    return '<div class="preview-section">' +
+      '<div class="preview-section-header">' +
+        '<div class="preview-section-titles">' +
+          '<div class="preview-eyebrow">Your Trip Preview</div>' +
+          '<div class="preview-title">Your Cape Town, <em>visualised</em></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="preview-empty">' +
+        '' +
+        '<div class="preview-empty-text">' +
+          '<div class="preview-empty-title">Your visual preview is waiting</div>' +
+          '<div class="preview-empty-sub">Add a stay, car or experience to see a preview of your Cape Town trip.</div>' +
+          '<a href="#recSection" class="preview-btn-primary">Add More to Your Trip →</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  var savedCount = places.length;
+  var subtitle = savedCount >= 2
+    ? 'A visual preview of your saved choices — the places and moments waiting for you.'
+    : 'A visual preview of the places, experiences and moments waiting for you in Cape Town.';
+
+  var cardsHtml = cards.map(function(card) {
+
+    // Image or placeholder
+    var imgHtml;
+    if (card.image) {
+      imgHtml = '<img class="preview-card-img" src="' + escHtml(card.image) + '" alt="' + escHtml(card.title) + '" loading="lazy" ' +
+        'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'none\';this.parentElement.querySelector(\'.preview-card-img-placeholder\').style.display=\'flex\'">' +
+        '<div class="preview-card-img-overlay"></div>' +
+        '<div class="preview-card-img-placeholder" style="display:none;position:absolute;inset:0;">' +
+          '<p>' + escHtml(card.category) + '</p>' +
+        '</div>';
+    } else {
+      imgHtml = '<div class="preview-card-img-placeholder" style="position:absolute;inset:0;">' +
+        '<p>' + escHtml(card.category) + '</p>' +
+      '</div>';
+    }
+
+    // Video play button
+    var playHtml = card.videoUrl
+      ? '<a href="' + escHtml(card.videoUrl) + '" target="_blank" rel="noopener" class="preview-play-btn" title="Watch preview"></a>'
+      : '';
+
+    var badgeHtml = card.isSaved
+      ? '<div class="preview-card-badge saved">✓ Saved</div>'
+      : '<div class="preview-card-badge suggested">Suggested</div>';
+
+    // Primary CTA
+    var primaryHtml;
+    if (card.videoUrl && !card.primaryUrl.startsWith('http')) {
+      primaryHtml = '<a href="' + escHtml(card.videoUrl) + '" target="_blank" rel="noopener" class="preview-btn-primary">▶ Watch Preview</a>';
+    } else if (card.primaryUrl && card.primaryUrl.startsWith('http')) {
+      primaryHtml = '<a href="' + escHtml(card.primaryUrl) + '" target="_blank" rel="noopener" class="preview-btn-primary">' + escHtml(card.primaryLabel) + '</a>';
+    } else {
+      primaryHtml = '<a href="' + escHtml(card.primaryUrl) + '" class="preview-btn-primary">' + escHtml(card.primaryLabel) + '</a>';
+    }
+
+    // Secondary CTA
+    var secondaryHtml = card.isSaved
+      ? '<button class="preview-btn-remove" onclick="' + card.secondaryAction + '">Remove</button>'
+      : '<button class="preview-btn-ghost" onclick="' + card.secondaryAction + '">' + escHtml(card.secondaryLabel) + '</button>';
+
+    return '<div class="preview-card">' +
+      '<div class="preview-card-img-wrap">' +
+        imgHtml +
+        playHtml +
+        badgeHtml +
+      '</div>' +
+      '<div class="preview-card-body">' +
+        '<div class="preview-card-cat">' + escHtml(card.category) + '</div>' +
+        '<div class="preview-card-title">' + escHtml(card.title) + '</div>' +
+        '<div class="preview-card-desc">' + escHtml(card.description) + '</div>' +
+        (card.detail ? '<div class="preview-card-detail">' + escHtml(card.detail) + '</div>' : '') +
+        '<div class="preview-card-actions">' +
+          primaryHtml +
+          secondaryHtml +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  return '<div class="preview-section">' +
+    '<div class="preview-section-header">' +
+      '<div class="preview-section-titles">' +
+        '<div class="preview-eyebrow">Your Trip Preview</div>' +
+        '<div class="preview-title">Your Cape Town, <em>visualised</em></div>' +
+        '<div class="preview-subtitle">' + escHtml(subtitle) + '</div>' +
+      '</div>' +
+      '<div class="preview-nav">' +
+        '<button class="preview-nav-btn" onclick="(function(){var c=document.getElementById(\'' + carouselId + '\');c.scrollBy({left:-306,behavior:\'smooth\'});})()" aria-label="Previous">←</button>' +
+        '<button class="preview-nav-btn" onclick="(function(){var c=document.getElementById(\'' + carouselId + '\');c.scrollBy({left:306,behavior:\'smooth\'});})()" aria-label="Next">→</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="preview-carousel-wrap">' +
+      '<div class="preview-carousel" id="' + carouselId + '">' + cardsHtml + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ─── Main render ─────────────────────────────────────────
+function renderCockpit() {
+  var main = document.getElementById('mainContent');
+  var raw = null;
+  try { raw = localStorage.getItem('ubuntuTripProfile'); } catch(e) {}
+  var p = null;
+  if (raw) { try { p = JSON.parse(raw); } catch(e) {} }
+
+  if (!p) {
+    // ── NO PROFILE: elegant empty state ──
+    main.innerHTML = [
+      '<div class="no-profile-wrap">',
+        '',
+        '<h1 class="no-profile-title">Your Cape Town<br><em>Travel Cockpit</em></h1>',
+        '<p class="no-profile-sub">Your personal trip plan is waiting.<br>Start the Trip Builder to create your Cape Town profile.</p>',
+        '<a href="itinerary.html" class="no-profile-btn">Start the Trip Builder</a>',
+        '<div class="resend-secondary" style="margin-top:64px;padding-top:40px;border-top:1px solid rgba(201,169,110,0.08);">',
+          '<div class="resend-secondary-title">Need to resend your guide link?</div>',
+          '<div class="resend-row">',
+            '<input type="email" class="email-input" id="guideEmail" placeholder="your@email.com" />',
+            '<button class="resend-btn" onclick="resendGuide()">Resend →</button>',
+          '</div>',
+          '<div id="resendMsg"></div>',
+        '</div>',
+      '</div>'
+    ].join('');
+    document.getElementById('guideEmail').addEventListener('keypress', function(e) { if (e.key === 'Enter') resendGuide(); });
+    return;
+  }
+
+  // ── PROFILE EXISTS: full cockpit ──
+  var interests = Array.isArray(p.interests) ? p.interests : [];
+  var days = p.days || '—';
+  var travellers = p.travellers || '—';
+
+  // Build interest tags HTML
+  var interestTagsHtml = interests.length
+    ? interests.map(function(i) { return '<span class="interest-tag">' + escHtml(i) + '</span>'; }).join('')
+    : '<span style="font-size:13px;color:var(--ink-mid);">No interests selected. <a href="itinerary.html" style="color:var(--gold-dark);text-decoration:none;">Update your profile →</a></span>';
+
+  // ── 4 DASHBOARD CARDS ──
+  var pct = computeCompletion(p);
+  var savedCount = Array.isArray(p.savedPlaces) ? p.savedPlaces.length : 0;
+  var hasItinerary = Array.isArray(p.generatedItinerary) && p.generatedItinerary.length > 0;
+
+  var dashHtml =
+    '<div class="dash-row">' +
+      '<div class="dash-card">' +
+        '<div class="dash-card-label">Trip Setup</div>' +
+        '<div class="dash-card-value">' + pct + '<span style="font-size:16px;font-family:Inter,sans-serif;">%</span></div>' +
+        '<div class="dash-card-sub">complete</div>' +
+        '<div class="dash-card-bar"><div class="dash-card-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>' +
+      '<div class="dash-card">' +
+        '<div class="dash-card-label">Saved Plan</div>' +
+        '<div class="dash-card-value">' + savedCount + '</div>' +
+        '<div class="dash-card-sub">' + (savedCount === 1 ? 'place saved' : 'places saved') + '</div>' +
+      '</div>' +
+      '<div class="dash-card">' +
+        '<div class="dash-card-label">Budget</div>' +
+        '<div class="dash-card-value" style="font-size:18px;font-family:Inter,sans-serif;margin-top:4px;">' + escHtml(p.budget || '—') + '</div>' +
+        '<div class="dash-card-sub">' + escHtml(p.travellingWith || p.pace || '—') + '</div>' +
+      '</div>' +
+      '<div class="dash-card">' +
+        '<div class="dash-card-label">Itinerary</div>' +
+        '<div class="dash-card-sub" style="margin-top:6px;">' +
+          '<span class="dash-status ' + (hasItinerary ? 'ready' : 'pending') + '">' +
+            '<span class="dash-status-dot ' + (hasItinerary ? 'ready' : 'pending') + '"></span>' +
+            (hasItinerary ? 'Ready to view' : 'Pending generation') +
+          '</span>' +
+        '</div>' +
+        '<div style="margin-top:10px;"><a href="itinerary.html" style="font-size:11px;color:var(--gold-dark);text-decoration:none;font-weight:500;">' + (hasItinerary ? 'Rebuild →' : 'Generate now →') + '</a></div>' +
+      '</div>' +
+    '</div>';
+
+  main.innerHTML = [
+    // ── PAGE HEADER ──
+    '<div id="guide-content-start" class="page-header">',
+      '<div class="mg-content mg-header-flex">',
+        '<div class="page-header-left">',
+          '<div class="eyebrow">My Cape Town Guide</div>',
+          '<h1>Your <em>Travel Cockpit</em></h1>',
+        '</div>',
+        '<div style="display:flex;gap:10px;flex-shrink:0;">',
+          '<a href="home.html#ubuntu-voice" class="btn-cta" style="font-size:11px;padding:11px 24px;background:transparent;border:1.5px solid var(--gold);color:var(--gold-dark);text-decoration:none;">Talk to Ubuntu</a>',
+          '<a href="itinerary.html?edit=true" class="btn-cta" style="font-size:11px;padding:11px 24px;">✎ Edit My Trip</a>',
+          '<button type="button" onclick="resetMyTrip()" class="btn-cta" style="font-size:11px;padding:11px 24px;background:transparent;border:1.5px solid rgba(250,248,244,0.4);color:rgba(250,248,244,0.9);cursor:pointer;">Reset My Trip</button>',
+        '</div>',
+      '</div>',
+    '</div>',
+
+    '<div class="mg-content">',
+
+    // ── YOUR TRIP PREVIEW ──
+    renderPreviewSection(p),
+
+    dashHtml,
+
+    '<div class="cockpit">',
+
+    // ── NEXT BEST ACTIONS ──
+    '<div class="section">',
+      '<div class="section-header">',
+        '<div class="section-title">Next <em>Best Actions</em></div>',
+      '</div>',
+      renderNextActions(p),
+    '</div>',
+
+    // ── BUDGET & COSTS ──
+    '<div class="section" id="budget-costs-section">',
+      '<div class="section-header">',
+        '<div class="section-title">Budget <em>&amp; Costs</em></div>',
+      '</div>',
+      '<div class="placeholder-box" style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">',
+        '<div>',
+          '<div style="font-size:13px;color:var(--ink);font-weight:500;margin-bottom:6px;">Budget level: ' + escHtml(p.budget || 'Not set') + '</div>',
+          '<p style="font-size:13px;color:var(--ink-mid);line-height:1.65;max-width:480px;">Add your flight, transfer and extra travel costs to complete your trip picture. Update them in your trip profile.</p>',
+        '</div>',
+        '<a href="itinerary.html?edit=true" class="section-link" style="font-size:12px;white-space:nowrap;border:1px solid var(--border-gold);padding:9px 20px;border-radius:20px;color:var(--gold-dark);text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background=\'rgba(201,169,110,0.1)\'" onmouseout="this.style.background=\'transparent\'">Edit trip profile →</a>',
+      '</div>',
+    '</div>',
+
+    // ── ASK UBUNTU CTA (links to Guide Home) ──
+    '<div class="section" id="ask-ubuntu-section">',
+      '<div class="placeholder-box" style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">',
+        '<div style="display:flex;align-items:center;gap:16px;">',
+          '<img src="/ubuntu-avatar.png" alt="Ubuntu" style="width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid rgba(201,169,110,0.4);flex-shrink:0;" />',
+          '<div>',
+            '<div style="font-size:13px;color:var(--ink);font-weight:600;margin-bottom:4px;">Need help planning?</div>',
+            '<p style="font-size:13px;color:var(--ink-mid);line-height:1.6;max-width:460px;">Ubuntu can help you choose smarter, plan safer and shape your Cape Town itinerary.</p>',
+          '</div>',
+        '</div>',
+        '<a href="home.html#ubuntu-voice" class="btn-cta" style="font-size:12px;padding:12px 22px;white-space:nowrap;text-decoration:none;">Talk to Ubuntu →</a>',
+      '</div>',
+    '</div>',
+
+    // ── MY SAVED PLAN ── (above recommendations)
+    (function() {
+      var places = Array.isArray(p.savedPlaces) ? p.savedPlaces : [];
+      var inner;
+      if (places.length === 0) {
+        inner = '<div class="empty-state"><div class="empty-title">Nothing saved yet</div><div class="empty-sub">Add a car, stay, restaurant or experience from the recommendations below.</div></div>';
+      } else {
+        var knownCats = ['Rental Car', 'Accommodation', 'Experience', 'Restaurant', 'Wine Estate'];
+        var groupDefs = [
+          { key: 'Rental Car',    label: 'Your ride' },
+          { key: 'Accommodation', label: 'Your stay' },
+          { key: 'Experience',    label: 'Experiences' },
+          { key: 'Restaurant',    label: 'Restaurants' },
+          { key: 'Wine Estate',   label: 'Wine &amp; Winelands' },
+          { key: '_other',        label: 'Other saved places' }
+        ];
+        var srcLabels = { 'stay.html': 'Where to Stay', 'food.html': 'Food Guide', 'wine.html': 'Wine & Winelands', 'experiences.html': 'Iconic Experiences', 'hidden-gems.html': 'Hidden Gems', 'beaches.html': 'Beaches', 'daytrips.html': 'Day Trips', 'map.html': 'Interactive Map', 'carrental.html': 'Car Rental' };
+        inner = '';
+        groupDefs.forEach(function(g) {
+          var items = g.key === '_other'
+            ? places.filter(function(pl) { return knownCats.indexOf(pl.category) === -1; })
+            : places.filter(function(pl) { return pl.category === g.key; });
+          if (!items.length) return;
+          inner += '<div style="margin-bottom:24px;"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px;font-weight:600;">' + g.label + '</div>';
+          inner += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">';
+          items.forEach(function(pl) {
+            var src = srcLabels[pl.sourcePage] || pl.sourcePage || '';
+            var safeName = escHtml(pl.name).replace(/'/g,"\\'");
+            var safePage = (pl.sourcePage||'').replace(/'/g,"\\'");
+            inner += '<div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:18px 16px;box-shadow:0 1px 3px rgba(27,58,75,0.05);">' +
+              '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:5px;font-weight:600;">' + escHtml(pl.category) + '</div>' +
+              '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;font-weight:400;color:var(--ink);margin-bottom:5px;line-height:1.3;">' + escHtml(pl.name) + '</div>' +
+              (pl.location ? '<div style="font-size:11px;color:var(--ink-faint);">' + escHtml(pl.location) + '</div>' : (src ? '<div style="font-size:11px;color:var(--ink-faint);">From: ' + escHtml(src) + '</div>' : '')) +
+              '<button onclick="removeSavedPlace(\'' + safeName + '\',\'' + safePage + '\')" style="display:block;width:100%;margin-top:10px;padding:7px;background:transparent;border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--ink-faint);cursor:pointer;font-family:Inter,sans-serif;transition:all 0.2s;" onmouseover="this.style.color=\'var(--ink)\';this.style.borderColor=\'var(--border-gold)\'" onmouseout="this.style.color=\'var(--ink-faint)\';this.style.borderColor=\'var(--border)\'">Remove</button>' +
+            '</div>';
+          });
+          inner += '</div></div>';
+        });
+      }
+      return [
+        '<div class="section">',
+          '<div class="section-header">',
+            '<div class="section-title">My <em>Saved Plan</em></div>',
+            places.length ? '<a href="#recSection" class="section-link">Add more →</a>' : '',
+          '</div>',
+          inner,
+        '</div>'
+      ].join('');
+    })(),
+
+    // ── RECOMMENDATIONS ──
+    '<div class="section" id="recSection">',
+      '<div class="section-header">',
+        '<div class="section-title">Add More to <em>Your Trip</em></div>',
+      '</div>',
+      '<div class="rec-loading" id="recLoading">',
+        '',
+        '<p style="font-size:13px;color:var(--ink-mid);margin-top:16px;">Matching recommendations to your trip profile…</p>',
+      '</div>',
+    '</div>',
+
+    // ── CURATED BOOKABLE EXPERIENCES ──
+    (function() {
+      return [
+        '<div class="section" id="curated-experiences-section">',
+          '<div class="section-header">',
+            '<div class="section-title">Curated <em>Bookable Experiences</em></div>',
+          '</div>',
+          '<p class="cbe-intro">A short, hand-picked list of Cape Town experiences worth booking ahead &mdash; grouped by what you&rsquo;re after. Curated by fit, not by commission.</p>',
+
+          '<details class="cbe-cat" open>',
+            '<summary class="cbe-summary">First-time essentials</summary>',
+            '<div class="cbe-grid">',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Table Mountain Cableway</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>First-timers wanting the iconic 360&deg; view with zero effort.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>It&rsquo;s windy or cloudy &mdash; the cableway closes and the views vanish.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>Go on a clear, still morning and take the first cars up to beat the queues.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>Same day, once you&rsquo;ve checked the weather. Skip-the-line helps in peak season.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Robben Island</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Anyone who wants the history behind Mandela and modern South Africa.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>Seas are rough &mdash; the ferry gets cancelled and crossings turn choppy.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>A former political prisoner guides the tour &mdash; that&rsquo;s the part people remember.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A few days ahead. It sells out, especially in summer.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Cape Point &amp; Penguins</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>First-timers who want the Peninsula&rsquo;s big hitters in one day.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You&rsquo;d rather move slowly &mdash; it&rsquo;s a long, full day.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>Cape Point, Boulders penguins and Chapman&rsquo;s Peak in one sweep &mdash; unbeatable on a clear day.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A day or two ahead in high season.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Hop-on Hop-off Bus</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>A relaxed first orientation with no driving or parking.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You already have a car and a plan &mdash; you won&rsquo;t need it.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>A surprisingly good way to get the lay of the land on day one.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>Same day. Tickets are flexible.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+            '</div>',
+          '</details>',
+
+          '<details class="cbe-cat">',
+            '<summary class="cbe-summary">Wine &amp; food</summary>',
+            '<div class="cbe-grid">',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Stellenbosch wine tour</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Wine lovers who want the classic estates without driving.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You only have a couple of hours &mdash; it&rsquo;s a full day.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>Go midweek; weekends get busy and you taste better with a bit of space.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A few days ahead in season.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Franschhoek wine tram</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Couples and groups who want food and wine in a postcard village.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You want quiet, serious tasting &mdash; the tram is social and lively.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>The hop-on wine tram is genuinely fun, and no one has to be the driver.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>Ahead &mdash; popular slots fill fast.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Cape Town food tour</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Curious eaters who want to taste the city, not just see it.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You&rsquo;re short on time or prefer fine dining to street-level gems.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>The Bo-Kaap and Bree Street stops show the real Cape Town food scene.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A few days ahead; small groups sell out.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+            '</div>',
+          '</details>',
+
+          '<details class="cbe-cat">',
+            '<summary class="cbe-summary">Ocean &amp; iconic views</summary>',
+            '<div class="cbe-grid">',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Helicopter flight over Cape Town</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>A once-in-a-trip splurge with unreal coastline views.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>It&rsquo;s windy or hazy &mdash; both spoil the flight and the photos.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>The Atlantic seaboard from the air is worth every cent on a clear day.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>Stay flexible &mdash; book when the forecast looks clear.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check flight options &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Sunset cruise from the V&amp;A Waterfront</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Couples and groups wanting an easy, scenic golden hour.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You get seasick easily or the swell is up.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>A glass in hand as the sun drops behind the Twelve Apostles &mdash; hard to beat.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A day ahead; sunset slots go first.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check sunset options &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Kayaking with dolphins</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Active travellers who want wildlife at sea level.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>The wind is up &mdash; trips cancel and it gets choppy.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>Early mornings are calmest, and that&rsquo;s when the dolphins and seals show up.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A day or two ahead, weather permitting.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+            '</div>',
+          '</details>',
+
+          '<details class="cbe-cat">',
+            '<summary class="cbe-summary">Adventure</summary>',
+            '<div class="cbe-grid">',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Paragliding from Signal Hill</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Thrill-seekers wanting the city from the air without a helicopter price.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>Conditions are wrong &mdash; it&rsquo;s entirely wind-dependent.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>A tandem flight off Signal Hill is the easiest big thrill in Cape Town.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>Same day, dictated by the wind.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Guided Table Mountain or Lion&rsquo;s Head hike</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Walkers who want the summit safely, with local knowledge.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You&rsquo;ve just landed &mdash; don&rsquo;t hike day one after a long flight.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>A guide keeps you on the right route and turns a hike into a story.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A day or two ahead; start early.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+            '</div>',
+          '</details>',
+
+          '<details class="cbe-cat">',
+            '<summary class="cbe-summary">Guided trips &amp; easy transfers</summary>',
+            '<div class="cbe-grid">',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Airport transfer</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>A smooth, safe arrival without sorting transport while jet-lagged.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You&rsquo;re collecting a rental car straight from the airport anyway.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>Worth it on arrival night &mdash; you land, you&rsquo;re met, you relax.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>Ahead of your flight so a driver is waiting.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Cape Peninsula guided tour</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Travellers who&rsquo;d rather take in the views than watch the road.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You&rsquo;re happy driving Chapman&rsquo;s Peak yourself and want full freedom.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>On a long Peninsula day, letting someone else drive is the relaxed call.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A day or two ahead in season.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+              '<div class="cbe-card">',
+                '<div class="cbe-card-title">Wine tour with transport</div>',
+                '<div class="cbe-row"><span class="cbe-label">Best for</span>Anyone who wants to taste properly without nominating a driver.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Avoid if</span>You&rsquo;re only visiting one estate close to the city.</div>',
+                '<div class="cbe-row"><span class="cbe-label">Dirk&rsquo;s take</span>The whole point of the winelands is to enjoy the wine &mdash; let someone else drive.</div>',
+                '<div class="cbe-row"><span class="cbe-label">When to book</span>A few days ahead, especially for weekends.</div>',
+                '<a href="GETYOURGUIDE_AFFILIATE_LINK_HERE" class="cbe-cta">Check availability &rarr;</a>',
+              '</div>',
+            '</div>',
+          '</details>',
+
+          '<p class="cbe-note">Some links may earn a small commission, at no extra cost to you. Recommendations are selected by fit, not by commission.</p>',
+        '</div>'
+      ].join('');
+    })(),
+
+    // ── MY ITINERARY ──
+    (function() {
+      var generatedDays = Array.isArray(p.generatedItinerary) && p.generatedItinerary.length ? p.generatedItinerary : null;
+      var places = Array.isArray(p.savedPlaces) ? p.savedPlaces : [];
+      var numDays = parseInt(p.days, 10) || 5;
+      var inner;
+      if (generatedDays) {
+        inner = renderPersonalisedItinerary(generatedDays);
+      } else if (places.length === 0) {
+        inner = '<div class="itin-pending">' +
+          '<div class="itin-pending-title">Your Cape Town <em>itinerary</em></div>' +
+          '<p class="itin-pending-sub">Built around your travel dates, style and saved choices.</p>' +
+          '<div class="itin-pending-single-card">' +
+            '<div class="itin-pending-card-body">Add a stay, car, experiences, restaurants or wine estates from the recommendations below. Your itinerary will be built from your saved choices.</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">' +
+            '<a href="#recSection" style="display:inline-block;padding:12px 22px;background:var(--ocean-dark);color:#FAF8F4;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;font-family:Inter,sans-serif;">Add to My Trip →</a>' +
+            '<a href="sample-itinerary.html" style="display:inline-block;padding:12px 22px;background:transparent;color:var(--ink);border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:400;text-decoration:none;font-family:Inter,sans-serif;">View sample itinerary →</a>' +
+          '</div>' +
+        '</div>';
+      } else {
+        var mvpDays = buildMvpItinerary(p);
+        var longerNote = numDays > 5
+          ? '<p style="font-size:12px;color:var(--ink-faint);margin-top:16px;text-align:center;">This is your first itinerary draft. Longer trips can be expanded as you add more saved choices.</p>'
+          : '';
+        inner = '<div style="margin-bottom:8px;">' +
+            '<p style="font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:4px;">Built around your travel dates, style and saved choices.</p>' +
+            '<p style="font-size:12px;color:var(--ink-faint);margin-bottom:20px;">Add or remove places from My Guide and rebuild this plan anytime.</p>' +
+          '</div>' +
+          renderPersonalisedItinerary(mvpDays) +
+          longerNote +
+          '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;">' +
+            '<button onclick="rebuildItinerary()" style="display:inline-block;padding:12px 22px;background:var(--ocean-dark);color:#FAF8F4;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:Inter,sans-serif;">Rebuild itinerary →</button>' +
+            '<a href="sample-itinerary.html" style="display:inline-block;padding:12px 22px;background:transparent;color:var(--ink);border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:400;text-decoration:none;font-family:Inter,sans-serif;">View sample itinerary →</a>' +
+          '</div>';
+      }
+      return [
+        '<div class="section" id="my-itinerary-section">',
+          '<div class="section-header">',
+            '<div class="section-title">My <em>Itinerary</em></div>',
+          '</div>',
+          inner,
+        '</div>'
+      ].join('');
+    })(),
+
+    // ── SAFETY NOTES ──
+    '<div class="section" style="border-bottom:none;">',
+      '<div class="section-header">',
+        '<div class="section-title">Safety <em>Essentials</em></div>',
+        '<a href="safety.html" class="section-link">Full guide →</a>',
+      '</div>',
+      '<ul class="safety-list">',
+        '<li class="safety-item"><div class="safety-text"><strong>Nothing visible in your car</strong><span>Smash-and-grab is common. Bags in the boot, out of sight, before you park.</span></div></li>',
+        '<li class="safety-item"><div class="safety-text"><strong>Phone out of sight in public</strong><span>CBD, markets, beachfront — use it indoors or with your back to a wall.</span></div></li>',
+        '<li class="safety-item"><div class="safety-text"><strong>Stick to safe areas after dark</strong><span>Sea Point, Camps Bay, Waterfront, De Waterkant. Rideshare over walking at night.</span></div></li>',
+        '<li class="safety-item"><div class="safety-text"><strong>Use Uber or inDriver</strong><span>Metered street taxis overcharge. Uber is reliable, affordable, and city-wide.</span></div></li>',
+      '</ul>',
+    '</div>',
+
+    // ── RESEND SECONDARY ──
+    '<div class="resend-secondary">',
+      '<div class="resend-secondary-title">Need your guide link resent?</div>',
+      '<div class="resend-row">',
+        '<input type="email" class="email-input" id="guideEmail" placeholder="your@email.com" />',
+        '<button class="resend-btn" onclick="resendGuide()">Resend →</button>',
+      '</div>',
+      '<div id="resendMsg"></div>',
+    '</div>',
+
+    '</div>', // /cockpit
+
+    '</div>', // /mg-content
+
+  ].join('');
+
+  // Bind resend enter key
+  var emailEl = document.getElementById('guideEmail');
+  if (emailEl) emailEl.addEventListener('keypress', function(e) { if (e.key === 'Enter') resendGuide(); });
+
+}
+
+// ─── Recommendation system ────────────────────────────────
+
+function buildRecCard(item) {
+  var bookLabel = item.category === 'Restaurant' ? 'Reserve' : item.category === 'Accommodation' ? 'Check Availability' : item.category === 'Rental Car' ? 'Check Rates' : item.category === 'Wine Estate' ? 'Plan Visit' : 'Book';
+
+  var saveItem = {
+    name: item.name,
+    category: item.category,
+    sourcePage: item.category === 'Restaurant' ? 'food.html' : item.category === 'Accommodation' ? 'stay.html' : item.category === 'Rental Car' ? 'carrental.html' : item.category === 'Wine Estate' ? 'wine.html' : 'experiences.html',
+    location: item.area || '',
+    notes: item.whyItFits || '',
+    url: item.bookingUrl || ''
+  };
+  var saveItemStr = JSON.stringify(saveItem)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+
+  // Image — use PREVIEW_IMAGES map, fall back to category fallback
+  var imgSrc = (typeof PREVIEW_IMAGES !== 'undefined' && PREVIEW_IMAGES[item.id])
+    || (typeof PREVIEW_FALLBACKS !== 'undefined' && PREVIEW_FALLBACKS[item.category])
+    || '/photos/hero-aerial.jpg';
+  var imgHtml = '<div class="rc-img-wrap">' +
+    '<img class="rc-img" src="' + escHtml(imgSrc) + '" alt="' + escHtml(item.name) + '" loading="lazy" ' +
+      'onerror="this.style.display=\'none\';this.parentElement.classList.add(\'rc-img-wrap--fallback\')">' +
+    '<div class="rc-img-placeholder">' + escHtml(item.category) + '</div>' +
+    '</div>';
+
+  // Teaser: truncate whyItFits to ~100 chars
+  var teaser = '';
+  if (item.whyItFits) {
+    teaser = item.whyItFits.length > 100 ? item.whyItFits.slice(0, 97) + '…' : item.whyItFits;
+  }
+
+  // Dirk's tip: collapsed toggle
+  var tipHtml = '';
+  if (item.dirkTip) {
+    var tipId = 'rctip-' + escHtml(item.id || (item.name || '').replace(/\W/g,'').slice(0,10));
+    tipHtml = '<div class="rc-tip">' +
+      '<button class="rc-tip-toggle" onclick="(function(btn){var t=document.getElementById(\'' + tipId + '\');var open=t.style.display===\'block\';t.style.display=open?\'none\':\'block\';btn.textContent=open?\'Dirk\\\'s tip ↓\':\'Dirk\\\'s tip ↑\';})(this)">' +
+        'Dirk\'s tip ↓' +
+      '</button>' +
+      '<div id="' + tipId + '" class="rc-tip-body" style="display:none;">' + escHtml(item.dirkTip) + '</div>' +
+    '</div>';
+  }
+
+  return '<div class="rec-card">' +
+    imgHtml +
+    '<div class="rc-body">' +
+      '<div class="rc-cat">' + escHtml(item.category) + '</div>' +
+      '<div class="rc-name">' + escHtml(item.name) + '</div>' +
+      (teaser ? '<div class="rc-teaser">' + escHtml(teaser) + '</div>' : '') +
+      '<div class="rc-meta">' +
+        (item.area ? '<span>' + escHtml(item.area) + '</span>' : '') +
+        (item.estimatedPriceRange ? '<span>' + escHtml(item.estimatedPriceRange) + '</span>' : '') +
+      '</div>' +
+      tipHtml +
+      '<div class="rc-actions">' +
+        '<button class="rc-btn-primary" onclick="addRecToTrip(\'' + saveItemStr + '\', this)">+ Add to My Trip</button>' +
+        (item.bookingUrl ? '<a href="' + escHtml(item.bookingUrl) + '" target="_blank" rel="noopener" class="rc-btn-secondary">' + bookLabel + ' →</a>' : '') +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function addRecToTrip(itemJsonStr, btn) {
+  var item;
+  try { item = JSON.parse(itemJsonStr); } catch(e) { return; }
+  if (typeof addToMyTrip === 'function') {
+    addToMyTrip(item, btn);
+  }
+}
+
+function renderRecommendations(data) {
+  var section = document.getElementById('recSection');
+  if (!section) return;
+
+  var categories = [
+    { id: 'rental-car-options',     label: 'Choose your ride',          sub: 'Pick the right car for your Cape Town adventure.',           carouselId: 'carousel-cars',  items: data.rentalCars },
+    { id: 'places-to-stay-options', label: 'Choose your base',          sub: 'Where you sleep shapes your whole Cape Town experience.',    carouselId: 'carousel-stays', items: data.placesToStay },
+    { id: 'experiences-to-prebook', label: 'Pre-book your experiences', sub: 'These sell out — add them to your trip and book early.',    carouselId: 'carousel-exp',   items: data.experiencesToBook },
+    { id: 'restaurants-section',    label: 'Reserve your tables',       sub: 'The best tables in Cape Town go fast. Reserve early.',      carouselId: 'carousel-rest',  items: data.restaurantsToReserve },
+    { id: 'wine-estates-section',   label: 'Choose your wine escape',   sub: 'Cape Town\'s best wine estates, tastings and long-lunch views — curated for your trip.', carouselId: 'carousel-wine', items: data.wineEstates }
+  ].filter(function(c) { return Array.isArray(c.items) && c.items.length > 0; });
+
+  if (categories.length === 0) {
+    var loading = section.querySelector('#recLoading');
+    if (loading) loading.innerHTML = '<div class="rec-error">We couldn\'t load recommendations yet. Your trip profile is saved — try again later.</div>';
+    return;
+  }
+
+  var html = '';
+  categories.forEach(function(cat) {
+    html += '<div class="rec-row" id="' + cat.id + '">' +
+      '<div class="rec-row-header">' +
+        '<div>' +
+          '<div class="rec-row-title">' + cat.label + '</div>' +
+          '<div class="rec-row-sub">' + cat.sub + '</div>' +
+        '</div>' +
+        '<div class="rec-row-nav">' +
+          '<button class="rec-nav-btn" onclick="scrollRecCarousel(\'' + cat.carouselId + '\',-1)" aria-label="Previous">←</button>' +
+          '<button class="rec-nav-btn" onclick="scrollRecCarousel(\'' + cat.carouselId + '\',1)" aria-label="Next">→</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="rec-carousel" id="' + cat.carouselId + '">' +
+        cat.items.map(buildRecCard).join('') +
+      '</div>' +
+    '</div>';
+  });
+
+  var loading = section.querySelector('#recLoading');
+  if (loading) loading.outerHTML = html;
+}
+
+// ─── Curated recommendation data ─────────────────────────
+
+var RENTAL_CARS = [
+  { id:'car-budget-compact', name:'Compact City Car', category:'Rental Car', provider:'First Car Rental / Tempest', area:'Pick up at Cape Town Airport',
+    budgetLevel:['budget'], bestFor:['solo','couple'], tags:['city','short'],
+    whyItFits:'Fuel-efficient and easy to park in the city. Perfect for day trips around the Cape Peninsula without breaking the budget.',
+    dirkTip:'Book directly with First Car Rental or Tempest — they\'re the best value in Cape Town and have desks at the airport.',
+    estimatedPriceRange:'R350–R550 / day', bookingUrl:'https://www.firstcarrental.co.za/' },
+  { id:'car-mid-suv', name:'Compact SUV', category:'Rental Car', provider:'Europcar / Avis', area:'Pick up at Cape Town Airport',
+    budgetLevel:['mid'], bestFor:['couple','family','solo'], tags:['all','peninsula','winelands'],
+    whyItFits:'The ideal Cape Town car — comfortable on Chapman\'s Peak, confident on dirt roads to Boulders Beach, easy to park in Sea Point.',
+    dirkTip:'The Toyota Corolla Cross or VW T-Roc category gives you the perfect balance of comfort and practicality.',
+    estimatedPriceRange:'R650–R950 / day', bookingUrl:'https://www.europcar.co.za/' },
+  { id:'car-premium-suv', name:'Premium SUV', category:'Rental Car', provider:'Avis / Hertz', area:'Pick up at Cape Town Airport',
+    budgetLevel:['premium','luxury'], bestFor:['couple','family'], tags:['luxury','comfort'],
+    whyItFits:'A BMW X3 or Mercedes GLC makes the drive from the Waterfront to Camps Bay feel exactly right. Comfortable for long days out.',
+    dirkTip:'Avis and Hertz have the best premium fleet at Cape Town Airport. Book in advance — premium cars go fast in peak season.',
+    estimatedPriceRange:'R1,200–R1,800 / day', bookingUrl:'https://www.avis.co.za/' },
+  { id:'car-family-suv', name:'Large Family SUV', category:'Rental Car', provider:'Europcar / Budget', area:'Pick up at Cape Town Airport',
+    budgetLevel:['mid','premium'], bestFor:['family'], tags:['family','space','road-trip'],
+    whyItFits:'A Toyota Fortuner or similar gives you the space, boot room and comfort for a family travelling Cape Town with gear.',
+    dirkTip:'Book the biggest boot you can afford. You\'ll thank yourself when loading beach gear, hiking kit and shopping bags.',
+    estimatedPriceRange:'R900–R1,400 / day', bookingUrl:'https://www.europcar.co.za/' },
+  { id:'car-4x4-adventure', name:'4x4 Adventure Vehicle', category:'Rental Car', provider:'Sixt / Britz Campers', area:'Pick up at Cape Town Airport',
+    budgetLevel:['mid','premium','luxury'], bestFor:['couple','solo','group'], tags:['adventure','garden-route','addo','road-trip'],
+    whyItFits:'If you\'re heading to Addo, the Garden Route or any gravel roads, a proper 4x4 makes the whole trip safer and more enjoyable.',
+    dirkTip:'Sixt has a strong 4x4 fleet. For the Garden Route, consider a Britz camper — freedom to stop wherever you want.',
+    estimatedPriceRange:'R1,100–R1,600 / day', bookingUrl:'https://www.sixt.co.za/' },
+  { id:'car-convertible', name:'Convertible / Cabrio', category:'Rental Car', provider:'Avis / Hertz', area:'Pick up at Cape Town Airport',
+    budgetLevel:['premium','luxury'], bestFor:['couple','solo'], tags:['luxury','scenic','coast'],
+    whyItFits:'Chapman\'s Peak, Hout Bay, the Atlantic Seaboard — in a convertible these drives are unforgettable. Best for warm summer days.',
+    dirkTip:'Only worth it December–March. Check weather before you pick up — a misty day wastes it. Avis has the best convertible options.',
+    estimatedPriceRange:'R1,400–R2,400 / day', bookingUrl:'https://www.avis.co.za/' },
+  { id:'car-private-driver', name:'Private Driver / Full Day', category:'Rental Car', provider:'Various operators', area:'Hotel pick-up / drop-off',
+    budgetLevel:['premium','luxury'], bestFor:['couple','family','solo'], tags:['luxury','convenience','safe','winelands'],
+    whyItFits:'A dedicated driver lets you fully relax — no navigation, no parking, no worries in the winelands. Worth every rand.',
+    dirkTip:'For winelands days a private driver is essential so you can taste safely at 4–5 estates. Cost: R800–R1,200 for a full day.',
+    estimatedPriceRange:'R800–R1,400 / day', bookingUrl:'' },
+  { id:'car-uber-only', name:'Uber & Bolt — No Rental Car', category:'Rental Car', provider:'Uber / Bolt / inDriver', area:'App-based, city-wide',
+    budgetLevel:['budget','mid'], bestFor:['solo','couple'], tags:['city','no-car','simple','safe','budget'],
+    whyItFits:'For a city-focused trip you genuinely don\'t need a rental car. Uber runs well in Cape Town — safe, affordable and instant.',
+    dirkTip:'Use Uber or inDriver (cheaper). For the Peninsula loop, book a guided day tour — often better value than rental car + fuel + parking.',
+    estimatedPriceRange:'R30–R200 / ride', bookingUrl:'' }
+];
+
+var STAY_OPTIONS = [
+  { id:'stay-mojo', name:'Mojo Hotel', category:'Accommodation', area:'Sea Point',
+    budgetLevel:['budget','mid'], bestFor:['solo','couple'], accommodation:['hotel','guesthouse'], tags:['sea-point','atlantic'],
+    whyItFits:'Walking distance to the Sea Point Promenade, close to great restaurants on Main Road, and easy Uber access to the city.',
+    dirkTip:'Ask for a room with a mountain view. The rooftop bar has great sundowner vibes.',
+    estimatedPriceRange:'R1,200–R1,800 / night', bookingUrl:'https://www.mojohotel.co.za/' },
+  { id:'stay-ashanti', name:'Ashanti Gardens', category:'Accommodation', area:'Gardens / CBD',
+    budgetLevel:['budget'], bestFor:['solo','group'], accommodation:['guesthouse','hostel','airbnb'], tags:['gardens','social','central'],
+    whyItFits:'The best-known guesthouse for solo travellers and small groups in Cape Town. Central, social, and great for meeting other travellers.',
+    dirkTip:'The rooftop pool area is perfect for sundowners. Book a private room if you want quiet — the social vibe is strong here.',
+    estimatedPriceRange:'R800–R1,400 / night', bookingUrl:'https://www.ashanti.co.za/' },
+  { id:'stay-pepper-club', name:'Pepper Club Hotel', category:'Accommodation', area:'Cape Town CBD',
+    budgetLevel:['mid'], bestFor:['couple','solo'], accommodation:['hotel','apartment'], tags:['cbd','central','rooftop'],
+    whyItFits:'Great central location for exploring the CBD, Bo-Kaap and Bree Street on foot. The rooftop pool is a highlight.',
+    dirkTip:'The CBD is safe within specific areas — stick to Long Street, Bree Street and Kloof Street. Uber everywhere after dark.',
+    estimatedPriceRange:'R1,400–R2,200 / night', bookingUrl:'https://www.pepperclub.co.za/' },
+  { id:'stay-pod', name:'POD Boutique Hotel', category:'Accommodation', area:'Camps Bay',
+    budgetLevel:['premium'], bestFor:['couple','solo'], accommodation:['hotel','boutique'], tags:['camps-bay','atlantic','views'],
+    whyItFits:'Waking up in Camps Bay with Table Mountain and the Atlantic in front of you is the Cape Town experience. POD sits right in the action.',
+    dirkTip:'Book a room facing the ocean. The Camps Bay strip is 2 minutes on foot — sunset drinks, dinner, all within walking distance.',
+    estimatedPriceRange:'R2,800–R4,500 / night', bookingUrl:'https://www.podhotel.co.za/' },
+  { id:'stay-kalk-bay', name:'Kalk Bay House', category:'Accommodation', area:'Kalk Bay',
+    budgetLevel:['mid','premium'], bestFor:['couple'], accommodation:['guesthouse','boutique','airbnb'], tags:['kalk-bay','village','unique'],
+    whyItFits:'If you want the real Cape Town without tourist crowds, Kalk Bay is where Capetonians actually go. Boutique, characterful, close to the best fish & chips in the country.',
+    dirkTip:'Walk to the harbour, watch the boats come in, buy fish straight off the dock. Best breakfast in Cape Town is at Olympia Café, 3 minutes away.',
+    estimatedPriceRange:'R1,800–R3,200 / night', bookingUrl:'https://www.kalkbayhouse.co.za/' },
+  { id:'stay-one-only', name:'One&Only Cape Town', category:'Accommodation', area:'V&A Waterfront',
+    budgetLevel:['luxury'], bestFor:['couple','family'], accommodation:['hotel','resort'], tags:['luxury','waterfront','family'],
+    whyItFits:'The most complete luxury hotel in Cape Town — stunning location on the Waterfront, world-class spa, and Table Mountain as the backdrop.',
+    dirkTip:'Book a Marina Rise room for direct water views. The Nobu restaurant is worth a visit even if you\'re not staying.',
+    estimatedPriceRange:'R8,000–R15,000 / night', bookingUrl:'https://www.oneandonlyresorts.com/cape-town' },
+  { id:'stay-silo', name:'The Silo Hotel', category:'Accommodation', area:'V&A Waterfront',
+    budgetLevel:['luxury'], bestFor:['couple','solo'], accommodation:['hotel','boutique'], tags:['luxury','design','waterfront'],
+    whyItFits:'The most design-forward hotel in Cape Town — built into a converted grain silo with jaw-dropping architecture and rooftop views.',
+    dirkTip:'Even if you\'re not staying, visit the Silo Bar for cocktails at sunset. The Zeitz MOCAA museum is directly below.',
+    estimatedPriceRange:'R10,000–R20,000 / night', bookingUrl:'https://www.theroyalportfolio.com/the-silo/' },
+  { id:'stay-twelve-apostles', name:'12 Apostles Hotel', category:'Accommodation', area:'Camps Bay / Oudekraal',
+    budgetLevel:['luxury'], bestFor:['couple','family'], accommodation:['hotel','resort'], tags:['luxury','nature','camps-bay'],
+    whyItFits:'Tucked between the Twelve Apostles mountain range and the Atlantic, this is one of the most dramatically located hotels in the world.',
+    dirkTip:'The spa is exceptional. Ask for a room with a mountain OR ocean view — both are unforgettable.',
+    estimatedPriceRange:'R6,000–R12,000 / night', bookingUrl:'https://www.12apostleshotel.com/' },
+  { id:'stay-mount-nelson', name:'Belmond Mount Nelson', category:'Accommodation', area:'Gardens',
+    budgetLevel:['luxury'], bestFor:['couple','family'], accommodation:['hotel','resort'], tags:['luxury','classic','gardens'],
+    whyItFits:'The grande dame of Cape Town hotels. Pink walls, manicured gardens, and a century of stories. Walking distance to Kloof Street.',
+    dirkTip:'Afternoon tea at The Mount Nelson is a Cape Town institution. Book it even if you\'re staying elsewhere.',
+    estimatedPriceRange:'R7,000–R14,000 / night', bookingUrl:'https://www.belmond.com/hotels/africa/south-africa/cape-town/belmond-mount-nelson-hotel/' }
+];
+
+var EXPERIENCE_OPTIONS = [
+  { id:'exp-table-mountain', name:'Table Mountain Cableway', category:'Experience', area:'Table Mountain',
+    tags:['iconic','views','nature','hiking','first-timers'],
+    interests:['nature','hiking','views','iconic','table mountain'],
+    whyItFits:'The single most iconic experience in Cape Town — 1,086m above the city with 360° views across both oceans.',
+    dirkTip:'Go before 9am to beat the queues. Book online. Check wind forecast — cable car closes in high wind. Backup: Lion\'s Head hike instead.',
+    bookingNote:'Book online at tablemountain.net — tickets sell out in peak season.',
+    bookingUrl:'https://www.tablemountain.net/buy-tickets' },
+  { id:'exp-cape-point', name:'Cape Point & Peninsula Drive', category:'Experience', area:'Cape Peninsula',
+    tags:['road-trip','nature','scenic','penguins','iconic'],
+    interests:['driving','nature','scenery','scenic drive','road trip','wildlife'],
+    whyItFits:'The most dramatic coastal road in South Africa. Chapman\'s Peak, Cape Point, Boulders Beach — a perfect full-day loop.',
+    dirkTip:'Start early, drive anti-clockwise via Hout Bay. Fill up petrol before you leave — no stations on the loop.',
+    bookingNote:'Book Cape Point entry at SANParks.org in advance.',
+    bookingUrl:'https://www.sanparks.org/parks/table_mountain/' },
+  { id:'exp-boulders-beach', name:'Boulders Beach Penguins', category:'Experience', area:'Simon\'s Town',
+    tags:['family','wildlife','nature','penguins'],
+    interests:['wildlife','nature','penguins','family','kids'],
+    whyItFits:'African penguins waddling around your feet — one of the best wildlife encounters in South Africa. 45 minutes from Cape Town.',
+    dirkTip:'Go in the morning before tour buses arrive. Book entry online — cash queues are much longer.',
+    bookingNote:'Book entry at SANParks.org.',
+    bookingUrl:'https://www.sanparks.org/parks/table_mountain/' },
+  { id:'exp-robben-island', name:'Robben Island Tour', category:'Experience', area:'V&A Waterfront',
+    tags:['history','culture','iconic','mandatory'],
+    interests:['history','culture','mandela','politics','apartheid'],
+    whyItFits:'Mandela\'s prison cell and a guide who was imprisoned here himself — the most powerful historical experience in Africa.',
+    dirkTip:'Book 2–3 weeks ahead in peak season — tours sell out. Ferries leave from the V&A Waterfront. Allow a full morning.',
+    bookingNote:'Book at robben-island.org.za — do not leave this to the last minute.',
+    bookingUrl:'https://www.robben-island.org.za/' },
+  { id:'exp-winelands', name:'Stellenbosch & Franschhoek Wine Day', category:'Experience', area:'Cape Winelands',
+    tags:['wine','food','day-trip','couple','scenic'],
+    interests:['wine','food','winelands','stellenbosch','franschhoek','gastronomy','romantic'],
+    whyItFits:'The Cape Winelands are 45 minutes from Cape Town — world-class estates, mountain scenery and outstanding food.',
+    dirkTip:'Hire a driver for the day — R600–R900 gets you a dedicated driver to multiple estates safely. Go midweek for fewer crowds.',
+    bookingNote:'Many estates accept walk-ins for tastings. Booking recommended for restaurants.',
+    bookingUrl:'https://www.wineroute.co.za/' },
+  { id:'exp-sunset-sail', name:'Sunset Catamaran Sail', category:'Experience', area:'V&A Waterfront',
+    tags:['romantic','water','sunset','couple','unique'],
+    interests:['sailing','ocean','romantic','sunset','couple','water activities'],
+    whyItFits:'Sailing out of the Waterfront with Table Mountain as the backdrop as the sun drops into the Atlantic — genuinely unforgettable.',
+    dirkTip:'The Waterfront Charters catamaran is the best option. Book in advance — the sunset slot fills up daily.',
+    bookingNote:'Book at waterfrontcharters.co.za.',
+    bookingUrl:'https://www.waterfrontcharters.co.za/' },
+  { id:'exp-lions-head', name:'Lion\'s Head Sunrise Hike', category:'Experience', area:'Signal Hill',
+    tags:['hiking','active','views','sunrise','fitness'],
+    interests:['hiking','active','fitness','adventure','sunrise','views'],
+    whyItFits:'The most rewarding 2.5-hour hike in Cape Town — 360° views of the city, the Atlantic, and Table Mountain from the summit.',
+    dirkTip:'Go on a weekday before 7am. The full moon hike is bucket-list. Wear trail shoes — there are chains and ladders on the upper section.',
+    bookingNote:'No booking required. Free access. Start from the Signal Hill road parking area.',
+    bookingUrl:'' },
+  { id:'exp-whale-watching', name:'Whale Watching from Hermanus', category:'Experience', area:'Hermanus (90 min from Cape Town)',
+    tags:['wildlife','nature','whales','day-trip','seasonal'],
+    interests:['wildlife','whales','nature','ocean','day trip'],
+    whyItFits:'Southern right whales come to Walker Bay between June and November — Hermanus is the best land-based whale watching spot in the world.',
+    dirkTip:'Go from August to October for peak season. Book a boat trip for up-close encounters — the cliff path walk is free.',
+    bookingNote:'Book boat trips at hermanuswhalewatching.co.za. Active June–Nov.',
+    bookingUrl:'https://www.hermanuswhalewatching.co.za/' },
+  { id:'exp-shark-cage', name:'Shark Cage Diving', category:'Experience', area:'Gansbaai (2 hrs from Cape Town)',
+    tags:['adventure','adrenaline','wildlife','bucket-list'],
+    interests:['sharks','adventure','adrenaline','bucket list','wildlife','diving','ocean'],
+    whyItFits:'Great White Sharks, a cage, and the open ocean — one of the most exhilarating wildlife encounters on the planet.',
+    dirkTip:'White Shark Projects in Gansbaai is the most reputable operator. Go early morning when conditions are calmest.',
+    bookingNote:'Book at whitesharkprojects.co.za. Departs from Gansbaai, 2 hours from Cape Town.',
+    bookingUrl:'https://www.whitesharkprojects.co.za/' },
+  { id:'exp-helicopter', name:'Helicopter Flight over Cape Town', category:'Experience', area:'V&A Waterfront',
+    tags:['luxury','views','unique','aerial','premium'],
+    interests:['helicopter','aerial','views','luxury','unique experience','photography'],
+    whyItFits:'Seeing Cape Town from the air — Table Mountain, Camps Bay, Chapman\'s Peak and the Cape Peninsula — is genuinely breathtaking.',
+    dirkTip:'NAC Helicopters at the V&A Waterfront run the best tours. The 30-minute Cape Peninsula route is worth every rand.',
+    bookingNote:'Book at nachelicopters.co.za.',
+    bookingUrl:'https://www.nachelicopters.co.za/' },
+  { id:'exp-surf', name:'Surf Lesson at Muizenberg', category:'Experience', area:'Muizenberg',
+    tags:['surfing','active','beach','beginner','fun'],
+    interests:['surfing','beach','water sports','active','adventure','fun'],
+    whyItFits:'Muizenberg has the gentlest, most consistent beginner waves in South Africa — the best place in the country to learn to surf.',
+    dirkTip:'Gary\'s Surf School is the go-to. Book a 2-hour lesson. The colourful beach huts are iconic — go at low tide.',
+    bookingNote:'Book at garysurf.com.',
+    bookingUrl:'https://www.garysurf.com/' },
+  { id:'exp-constantia-wine', name:'Wine Tasting — Constantia Valley', category:'Experience', area:'Constantia (20 min from CBD)',
+    tags:['wine','food','day-trip','couple','scenic','local','constantia'],
+    interests:['wine','winelands','food','gastronomy','romantic','constantia','local'],
+    whyItFits:'Constantia is Cape Town\'s own wine valley — just 20 minutes from the city centre. Groot Constantia and Beau Constantia are world-class.',
+    dirkTip:'Start at Beau Constantia for views and lunch, then walk to Groot Constantia for the cellar tour. Back in the city by 5pm.',
+    bookingNote:'Most estates accept walk-ins for tastings. Booking recommended for lunch.',
+    bookingUrl:'https://www.constantia.co.za/' },
+  { id:'exp-kayaking', name:'Kayaking with Cape Fur Seals', category:'Experience', area:'Hout Bay Harbour',
+    tags:['active','water','wildlife','seals','unique','ocean','kayaking'],
+    interests:['kayaking','ocean','water sports','wildlife','seals','active','adventure','fun'],
+    whyItFits:'Paddle from Hout Bay harbour surrounded by Cape fur seals and mountain scenery. One of Cape Town\'s most underrated experiences.',
+    dirkTip:'Morning sessions are calmer and the light is beautiful. 2 hours, R350–R450 per person. Go at low tide for best conditions.',
+    bookingNote:'Book in advance — small group sizes fill up.',
+    bookingUrl:'' }
+];
+
+var RESTAURANT_OPTIONS = [
+  { id:'rest-test-kitchen', name:'The Test Kitchen', category:'Restaurant', area:'Woodstock',
+    tags:['fine-dining','special-occasion','bucket-list','foodie'],
+    interests:['fine dining','food','special occasion','foodie','restaurants'],
+    whyItFits:'Consistently ranked among the best restaurants in Africa. If you\'re serious about food, this is the one.',
+    dirkTip:'Book 6–8 weeks ahead. Non-negotiable. Wednesday or Thursday lunch is slightly easier to get than weekends.',
+    bookingUrl:'https://www.thetestkitchen.co.za/' },
+  { id:'rest-la-colombe', name:'La Colombe', category:'Restaurant', area:'Constantia',
+    tags:['fine-dining','wine','views','romantic','luxury'],
+    interests:['fine dining','wine','food','romantic','winelands','gastronomy'],
+    whyItFits:'Perched above the Constantia Winelands with stunning valley views — elegant French-influenced cuisine in one of the most beautiful settings.',
+    dirkTip:'Book the counter seats in the kitchen if available — watching the team in action is part of the experience.',
+    bookingUrl:'https://lacolombe.co.za/' },
+  { id:'rest-fyn', name:'FYN Restaurant', category:'Restaurant', area:'CBD',
+    tags:['fine-dining','asian-fusion','unique','innovative'],
+    interests:['fine dining','food','asian','innovative','foodie'],
+    whyItFits:'Asian-inspired fine dining in the heart of the CBD — one of the most innovative restaurants in South Africa right now.',
+    dirkTip:'Book the chef\'s table experience if available. The sake selection is outstanding.',
+    bookingUrl:'https://www.fynrestaurant.com/' },
+  { id:'rest-pot-luck-club', name:'The Pot Luck Club', category:'Restaurant', area:'Woodstock (Old Biscuit Mill)',
+    tags:['views','sharing','trendy','casual-fine','foodie'],
+    interests:['food','views','trendy','social','tapas','sharing plates'],
+    whyItFits:'Sharing plates with Cape Town views from the 6th floor of the Old Biscuit Mill — creative food, great atmosphere.',
+    dirkTip:'Go on a Saturday when the Neighbourgoods Market is running below — combine both.',
+    bookingUrl:'https://www.thepotluckclub.co.za/' },
+  { id:'rest-kloof-street', name:'Kloof Street House', category:'Restaurant', area:'Gardens',
+    tags:['romantic','atmosphere','mid-range','special','unique'],
+    interests:['romantic','atmosphere','dinner','special occasion','food','mid-range'],
+    whyItFits:'A 100-year-old Victorian house turned into one of Cape Town\'s most atmospheric restaurants. Romantic, beautiful, consistently excellent.',
+    dirkTip:'Book a table in the back garden if the weather is good. The cocktail menu is exceptional.',
+    bookingUrl:'https://www.kloofstreet.com/' },
+  { id:'rest-harbour-house', name:'Harbour House', category:'Restaurant', area:'Kalk Bay',
+    tags:['seafood','views','lunch','atlantic','fresh'],
+    interests:['seafood','fish','ocean','lunch','views','fresh','kalk bay'],
+    whyItFits:'Fresh line fish served metres from where it was caught, with Kalk Bay harbour below you. As good as seafood gets.',
+    dirkTip:'Book the window table — ask specifically. Come for lunch so you can enjoy the harbour views properly.',
+    bookingUrl:'https://www.harbourhouse.co.za/' },
+  { id:'rest-olympia', name:'Olympia Café', category:'Restaurant', area:'Kalk Bay',
+    tags:['breakfast','casual','local','neighbourhood'],
+    interests:['breakfast','casual','local','neighbourhood','coffee','hidden gem'],
+    whyItFits:'The best breakfast in Cape Town, hands down. Kalk Bay locals have been coming here for decades. Cash only, no bookings.',
+    dirkTip:'Arrive early or expect a queue. It\'s worth it. The eggs on toast and freshly baked bread are legendary.',
+    bookingUrl:'' },
+  { id:'rest-la-parada', name:'La Parada', category:'Restaurant', area:'Camps Bay / Waterfront',
+    tags:['tapas','social','casual','group','beachfront'],
+    interests:['tapas','social','group','casual','spanish','beachfront'],
+    whyItFits:'Spanish tapas on the Camps Bay strip with mountain views. Great for groups, flexible, always buzzing.',
+    dirkTip:'Go for sunset — the Camps Bay strip at golden hour with Table Mountain behind you is a proper Cape Town moment.',
+    bookingUrl:'https://www.laparada.co.za/' },
+  { id:'rest-superette', name:'Superette', category:'Restaurant', area:'Gardens',
+    tags:['pasta','casual','trendy','local','neighbourhood'],
+    interests:['pasta','casual','trendy','local','neighbourhood','food'],
+    whyItFits:'The best pasta in Cape Town in a relaxed neighbourhood setting. A favourite of locals who know where to eat.',
+    dirkTip:'No reservations — arrive early or late to avoid the queue. The cacio e pepe is ridiculous.',
+    bookingUrl:'' },
+  { id:'rest-bungalow', name:'The Bungalow', category:'Restaurant', area:'Clifton',
+    tags:['views','beachfront','lunch','premium','scenic'],
+    interests:['views','beachfront','lunch','premium','scenic','camps bay','clifton'],
+    whyItFits:'Best seat in Cape Town for lunch — right on the Clifton beachfront with the Twelve Apostles as the backdrop.',
+    dirkTip:'Go for lunch on a clear day. Book the deck seats. The calamari and salads are consistently great.',
+    bookingUrl:'https://www.thebungalow.co.za/' },
+  { id:'rest-grand-africa', name:'Grand Africa Café & Beach', category:'Restaurant', area:'V&A Waterfront',
+    tags:['beachfront','lunch','casual','social','views','waterfront'],
+    interests:['beach','lunch','casual','social','waterfront','sundowners','group'],
+    whyItFits:'Beach bar, restaurant and sundowner spot right on the V&A. Sandy floors, ocean views, relaxed and fun.',
+    dirkTip:'Book a beach bed for the afternoon and stay for sunset drinks — one of Cape Town\'s great easy afternoons.',
+    bookingUrl:'https://www.grandafrica.com/' },
+  { id:'rest-upper-union', name:'Upper Union', category:'Restaurant', area:'Gardens',
+    tags:['pizza','casual','trendy','neighbourhood','local'],
+    interests:['pizza','casual','local','neighbourhood','food','trendy'],
+    whyItFits:'The best wood-fired pizza in Cape Town in a lively, neighbourhood setting beloved by locals.',
+    dirkTip:'No reservations for most tables — arrive at 6pm to avoid the wait. The truffle pizza is consistently excellent.',
+    bookingUrl:'https://upperunion.co.za/' },
+  { id:'rest-ozcf-market', name:'Oranjezicht City Farm Market', category:'Restaurant', area:'Granger Bay (near V&A)',
+    tags:['market','breakfast','casual','local','artisan','weekend'],
+    interests:['market','food','breakfast','local','artisan','coffee','casual','weekend'],
+    whyItFits:'The best Saturday morning in Cape Town — local producers, fresh food, coffee, and harbour views in one place.',
+    dirkTip:'Go between 9am and 11am on a Saturday. Bring cash. The pastries and fresh bread sell out early.',
+    bookingUrl:'https://ozcf.co.za/market/' },
+  { id:'rest-athletic-club', name:'Athletic Club & Social', category:'Restaurant', area:'Cape Town CBD',
+    tags:['cocktails','social','trendy','after-dinner','bar','casual'],
+    interests:['cocktails','bar','social','trendy','nightlife','drinks','after dinner'],
+    whyItFits:'One of Cape Town\'s best cocktail bars — creative drinks, great atmosphere, right in the heart of the city.',
+    dirkTip:'Go after dinner for cocktails. The bar snacks are excellent. Gets busy after 9pm on weekends.',
+    bookingUrl:'' },
+  { id:'rest-chefs-warehouse-beau', name:'Chef\'s Warehouse at Beau Constantia', category:'Restaurant', area:'Constantia',
+    tags:['fine-dining','views','wine','tasting','romantic','scenic'],
+    interests:['fine dining','wine','views','romantic','food','winelands','constantia','gastronomy'],
+    whyItFits:'Sharing-style tasting menu with sweeping Constantia valley views — one of the best lunch experiences in Cape Town.',
+    dirkTip:'Book lunch, not dinner — the valley views in daylight are the whole point. Book 2–3 weeks ahead minimum.',
+    bookingUrl:'https://www.chefswarehouserestaurants.com/' }
+];
+
+var WINE_ESTATE_OPTIONS = [
+  { id:'wine-groot-constantia', name:'Groot Constantia', category:'Wine Estate', area:'Constantia (20 min from CBD)',
+    tags:['historic','classic','constantia','family','cellar-tour','local'],
+    interests:['wine','history','constantia','winelands','local','culture','cellar tour'],
+    whyItFits:'South Africa\'s oldest wine estate — over 300 years of history, beautiful Cape Dutch architecture, and excellent wines.',
+    dirkTip:'Do the cellar tour first, then taste in the manor house. The Gouverneurs Reserve is their flagship red.',
+    estimatedPriceRange:'R90–R150 tasting', bookingUrl:'https://www.grootconstantia.co.za/' },
+  { id:'wine-beau-constantia', name:'Beau Constantia', category:'Wine Estate', area:'Constantia (25 min from CBD)',
+    tags:['views','modern','constantia','romantic','lunch','premium'],
+    interests:['wine','views','romantic','constantia','winelands','fine dining','premium'],
+    whyItFits:'Perched on the Constantia ridge with jaw-dropping views across False Bay — one of the most beautiful settings in the Cape.',
+    dirkTip:'Book lunch at Chef\'s Warehouse here — the tasting + lunch combination is a perfect full day.',
+    estimatedPriceRange:'R120–R180 tasting', bookingUrl:'https://www.beauconstantia.co.za/' },
+  { id:'wine-constantia-glen', name:'Constantia Glen', category:'Wine Estate', area:'Constantia (20 min from CBD)',
+    tags:['boutique','constantia','quality','quiet','local'],
+    interests:['wine','constantia','boutique','quality','quiet','winelands'],
+    whyItFits:'Small, boutique and uncrowded — consistently one of the best Bordeaux-style blends produced in South Africa.',
+    dirkTip:'Visit on a weekday for the most peaceful experience. Their FIVE Bordeaux blend is exceptional value.',
+    estimatedPriceRange:'R100–R160 tasting', bookingUrl:'https://www.constantiaglen.com/' },
+  { id:'wine-buitenverwachting', name:'Buitenverwachting', category:'Wine Estate', area:'Constantia (20 min from CBD)',
+    tags:['constantia','restaurant','lunch','family','classic','picnic'],
+    interests:['wine','constantia','lunch','family','restaurant','winelands','picnic'],
+    whyItFits:'Beautiful historic estate with an excellent restaurant and one of the best picnic setups in the Cape. Great for families.',
+    dirkTip:'Book a farm picnic on the lawn in summer — basket of food, great wine, mountain backdrop. Book well ahead.',
+    estimatedPriceRange:'R80–R120 tasting', bookingUrl:'https://www.buitenverwachting.com/' },
+  { id:'wine-babylonstoren', name:'Babylonstoren', category:'Wine Estate', area:'Paarl (50 min from CBD)',
+    tags:['iconic','design','garden','paarl','food','hotel','premium'],
+    interests:['wine','garden','design','paarl','food','winelands','premium','photography'],
+    whyItFits:'One of the most beautiful farm estates in the world — a working Cape Dutch farm with a world-famous garden, spa and restaurant.',
+    dirkTip:'Book the Babel restaurant well in advance. The garden tour is worth doing. Go for a full day — there\'s too much for half.',
+    estimatedPriceRange:'R120–R180 tasting', bookingUrl:'https://babylonstoren.com/' },
+  { id:'wine-delaire-graff', name:'Delaire Graff Estate', category:'Wine Estate', area:'Stellenbosch (45 min from CBD)',
+    tags:['luxury','views','stellenbosch','art','premium','romantic'],
+    interests:['wine','luxury','views','stellenbosch','art','romantic','premium','winelands'],
+    whyItFits:'The most spectacular view in Stellenbosch — mountain passes in every direction, world-class art collection, and exceptional wines.',
+    dirkTip:'Have lunch at the Indochine restaurant — the views and food are outstanding. Smart casual dress expected.',
+    estimatedPriceRange:'R180–R280 tasting', bookingUrl:'https://delaire.co.za/' },
+  { id:'wine-tokara', name:'Tokara', category:'Wine Estate', area:'Stellenbosch (45 min from CBD)',
+    tags:['views','stellenbosch','olive-oil','restaurant','modern','premium'],
+    interests:['wine','views','stellenbosch','restaurant','food','winelands','premium','modern'],
+    whyItFits:'Stunning panoramic views from the top of Helshoogte Pass — great wines, excellent olive oils, and a very good restaurant.',
+    dirkTip:'Combine Tokara with Delaire on the same day — both sit on Helshoogte Pass and are a 5-minute drive apart.',
+    estimatedPriceRange:'R130–R200 tasting', bookingUrl:'https://www.tokara.com/' },
+  { id:'wine-boschendal', name:'Boschendal', category:'Wine Estate', area:'Franschhoek (1 hr from CBD)',
+    tags:['historic','franschhoek','picnic','family','classic','lunch'],
+    interests:['wine','franschhoek','history','picnic','family','winelands','lunch','classic'],
+    whyItFits:'One of the Cape\'s oldest and most beloved estates — oak trees, Cape Dutch manor house, exceptional picnic lunches.',
+    dirkTip:'Book the Werf picnic under the oak trees — one of the great Cape experiences. The charcuterie basket is outstanding.',
+    estimatedPriceRange:'R100–R160 tasting', bookingUrl:'https://www.boschendal.com/' },
+  { id:'wine-la-petite-ferme', name:'La Petite Ferme', category:'Wine Estate', area:'Franschhoek (1 hr from CBD)',
+    tags:['views','franschhoek','restaurant','romantic','lunch','boutique'],
+    interests:['wine','views','franschhoek','romantic','restaurant','winelands','lunch','boutique'],
+    whyItFits:'Perched on the Franschhoek valley hillside with the most romantic vineyard-view lunch setting imaginable.',
+    dirkTip:'Book the terrace table for lunch. Come midweek for fewer crowds. The wine-paired tasting menu is well worth it.',
+    estimatedPriceRange:'R120–R180 tasting', bookingUrl:'https://www.lapetiteferme.co.za/' },
+  { id:'wine-haute-cabriere', name:'Haute Cabrière', category:'Wine Estate', area:'Franschhoek (1 hr from CBD)',
+    tags:['cellar','franschhoek','views','sabre','classic','restaurant'],
+    interests:['wine','franschhoek','views','restaurant','unique','winelands','classic'],
+    whyItFits:'Famous for its cellar cut into the mountain and the ritual of sabring a Champagne bottle at tastings.',
+    dirkTip:'Watch the bottle-sabring ceremony at the tasting — theatrical and memorable. The Pierre Jourdan MCC is superb.',
+    estimatedPriceRange:'R100–R160 tasting', bookingUrl:'https://www.cabriere.co.za/' }
+];
+
+// ─── Local matching engine ────────────────────────────────
+
+function matchRecommendations(p) {
+  var budget = (p.budget || '').toLowerCase();
+  var budgetLevel = budget.includes('budget') ? 'budget'
+    : budget.includes('luxury') ? 'luxury'
+    : budget.includes('premium') ? 'premium'
+    : 'mid';
+
+  var travelWith = (p.travellingWith || '').toLowerCase();
+  var bestFor = travelWith.includes('solo') ? 'solo'
+    : travelWith.includes('couple') ? 'couple'
+    : travelWith.includes('famil') ? 'family'
+    : travelWith.includes('group') ? 'group'
+    : 'couple';
+
+  var transport = (p.transport || '').toLowerCase();
+  var wantsCar = transport.includes('rental') || transport.includes('car') || transport.includes('decided') || transport.includes('mix');
+
+  var interests = (Array.isArray(p.interests) ? p.interests.join(' ') : '').toLowerCase();
+  var mustDo = (p.mustDo || '').toLowerCase();
+  var avoid = (p.toAvoid || '').toLowerCase();
+  var notes = (p.extraNotes || '').toLowerCase();
+  var allText = interests + ' ' + mustDo + ' ' + notes;
+
+  var stayArea = (p.stayArea || '').toLowerCase();
+  var accommodation = (p.accommodation || '').toLowerCase();
+
+  // ── Rental cars ──────────────────────────────────────────
+  var cars = [];
+  if (wantsCar) {
+    var isAdventure = allText.includes('addo') || allText.includes('garden route') || allText.includes('4x4') || allText.includes('gravel');
+    var isFamily = bestFor === 'family';
+
+    if (isAdventure) {
+      cars = RENTAL_CARS.filter(function(c) { return c.id === 'car-4x4-adventure' || c.id === 'car-mid-suv'; });
+    } else if (isFamily) {
+      cars = RENTAL_CARS.filter(function(c) { return c.id === 'car-family-suv' || c.id === 'car-mid-suv'; });
+    } else if (budgetLevel === 'budget') {
+      cars = RENTAL_CARS.filter(function(c) { return c.id === 'car-budget-compact' || c.id === 'car-mid-suv'; });
+    } else if (budgetLevel === 'luxury' || budgetLevel === 'premium') {
+      cars = RENTAL_CARS.filter(function(c) { return c.id === 'car-convertible' || c.id === 'car-premium-suv' || c.id === 'car-mid-suv'; });
+    } else {
+      cars = RENTAL_CARS.filter(function(c) { return c.id === 'car-mid-suv' || c.id === 'car-budget-compact'; });
+    }
+    // always pad to 4 options, always include private driver as last resort
+    RENTAL_CARS.forEach(function(c) {
+      if (cars.length < 4 && !cars.find(function(x){return x.id===c.id;}) && c.id !== 'car-uber-only') cars.push(c);
+    });
+    cars = cars.slice(0, 4);
+  } else {
+    // User chose Uber/Bolt or guided tours — show no-car options
+    cars = RENTAL_CARS.filter(function(c) { return c.id === 'car-uber-only' || c.id === 'car-private-driver'; });
+  }
+
+  // ── Places to stay ───────────────────────────────────────
+  var scored = STAY_OPTIONS.map(function(s) {
+    var score = 0;
+    if (s.budgetLevel.indexOf(budgetLevel) > -1) score += 3;
+    if (s.bestFor.indexOf(bestFor) > -1) score += 2;
+    if (stayArea && s.area.toLowerCase().includes(stayArea.split(' ')[0])) score += 2;
+    if (s.accommodation && accommodation) {
+      s.accommodation.forEach(function(a) { if (accommodation.includes(a)) score += 1; });
+    }
+    return { item: s, score: score };
+  });
+  scored.sort(function(a,b) { return b.score - a.score; });
+  var stays = scored.slice(0, 3).map(function(s) { return s.item; });
+
+  // ── Experiences ──────────────────────────────────────────
+  var exScored = EXPERIENCE_OPTIONS.map(function(e) {
+    var score = 0;
+    e.interests.forEach(function(tag) {
+      if (allText.includes(tag)) score += 2;
+    });
+    e.tags.forEach(function(tag) {
+      if (allText.includes(tag)) score += 1;
+    });
+    // Table Mountain is for everyone
+    if (e.id === 'exp-table-mountain') score += 3;
+    // Seasonal boost — whale watching Jun-Nov
+    var month = new Date().getMonth();
+    if (e.id === 'exp-whale-watching' && month >= 5 && month <= 10) score += 3;
+    return { item: e, score: score };
+  });
+  exScored.sort(function(a,b) { return b.score - a.score; });
+  // Remove avoided items
+  var experiences = exScored.filter(function(e) {
+    if (!avoid) return true;
+    return !e.item.tags.some(function(t) { return avoid.includes(t); });
+  }).slice(0, 5).map(function(e) { return e.item; });
+  // Ensure at least Table Mountain and Cape Point if no interests
+  if (experiences.length === 0) {
+    experiences = EXPERIENCE_OPTIONS.slice(0, 4);
+  }
+
+  // ── Restaurants ──────────────────────────────────────────
+  var wantsFood = allText.includes('food') || allText.includes('restaurant') || allText.includes('dining') || allText.includes('wine') || allText.includes('eat') || allText.includes('gastronomy') || allText.includes('seafood') || allText.includes('coffee');
+  var restaurants = [];
+  if (wantsFood || restaurants.length === 0) {
+    var restScored = RESTAURANT_OPTIONS.map(function(r) {
+      var score = 0;
+      r.interests.forEach(function(tag) { if (allText.includes(tag)) score += 2; });
+      r.tags.forEach(function(tag) { if (allText.includes(tag)) score += 1; });
+      if (budgetLevel === 'luxury' || budgetLevel === 'premium') {
+        if (r.tags.indexOf('fine-dining') > -1) score += 2;
+      }
+      if (budgetLevel === 'budget') {
+        if (r.tags.indexOf('casual') > -1 || r.tags.indexOf('neighbourhood') > -1) score += 2;
+      }
+      return { item: r, score: score };
+    });
+    restScored.sort(function(a,b) { return b.score - a.score; });
+    restaurants = restScored.slice(0, 8).map(function(r) { return r.item; });
+  }
+
+  // ── Wine estates ─────────────────────────────────────────
+  var wineEstates = WINE_ESTATE_OPTIONS.slice(0, 10);
+
+  return {
+    rentalCars: cars,
+    placesToStay: stays,
+    experiencesToBook: experiences,
+    restaurantsToReserve: restaurants,
+    wineEstates: wineEstates
+  };
+}
+
+function scrollRecCarousel(id, dir) {
+  var el = document.getElementById(id);
+  if (el) el.scrollBy({ left: dir * 300, behavior: 'smooth' });
+}
+
+function loadRecommendations() {
+  var recSection = document.getElementById('recSection');
+  if (!recSection) return;
+
+  var raw;
+  try { raw = localStorage.getItem('ubuntuTripProfile'); } catch(e) {}
+  if (!raw) return;
+  var profile;
+  try { profile = JSON.parse(raw); } catch(e) { return; }
+  if (!profile) return;
+
+  var data = matchRecommendations(profile);
+  var hasAny = data.rentalCars.length || data.placesToStay.length || data.experiencesToBook.length || data.restaurantsToReserve.length || data.wineEstates.length;
+
+  if (!hasAny) {
+    var loading = document.getElementById('recLoading');
+    if (loading) loading.innerHTML = '<div class="rec-error">Ubuntu needs a little more trip information before recommending options. <a href="itinerary.html" style="color:var(--gold);">Edit your trip profile</a> to add budget, stay area and interests.</div>';
+    return;
+  }
+
+  renderRecommendations(data);
+}
+
+renderCockpit();
+loadRecommendations();
+</script>
+<script src="/guide/save-to-trip.js"></script>
 <script>lucide.createIcons();</script>
+
+<!-- PERSONALISED DAY MODAL -->
+<div class="pi-modal-overlay" id="piModalOverlay" onclick="handlePiOverlayClick(event)">
+  <div class="pi-modal" id="piModal">
+    <img class="pi-modal-photo" id="piModalPhoto" src="" alt="">
+    <button class="pi-modal-close" onclick="closePiDay()">✕</button>
+    <div class="pi-modal-body">
+      <div class="pi-modal-eyebrow" id="piModalEyebrow"></div>
+      <div class="pi-modal-title" id="piModalTitle"></div>
+      <div class="pi-modal-schedule" id="piModalSchedule"></div>
+      <div class="pi-modal-meta" id="piModalMeta"></div>
+      <div class="pi-modal-tip" id="piModalTip"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
