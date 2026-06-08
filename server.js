@@ -315,9 +315,10 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
   const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
   if (!token) throw new Error('RESEND_API_KEY not configured');
 
-  // Emergency step B: point the email's "Open My Guide" link at a stable page
-  // instead of the generated Render guideUrl (standalone guide had wrong images).
-  const guideLink = 'https://www.thecapetownguide.com/guide/home.html';
+  // Point the email's "Open My Guide" link at the personalised itinerary page
+  // (My Guide cockpit), where the user enters their email to load their plan —
+  // instead of the generic guide home or the generated Render guideUrl.
+  const guideLink = 'https://www.thecapetownguide.com/guide/myguide.html';
 
   const htmlBody = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
     <body style="font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 24px;color:#1C1C1A;line-height:1.7;">
