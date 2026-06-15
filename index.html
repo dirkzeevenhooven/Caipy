@@ -177,6 +177,38 @@
     .lbox-close:hover { background: rgba(255,255,255,.22); }
     @media (max-width: 768px) { .lbox-inner { flex-direction: column; height: 92vh; } .lbox-carousel { width: 100%; height: 260px; flex-shrink: 0; } .lbox-right { padding: 24px 20px; } .lbox-title { font-size: 28px; } }
 
+    /* CHAPTER PREVIEW MODAL (premium editorial topic preview) */
+    #chapter-preview-modal { display: none; position: fixed; inset: 0; z-index: 30001; background: rgba(8,18,28,0.92); backdrop-filter: blur(12px); align-items: center; justify-content: center; padding: 20px; }
+    #chapter-preview-modal.open { display: flex; }
+    .cpm-inner { position: relative; width: 100%; max-width: min(1040px, 95vw); max-height: 88vh; border-radius: 16px; overflow: hidden; background: #0c1e2e; box-shadow: 0 40px 120px rgba(0,0,0,.8); display: flex; flex-direction: row; animation: lboxIn .3s cubic-bezier(.175,.885,.32,1.275); }
+    .cpm-image { position: relative; width: 56%; flex-shrink: 0; overflow: hidden; cursor: zoom-in; }
+    .cpm-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cpm-image-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,18,28,0.55) 0%, rgba(8,18,28,0) 45%); z-index: 2; pointer-events: none; }
+    .cpm-expand-hint { position: absolute; bottom: 16px; left: 18px; z-index: 3; display: flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.78); background: rgba(8,18,28,0.45); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.18); padding: 7px 12px; border-radius: 999px; pointer-events: none; }
+    .cpm-body { flex: 1; overflow-y: auto; padding: 40px 36px 36px; display: flex; flex-direction: column; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.1) transparent; }
+    .cpm-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 8px; }
+    .cpm-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: #fff; line-height: 1.1; margin-bottom: 16px; }
+    .cpm-intro { font-size: 15px; color: rgba(255,255,255,.6); line-height: 1.75; margin-bottom: 20px; font-style: italic; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .cpm-bullets { list-style: none; padding: 0; margin: 0 0 20px; display: flex; flex-direction: column; gap: 0; }
+    .cpm-bullet { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 14px; color: rgba(255,255,255,.78); line-height: 1.7; font-weight: 300; }
+    .cpm-bullet:last-child { border-bottom: none; }
+    .cpm-bullet-dot { color: var(--gold); flex-shrink: 0; }
+    .cpm-bullet strong { color: #fff; font-weight: 500; }
+    .cpm-tip { background: rgba(184,134,58,.07); border: 1px solid rgba(184,134,58,.18); border-left: 3px solid var(--gold); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.7; margin-bottom: 24px; }
+    .cpm-tip::before { content: '💡 Ubuntu tip: '; color: var(--gold-l); font-weight: 500; }
+    .cpm-cta { background: var(--gold); color: var(--white); font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 16px 28px; border-radius: 4px; text-decoration: none; display: block; text-align: center; box-shadow: 0 6px 20px rgba(184,134,58,.4); margin-top: auto; transition: background .2s; }
+    .cpm-cta:hover { background: var(--gold-l); }
+    .cpm-close { position: absolute; top: 14px; right: 14px; z-index: 10; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; line-height: 1; }
+    .cpm-close:hover { background: rgba(255,255,255,.22); }
+    @media (max-width: 768px) { .cpm-inner { flex-direction: column; max-height: 92vh; } .cpm-image { width: 100%; height: 240px; flex-shrink: 0; } .cpm-body { padding: 24px 20px; } .cpm-title { font-size: 28px; } }
+
+    /* CHAPTER FULLSCREEN IMAGE VIEWER */
+    #chapter-img-viewer { display: none; position: fixed; inset: 0; z-index: 30002; background: rgba(8,18,28,0.95); align-items: center; justify-content: center; padding: 40px; cursor: zoom-out; }
+    #chapter-img-viewer.open { display: flex; }
+    .civ-img { max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 30px 100px rgba(0,0,0,.7); }
+    .civ-close { position: absolute; top: 20px; right: 24px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; line-height: 1; }
+    .civ-close:hover { background: rgba(255,255,255,.22); }
+
     /* TIPS */
     .tips-section { background: #162E3F; }
     .tips-section .section-title { color: var(--white); }
@@ -223,7 +255,7 @@
 
     /* CAIPY FLOATING WIDGET */
     #caipyWidget { position: fixed; bottom: 28px; right: 28px; z-index: 99999; display: flex !important; visibility: visible !important; flex-direction: column; align-items: flex-end; gap: 12px; }
-    #itin-lightbox.open ~ * #caipyWidget, body:has(#itin-lightbox.open) #caipyWidget { display: none !important; visibility: hidden !important; }
+    #itin-lightbox.open ~ * #caipyWidget, body:has(#itin-lightbox.open) #caipyWidget, body:has(#chapter-preview-modal.open) #caipyWidget { display: none !important; visibility: hidden !important; }
     #caipyBtn { position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; filter: drop-shadow(0 8px 24px rgba(184,134,58,.5)); transition: transform .25s; }
     #caipyBtn:hover { transform: scale(1.05); }
     .caipy-orb { width: 88px; height: 88px; border-radius: 50%; background: var(--gold-dim); display: flex; align-items: center; justify-content: center; border: 3px solid var(--gold); box-shadow: 0 0 0 4px rgba(184,134,58,.2), 0 0 28px 6px rgba(184,134,58,.35); overflow: hidden; }
@@ -1410,25 +1442,30 @@
 </div>
 
 <!-- GUIDE PREVIEW MODAL -->
-<!-- Topic preview modal (compact, dynamic) -->
-<div id="topic-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(13,27,42,.9);backdrop-filter:blur(10px);z-index:30001;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#FAF7F2;border-radius:20px;max-width:440px;width:100%;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.6);overflow:hidden;">
-    <button onclick="closeTopicPreviewModal()" aria-label="Close" style="position:absolute;top:14px;right:14px;background:rgba(0,0,0,.4);border:none;width:34px;height:34px;border-radius:50%;font-size:19px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;z-index:2;line-height:1;">×</button>
-    <div style="position:relative;height:150px;overflow:hidden;">
-      <img id="tpm-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,42,0) 40%,rgba(13,27,42,.55) 100%);"></div>
+<!-- Chapter preview modal (premium editorial, dynamic) -->
+<div id="chapter-preview-modal" onclick="if(event.target===this)closeChapterModal()">
+  <div class="cpm-inner">
+    <button class="cpm-close" onclick="closeChapterModal()" aria-label="Close">×</button>
+    <div class="cpm-image" onclick="openChapterImage(this.querySelector('img').src)">
+      <img id="cpm-img" src="" alt="">
+      <div class="cpm-image-overlay"></div>
+      <div class="cpm-expand-hint">⤢ Tap to expand</div>
     </div>
-    <div style="padding:24px 28px 28px;">
-      <div id="tpm-eyebrow" style="font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:#B8863A;margin-bottom:8px;"></div>
-      <h3 id="tpm-title" style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;color:#0d1b2a;line-height:1.1;margin-bottom:16px;"></h3>
-      <ul id="tpm-bullets" style="list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:10px;"></ul>
-      <div style="background:rgba(184,134,58,.1);border-left:3px solid #B8863A;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:22px;">
-        <div style="font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#B8863A;margin-bottom:4px;">Ubuntu's tip</div>
-        <div id="tpm-tip" style="font-size:13px;color:#4A4540;line-height:1.6;font-weight:300;font-style:italic;"></div>
-      </div>
-      <a href="https://buy.stripe.com/7sY00k090g77adCcZc5kk02" target="_blank" rel="noopener" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:15px 28px;border-radius:4px;text-decoration:none;display:block;text-align:center;box-shadow:0 6px 20px rgba(184,134,58,.4);">Unlock the Guide — €49</a>
+    <div class="cpm-body">
+      <div id="cpm-eyebrow" class="cpm-eyebrow"></div>
+      <h3 id="cpm-title" class="cpm-title"></h3>
+      <p id="cpm-intro" class="cpm-intro"></p>
+      <ul id="cpm-bullets" class="cpm-bullets"></ul>
+      <div id="cpm-tip" class="cpm-tip"></div>
+      <a class="cpm-cta" href="https://buy.stripe.com/7sY00k090g77adCcZc5kk02" target="_blank" rel="noopener">Unlock the Guide — €49</a>
     </div>
   </div>
+</div>
+
+<!-- Chapter fullscreen image viewer -->
+<div id="chapter-img-viewer" onclick="if(event.target===this)closeChapterImage()">
+  <button class="civ-close" onclick="closeChapterImage()" aria-label="Close">×</button>
+  <img id="civ-img" class="civ-img" src="" alt="">
 </div>
 
 <div id="preview-modal" style="display:none;position:fixed;inset:0;background:rgba(13,27,42,.9);backdrop-filter:blur(10px);z-index:30000;align-items:center;justify-content:center;padding:20px;">
@@ -1519,6 +1556,7 @@
 var PREVIEWS = {
   'neighbourhoods': {
     image: 'photos/camps-bay.webp', eyebrow: 'Where to stay', title: 'By neighbourhood',
+    intro: 'Cape Town changes completely depending on where you stay. This preview helps you choose the base that makes your days easier, safer and more enjoyable.',
     bullets: [
       'Sea Point — the smartest first-timer base: ocean walks, cafés, Uber access and fewer Camps Bay prices.',
       'Camps Bay — beautiful and cinematic, but pricier and less practical if you want to move around daily.',
@@ -1529,6 +1567,7 @@ var PREVIEWS = {
   },
   'local-favourites': {
     image: 'photos/bree-street.jpg', eyebrow: 'Eat & drink', title: 'Restaurants',
+    intro: 'The best Cape Town meals are not always the obvious ones. This chapter helps you eat well without falling into tourist-trap mode.',
     bullets: [
       'Bree Street — strong dinner-and-drinks choice when you want city energy without going full tourist.',
       'Kloof Street — cafés, casual bars and local rhythm; better for wandering than over-planning.',
@@ -1539,6 +1578,7 @@ var PREVIEWS = {
   },
   'beaches': {
     image: 'photos/llandudno-beach.jpg', eyebrow: 'Beaches', title: 'Beaches & coast',
+    intro: 'Cape Town beach days are all about wind, timing and choosing the right side of the mountain.',
     bullets: [
       'Clifton — your best beach call when the south-easter makes Camps Bay uncomfortable.',
       'Llandudno — dramatic and beautiful, but bring your own drinks and snacks; there are no shops.',
@@ -1549,6 +1589,7 @@ var PREVIEWS = {
   },
   'wine': {
     image: 'photos/winelands.webp', eyebrow: 'Wine', title: 'Wine & winelands',
+    intro: 'The winelands can be a lazy half-day, a full postcard day or a polished food-and-wine escape \u2014 the trick is choosing the right route.',
     bullets: [
       'Constantia — the easiest winelands feeling without losing half your day in traffic.',
       'Stellenbosch — classic estates, mountain views and the iconic full-day wine route.',
@@ -1559,6 +1600,7 @@ var PREVIEWS = {
   },
   'outdoors': {
     image: 'photos/signal-hill.webp', eyebrow: 'Outdoors', title: 'Hikes & the outdoors',
+    intro: 'Cape Town rewards people who move early, watch the weather and pick the right adventure for the day.',
     bullets: [
       'Lion\u2019s Head — sunrise or sunset classic, but only when wind and visibility are on your side.',
       'Table Mountain — don\u2019t just \u201cgo up\u201d; choose the route based on weather, fitness and timing.',
@@ -1569,6 +1611,7 @@ var PREVIEWS = {
   },
   'safety': {
     image: 'photos/chapmans-peak.jpeg', eyebrow: 'Safety', title: 'Safety & getting around',
+    intro: 'Cape Town is incredible, but confidence comes from knowing where to go, when to go and what to skip.',
     bullets: [
       'Know which areas are fine by day but not smart after dark. That distinction matters.',
       'Use Uber at night instead of trying to be brave or saving a few euros.',
@@ -1579,6 +1622,7 @@ var PREVIEWS = {
   },
   'map': {
     image: 'photos/table-mountain.jpeg', eyebrow: 'The map', title: 'Interactive map',
+    intro: 'This is where the guide becomes practical: beaches, food, viewpoints and routes grouped so your day actually works.',
     bullets: [
       'Group beaches, restaurants, hikes and viewpoints so your day actually makes sense geographically.',
       'Open the right places directly in Google Maps instead of searching again on the street.',
@@ -1589,6 +1633,7 @@ var PREVIEWS = {
   },
   'ubuntu': {
     image: 'photos/dirk-lions-head.jpeg', eyebrow: 'Ubuntu', title: 'Ubuntu Travel Butler',
+    intro: 'Ubuntu helps turn too many options into one clear Cape Town plan \u2014 local logic, not generic AI noise.',
     bullets: [
       'Ask where to stay based on your trip style, not just what looks pretty online.',
       'Choose between beach, city, wine and adventure days without drowning in options.',
@@ -1603,20 +1648,21 @@ var PREVIEWS = {
 function showPreviewModal(slug) {
   var data = slug && PREVIEWS[slug];
   if (data) {
-    var img = document.getElementById('tpm-img');
+    var img = document.getElementById('cpm-img');
     img.src = data.image;
     img.alt = data.title;
-    document.getElementById('tpm-eyebrow').textContent = data.eyebrow;
-    document.getElementById('tpm-title').textContent = data.title;
-    document.getElementById('tpm-bullets').innerHTML = data.bullets.map(function(b) {
+    document.getElementById('cpm-eyebrow').textContent = data.eyebrow;
+    document.getElementById('cpm-title').textContent = data.title;
+    document.getElementById('cpm-intro').textContent = data.intro || '';
+    document.getElementById('cpm-bullets').innerHTML = data.bullets.map(function(b) {
       var i = b.indexOf(' \u2014 ');
       var body = i > -1
-        ? '<strong style="color:#0d1b2a;font-weight:600;">' + b.slice(0, i) + '</strong>' + b.slice(i)
+        ? '<strong>' + b.slice(0, i) + '</strong>' + b.slice(i)
         : b;
-      return '<li style="display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#4A4540;line-height:1.55;font-weight:300;"><span style="color:#B8863A;flex-shrink:0;">\u2022</span><span>' + body + '</span></li>';
+      return '<li class="cpm-bullet"><span class="cpm-bullet-dot">\u2022</span><span>' + body + '</span></li>';
     }).join('');
-    document.getElementById('tpm-tip').textContent = data.tip;
-    document.getElementById('topic-preview-modal').style.display = 'flex';
+    document.getElementById('cpm-tip').textContent = data.tip;
+    document.getElementById('chapter-preview-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
     return;
   }
@@ -1629,21 +1675,26 @@ function closePreviewModal() {
   m.style.display = 'none';
   document.body.style.overflow = '';
 }
-function closeTopicPreviewModal() {
-  document.getElementById('topic-preview-modal').style.display = 'none';
+function closeChapterModal() {
+  document.getElementById('chapter-preview-modal').classList.remove('open');
   document.body.style.overflow = '';
+}
+function openChapterImage(src) {
+  if (!src) return;
+  document.getElementById('civ-img').src = src;
+  document.getElementById('chapter-img-viewer').classList.add('open');
+}
+function closeChapterImage() {
+  document.getElementById('chapter-img-viewer').classList.remove('open');
 }
 document.getElementById('preview-modal').addEventListener('click', function(e) {
   if (e.target === this) closePreviewModal();
 });
-document.getElementById('topic-preview-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeTopicPreviewModal();
-});
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    if (document.getElementById('topic-preview-modal').style.display === 'flex') closeTopicPreviewModal();
-    if (document.getElementById('preview-modal').style.display === 'flex') closePreviewModal();
-  }
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('chapter-img-viewer').classList.contains('open')) { closeChapterImage(); return; }
+  if (document.getElementById('chapter-preview-modal').classList.contains('open')) { closeChapterModal(); return; }
+  if (document.getElementById('preview-modal').style.display === 'flex') closePreviewModal();
 });
 
 // Show sticky bar after scrolling past hero
