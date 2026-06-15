@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/guide/guard.js"></script>
+  <script>var GUIDE_PAGE = 'personalized-itinerary';</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Itinerary · Planet Curated Cape Town</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-dark: #0F2430;
+      --ocean-mid: #1a3545;
+      --ocean: #1B3A4B;
+      --gold: #C9A96E;
+      --gold-light: #e0c48a;
+      --gold-dim: rgba(201,169,110,0.25);
+      --blue: #3A8FC0;
+      --blue-light: #5ab4e8;
+      --blue-dim: rgba(58,143,192,0.2);
+      --green: #4A7C59;
+      --green-light: #6aaa7a;
+      --green-dim: rgba(74,124,89,0.2);
+      --white: #FAF8F4;
+      --white-dim: rgba(250,248,244,0.65);
+      --white-faint: rgba(250,248,244,0.35);
+      --glass: rgba(15,36,48,0.88);
+      --sidebar-w: 200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--ocean-dark); border-right: 1px solid rgba(201,169,110,0.12); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .sidebar-logo .globe { font-size: 22px; }
+    .sidebar-logo .brand { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.2; }
+    .sidebar-logo .sub { font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+    .sidebar-section { padding: 16px 12px 4px; font-size: 9px; letter-spacing: 2px; color: rgba(201,169,110,0.45); text-transform: uppercase; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--white-dim); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .sidebar-item:hover { color: var(--white); background: rgba(201,169,110,0.06); }
+    .sidebar-item.active { border-left: 2px solid var(--gold); color: var(--gold-light); background: rgba(201,169,110,0.08); }
+    .sidebar-item .icon { font-size: 14px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 320px;
+      background: linear-gradient(135deg, #0a1e2a, #0F2430, #1a3545);
+      display: flex; align-items: center; overflow: hidden;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 60px 60px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 12px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px, 6vw, 76px); font-weight: 300; line-height: 1.0; margin-bottom: 16px; }
+    .hero-title em { font-style: italic; color: var(--gold-light); }
+    .hero-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 520px; margin-bottom: 24px; }
+    .hero-stat-strip { display: inline-flex; gap: 0; border: 1px solid rgba(201,169,110,0.2); border-radius: 8px; overflow: hidden; }
+    .hero-stat { padding: 10px 20px; font-size: 12px; font-weight: 500; color: var(--gold-light); border-right: 1px solid rgba(201,169,110,0.15); }
+    .hero-stat:last-child { border-right: none; }
+    .hero-deco { position: absolute; right: 80px; top: 50%; transform: translateY(-50%); font-size: 120px; opacity: 0.05; pointer-events: none; }
+
+    /* ── TRIP HEADER BAR ── */
+    .trip-header-bar {
+      display: flex; align-items: center;
+      background: var(--ocean-mid);
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 16px 60px;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    .trip-header-stat {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500; color: var(--gold-light);
+      padding-right: 24px;
+      margin-right: 24px;
+      border-right: 1px solid rgba(201,169,110,0.18);
+    }
+    .trip-header-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+
+    /* ── TRIP OVERVIEW ── */
+    .overview-strip { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--ocean-mid); border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .overview-stat { padding: 24px; border-right: 1px solid rgba(201,169,110,0.08); }
+    .overview-stat:last-child { border-right: none; }
+    .overview-icon { font-size: 20px; margin-bottom: 8px; }
+    .overview-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--white-faint); margin-bottom: 4px; }
+    .overview-val { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; color: var(--gold-light); margin-bottom: 2px; }
+    .overview-note { font-size: 11px; color: var(--white-faint); }
+
+    /* ── SECTION HEADER ── */
+    .section-header { padding: 52px 60px 32px; }
+    .section-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 10px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 400; line-height: 1.2; }
+
+    /* ── DAY CARDS ── */
+    .days-wrap { padding: 0 60px 60px; display: flex; flex-direction: column; gap: 3px; }
+
+    .day-card {
+      background: var(--ocean-mid); border: 1px solid rgba(201,169,110,0.1);
+      opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .day-card.visible { opacity: 1; transform: translateY(0); }
+
+    .day-card-header { padding: 32px 40px 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; border-bottom: 1px solid rgba(201,169,110,0.08); }
+    .day-card-header-left { display: flex; align-items: flex-start; gap: 24px; }
+    .day-badge { width: 56px; height: 56px; border-radius: 50%; background: var(--ocean-dark); border: 1px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+    .day-badge-num { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
+    .day-badge-day { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; line-height: 1; }
+    .day-theme { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+    .day-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; line-height: 1.1; }
+
+    /* Save Day button */
+    .save-day-btn {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .save-day-btn:hover { background: rgba(201,169,110,0.08); border-color: var(--gold); color: var(--gold-light); }
+
+    .day-card-body { display: grid; grid-template-columns: 1fr 320px; }
+    .day-timeline { padding: 32px 40px; border-right: 1px solid rgba(201,169,110,0.08); }
+
+    /* Timeline left border */
+    .timeline-track { position: relative; padding-left: 16px; border-left: 2px solid rgba(201,169,110,0.25); }
+
+    /* Timeline row */
+    .timeline-item { display: grid; grid-template-columns: 80px 16px 1fr; gap: 0 12px; padding-bottom: 28px; position: relative; align-items: start; }
+    .timeline-item:not(:last-child)::after { content: ''; position: absolute; left: 96px; top: 36px; bottom: 0; width: 1px; background: rgba(201,169,110,0.18); }
+
+    .timeline-time { text-align: right; padding-top: 2px; }
+    .timeline-time-val { font-family: 'Courier New', monospace; font-size: 12px; font-weight: 700; color: var(--gold); display: block; }
+    .timeline-time-am { font-size: 9px; color: var(--white-faint); display: block; }
+
+    .timeline-dot-col { display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
+    .timeline-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid; flex-shrink: 0; background: var(--ocean-dark); }
+
+    .timeline-content { flex: 1; }
+    .timeline-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .timeline-stop { font-size: 14px; font-weight: 600; color: var(--white); }
+    .timeline-indicators { display: flex; align-items: center; gap: 5px; }
+
+    /* Indicator dots with tooltip */
+    .indicator-dot {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; color: var(--white-faint);
+      position: relative; cursor: default;
+    }
+    .indicator-dot span.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+    .dot-green { background: #4caf50; }
+    .dot-amber { background: #ff9800; }
+    .dot-red { background: #f44336; }
+
+    /* Tooltip */
+    .indicator-dot .tip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,36,48,0.97);
+      border: 1px solid rgba(201,169,110,0.3);
+      color: var(--white);
+      font-size: 10px;
+      white-space: nowrap;
+      padding: 4px 8px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 50;
+    }
+    .indicator-dot:hover .tip { display: block; }
+
+    .location-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.2); font-size: 10px; color: var(--gold-light); letter-spacing: 0.3px; }
+    .timeline-detail { font-size: 12px; color: var(--white-dim); line-height: 1.6; margin-top: 4px; font-style: italic; }
+    .timeline-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--gold); text-decoration: none; margin-top: 6px; transition: color 0.2s; font-style: normal; }
+    .timeline-link:hover { color: var(--gold-light); }
+
+    .day-alt { padding: 32px 28px; background: rgba(15,36,48,0.5); }
+    .day-alt-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--white-faint); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .day-alt-title { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; margin-bottom: 12px; }
+    .day-alt-text { font-size: 12px; color: var(--white-dim); line-height: 1.7; }
+
+    /* Day 1 — gold */
+    .day-card-1 .day-badge { border-color: rgba(201,169,110,0.4); }
+    .day-card-1 .day-badge-num { color: var(--gold); }
+    .day-card-1 .day-badge-day { color: var(--gold-light); }
+    .day-card-1 .day-theme { color: var(--gold); }
+    .day-card-1 .timeline-dot { border-color: var(--gold); }
+    .day-card-1 .day-alt { border-left: 2px solid var(--gold); }
+    .day-card-1 .day-alt-title { color: var(--gold-light); }
+
+    /* Day 2 — blue */
+    .day-card-2 .day-badge { border-color: rgba(58,143,192,0.4); }
+    .day-card-2 .day-badge-num { color: var(--blue); }
+    .day-card-2 .day-badge-day { color: var(--blue-light); }
+    .day-card-2 .day-theme { color: var(--blue); }
+    .day-card-2 .timeline-dot { border-color: var(--blue); }
+    .day-card-2 .timeline-time-val { color: var(--blue-light); }
+    .day-card-2 .timeline-link { color: var(--blue-light); }
+    .day-card-2 .day-alt { border-left: 2px solid var(--blue); }
+    .day-card-2 .day-alt-title { color: var(--blue-light); }
+
+    /* Day 3 — green */
+    .day-card-3 .day-badge { border-color: rgba(74,124,89,0.4); }
+    .day-card-3 .day-badge-num { color: var(--green); }
+    .day-card-3 .day-badge-day { color: var(--green-light); }
+    .day-card-3 .day-theme { color: var(--green); }
+    .day-card-3 .timeline-dot { border-color: var(--green); }
+    .day-card-3 .timeline-time-val { color: var(--green-light); }
+    .day-card-3 .timeline-link { color: var(--green-light); }
+    .day-card-3 .day-alt { border-left: 2px solid var(--green); }
+    .day-card-3 .day-alt-title { color: var(--green-light); }
+
+    /* ── ADAPTIVE TABS ── */
+    .adaptive-section { padding: 0 60px 60px; }
+    .adaptive-tabs { display: flex; gap: 6px; margin-bottom: 3px; flex-wrap: wrap; }
+    .adaptive-tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid rgba(201,169,110,0.3);
+      border-radius: 40px;
+      font-size: 13px; color: var(--gold); cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .adaptive-tab:hover { color: var(--gold-light); background: rgba(201,169,110,0.06); }
+    .adaptive-tab.active { background: var(--gold); border-color: var(--gold); color: var(--ocean-dark); font-weight: 600; }
+    .adaptive-panel { display: none; }
+    .adaptive-panel.active { display: block; }
+    .adaptive-panel-inner {
+      background: var(--ocean-mid); border: 1px solid rgba(201,169,110,0.1);
+      padding: 40px 40px 36px; margin-top: 6px;
+    }
+    .adaptive-panel-icon { font-size: 40px; text-align: center; display: block; margin-bottom: 16px; }
+    .adaptive-condition { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; text-align: center; }
+    .adaptive-rec { font-size: 14px; color: var(--white-dim); line-height: 1.8; max-width: 680px; margin: 0 auto; text-align: center; }
+
+    /* ── QUICK LINKS ── */
+    .quicklinks-section { padding: 0 60px 60px; }
+    .quicklinks-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+    .quicklink-card {
+      background: var(--ocean-mid); padding: 28px 24px; border: 1px solid rgba(201,169,110,0.08);
+      text-decoration: none; display: block;
+      opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .quicklink-card.visible { opacity: 1; transform: translateY(0); }
+    .quicklink-card:hover { border-color: rgba(201,169,110,0.25); background: rgba(201,169,110,0.04); }
+    .quicklink-icon { font-size: 28px; margin-bottom: 12px; }
+    .quicklink-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--white); margin-bottom: 6px; }
+    .quicklink-desc { font-size: 12px; color: var(--white-dim); line-height: 1.5; margin-bottom: 14px; }
+    .quicklink-open { font-size: 11px; color: var(--gold); letter-spacing: 1px; }
+
+    /* ── CTA ── */
+    /* ── UNLOCK MORE ── */
+    .unlock-section { padding: 64px 60px; border-top: 1px solid rgba(201,169,110,0.1); }
+    .unlock-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 10px; }
+    .unlock-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; line-height: 1.15; margin-bottom: 8px; }
+    .unlock-title em { font-style: italic; color: var(--gold); }
+    .unlock-sub { font-size: 14px; color: var(--white-dim); line-height: 1.7; max-width: 520px; margin-bottom: 48px; }
+    .unlock-group-label { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--white-faint); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .unlock-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+    .unlock-grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 0; }
+    .addon-card {
+      background: var(--ocean-mid);
+      border: 1px solid rgba(201,169,110,0.15);
+      border-radius: 10px;
+      padding: 24px 24px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .addon-card:hover { border-color: rgba(201,169,110,0.35); background: #1f3f52; }
+    .addon-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .addon-badge-free { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green-light); background: var(--green-dim); border: 1px solid rgba(74,124,89,0.3); padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .addon-badge-paid { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.2); padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .addon-title { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; color: var(--white); line-height: 1.2; }
+    .addon-benefit { font-size: 12px; color: var(--white-dim); line-height: 1.6; flex: 1; }
+    .addon-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .addon-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold); font-weight: 400; }
+    .addon-price-free { font-size: 11px; color: var(--green-light); letter-spacing: 0.5px; }
+    .addon-cta-free { display: inline-block; font-size: 11px; font-weight: 500; color: var(--gold-light); background: none; border: 1px solid rgba(201,169,110,0.25); border-radius: 4px; padding: 6px 14px; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; transition: all 0.2s; text-decoration: none; }
+    .addon-cta-free:hover { border-color: var(--gold); color: var(--white); background: rgba(201,169,110,0.07); }
+    .addon-cta-paid { font-size: 11px; font-weight: 500; color: var(--ocean-dark); background: var(--gold); border: none; border-radius: 4px; padding: 6px 14px; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; transition: all 0.2s; }
+    .addon-cta-paid:hover { background: var(--gold-light); }
+
+    .cta-section { padding: 64px 60px; background: linear-gradient(135deg, rgba(201,169,110,0.06), transparent); border-top: 1px solid rgba(201,169,110,0.12); text-align: center; }
+    .cta-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; margin-bottom: 12px; }
+    .cta-sub { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 520px; margin: 0 auto 28px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; background: var(--gold); color: var(--ocean-dark); font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 6px; transition: all 0.2s; letter-spacing: 0.3px; }
+    .cta-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: rgba(15,36,48,0.95);
+      border: 1px solid var(--gold);
+      color: var(--white); padding: 12px 24px; border-radius: 6px;
+      font-size: 13px; z-index: 9999;
+      opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--ocean-dark); border-top: 1px solid rgba(201,169,110,0.15); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .bottom-nav-inner { display: flex; justify-content: space-around; }
+    .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 12px; cursor: pointer; color: var(--white-dim); font-size: 10px; text-decoration: none; }
+    .bottom-nav-item.active { color: var(--gold); }
+    .bottom-nav-item .nav-icon { font-size: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding-bottom: 70px; }
+      .bottom-nav { display: block; }
+      .hero-content { padding: 32px 24px; }
+      .hero-title { font-size: clamp(36px, 9vw, 56px); }
+      .hero-stat-strip { flex-wrap: wrap; }
+      .trip-header-bar { padding: 14px 24px; gap: 8px; }
+      .trip-header-stat { font-size: 12px; padding-right: 16px; margin-right: 16px; }
+      .overview-strip { grid-template-columns: repeat(2, 1fr); }
+      .section-header { padding: 36px 24px 24px; }
+      .days-wrap { padding: 0 24px 40px; }
+      .day-card-header { padding: 24px 24px 20px; flex-direction: column; gap: 14px; }
+      .day-card-header-left { flex-direction: row; }
+      .day-card-body { grid-template-columns: 1fr; }
+      .day-timeline { padding: 24px; border-right: none; border-bottom: 1px solid rgba(201,169,110,0.08); }
+      .day-alt { padding: 24px; }
+      .adaptive-section { padding: 0 24px 40px; }
+      .adaptive-tabs { gap: 6px; }
+      .adaptive-tab { font-size: 12px; padding: 8px 14px; }
+      .adaptive-panel-inner { padding: 28px 24px; }
+      .quicklinks-section { padding: 0 24px 40px; }
+      .quicklinks-grid { grid-template-columns: repeat(2, 1fr); }
+      .cta-section { padding: 48px 24px; }
+      .unlock-section { padding: 48px 24px; }
+      .unlock-grid { grid-template-columns: 1fr; }
+      .unlock-grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .quicklinks-grid { grid-template-columns: 1fr; }
+      .overview-strip { grid-template-columns: 1fr 1fr; }
+      .trip-header-stat { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="globe">🌍</div>
+    <div class="brand">Planet Curated</div>
+    <div class="sub">Cape Town Guide</div>
+  </div>
+  <div class="sidebar-section">Dashboard</div>
+  <a href="guide.html" class="sidebar-item"><span class="icon">🏠</span> Home</a>
+  <a href="personalized-itinerary.html" class="sidebar-item active"><span class="icon">✈️</span> My Itinerary</a>
+  <a href="map.html" class="sidebar-item"><span class="icon">🗺️</span> Interactive Map</a>
+  <div class="sidebar-section">Discover</div>
+  <a href="explore.html" class="sidebar-item"><span class="icon">⭐</span> Iconic Experiences</a>
+  <a href="secrets.html" class="sidebar-item"><span class="icon">💎</span> Hidden Gems</a>
+  <a href="#" class="sidebar-item"><span class="icon">🏘️</span> Neighbourhoods</a>
+  <div class="sidebar-section">Eat &amp; Drink</div>
+  <a href="#" class="sidebar-item"><span class="icon">🍽️</span> Restaurants &amp; Food</a>
+  <a href="#" class="sidebar-item"><span class="icon">🍷</span> Wine &amp; Winelands</a>
+  <div class="sidebar-section">Outdoors</div>
+  <a href="#" class="sidebar-item"><span class="icon">🏖️</span> Beaches</a>
+  <a href="#" class="sidebar-item"><span class="icon">🥾</span> Hikes &amp; Outdoors</a>
+  <a href="road-trip.html" class="sidebar-item"><span class="icon">🚗</span> Day Trips</a>
+  <div class="sidebar-section">Plan Your Trip</div>
+  <a href="safety-guide.html" class="sidebar-item"><span class="icon">🛡️</span> Safety Guide</a>
+  <a href="#" class="sidebar-item"><span class="icon">ℹ️</span> Practical Info</a>
+  <a href="hotels.html" class="sidebar-item"><span class="icon">🏨</span> Where to Stay</a>
+  <a href="my-trip.html" class="sidebar-item"><span class="icon">📖</span> My Trip</a>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-deco">✈️</div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Planet Curated · Your Trip</div>
+      <h1 class="hero-title">Your Cape Town<br><em>Itinerary</em></h1>
+      <p class="hero-sub">A curated 3-day plan built around how you travel — with alternatives for every condition.</p>
+      <div class="hero-stat-strip">
+        <div class="hero-stat">3 Days</div>
+        <div class="hero-stat">15 Stops</div>
+        <div class="hero-stat">Adaptive to weather &amp; mood</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRIP HEADER BAR -->
+  <div class="trip-header-bar">
+    <div class="trip-header-stat">🗓️ 3 Days</div>
+    <div class="trip-header-stat">📍 15 Stops</div>
+    <div class="trip-header-stat">💶 €80–200/day</div>
+    <div class="trip-header-stat">🚗 Car recommended Day 2+</div>
+  </div>
+
+  <!-- TRIP OVERVIEW -->
+  <div class="overview-strip">
+    <div class="overview-stat">
+      <div class="overview-icon">✈️</div>
+      <div class="overview-label">Arrival</div>
+      <div class="overview-val">Cape Town International</div>
+      <div class="overview-note">35 min to city</div>
+    </div>
+    <div class="overview-stat">
+      <div class="overview-icon">🌤️</div>
+      <div class="overview-label">Best Season</div>
+      <div class="overview-val">Oct–Apr</div>
+      <div class="overview-note">Long summer days</div>
+    </div>
+    <div class="overview-stat">
+      <div class="overview-icon">💶</div>
+      <div class="overview-label">Budget Guide</div>
+      <div class="overview-val">€80–200/day</div>
+      <div class="overview-note">Mid to luxury</div>
+    </div>
+    <div class="overview-stat">
+      <div class="overview-icon">🚗</div>
+      <div class="overview-label">Transport</div>
+      <div class="overview-val">Car recommended</div>
+      <div class="overview-note">From Day 2</div>
+    </div>
+  </div>
+
+  <!-- DAY BY DAY -->
+  <div class="section-header">
+    <div class="section-label">The Plan</div>
+    <h2 class="section-title">Day-by-day itinerary</h2>
+  </div>
+
+  <div class="days-wrap">
+
+    <!-- DAY 1 -->
+    <div class="day-card day-card-1">
+      <div class="day-card-header">
+        <div class="day-card-header-left">
+          <div class="day-badge">
+            <div class="day-badge-num">Day</div>
+            <div class="day-badge-day">1</div>
+          </div>
+          <div class="day-header-text">
+            <div class="day-theme">The City Icons</div>
+            <div class="day-title">Table Mountain · Bo-Kaap · Bree Street</div>
+          </div>
+        </div>
+        <button class="save-day-btn" onclick="showToast('Day 1 saved to My Trip!')">Save Day →</button>
+      </div>
+      <div class="day-card-body">
+        <div class="day-timeline">
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">7:30</span>
+              <span class="timeline-time-am">am</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Table Mountain</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot" title="Energy: Moderate">
+                    <span class="dot dot-amber"></span>
+                    <span class="tip">⚡ Energy: Moderate</span>
+                  </span>
+                  <span class="indicator-dot" title="Crowds: Moderate">
+                    <span class="dot dot-amber"></span>
+                    <span class="tip">👥 Crowds: Moderate</span>
+                  </span>
+                </div>
+                <span class="location-badge">City Bowl</span>
+              </div>
+              <div class="timeline-detail">Beat the cable car queue. Arrive at the lower station by 8am. Check cloud cover the night before on yr.no. If cloudy: Lion's Head instead — better views when Table Mountain has its tablecloth.</div>
+              <a href="explore.html" class="timeline-link">→ See guide</a>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">11:00</span>
+              <span class="timeline-time-am">am</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Bo-Kaap</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-amber"></span>
+                    <span class="tip">👥 Crowds: Moderate</span>
+                  </span>
+                </div>
+                <span class="location-badge">Bo-Kaap</span>
+              </div>
+              <div class="timeline-detail">Walk from the cable car down to the city. Bo-Kaap is 20 minutes by Uber. Come for the pastel houses and the history — be there before noon before the tour groups arrive.</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">2:00</span>
+              <span class="timeline-time-am">pm</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">V&amp;A Waterfront</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-red"></span>
+                    <span class="tip">👥 Crowds: Busy</span>
+                  </span>
+                </div>
+                <span class="location-badge">Waterfront</span>
+              </div>
+              <div class="timeline-detail">Not for the restaurants (overpriced) but for the seals, the views, and the Zeitz MOCAA if you're into contemporary African art.</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">7:00</span>
+              <span class="timeline-time-am">pm</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Bree Street Dinner</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-amber"></span>
+                    <span class="tip">👥 Crowds: Moderate</span>
+                  </span>
+                </div>
+                <span class="location-badge">Bree Street</span>
+              </div>
+              <div class="timeline-detail">Pick any restaurant on the strip. Farro, Haiku, or Bocca all excellent. Book ahead.</div>
+              <a href="#" class="timeline-link">→ See guide</a>
+            </div>
+          </div>
+
+        </div>
+        <div class="day-alt">
+          <div class="day-alt-label">🌬️ If conditions change</div>
+          <div class="day-alt-title">Windy or rainy day alternative</div>
+          <div class="day-alt-text">Skip Table Mountain (not safe). Do Zeitz MOCAA + Bree Street lunch + Constantia wine estate instead. This is actually a brilliant rainy day — arguably more interesting than the original plan.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-card day-card-2">
+      <div class="day-card-header">
+        <div class="day-card-header-left">
+          <div class="day-badge">
+            <div class="day-badge-num">Day</div>
+            <div class="day-badge-day">2</div>
+          </div>
+          <div class="day-header-text">
+            <div class="day-theme">The Peninsula</div>
+            <div class="day-title">Chapman's Peak · Cape Point · Penguins · Kalk Bay</div>
+          </div>
+        </div>
+        <button class="save-day-btn" onclick="showToast('Day 2 saved to My Trip!')">Save Day →</button>
+      </div>
+      <div class="day-card-body">
+        <div class="day-timeline">
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">7:30</span>
+              <span class="timeline-time-am">am</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Chapman's Peak Drive</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">👥 Crowds: Quiet</span>
+                  </span>
+                </div>
+                <span class="location-badge">Hout Bay</span>
+              </div>
+              <div class="timeline-detail">Leave by 7:30am. Drive the full pass — stop at every viewpoint. R52 toll, worth every cent. Morning light on the Atlantic is extraordinary.</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">9:30</span>
+              <span class="timeline-time-am">am</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Cape Point + Cape of Good Hope</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-red"></span>
+                    <span class="tip">⚡ Energy: Active</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-amber"></span>
+                    <span class="tip">👥 Crowds: Moderate</span>
+                  </span>
+                </div>
+                <span class="location-badge">Cape Peninsula</span>
+              </div>
+              <div class="timeline-detail">Walk to the old lighthouse. Two oceans meet here. Allow 2 hours. Combine with the funicular up to the lighthouse.</div>
+              <a href="explore.html" class="timeline-link">→ See guide</a>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">1:30</span>
+              <span class="timeline-time-am">pm</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Boulders Beach Penguins</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-amber"></span>
+                    <span class="tip">👥 Crowds: Moderate</span>
+                  </span>
+                </div>
+                <span class="location-badge">Simonstown</span>
+              </div>
+              <div class="timeline-detail">African penguins on a pristine beach. R220 entry. Genuinely magical — the penguins come right up to you. Allow 90 minutes.</div>
+              <a href="#" class="timeline-link">→ See guide</a>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">4:00</span>
+              <span class="timeline-time-am">pm</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Kalk Bay Harbour</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">👥 Crowds: Quiet</span>
+                  </span>
+                </div>
+                <span class="location-badge">Kalk Bay</span>
+              </div>
+              <div class="timeline-detail">Fish &amp; chips from the boats. Antique shops on the main street. One of the most authentic parts of Cape Town.</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="day-alt">
+          <div class="day-alt-label">🔄 If conditions change</div>
+          <div class="day-alt-title">Alternative Peninsula routes</div>
+          <div class="day-alt-text">If Chapman's Peak is closed (check SA National Parks): drive via Hout Bay — still beautiful. If Boulders is too crowded (peak season Dec/Jan): go to Simonstown and walk the boardwalk instead.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="day-card day-card-3">
+      <div class="day-card-header">
+        <div class="day-card-header-left">
+          <div class="day-badge">
+            <div class="day-badge-num">Day</div>
+            <div class="day-badge-day">3</div>
+          </div>
+          <div class="day-header-text">
+            <div class="day-theme">Wine &amp; Culture</div>
+            <div class="day-title">Markets · Winelands · Signal Hill · Farewell Dinner</div>
+          </div>
+        </div>
+        <button class="save-day-btn" onclick="showToast('Day 3 saved to My Trip!')">Save Day →</button>
+      </div>
+      <div class="day-card-body">
+        <div class="day-timeline">
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">9:00</span>
+              <span class="timeline-time-am">am</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Neighbourgoods Market <span style="font-size:10px;color:var(--white-faint);font-weight:400;">(Sat only)</span></span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-red"></span>
+                    <span class="tip">👥 Crowds: Busy</span>
+                  </span>
+                </div>
+                <span class="location-badge">Woodstock</span>
+              </div>
+              <div class="timeline-detail">The Old Biscuit Mill in Woodstock. Cape Town's best market. Food, coffee, design. Get there early. If not Saturday: Oranjezicht City Farm Market at Granger Bay instead.</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">11:00</span>
+              <span class="timeline-time-am">am</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Durbanville Hills / Diemersdal</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">👥 Crowds: Quiet</span>
+                  </span>
+                </div>
+                <span class="location-badge">Durbanville</span>
+              </div>
+              <div class="timeline-detail">The insider wine estate. 20 minutes from the city. Smaller, no crowds, you can meet the winemaker. Order the Sauvignon Blanc.</div>
+              <a href="#" class="timeline-link">→ See guide</a>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">5:30</span>
+              <span class="timeline-time-am">pm</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Signal Hill Sundowner</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">👥 Crowds: Quiet</span>
+                  </span>
+                </div>
+                <span class="location-badge">Signal Hill</span>
+              </div>
+              <div class="timeline-detail">Drive up Signal Hill 30 minutes before sunset. Park at the lookout. Bring a bottle of the wine you bought this morning. Watch the city go golden. Free.</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-time">
+              <span class="timeline-time-val">7:30</span>
+              <span class="timeline-time-am">pm</span>
+            </div>
+            <div class="timeline-dot-col">
+              <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-meta">
+                <span class="timeline-stop">Farewell Dinner</span>
+                <div class="timeline-indicators">
+                  <span class="indicator-dot">
+                    <span class="dot dot-green"></span>
+                    <span class="tip">⚡ Energy: Easy</span>
+                  </span>
+                  <span class="indicator-dot">
+                    <span class="dot dot-amber"></span>
+                    <span class="tip">👥 Crowds: Moderate</span>
+                  </span>
+                </div>
+                <span class="location-badge">City Centre</span>
+              </div>
+              <div class="timeline-detail">The Test Kitchen (book 6 weeks ahead) for a true occasion. Or Pot Luck Club for excellent food with city views. Or back to Bree Street if you found something you loved.</div>
+              <a href="#" class="timeline-link">→ See guide</a>
+            </div>
+          </div>
+
+        </div>
+        <div class="day-alt">
+          <div class="day-alt-label">🌧️ If it rains</div>
+          <div class="day-alt-title">Rainy day wine alternative</div>
+          <div class="day-alt-text">Constantia wine estates are beautiful in rain. Groot Constantia + Buitenverwachting in the same afternoon. Take the Peninsula road via Hout Bay.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADAPTIVE WEATHER TABS -->
+  <div class="section-header">
+    <div class="section-label">The Backup Plans</div>
+    <h2 class="section-title">When things change — and they will.</h2>
+  </div>
+
+  <div class="adaptive-section">
+    <div style="font-size:14px;color:var(--white-dim);line-height:1.7;margin-bottom:28px;">Cape Town weather is theatrical. Here's how to adapt without losing a day.</div>
+
+    <div class="adaptive-tabs">
+      <button class="adaptive-tab active" onclick="switchTab(this,'perfect')">☀️ Perfect Day</button>
+      <button class="adaptive-tab" onclick="switchTab(this,'windy')">🌬️ Windy</button>
+      <button class="adaptive-tab" onclick="switchTab(this,'rain')">🌧️ Rain</button>
+      <button class="adaptive-tab" onclick="switchTab(this,'peak')">👥 Peak Season</button>
+    </div>
+
+    <div id="tab-perfect" class="adaptive-panel active">
+      <div class="adaptive-panel-inner">
+        <span class="adaptive-panel-icon">☀️</span>
+        <div class="adaptive-condition">Perfect Day</div>
+        <p class="adaptive-rec">Drop everything and go to Beta Beach (Bakoven) or Llandudno. Bring lunch, water, and sunscreen. These are Cape Town's most beautiful beaches — no crowds, no vendors, just ocean. Come back to the itinerary tomorrow.</p>
+      </div>
+    </div>
+
+    <div id="tab-windy" class="adaptive-panel">
+      <div class="adaptive-panel-inner">
+        <span class="adaptive-panel-icon">🌬️</span>
+        <div class="adaptive-condition">Strong SE Wind (Cape Doctor)</div>
+        <p class="adaptive-rec">Skip beaches and the mountain. Perfect day for: Constantia wine estates (sheltered valley), Zeitz MOCAA + gallery circuit, Neighbourgoods Market if Saturday, or drive to Stellenbosch. The Cape Doctor blows cold and hard — lean into the inland day.</p>
+      </div>
+    </div>
+
+    <div id="tab-rain" class="adaptive-panel">
+      <div class="adaptive-panel-inner">
+        <span class="adaptive-panel-icon">🌧️</span>
+        <div class="adaptive-condition">Rain</div>
+        <p class="adaptive-rec">Cape Town in rain is still great. Best options: Zeitz MOCAA, Norval Foundation (sculpture garden + café), wine estates in Constantia valley, Kalk Bay antique shops + coffee. Rain in Constantia is actually beautiful — bring a jacket and embrace it.</p>
+      </div>
+    </div>
+
+    <div id="tab-peak" class="adaptive-panel">
+      <div class="adaptive-panel-inner">
+        <span class="adaptive-panel-icon">👥</span>
+        <div class="adaptive-condition">Peak Season (Dec–Jan)</div>
+        <p class="adaptive-rec">Move Table Mountain to a weekday at 7am. Skip Clifton 4th — go to Beta Beach or Llandudno. Avoid Neighbourgoods Market — go to Oranjezicht City Farm Market instead. Book all restaurants minimum 2 days ahead. The city is full but the peninsula still has quiet corners.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="section-header">
+    <div class="section-label">The Guide</div>
+    <h2 class="section-title">Deep dives into every stop</h2>
+  </div>
+
+  <div class="quicklinks-section">
+    <div class="quicklinks-grid">
+
+      <a href="#" class="quicklink-card">
+        <div class="quicklink-icon">🏖️</div>
+        <div class="quicklink-title">Beaches</div>
+        <div class="quicklink-desc">Which beach for which day — ranked and rated with Dirk's verdict on every one.</div>
+        <div class="quicklink-open">Open →</div>
+      </a>
+
+      <a href="#" class="quicklink-card">
+        <div class="quicklink-icon">🍽️</div>
+        <div class="quicklink-title">Restaurants &amp; Food</div>
+        <div class="quicklink-desc">Bree Street, the waterfront trap, where locals actually eat. Full curated list.</div>
+        <div class="quicklink-open">Open →</div>
+      </a>
+
+      <a href="#" class="quicklink-card">
+        <div class="quicklink-icon">🍷</div>
+        <div class="quicklink-title">Wine &amp; Winelands</div>
+        <div class="quicklink-desc">Stellenbosch vs Constantia vs Durbanville — the insider breakdown on every region.</div>
+        <div class="quicklink-open">Open →</div>
+      </a>
+
+      <a href="explore.html" class="quicklink-card">
+        <div class="quicklink-icon">⭐</div>
+        <div class="quicklink-title">Iconic Experiences</div>
+        <div class="quicklink-desc">Table Mountain, Cape Point, the Peninsula. Everything you must do, and how to do it right.</div>
+        <div class="quicklink-open">Open →</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- UNLOCK MORE -->
+  <div class="unlock-section">
+    <div class="unlock-label">Enhance your experience</div>
+    <h2 class="unlock-title">Unlock more <em>for your trip</em></h2>
+    <p class="unlock-sub">A few extras that go deeper. Take what's useful, skip what isn't.</p>
+
+    <!-- Free extras -->
+    <div class="unlock-group-label">Free resources</div>
+    <div class="unlock-grid">
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">Safety & Preparation Guide</div>
+          <span class="addon-badge-free">Free</span>
+        </div>
+        <p class="addon-benefit">Everything you need to know before you land — neighbourhoods, petty crime realities, emergency numbers, and what travellers consistently get wrong.</p>
+        <div class="addon-footer">
+          <span class="addon-price-free">Included</span>
+          <a href="safety-guide.html" class="addon-cta-free">Unlock Free →</a>
+        </div>
+      </div>
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">First-Timer Cape Town Checklist</div>
+          <span class="addon-badge-free">Free</span>
+        </div>
+        <p class="addon-benefit">A concise checklist of what to book in advance, what to pack, and the five things most first-timers wish they'd known before they arrived.</p>
+        <div class="addon-footer">
+          <span class="addon-price-free">Included</span>
+          <a href="starthere.html" class="addon-cta-free">Unlock Free →</a>
+        </div>
+      </div>
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">Best Areas To Stay Guide</div>
+          <span class="addon-badge-free">Free</span>
+        </div>
+        <p class="addon-benefit">Sea Point vs. De Waterkant vs. the City Bowl — a clear breakdown of Cape Town's neighbourhoods so you stay in the right place for how you travel.</p>
+        <div class="addon-footer">
+          <span class="addon-price-free">Included</span>
+          <a href="stay.html" class="addon-cta-free">Unlock Free →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Paid add-ons -->
+    <div class="unlock-group-label">Premium add-ons</div>
+    <div class="unlock-grid-2">
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">Garden Route Add-On</div>
+          <span class="addon-badge-paid">Add-On</span>
+        </div>
+        <p class="addon-benefit">A curated extension beyond Cape Town — from Hermanus to Knysna, with the stops worth making and the ones worth skipping.</p>
+        <div class="addon-footer">
+          <span class="addon-price">€29</span>
+          <button class="addon-cta-paid" onclick="showToast('Garden Route — coming soon')">Add to My Trip →</button>
+        </div>
+      </div>
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">Food & Wine Pack</div>
+          <span class="addon-badge-paid">Add-On</span>
+        </div>
+        <p class="addon-benefit">The restaurants worth booking, the wine estates worth the detour, and the local food experiences that don't appear on any travel blog.</p>
+        <div class="addon-footer">
+          <span class="addon-price">€19</span>
+          <button class="addon-cta-paid" onclick="showToast('Food & Wine Pack — coming soon')">Add to My Trip →</button>
+        </div>
+      </div>
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">Adventure & Hidden Gems Pack</div>
+          <span class="addon-badge-paid">Add-On</span>
+        </div>
+        <p class="addon-benefit">The hikes, surf spots, freediving sites, and off-the-map locations that most visitors never find — with honest difficulty ratings and logistics.</p>
+        <div class="addon-footer">
+          <span class="addon-price">€19</span>
+          <button class="addon-cta-paid" onclick="showToast('Adventure Pack — coming soon')">Add to My Trip →</button>
+        </div>
+      </div>
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">Family Pack</div>
+          <span class="addon-badge-paid">Add-On</span>
+        </div>
+        <p class="addon-benefit">Cape Town with kids, reordered. Age-appropriate activities, the beaches that are actually safe for children, and a day-by-day rhythm that works for families.</p>
+        <div class="addon-footer">
+          <span class="addon-price">€19</span>
+          <button class="addon-cta-paid" onclick="showToast('Family Pack — coming soon')">Add to My Trip →</button>
+        </div>
+      </div>
+
+      <div class="addon-card">
+        <div class="addon-card-top">
+          <div class="addon-title">Premium Human Review</div>
+          <span class="addon-badge-paid">Add-On</span>
+        </div>
+        <p class="addon-benefit">Dirk reviews your itinerary personally, flags anything that doesn't work for your trip, and sends back a refined version within 48 hours.</p>
+        <div class="addon-footer">
+          <span class="addon-price">€79</span>
+          <button class="addon-cta-paid" onclick="showToast('Human Review — coming soon')">Add to My Trip →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2 class="cta-title">Want a plan tailored to your exact trip?</h2>
+    <p class="cta-sub">Ask Caipy — enter your travel style, dates, and who you're with. It takes 2 minutes.</p>
+    <a href="../index.html#caipy" class="cta-btn">Build My Personal Plan →</a>
+  </div>
+
+</main>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="guide.html" class="bottom-nav-item"><span class="nav-icon">🏠</span>Home</a>
+    <a href="map.html" class="bottom-nav-item"><span class="nav-icon">🗺️</span>Map</a>
+    <a href="explore.html" class="bottom-nav-item"><span class="nav-icon">⭐</span>Explore</a>
+    <a href="hotels.html" class="bottom-nav-item"><span class="nav-icon">🏨</span>Stay</a>
+    <a href="personalized-itinerary.html" class="bottom-nav-item active"><span class="nav-icon">✈️</span>My Trip</a>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script>
+  // Toast system
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // Adaptive weather tabs — pill style
+  function switchTab(btn, name) {
+    document.querySelectorAll('.adaptive-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.adaptive-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  // Scroll animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.day-card, .quicklink-card').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

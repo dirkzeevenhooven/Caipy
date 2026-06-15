@@ -294,24 +294,27 @@
   </a>
   <div class="nav-links">
     <a href="#ai-chat">Build My Trip</a>
-    <a href="#itinerary">The Guide</a>
-    <a href="#tips">Start Here</a>
+    <a href="#guide-preview">The Guide</a>
+    <a href="#guide-preview">Start Here</a>
     <a href="guide/about.html">About</a>
     <a href="guide/contact.html">Contact</a>
   </div>
-  <button onclick="openCaipy()" style="background:#c9a84c;color:#0d1b2a;padding:10px 20px;border-radius:4px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif">Meet Ubuntu →</button>
+<div style="display:flex;gap:12px;align-items:center">
+  <button onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})" style="display:flex;align-items:center;gap:9px;background:#c9a84c;color:#0d1b2a;padding:6px 18px 6px 6px;border-radius:100px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif"><img src="ubuntu-avatar.png" alt="Ubuntu" style="width:30px;height:30px;border-radius:50%;object-fit:cover;display:block">Talk to Ubuntu</button>
+  <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);padding:10px 18px;border-radius:100px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif">Unlock Full Guide — €49</button>
+</div>
   <button class="ham-btn" onclick="toggleMobileNav()">☰</button>
 </nav>
 
 <!-- HERO -->
 <section class="hero" style="height:0;overflow:hidden;padding:0;margin:0;">
   <div class="hero-content reveal">
-    <div class="hero-badge">✦ Cape Town Insider Guide 2026</div>
+    <div class="hero-badge">✦ The Cape Town Guide 2026</div>
     <h1>Your perfect Cape Town trip.<br><em>Ready in minutes.</em></h1>
     <p>AI-powered travel guidance built on 10+ years of deep Cape Town experience.</p>
     <div class="hero-btns">
-      <button class="btn-primary" onclick="openCaipy()">Talk to Ubuntu for Free</button>
-      <button class="btn-ghost" onclick="openCaipy()">Unlock Full Guide — €49</button>
+      <button class="btn-primary" onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})">Talk to Ubuntu for Free</button>
+      <button class="btn-ghost" onclick="document.getElementById('itinerary-modal').style.display='flex'">Unlock Full Guide — €49</button>
     </div>
   </div>
 </section>
@@ -321,14 +324,26 @@
 
 <!-- VIDEO SECTION — cinematic crossfade hero -->
 <section id="video-section" style="position:relative;width:100%;height:100vh;min-height:600px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0d1b2a;">
-  <video id="vid-a" muted playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;" src="https://videos.pexels.com/video-files/33646247/14298719_1920_1080_24fps.mp4"></video>
-  <video id="vid-b" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="https://videos.pexels.com/video-files/33646748/14298633_1920_1080_24fps.mp4"></video>
-  <video id="vid-c" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="https://videos.pexels.com/video-files/5664984/5664984-hd_1920_1080_25fps.mp4"></video>
-  <video id="vid-d" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="https://videos.pexels.com/video-files/17916042/17916042-hd_1920_1080_30fps.mp4"></video>
-  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,42,0.15) 0%,rgba(13,27,42,0.5) 100%);z-index:1;"></div>
+  <video id="vid-a" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/cape-town-farview.mp4"></video>
+  <video id="vid-b" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/lionshead-sunrise.mp4"></video>
+  <video id="vid-c" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/camps-bay-drone.mp4"></video>
+  <video id="vid-e" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/bouldersbeach.mp4"></video>
+  <video id="vid-f" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/muizenberg.mp4"></video>
+  <video id="vid-g" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/waterfront.mp4"></video>
+  <video id="vid-h" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/capetown-sunset.mp4"></video>
+  <video id="vid-j" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/capetown-drone.mp4"></video>
+  <video id="vid-k" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/hiddenbeach.mp4"></video>
+  <video id="vid-l" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/lionshead.mp4"></video>
+  <video id="vid-m" muted playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;" src="photos/ontherocks.mp4"></video>
+  <video id="vid-n" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/robben-island.mp4"></video>
+  <video id="vid-o" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/signalhill.mp4"></video>
+  <video id="vid-p" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/blouberg.mp4"></video>
+  <video id="vid-q" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1.5s;opacity:0;" src="photos/camps-bay-beach.mp4"></video>
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,42,0.05) 0%,rgba(13,27,42,0.28) 100%);z-index:1;"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:62vh;z-index:1;pointer-events:none;background:radial-gradient(ellipse 55% 60% at 50% 26vh,rgba(13,27,42,0.48) 0%,rgba(13,27,42,0.36) 38%,rgba(13,27,42,0.16) 62%,rgba(13,27,42,0) 80%);"></div>
   <script>
   (function(){
-    const vids = ['vid-a','vid-b','vid-c','vid-d'].map(id => document.getElementById(id));
+    const vids = ['vid-m','vid-h','vid-o','vid-b','vid-l','vid-j','vid-c'].map(id => document.getElementById(id));
     let cur = 0;
     function next() {
       const prev = cur;
@@ -339,25 +354,11 @@
       vids[prev].style.opacity = '0';
       setTimeout(() => { vids[prev].pause(); }, 1500);
     }
-    vids[0].addEventListener('ended', next);
-    vids[1].addEventListener('ended', next);
-    vids[2].addEventListener('ended', next);
-    vids[3].addEventListener('ended', next);
+    setInterval(next, 4000);
   })();
   </script>
-  <div style="position:relative;z-index:2;text-align:left;padding:0 5vw;max-width:700px;">
-    <span style="display:inline-block;font-family:&#39;Jost&#39;,sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#D4A55A;border:1px solid rgba(212,165,90,0.6);padding:0.4rem 1.1rem;border-radius:100px;margin-bottom:1.6rem;backdrop-filter:blur(8px);background:rgba(13,27,42,0.5);">Cape Town, Curated.</span>
-    <h2 style="font-family:&#39;Cormorant Garamond&#39;,Georgia,serif;font-size:clamp(2.4rem,6vw,4.8rem);font-weight:400;color:#fff;line-height:1.05;margin-bottom:1rem;">Not a guide.<br><em style="color:#D4A55A;font-style:italic;">A local.</em><br>In your pocket.</h2>
-    <p style="font-family:&#39;Jost&#39;,sans-serif;font-size:1rem;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.75;max-width:480px;">Your perfect Cape Town trip — personalised, planned, and ready in minutes.</p>
-    <p style="font-family:&#39;Jost&#39;,sans-serif;font-size:0.85rem;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.7;max-width:480px;margin-top:0.75rem;">Start with a free Ubuntu call. Unlock your full Cape Town Guide + personalised itinerary for €49.</p>
-    <div class="hero-cta-row" style="display:flex;gap:14px;justify-content:flex-start;flex-wrap:wrap;margin-top:2rem;">
-      <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 32px;border-radius:4px;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;" onmouseout="this.style.transform=&#39;&#39;">
-        Talk to Ubuntu for Free
-      </button>
-      <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35);font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;padding:16px 32px;border-radius:4px;cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor=&#39;rgba(255,255,255,.7)&#39;" onmouseout="this.style.borderColor=&#39;rgba(255,255,255,.35)&#39;">
-        Unlock Full Guide — €49
-      </button>
-    </div>
+    <div style="position:absolute;top:calc(18vh + 15px);left:0;right:0;z-index:2;text-align:center;">
+    <img src="photos/cape-town-guide-logo.png" alt="The Cape Town Guide — by Planet Curated" style="width:min(735px,88vw);height:auto;display:inline-block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.60)) drop-shadow(0 7px 30px rgba(0,0,0,.55));">
   </div>
 </section>
 
@@ -365,7 +366,6 @@
 
 <!-- AI CHAT SECTION -->
 <section class="ai-section" id="ai-chat">
-  <p style="font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(212,165,90,0.6);text-align:center;margin-bottom:-60px;padding-top:0;">Example: how Ubuntu adapts your day</p>
   <div class="ubuntu-meet">
 
     <!-- Ubuntu video -->
@@ -397,11 +397,12 @@
 
     <!-- Content -->
     <div>
-      <h2 class="section-title" style="text-align:left">Meet Ubuntu</h2>
-      <div class="section-label" style="color:rgba(212,165,90,.8);text-align:left;margin-bottom:20px">Your Personal Cape Town Travel Guide</div>
-      <p class="section-sub" style="text-align:left;max-width:500px">Ask Ubuntu anything about Cape Town — or let him create a personalised, tailor-made itinerary built around your dates, budget, travel style and dream trip.</p>
+      <div class="section-label" style="color:rgba(212,165,90,.8);text-align:left;margin-bottom:12px">Your Personal Cape Town Travel Butler</div>
+      <h2 class="section-title" style="text-align:left;margin-bottom:18px">Meet Ubuntu.</h2>
+      <p class="section-sub" style="text-align:left;max-width:500px">The Guide gives you the best local Cape Town intelligence. Ubuntu helps you apply it to your own trip — where to stay, what to skip, when to go, and how to move around safely. Human-filtered local knowledge, not generic AI.<br><br>Want Ubuntu to turn the Guide into your full day-by-day plan? Upgrade to the Personalised Cape Town Plan.</p>
 
       <!-- Morning briefing card -->
+      <p style="font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(212,165,90,0.6);text-align:left;margin:32px 0 14px;">A glimpse of Ubuntu at work</p>
       <div class="ubuntu-msg-card">
         <div class="ubuntu-msg-header">
           <div class="ubuntu-msg-av"><img src="ubuntu-avatar.png" alt="Ubuntu"></div>
@@ -413,14 +414,14 @@
         </div>
         <div class="ubuntu-msg-body">
           <p>Good morning, howzit?</p>
-          <p><strong>Cape Town is showing off again today.</strong> Clear skies, low wind, and Table Mountain is perfect this morning. I'd get to the cable car before 09:00 to beat the queues.</p>
-          <p>The south-easter picks up after 14:00, so I've adjusted your day: mountain first, beach later.</p>
-          <p>Your updated itinerary is ready.</p>
+          <p><strong>Cape Town's showing off today</strong> — clear skies, low wind. Table Mountain is perfect right now; I'd be at the cable car before 09:00 to beat the queues.</p>
+          <p>The south-easter kicks in after 14:00, so do the mountain first and save the beach for late afternoon.</p>
+          <p>Want me to plan every day like this? That's the Personalised Plan.</p>
         </div>
       </div>
 
       <button onclick="document.getElementById('itinerary').scrollIntoView({behavior:'smooth'})" style="background:transparent;color:#D4A85A;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 28px;border-radius:4px;border:1.5px solid rgba(212,165,90,.5);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='rgba(212,165,90,.9)';this.style.color='#e8c87a'" onmouseout="this.style.borderColor='rgba(212,165,90,.5)';this.style.color='#D4A85A'">
-        See Sample Itinerary →
+        Preview the Personalised Plan →
       </button>
     </div>
 
@@ -428,58 +429,126 @@
 </section>
 
 <!-- WHAT YOU GET -->
-<section style="background:var(--warm);padding:80px 5vw;">
+<section id="guide-preview" style="background:var(--warm);padding:80px 5vw;">
   <div style="max-width:960px;margin:0 auto;">
     <div class="section-label" style="text-align:center;">What you get</div>
-    <h2 class="section-title" style="text-align:center;">Everything for <em style="font-style:italic;color:var(--gold);">€49</em></h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:40px;">
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="font-size:20px;margin-bottom:10px;">🗓</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Personalised day-by-day itinerary</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Built around your exact dates, travel style, and interests.</p>
+    <h2 class="section-title" style="text-align:center;">The Cape Town Guide — <em style="font-style:italic;color:var(--gold);">€49</em></h2>
+    <p style="text-align:center;font-size:14px;color:var(--muted);max-width:580px;margin:14px auto 0;line-height:1.7;">
+      <strong style="color:var(--navy);">Step 1 — Unlock the Guide for €49.</strong> Get access to the curated Cape Town guide, neighbourhood advice, safety tips, local recommendations, maps and Ubuntu inside the Guide.<br><br>
+      <strong style="color:var(--navy);">Step 2 — Want it planned for you?</strong> Add the optional Personalised Plan and let Ubuntu turn the Guide into your day-by-day itinerary.
+    </p>
+    <div class="itinerary-grid" style="margin-top:40px;">
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/camps-bay.webp" alt="Cape Town neighbourhoods">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">Where to stay</div>
+          <div class="itin-day-title">By neighbourhood</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Which area fits your trip — honest pros, cons &amp; safety notes.</p>
+        </div>
       </div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="font-size:20px;margin-bottom:10px;">🗺</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Interactive Cape Town guide</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Day cards, photos, local tips, and booking links in one place.</p>
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/bree-street.jpg" alt="Cape Town restaurants">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">Eat &amp; drink</div>
+          <div class="itin-day-title">Local favourites</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Where locals actually eat — beyond the tourist traps.</p>
+        </div>
       </div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="font-size:20px;margin-bottom:10px;">🧠</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Live local intelligence</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Weather, crowds, and timing — always current, never outdated.</p>
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/llandudno-beach.jpg" alt="Cape Town beaches">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">Beaches</div>
+          <div class="itin-day-title">Beaches &amp; coast</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Clifton, Llandudno, Boulders — matched to wind and mood.</p>
+        </div>
       </div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="font-size:20px;margin-bottom:10px;">🛡</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Safety & transport guidance</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Honest advice on where to go, what to avoid, how to get around.</p>
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/winelands.webp" alt="Cape Winelands">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">Wine</div>
+          <div class="itin-day-title">Wine &amp; winelands</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">The estates worth your afternoon — minus the crowds.</p>
+        </div>
       </div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="font-size:20px;margin-bottom:10px;">📍</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Google Maps-ready planning</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Every recommendation is location-aware and easy to navigate to.</p>
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/signal-hill.webp" alt="Cape Town hikes and outdoors">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">Outdoors</div>
+          <div class="itin-day-title">Hikes &amp; the outdoors</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">From Lion's Head to hidden contour paths — timed right.</p>
+        </div>
       </div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="font-size:20px;margin-bottom:10px;">💬</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Ubuntu access</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Ask follow-up questions anytime. Ubuntu knows your trip.</p>
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/chapmans-peak.jpeg" alt="Cape Town getting around">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">Safety</div>
+          <div class="itin-day-title">Safety &amp; getting around</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Where to go, what to avoid, how to move with confidence.</p>
+        </div>
       </div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="font-size:20px;margin-bottom:10px;">🏔</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:6px;">Dirk's insider layer</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6;">10+ years of deep Cape Town experience — not scraped from the internet.</p>
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/table-mountain.jpeg" alt="Cape Town interactive map">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">The map</div>
+          <div class="itin-day-title">Interactive map</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Every recommendation pinned and ready for Google Maps.</p>
+        </div>
+      </div>
+      <div class="itinerary-card reveal" onclick="showPreviewModal()" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+        <img class="itin-photo" src="photos/dirk-lions-head.jpeg" alt="Ubuntu, your Cape Town local">
+        <div class="itin-overlay"></div>
+        <div class="itin-day" style="padding-bottom:24px;">
+          <div class="itin-day-num">Ubuntu</div>
+          <div class="itin-day-title">Ubuntu inside the Guide</div>
+          <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Ask anything, anytime. Ubuntu knows Cape Town cold.</p>
+        </div>
       </div>
     </div>
     <div style="text-align:center;margin-top:40px;">
       <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 36px;border-radius:4px;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">Unlock Full Guide — €49</button>
+      <div style="margin-top:16px;">
+        <button onclick="showPreviewModal()" style="background:none;border:none;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--navy);cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;">See what's inside →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT LADDER -->
+<section style="background:var(--white);padding:80px 5vw;">
+  <div style="max-width:960px;margin:0 auto;">
+    <div class="section-label" style="text-align:center;">Two ways in</div>
+    <h2 class="section-title" style="text-align:center;">Start with the Guide. Upgrade when you're ready.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:40px;align-items:stretch;">
+      <div style="background:var(--warm);border:1px solid var(--border);border-radius:16px;padding:32px;display:flex;flex-direction:column;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Start here</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--navy);line-height:1.1;margin-bottom:6px;">The Cape Town Guide</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;color:var(--gold);line-height:1;margin-bottom:18px;">€49</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px;flex-grow:1;">Everything you need to plan Cape Town yourself — where to stay by neighbourhood, beaches, wine, hikes, restaurants, safety, the interactive map, and Ubuntu on call.</p>
+        <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:#B8863A;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;border:none;cursor:pointer;width:100%;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">Unlock the Guide — €49</button>
+      </div>
+      <div style="background:var(--navy);border:1px solid var(--gold);border-radius:16px;padding:32px;display:flex;flex-direction:column;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold-l);margin-bottom:12px;">Optional upgrade</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#fff;line-height:1.1;margin-bottom:6px;">Personalised Plan</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.5px;margin-bottom:18px;">Add-on · built around your trip</div>
+        <p style="font-size:14px;color:rgba(255,255,255,.78);line-height:1.7;margin-bottom:24px;flex-grow:1;"><strong style="color:#fff;">Everything in the Guide, plus</strong> a day-by-day itinerary Ubuntu builds around your exact dates, party and pace — and reroutes in real time when plans change.</p>
+        <button onclick="document.getElementById('itinerary').scrollIntoView({behavior:'smooth'})" style="background:transparent;color:var(--gold-l);font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;border:1px solid var(--gold);cursor:pointer;width:100%;transition:all .25s;" onmouseover="this.style.background='rgba(184,134,58,.15)'" onmouseout="this.style.background='transparent'">Preview the Personalised Plan →</button>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ITINERARY -->
 <section class="itinerary-section" id="itinerary">
-  <div class="section-label">The Itinerary</div>
-  <h2 class="section-title">Four days. Perfectly planned.</h2>
-  <p class="section-sub">This is a sample. Your itinerary is built around your exact trip.</p>
+  <div class="section-label">The Personalised Plan · Optional upgrade</div>
+  <h2 class="section-title">Want it built around your exact trip?</h2>
+  <p class="section-sub">A sample of the optional Personalised Plan add-on — built around your dates, party and pace. Not included in the €49 Guide.</p>
   <div class="itinerary-grid">
     <div class="itinerary-card reveal" onclick="openLightbox(1)">
       <img class="itin-photo" src="photos/waterfront.jpeg" alt="V&A Waterfront Cape Town">
@@ -525,6 +594,9 @@
         <div class="itin-item"><div class="itin-time">Evening</div><p><strong>Back to the city</strong> — 20 minutes from Cape Town. Sundowner on the way home.</p></div>
       </div>
     </div>
+  </div>
+  <div style="text-align:center;margin-top:44px;">
+    <button onclick="openLightbox(1)" style="background:transparent;color:var(--gold-l);font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 36px;border-radius:4px;border:1px solid var(--gold);cursor:pointer;display:inline-block;transition:all .25s;" onmouseover="this.style.background='rgba(184,134,58,.15)'" onmouseout="this.style.background='transparent'">Preview the full Personalised Plan →</button>
   </div>
 </section>
 
@@ -624,7 +696,7 @@
   <h2>Stop researching.<br><em style="font-style:italic;color:var(--gold-l)">Start experiencing Cape Town.</em></h2>
   <p>Your personalised Cape Town trip, ready in minutes.</p>
   <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
-    <button onclick="openCaipy()" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;" onmouseout="this.style.transform=&#39;&#39;">
+    <button onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 36px;border-radius:4px;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(184,134,58,.4);transition:all .25s;" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;" onmouseout="this.style.transform=&#39;&#39;">
       Talk to Ubuntu for Free
     </button>
   </div>
@@ -638,7 +710,7 @@
         <div class="logo-icon">🌍</div>
         <div>
           <div class="logo-text">The Cape Town Guide</div>
-          <div class="logo-sub">Cape Town Insider Guide</div>
+          <div class="logo-sub">The Cape Town Guide</div>
         </div>
       </div>
       <p>Deep local knowledge of Cape Town. Always live, always personal.</p>
@@ -673,11 +745,11 @@
 <!-- Post-call itinerary modal -->
 <div id="itinerary-modal" style="display:none;position:fixed;inset:0;background:rgba(28,28,26,.6);backdrop-filter:blur(4px);z-index:20000;align-items:center;justify-content:center">
   <div style="background:#FAF7F2;border-radius:20px;padding:40px 36px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35)">
-    <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:28px;font-weight:600;margin-bottom:8px;color:#1C1C1A;line-height:1.2">Unlock your full Cape Town Guide<br>+ personal itinerary</div>
+    <div style="font-family:&#39;Cormorant Garamond&#39;,serif;font-size:28px;font-weight:600;margin-bottom:8px;color:#1C1C1A;line-height:1.2">Unlock the full Cape Town Guide</div>
     <p style="font-size:13px;color:#6B6560;line-height:1.7;margin-bottom:20px">Enter your email to continue to secure checkout and receive access.</p>
     <input type="email" id="itinerary-email" placeholder="your@email.com" style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,0,0,.12);border-radius:10px;font-family:&#39;Jost&#39;,sans-serif;font-size:14px;outline:none;margin-bottom:14px;background:#fff;box-sizing:border-box;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#B8863A&#39;" onblur="this.style.borderColor=&#39;rgba(0,0,0,.12)&#39;">
     <button id="pay-btn" onclick="startItineraryPayment()" style="width:100%;background:linear-gradient(135deg,#B8863A,#D4A85A);color:#fff;border:none;padding:18px 28px;border-radius:10px;font-family:&#39;Jost&#39;,sans-serif;font-size:16px;font-weight:600;letter-spacing:.5px;cursor:pointer;margin-bottom:10px;box-shadow:0 6px 24px rgba(184,134,58,.45);transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform=&#39;translateY(-2px)&#39;;this.style.boxShadow=&#39;0 10px 32px rgba(184,134,58,.55)&#39;" onmouseout="this.style.transform=&#39;&#39;;this.style.boxShadow=&#39;0 6px 24px rgba(184,134,58,.45)&#39;">Unlock Full Guide — €49</button>
-    <p style="font-size:11.5px;color:#9B9491;line-height:1.6;margin-bottom:8px;font-style:italic">Personalised day-by-day plan built by Ubuntu,<br>powered by Dirk's 15 years of Cape Town knowledge</p>
+    <p style="font-size:11.5px;color:#9B9491;line-height:1.6;margin-bottom:8px;font-style:italic">The complete curated guide — where to stay, eat, explore and stay safe, powered by Dirk's 15 years in Cape Town.<br>Want a day-by-day plan? Add a Personalised Plan after unlocking.</p>
     <p style="font-size:11px;color:#B0A89F;line-height:1.6;margin-bottom:16px;">Not useful? Email us within 7 days and we'll refund you. No drama.</p>
 
     <!-- Voucher toggle -->
@@ -712,12 +784,7 @@
     </div>
   </div>
 
-  <div id="caipyBtn" onclick="openCaipy()">
-    <div class="caipy-bubble" id="caipyBubble" style="opacity: 0; transition: opacity 0.5s; pointer-events: none;">Hi! I'm Ubuntu — Ask me anything about Cape Town!</div>
-    <div class="caipy-orb"><img src="ubuntu-avatar.png" alt="Ubuntu"></div>
-    <div class="caipy-name-tag">Ubuntu</div>
-    <div class="caipy-pulse"></div>
-  </div>
+  
 </div>
 
 <script>
@@ -735,7 +802,7 @@
       const data = await res.json();
       if (data.success) {
         localStorage.setItem('guide_access', '1');
-        window.location.href = 'guide.html';
+        window.location.href = 'guide/home.html';
       }
     } catch(e) { console.error('Verify payment error:', e); }
   })();
@@ -1067,7 +1134,7 @@
     // Localhost-only bypass — no server needed when testing locally
     if (window.location.hostname === 'localhost' && ['CAPETOWN-VIP', 'KLM2026'].indexOf(code.trim().toUpperCase()) !== -1) {
       localStorage.setItem('guide_access', '1');
-      window.location.href = 'guide.html';
+      window.location.href = 'guide/home.html';
       return;
     }
 
@@ -1081,7 +1148,7 @@
       const data = await res.json();
       if (data.success) {
         localStorage.setItem('guide_access', '1');
-        setTimeout(() => { window.location.href = 'guide.html'; }, 1500);
+        setTimeout(() => { window.location.href = 'guide/home.html'; }, 1500);
         const modal = document.getElementById('itinerary-modal');
         modal.querySelector('input[type="email"]').style.display = 'none';
         document.getElementById('pay-btn').style.display = 'none';
@@ -1323,8 +1390,8 @@
 <!-- STICKY PAYMENT BAR -->
 <div id="sticky-pay" style="position:fixed;bottom:0;left:0;right:0;z-index:9998;background:rgba(28,28,26,.97);backdrop-filter:blur(20px);border-top:1px solid rgba(184,134,58,.22);padding:0 5vw;height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px;transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);">
   <div id="sticky-text">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:#fff;margin-bottom:2px;">Your adaptive Cape Town itinerary</div>
-    <div style="font-family:'Jost',sans-serif;font-size:10px;color:rgba(255,255,255,.45);font-weight:300;letter-spacing:.3px;">Day-by-day plan · Real-time tips · Local intel · Ubuntu access</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;color:#fff;margin-bottom:2px;">Unlock the Cape Town Guide</div>
+    <div style="font-family:'Jost',sans-serif;font-size:10px;color:rgba(255,255,255,.45);font-weight:300;letter-spacing:.3px;">Where to stay · Local intel · Safety · Ubuntu access</div>
   </div>
   <div id="sticky-action" style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
     <div id="sticky-price" style="text-align:center;flex-shrink:0;">
@@ -1335,10 +1402,10 @@
       <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);font-size:14px;">✉</span>
       <input type="email" id="sticky-email" placeholder="your@email.com" style="width:220px;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:10px 14px 10px 36px;font-size:13px;font-family:'Jost',sans-serif;color:#fff;background:rgba(255,255,255,.06);outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='rgba(212,165,90,.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
     </div>
-    <button onclick="stickyPay()" style="background:linear-gradient(135deg,#B8863A,#D4A55A);color:#fff;border:none;padding:11px 24px;border-radius:6px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(184,134,58,.38);white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 28px rgba(184,134,58,.55)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(184,134,58,.38)'">Talk to Ubuntu for Free</button>
-    <button onclick="openTavus()" style="background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.38);font-family:'Jost',sans-serif;font-size:10px;font-weight:400;letter-spacing:1.2px;text-transform:uppercase;transition:color .25s;padding:0;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.color='rgba(212,165,90,.75)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">
+    <button onclick="stickyPay()" style="background:linear-gradient(135deg,#B8863A,#D4A55A);color:#fff;border:none;padding:11px 24px;border-radius:6px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(184,134,58,.38);white-space:nowrap;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 28px rgba(184,134,58,.55)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(184,134,58,.38)'">Unlock the Guide — €49</button>
+    <button onclick="showPreviewModal()" style="background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.38);font-family:'Jost',sans-serif;font-size:10px;font-weight:400;letter-spacing:1.2px;text-transform:uppercase;transition:color .25s;padding:0;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.color='rgba(212,165,90,.75)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">
       <span style="width:18px;height:18px;border:1px solid currentColor;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;">→</span>
-      See how it works
+      See what's inside
     </button>
   </div>
 </div>
@@ -1363,8 +1430,8 @@
         <div style="display:flex;gap:18px;align-items:flex-start;">
           <span style="font-size:22px;flex-shrink:0;margin-top:2px;">🗓</span>
           <div>
-            <div style="font-size:16px;font-weight:600;color:#1C1C1A;margin-bottom:4px;">Your trip. Your itinerary.</div>
-            <div style="font-size:14px;color:#6B6560;line-height:1.6;font-weight:300;">Built around your exact dates, travel style, and who you're going with. Not a template — yours alone.</div>
+            <div style="font-size:16px;font-weight:600;color:#1C1C1A;margin-bottom:4px;">A guide that knows Cape Town cold.</div>
+            <div style="font-size:14px;color:#6B6560;line-height:1.6;font-weight:300;">Where to stay, eat, explore and stay safe — curated by a local, not scraped from the internet. Yours the moment you unlock.</div>
           </div>
         </div>
         <div style="display:flex;gap:18px;align-items:flex-start;">
@@ -1392,7 +1459,8 @@
 
       <!-- Sample day — clean preview -->
       <div style="background:#0d1b2a;border-radius:12px;padding:24px 28px;margin-bottom:36px;">
-        <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B8863A;margin-bottom:16px;">Sample — Day 1</div>
+        <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B8863A;margin-bottom:6px;">Personalised Plan — Sample Day 1</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);font-style:italic;line-height:1.5;margin-bottom:16px;">Preview what Ubuntu can build in the Personalised Plan upgrade — an optional add-on, not part of the €49 Guide.</div>
         <div style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;gap:14px;">
             <div style="font-size:11px;color:#D4A55A;font-weight:600;letter-spacing:1px;text-transform:uppercase;min-width:60px;padding-top:2px;">08:00</div>
@@ -1418,7 +1486,7 @@
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
           <a href="https://buy.stripe.com/7sY00k090g77adCcZc5kk02" target="_blank" rel="noopener" style="background:#B8863A;color:#fff;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:18px 32px;border-radius:4px;text-decoration:none;display:inline-block;box-shadow:0 6px 20px rgba(184,134,58,.4);">Get your Guide — €49 →</a>
-          <button onclick="closePreviewModal();openCaipy();" style="background:none;border:none;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;color:#B8863A;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;">Speak with Ubuntu first — it's free</button>
+          <button onclick="closePreviewModal();document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'});" style="background:none;border:none;font-family:&#39;Jost&#39;,sans-serif;font-size:12px;color:#B8863A;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;">Speak with Ubuntu first — it's free</button>
         </div>
       </div>
 

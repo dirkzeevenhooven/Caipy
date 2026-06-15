@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="/guide/guard.js"></script>
+  <script>var GUIDE_PAGE = 'itinerary';</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Build My Trip · Planet Curated Cape Town</title>
@@ -582,10 +584,23 @@
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
-        if (data.message) document.getElementById('tbSuccessMsg').textContent = data.message;
-        document.querySelectorAll('.tb-step').forEach(s => s.classList.remove('active'));
-        document.querySelector('.tb-progress').style.display = 'none';
-        document.getElementById('tbSuccess').classList.add('active');
+        // Save the trip into the profile the Travel Cockpit reads, then open it.
+        // (Merge with any existing profile so saved places / costs aren't lost.)
+        try {
+          let existing = {};
+          try { existing = JSON.parse(localStorage.getItem('ubuntuTripProfile')) || {}; } catch (e) {}
+          const profile = Object.assign(existing, {
+            name: trip.name,
+            dates: trip.dates,
+            days: trip.days,
+            travellingWith: trip.group,
+            budget: trip.budget,
+            interests: trip.interests,
+          });
+          localStorage.setItem('ubuntuTripProfile', JSON.stringify(profile));
+        } catch (e) {}
+        window.location.href = 'myguide.html';
+        return;
       } else {
         err.textContent = (data && data.message) || 'Something went wrong. Please try again.';
         btn.disabled = false;
