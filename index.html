@@ -121,7 +121,9 @@
     .itinerary-section .section-title { color: var(--white); }
     .itinerary-section .section-label { color: var(--gold-l); }
     .itinerary-section .section-sub { color: rgba(255,255,255,.55); }
-    .itinerary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+    .itinerary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    @media (max-width: 980px) { .itinerary-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .itinerary-grid { grid-template-columns: 1fr; } }
     .itinerary-card { position: relative; border-radius: var(--radius); overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,.5); min-height: 420px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; }
     .itin-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: transform .6s ease; }
     .itinerary-card:hover .itin-photo { transform: scale(1.04); }
@@ -428,15 +430,14 @@
 
 <!-- WHAT YOU GET -->
 <section id="guide-preview" style="background:var(--warm);padding:80px 5vw;">
-  <div style="max-width:960px;margin:0 auto;">
+  <div style="max-width:1120px;margin:0 auto;">
     <div class="section-label" style="text-align:center;">What you get</div>
     <h2 class="section-title" style="text-align:center;">The Cape Town Guide — <em style="font-style:italic;color:var(--gold);">€49</em></h2>
     <p style="text-align:center;font-size:14px;color:var(--muted);max-width:580px;margin:14px auto 0;line-height:1.7;">
-      <strong style="color:var(--navy);">Step 1 — Unlock the Guide for €49.</strong> Get access to the curated Cape Town guide, neighbourhood advice, safety tips, local recommendations, maps and Ubuntu inside the Guide.<br><br>
-      <strong style="color:var(--navy);">Step 2 — Want it planned for you?</strong> Add the optional Personalised Plan and let Ubuntu turn the Guide into your day-by-day itinerary.
+      Everything inside the €49 Guide — at a glance. Unlock it all, then optionally let Ubuntu plan your days.
     </p>
     <div class="itinerary-grid" style="margin-top:40px;">
-      <div class="itinerary-card reveal" onclick="showPreviewModal('neighbourhoods')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('neighbourhoods')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/camps-bay.webp" alt="Cape Town neighbourhoods">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
@@ -445,16 +446,16 @@
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Which area fits your trip — honest pros, cons &amp; safety notes.</p>
         </div>
       </div>
-      <div class="itinerary-card reveal" onclick="showPreviewModal('local-favourites')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('local-favourites')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/bree-street.jpg" alt="Cape Town restaurants">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
           <div class="itin-day-num">Eat &amp; drink</div>
-          <div class="itin-day-title">Local favourites</div>
+          <div class="itin-day-title">Restaurants</div>
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Where locals actually eat — beyond the tourist traps.</p>
         </div>
       </div>
-      <div class="itinerary-card reveal" onclick="showPreviewModal('beaches')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('beaches')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/llandudno-beach.jpg" alt="Cape Town beaches">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
@@ -463,7 +464,7 @@
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Clifton, Llandudno, Boulders — matched to wind and mood.</p>
         </div>
       </div>
-      <div class="itinerary-card reveal" onclick="showPreviewModal('wine')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('wine')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/winelands.webp" alt="Cape Winelands">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
@@ -472,7 +473,7 @@
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">The estates worth your afternoon — minus the crowds.</p>
         </div>
       </div>
-      <div class="itinerary-card reveal" onclick="showPreviewModal('outdoors')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('outdoors')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/signal-hill.webp" alt="Cape Town hikes and outdoors">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
@@ -481,7 +482,7 @@
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">From Lion's Head to hidden contour paths — timed right.</p>
         </div>
       </div>
-      <div class="itinerary-card reveal" onclick="showPreviewModal('safety')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('safety')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/chapmans-peak.jpeg" alt="Cape Town getting around">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
@@ -490,7 +491,7 @@
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Where to go, what to avoid, how to move with confidence.</p>
         </div>
       </div>
-      <div class="itinerary-card reveal" onclick="showPreviewModal('map')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('map')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/table-mountain.jpeg" alt="Cape Town interactive map">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
@@ -499,12 +500,12 @@
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Every recommendation pinned and ready for Google Maps.</p>
         </div>
       </div>
-      <div class="itinerary-card reveal" onclick="showPreviewModal('ubuntu')" style="min-height:300px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
+      <div class="itinerary-card reveal" onclick="showPreviewModal('ubuntu')" style="min-height:200px;box-shadow:0 14px 40px rgba(13,27,42,.28);">
         <img class="itin-photo" src="photos/dirk-lions-head.jpeg" alt="Ubuntu, your Cape Town local">
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
           <div class="itin-day-num">Ubuntu</div>
-          <div class="itin-day-title">Ubuntu inside the Guide</div>
+          <div class="itin-day-title">Ubuntu Travel Butler</div>
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Ask anything, anytime. Ubuntu knows Cape Town cold.</p>
         </div>
       </div>
@@ -1527,7 +1528,7 @@ var PREVIEWS = {
     tip: 'First time in Cape Town? Don\u2019t just book the prettiest view. Book the area that makes your days easy.'
   },
   'local-favourites': {
-    image: 'photos/bree-street.jpg', eyebrow: 'Eat & drink', title: 'Local favourites',
+    image: 'photos/bree-street.jpg', eyebrow: 'Eat & drink', title: 'Restaurants',
     bullets: [
       'Bree Street — strong dinner-and-drinks choice when you want city energy without going full tourist.',
       'Kloof Street — cafés, casual bars and local rhythm; better for wandering than over-planning.',
@@ -1587,7 +1588,7 @@ var PREVIEWS = {
     tip: 'The magic is not just knowing where to go — it\u2019s knowing what fits together in one smooth day.'
   },
   'ubuntu': {
-    image: 'photos/dirk-lions-head.jpeg', eyebrow: 'Ubuntu', title: 'Ubuntu inside the Guide',
+    image: 'photos/dirk-lions-head.jpeg', eyebrow: 'Ubuntu', title: 'Ubuntu Travel Butler',
     bullets: [
       'Ask where to stay based on your trip style, not just what looks pretty online.',
       'Choose between beach, city, wine and adventure days without drowning in options.',
