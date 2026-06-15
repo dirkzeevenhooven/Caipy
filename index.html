@@ -74,14 +74,14 @@
     .ai-section .section-label { color: var(--gold-l); }
     .ai-section .section-title { color: var(--white); }
     .ai-section .section-sub { color: rgba(255,255,255,.55); }
-    .ubuntu-meet { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 220px 1fr; gap: 60px; align-items: center; }
+    .ubuntu-meet { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 220px 1fr; gap: 60px; align-items: start; }
     .ubuntu-portrait-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .ubuntu-avatar-wrap { position: relative; display: inline-block; margin-bottom: 16px; }
     .ubuntu-portrait { width: 170px; height: 170px; border-radius: 50%; object-fit: cover; object-position: center 20%; border: 3px solid rgba(212,165,90,.4); box-shadow: 0 0 0 6px rgba(212,165,90,.08), 0 20px 60px rgba(0,0,0,.5); }
     .ubuntu-online { position: absolute; bottom: 10px; right: 10px; width: 16px; height: 16px; background: #22c55e; border-radius: 50%; border: 3px solid #0F2430; }
     .ubuntu-pname { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--white); margin-bottom: 4px; }
     .ubuntu-prole { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(212,165,90,.65); }
-    .ubuntu-msg-card { background: rgba(255,255,255,.04); border: 1px solid rgba(212,165,90,.14); border-radius: 14px; padding: 22px 24px; margin: 22px 0; }
+    .ubuntu-msg-card { background: rgba(255,255,255,.04); border: 1px solid rgba(212,165,90,.14); border-radius: 14px; padding: 18px 20px; margin: 22px 0; }
     .ubuntu-msg-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,.06); }
     .ubuntu-msg-av { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
     .ubuntu-msg-av img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
@@ -371,11 +371,10 @@
     <!-- Ubuntu video -->
     <div class="ubuntu-portrait-col" style="align-self:start;padding-top:8px;">
       <div style="position:relative;width:260px;height:320px;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5);border:1px solid rgba(212,165,90,.2);background:#0F2430;">
-        <video id="ubuntu-video" src="photos/ubuntutravelbutler.mp4" playsinline muted style="width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.25);"></video>
-        <div onclick="openUbuntuModal()" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(15,36,48,0.35);transition:background .2s;" onmouseover="this.style.background='rgba(15,36,48,0.2)'" onmouseout="this.style.background='rgba(15,36,48,0.35)'">
-          <div style="width:60px;height:60px;border-radius:50%;background:rgba(201,169,110,0.9);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="#0F2430"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
+        <video id="ubuntu-video" src="photos/ubuntutravelbutler.mp4" playsinline muted autoplay loop style="width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.25);"></video>
+        <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(15,36,48,0) 60%,rgba(15,36,48,0.45) 100%);"></div>
+        <div onclick="openUbuntuModal()" title="Play with sound" style="position:absolute;bottom:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(201,169,110,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 14px rgba(0,0,0,0.45);transition:background .2s;" onmouseover="this.style.background='rgba(212,168,90,1)'" onmouseout="this.style.background='rgba(201,169,110,0.92)'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#0F2430"><polygon points="5,3 19,12 5,21"/></svg>
         </div>
       </div>
     </div>
@@ -399,7 +398,7 @@
     <div>
       <div class="section-label" style="color:rgba(212,165,90,.8);text-align:left;margin-bottom:12px">Your Personal Cape Town Travel Butler</div>
       <h2 class="section-title" style="text-align:left;margin-bottom:18px">Meet Ubuntu.</h2>
-      <p class="section-sub" style="text-align:left;max-width:500px">The Guide gives you the best local Cape Town intelligence. Ubuntu helps you apply it to your own trip — where to stay, what to skip, when to go, and how to move around safely. Human-filtered local knowledge, not generic AI.<br><br>Want Ubuntu to turn the Guide into your full day-by-day plan? Upgrade to the Personalised Cape Town Plan.</p>
+      <p class="section-sub" style="text-align:left;max-width:500px">Ubuntu turns the Guide’s local intelligence into advice for your trip — where to stay, what to skip, when to go. Human-filtered local knowledge, not generic AI.</p>
 
       <!-- Morning briefing card -->
       <p style="font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(212,165,90,0.6);text-align:left;margin:32px 0 14px;">A glimpse of Ubuntu at work</p>
@@ -413,10 +412,8 @@
           <div class="ubuntu-msg-live"></div>
         </div>
         <div class="ubuntu-msg-body">
-          <p>Good morning, howzit?</p>
-          <p><strong>Cape Town's showing off today</strong> — clear skies, low wind. Table Mountain is perfect right now; I'd be at the cable car before 09:00 to beat the queues.</p>
-          <p>The south-easter kicks in after 14:00, so do the mountain first and save the beach for late afternoon.</p>
-          <p>Want me to plan every day like this? That's the Personalised Plan.</p>
+          <p>Good morning, howzit? <strong>Cape Town’s showing off</strong> — clear skies, low wind.</p>
+          <p>Table Mountain first, before 09:00 to beat the queues. South-easter kicks in after 14:00, so save the beach for late afternoon.</p>
         </div>
       </div>
 
