@@ -7,6 +7,7 @@ public/guides/
 booking-monitor-state.json
 .data/
 .claude/worktrees/
+.claude/launch.json
 guide/backup bestanden/
 
 # local scratch / private / heavy media
