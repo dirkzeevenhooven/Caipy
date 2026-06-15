@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 210" fill="none" role="img" aria-label="The Cape Town Guide — by Planet Curated">
+  <!-- Table Mountain + Lion's Head contour, centred on x=300 -->
+  <path d="M150 70 L188 44 L206 32 L226 45 L250 36 L346 36 L366 45 L388 54 L410 54 L432 30 L442 30 L460 70"
+        stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="300" y="128" text-anchor="middle" textLength="520" lengthAdjust="spacingAndGlyphs"
+        font-family="'Cormorant Garamond', 'Cormorant', Georgia, serif"
+        font-size="40" font-weight="500" fill="#ffffff">THE CAPE TOWN GUIDE</text>
+  <!-- Byline with flanking rules -->
+  <line x1="178" y1="160" x2="216" y2="160" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+  <line x1="384" y1="160" x2="422" y2="160" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+  <text x="300" y="165" text-anchor="middle" textLength="150" lengthAdjust="spacingAndGlyphs"
+        font-family="'Cormorant Garamond', 'Cormorant', Georgia, serif"
+        font-size="18" font-style="italic" font-weight="500" fill="#ffffff">by Planet Curated</text>
+</svg>

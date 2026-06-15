@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 150" fill="none" role="img" aria-label="The Cape Town Guide">
+  <!-- Table Mountain + Lion's Head contour, centred on x=300 -->
+  <path d="M150 78 L188 52 L206 40 L226 53 L250 44 L346 44 L366 53 L388 62 L410 62 L432 38 L442 38 L460 78"
+        stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="300" y="125" text-anchor="middle" textLength="520" lengthAdjust="spacingAndGlyphs"
+        font-family="'Cormorant Garamond', 'Cormorant', Georgia, serif"
+        font-size="40" font-weight="500" fill="#ffffff">THE CAPE TOWN GUIDE</text>
+</svg>
