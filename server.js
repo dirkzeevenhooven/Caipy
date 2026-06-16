@@ -371,6 +371,63 @@ async function sendItineraryEmail(email, itinerary, guideUrl) {
   }
 }
 
+// ─── Customer access-confirmation email ──────────────────────────────────────
+// Sent in addition to (and independent of) the itinerary email, so the customer
+// always gets a clean confirmation with a button that activates their access.
+async function sendAccessEmail(email, accessUrl) {
+  const token = process.env.RESEND_API_KEY;
+  const from = process.env.SMTP_FROM || 'onboarding@resend.dev';
+  if (!token) throw new Error('RESEND_API_KEY not configured');
+
+  const htmlBody = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+    <body style="font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 24px;color:#1C1C1A;line-height:1.7;">
+
+      <div style="border-bottom:2px solid #B8863A;padding-bottom:20px;margin-bottom:36px;">
+        <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#B8863A;margin:0 0 8px 0;">The Cape Town Guide</p>
+        <h1 style="font-size:30px;font-weight:400;margin:0;line-height:1.2;">Your Cape Town Guide is ready.</h1>
+      </div>
+
+      <p style="font-size:17px;margin:0 0 28px 0;">Thank you — your access is confirmed. Everything you need to plan your Cape Town trip is now unlocked and waiting for you.</p>
+
+      <div style="background:#FAF7F2;border:1px solid rgba(184,134,58,0.3);border-radius:12px;padding:36px;margin-bottom:32px;text-align:center;">
+        <p style="font-family:sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#B8863A;margin:0 0 16px 0;">Your Interactive Cape Town Guide</p>
+        <a href="${accessUrl}" style="display:inline-block;background:#B8863A;color:#ffffff;font-family:sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:16px 40px;border-radius:100px;text-decoration:none;">Open Your Cape Town Guide →</a>
+        <p style="margin:20px 0 0;font-size:11px;color:#9B9491;">Or copy this link: <a href="${accessUrl}" style="color:#B8863A;">${accessUrl}</a></p>
+      </div>
+
+      <p style="font-size:15px;margin:0 0 36px 0;">Enjoy every moment. Cape Town is going to blow your mind.</p>
+
+      <div style="border-top:1px solid #EDE5D8;padding-top:24px;color:#6B6560;font-size:13px;font-family:sans-serif;">
+        <p style="margin:0;">With warmth,<br><strong style="color:#1C1C1A;">Dirk Zeevenhooven</strong><br>The Cape Town Guide · thecapetownguide.com</p>
+      </div>
+
+    </body></html>`;
+
+  const sendEmail = async (fromAddr) => fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: `The Cape Town Guide <${fromAddr}>`,
+      to: [email],
+      subject: 'Your Cape Town Guide is ready',
+      text: `Your access is confirmed. Open your Cape Town Guide here: ${accessUrl}\n\n— Dirk`,
+      html: htmlBody,
+    }),
+  });
+
+  let res = await sendEmail(from);
+  // Fallback to onboarding@resend.dev if custom domain not yet verified
+  if (!res.ok && from !== 'onboarding@resend.dev') {
+    console.log('Custom domain not verified — falling back to onboarding@resend.dev');
+    res = await sendEmail('onboarding@resend.dev');
+  }
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Resend API error ${res.status}: ${body}`);
+  }
+}
+
 // ─── Caipy System Prompt ──────────────────────────────────────────────────────
 const CAIPY_SYSTEM_PROMPT = `You are Caipy, a warm and knowledgeable AI travel guide specialized exclusively in Cape Town, South Africa. You were created by Dirk Zeevenhooven, who has lived in Cape Town for over 10 years and knows it intimately — not as a tourist, but as a local.
 
@@ -706,6 +763,11 @@ app.post('/verify-payment', async (req, res) => {
     console.log('Payment verified. email:', email, 'pendingId:', pendingId, 'conversationId:', conversationId);
 
     if (email) {
+      // Send the access-confirmation email (independent of itinerary generation)
+      sendAccessEmail(email, 'https://www.thecapetownguide.com/guide/access.html?success=true').catch(err => {
+        console.error('sendAccessEmail (payment) error:', err.message);
+      });
+
       // Get transcript from memory cache (fast path)
       let transcript = '';
       if (pendingId && pendingItineraries.has(pendingId)) {
@@ -778,6 +840,11 @@ app.post('/redeem-voucher', async (req, res) => {
       });
     }}).catch(() => {});
   }
+
+  // Send the access-confirmation email (independent of itinerary generation)
+  sendAccessEmail(email, 'https://www.thecapetownguide.com/guide/access.html?code=CTG-SOFTLAUNCH-2026').catch(err => {
+    console.error('sendAccessEmail (voucher) error:', err.message);
+  });
 
   // Fire itinerary generation in background
   generateAndEmailItinerary(email, (transcript || '').trim(), conversationId).catch(err => {
