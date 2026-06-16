@@ -832,7 +832,9 @@
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('guide_access', '1');
+        var token = 'ctg_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        localStorage.setItem('ctg_access_token', token);
+        localStorage.setItem('ctg_access_expiry', (Date.now() + 365 * 24 * 60 * 60 * 1000).toString());
         window.location.href = 'guide/home.html';
       }
     } catch(e) { console.error('Verify payment error:', e); }
@@ -1164,7 +1166,9 @@
 
     // Localhost-only bypass — no server needed when testing locally
     if (window.location.hostname === 'localhost' && ['CAPETOWN-VIP', 'KLM2026'].indexOf(code.trim().toUpperCase()) !== -1) {
-      localStorage.setItem('guide_access', '1');
+      var token = 'ctg_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem('ctg_access_token', token);
+      localStorage.setItem('ctg_access_expiry', (Date.now() + 365 * 24 * 60 * 60 * 1000).toString());
       window.location.href = 'guide/home.html';
       return;
     }
@@ -1178,7 +1182,9 @@
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('guide_access', '1');
+        var accessToken = 'ctg_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        localStorage.setItem('ctg_access_token', accessToken);
+        localStorage.setItem('ctg_access_expiry', (Date.now() + 365 * 24 * 60 * 60 * 1000).toString());
         setTimeout(() => { window.location.href = 'guide/home.html'; }, 1500);
         const modal = document.getElementById('itinerary-modal');
         modal.querySelector('input[type="email"]').style.display = 'none';
