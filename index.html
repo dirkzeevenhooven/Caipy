@@ -335,7 +335,7 @@
   </div>
 <div style="display:flex;gap:12px;align-items:center">
   <button onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})" style="display:flex;align-items:center;gap:9px;background:#c9a84c;color:#0d1b2a;padding:6px 18px 6px 6px;border-radius:100px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif"><img src="ubuntu-avatar.png" alt="Ubuntu" style="width:30px;height:30px;border-radius:50%;object-fit:cover;display:block">Talk to Ubuntu</button>
-  <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);padding:10px 18px;border-radius:100px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif">Unlock Full Guide — €49</button>
+  <button id="guideNavBtn" onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);padding:10px 18px;border-radius:100px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif">Unlock the Guide</button>
 </div>
   <button class="ham-btn" onclick="toggleMobileNav()">☰</button>
 </nav>
@@ -839,6 +839,31 @@
       }
     } catch(e) { console.error('Verify payment error:', e); }
   })();
+
+  /* ── DYNAMIC GUIDE NAV BUTTON ── */
+  function hasValidGuideAccess() {
+    try {
+      var token = localStorage.getItem('ctg_access_token');
+      var expiry = localStorage.getItem('ctg_access_expiry');
+      return !!token && !!expiry && Date.now() < Number(expiry);
+    } catch (e) { return false; }
+  }
+  function updateGuideNavButton() {
+    var btn = document.getElementById('guideNavBtn');
+    if (!btn) return;
+    if (hasValidGuideAccess()) {
+      btn.textContent = 'Your Cape Town Guide';
+      btn.onclick = function () { window.location.href = '/guide/home.html'; };
+    } else {
+      btn.textContent = 'Unlock the Guide';
+      btn.onclick = function () { document.getElementById('itinerary-modal').style.display = 'flex'; };
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateGuideNavButton);
+  } else {
+    updateGuideNavButton();
+  }
 
   /* ── SCROLL REVEAL ── */
   const observer = new IntersectionObserver((entries) => {
