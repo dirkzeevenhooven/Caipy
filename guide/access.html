@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Your Access · The Cape Town Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0F2430;
+      --navy-2: #0c1e2e;
+      --gold: #C9A96E;
+      --gold-d: #B8863A;
+      --cream: #FAF8F4;
+    }
+    body {
+      font-family: 'Jost', sans-serif;
+      background: radial-gradient(1200px 600px at 50% -10%, #16344a 0%, var(--navy) 55%, var(--navy-2) 100%);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(201,169,110,0.22);
+      border-radius: 20px;
+      padding: 48px 40px 44px;
+      text-align: center;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+    }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 22px;
+      border-radius: 50%;
+      background: rgba(201,169,110,0.14);
+      border: 1px solid rgba(201,169,110,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: var(--gold);
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      line-height: 1.12;
+      margin-bottom: 14px;
+    }
+    h1 .gold { color: var(--gold); font-style: italic; font-weight: 500; }
+    p.lead {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(250,248,244,0.66);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 15px 16px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(201,169,110,0.35);
+      background: rgba(255,255,255,0.04);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-align: center;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color .2s, background .2s;
+    }
+    input[type="text"]::placeholder { color: rgba(250,248,244,0.4); letter-spacing: .5px; text-transform: none; }
+    input[type="text"]:focus { border-color: var(--gold); background: rgba(255,255,255,0.07); }
+    .btn {
+      width: 100%;
+      display: inline-block;
+      padding: 16px 28px;
+      border: none;
+      border-radius: 8px;
+      background: var(--gold-d);
+      color: #fff;
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 8px 26px rgba(184,134,58,0.4);
+      transition: background .2s, transform .15s;
+    }
+    .btn:hover { background: var(--gold); transform: translateY(-1px); }
+    .msg {
+      min-height: 20px;
+      font-size: 13px;
+      margin-top: 14px;
+      color: #e88a7d;
+      font-weight: 300;
+    }
+    .hint {
+      margin-top: 22px;
+      font-size: 12px;
+      color: rgba(250,248,244,0.4);
+      font-weight: 300;
+    }
+    .hint a { color: var(--gold); text-decoration: none; }
+    [hidden] { display: none !important; }
+    @media (max-width: 480px) {
+      .card { padding: 38px 24px 34px; border-radius: 16px; }
+      h1 { font-size: 1.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <!-- SUCCESS STATE -->
+    <section id="state-success" hidden>
+      <div class="icon">&#10003;</div>
+      <div class="eyebrow">The Cape Town Guide</div>
+      <h1>Your Cape Town Guide is <span class="gold">ready</span></h1>
+      <p class="lead">Your access has been activated.</p>
+      <a class="btn" href="/guide/home.html">Open Your Cape Town Guide</a>
+    </section>
+
+    <!-- CODE-ENTRY STATE -->
+    <section id="state-form" hidden>
+      <div class="eyebrow">The Cape Town Guide</div>
+      <h1>Already <span class="gold">purchased?</span></h1>
+      <p class="lead">Enter your access code to open The Cape Town Guide.</p>
+      <div class="field">
+        <input id="code-input" type="text" placeholder="Enter access code" autocomplete="off" spellcheck="false" />
+        <button class="btn" id="code-btn" type="button">Open My Guide</button>
+      </div>
+      <div class="msg" id="code-msg" role="status" aria-live="polite"></div>
+      <p class="hint">Need help? <a href="/guide/contact.html">Contact us</a></p>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var ACCESS_CODE = 'CTG-SOFTLAUNCH-2026';
+      var TOKEN_KEY = 'ctg_access_token';
+      var EXPIRY_KEY = 'ctg_access_expiry';
+
+      function activateAccess() {
+        var token = 'ctg_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        var expiry = Date.now() + 365 * 24 * 60 * 60 * 1000; // 365 days
+        try {
+          localStorage.setItem(TOKEN_KEY, token);
+          localStorage.setItem(EXPIRY_KEY, expiry.toString());
+        } catch (e) {}
+      }
+
+      function showSuccess() {
+        document.getElementById('state-form').hidden = true;
+        document.getElementById('state-success').hidden = false;
+      }
+
+      function showForm() {
+        document.getElementById('state-success').hidden = true;
+        document.getElementById('state-form').hidden = false;
+        var input = document.getElementById('code-input');
+        var btn = document.getElementById('code-btn');
+        var msg = document.getElementById('code-msg');
+
+        function attempt() {
+          var entered = (input.value || '').trim().toUpperCase();
+          if (entered === ACCESS_CODE) {
+            activateAccess();
+            showSuccess();
+          } else {
+            msg.textContent = 'That access code is not valid. Please check and try again.';
+            input.focus();
+          }
+        }
+        btn.addEventListener('click', attempt);
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') attempt();
+        });
+        input.focus();
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var code = (params.get('code') || '').trim().toUpperCase();
+
+      if (params.get('success') === 'true' || params.get('session_id') || code === ACCESS_CODE) {
+        activateAccess();
+        showSuccess();
+      } else {
+        showForm();
+      }
+    })();
+  </script>
+</body>
+</html>
