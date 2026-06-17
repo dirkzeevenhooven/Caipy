@@ -334,7 +334,7 @@
     <a href="guide/contact.html">Contact</a>
   </div>
 <div style="display:flex;gap:12px;align-items:center">
-  <button onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})" style="display:flex;align-items:center;gap:9px;background:#c9a84c;color:#0d1b2a;padding:6px 18px 6px 6px;border-radius:100px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif"><img src="ubuntu-avatar.png" alt="Ubuntu" style="width:30px;height:30px;border-radius:50%;object-fit:cover;display:block">Talk to Ubuntu</button>
+  <button onclick="openCaipy()" style="display:flex;align-items:center;gap:9px;background:#c9a84c;color:#0d1b2a;padding:6px 18px 6px 6px;border-radius:100px;font-weight:700;font-size:13px;border:none;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif"><img src="ubuntu-avatar.png" alt="Ubuntu" style="width:30px;height:30px;border-radius:50%;object-fit:cover;display:block">Talk to Ubuntu</button>
   <button id="guideNavBtn" onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);padding:10px 18px;border-radius:100px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;font-family:&#39;Jost&#39;,sans-serif">Unlock the Guide</button>
 </div>
   <button class="ham-btn" onclick="toggleMobileNav()">☰</button>
@@ -395,11 +395,11 @@
     <img src="photos/cape-town-guide-logo.png" alt="The Cape Town Guide — by Planet Curated" style="width:min(500px,68vw);height:auto;display:inline-block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.60)) drop-shadow(0 7px 30px rgba(0,0,0,.55));">
   </div>
   <div style="position:absolute;top:52vh;left:0;right:0;z-index:2;text-align:center;padding:0 6vw;pointer-events:none;">
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:3.4rem;font-weight:600;color:#fff;line-height:1.05;margin:0 0 14px;text-shadow:0 2px 18px rgba(0,0,0,.55);">Cape Town, sorted.</h2>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:3.4rem;font-weight:600;color:#fff;line-height:1.05;margin:0 0 14px;text-shadow:0 2px 18px rgba(0,0,0,.55);">Cape Town, curated.</h2>
     <p style="font-family:'Jost',sans-serif;font-size:1.05rem;font-weight:300;color:rgba(255,255,255,.92);max-width:600px;margin:0 auto 26px;line-height:1.6;text-shadow:0 1px 10px rgba(0,0,0,.5);">The complete curated guide — where to stay, what to skip, and how to spend every day. Built on 15 years living the city.</p>
     <div class="hero-cta-row" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;pointer-events:auto;">
       <button onclick="document.getElementById('itinerary-modal').style.display='flex'" style="background:#B8863A;color:#fff;border:none;padding:15px 32px;border-radius:4px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .25s;box-shadow:0 8px 24px rgba(184,134,58,.4);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">Unlock The Cape Town Guide — €49</button>
-      <button onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);padding:15px 32px;border-radius:4px;font-family:'Jost',sans-serif;font-size:12px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='rgba(255,255,255,.7)'" onmouseout="this.style.borderColor='rgba(255,255,255,.45)'">Talk to Ubuntu — free</button>
+      <button onclick="openCaipy()" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);padding:15px 32px;border-radius:4px;font-family:'Jost',sans-serif;font-size:12px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='rgba(255,255,255,.7)'" onmouseout="this.style.borderColor='rgba(255,255,255,.45)'">Talk to Ubuntu — free</button>
     </div>
   </div>
 </section>
@@ -460,7 +460,7 @@
         </div>
       </div>
 
-      <button onclick="document.getElementById('itinerary').scrollIntoView({behavior:'smooth'})" style="background:transparent;color:#D4A85A;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 28px;border-radius:4px;border:1.5px solid rgba(212,165,90,.5);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='rgba(212,165,90,.9)';this.style.color='#e8c87a'" onmouseout="this.style.borderColor='rgba(212,165,90,.5)';this.style.color='#D4A85A'">
+      <button onclick="openLightbox(1)" style="background:transparent;color:#D4A85A;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 28px;border-radius:4px;border:1.5px solid rgba(212,165,90,.5);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='rgba(212,165,90,.9)';this.style.color='#e8c87a'" onmouseout="this.style.borderColor='rgba(212,165,90,.5)';this.style.color='#D4A85A'">
         Preview the Personalised Plan →
       </button>
     </div>
@@ -482,7 +482,7 @@
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
           <div class="itin-day-num">Where to stay</div>
-          <div class="itin-day-title">By neighbourhood</div>
+          <div class="itin-day-title">Neighbourhoods</div>
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Which area fits your trip — honest pros, cons &amp; safety notes.</p>
         </div>
       </div>
@@ -500,7 +500,7 @@
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
           <div class="itin-day-num">Beaches</div>
-          <div class="itin-day-title">Beaches &amp; coast</div>
+          <div class="itin-day-title">Beaches</div>
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">Clifton, Llandudno, Boulders — matched to wind and mood.</p>
         </div>
       </div>
@@ -509,7 +509,7 @@
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
           <div class="itin-day-num">Wine</div>
-          <div class="itin-day-title">Wine &amp; winelands</div>
+          <div class="itin-day-title">Winelands &amp; wineries</div>
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">The estates worth your afternoon — minus the crowds.</p>
         </div>
       </div>
@@ -518,7 +518,7 @@
         <div class="itin-overlay"></div>
         <div class="itin-day" style="padding-bottom:24px;">
           <div class="itin-day-num">Outdoors</div>
-          <div class="itin-day-title">Hikes &amp; the outdoors</div>
+          <div class="itin-day-title">Outdoor activities</div>
           <p style="position:relative;z-index:2;margin-top:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:300;">From Lion's Head to hidden contour paths — timed right.</p>
         </div>
       </div>
@@ -590,7 +590,7 @@
         <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#fff;line-height:1.1;margin-bottom:6px;">Personalised Plan</div>
         <div style="font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.5px;margin-bottom:18px;">Add-on · built around your trip</div>
         <p style="font-size:14px;color:rgba(255,255,255,.78);line-height:1.7;margin-bottom:24px;flex-grow:1;"><strong style="color:#fff;">Everything in the Guide, plus</strong> a day-by-day itinerary Ubuntu builds around your exact dates, party and pace — and reroutes in real time when plans change.</p>
-        <button onclick="document.getElementById('itinerary').scrollIntoView({behavior:'smooth'})" style="background:transparent;color:var(--gold-l);font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;border:1px solid var(--gold);cursor:pointer;width:100%;transition:all .25s;" onmouseover="this.style.background='rgba(184,134,58,.15)'" onmouseout="this.style.background='transparent'">Preview the Personalised Plan →</button>
+        <button onclick="openLightbox(1)" style="background:transparent;color:var(--gold-l);font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:16px 28px;border-radius:4px;border:1px solid var(--gold);cursor:pointer;width:100%;transition:all .25s;" onmouseover="this.style.background='rgba(184,134,58,.15)'" onmouseout="this.style.background='transparent'">Preview the Personalised Plan →</button>
       </div>
     </div>
   </div>
@@ -1610,7 +1610,7 @@
 // Topic-specific preview content
 var PREVIEWS = {
   'neighbourhoods': {
-    image: 'photos/camps-bay.webp', eyebrow: 'Where to stay', title: 'By neighbourhood',
+    image: 'photos/camps-bay.webp', eyebrow: 'Where to stay', title: 'Neighbourhoods',
     intro: 'Cape Town changes completely depending on where you stay. This preview helps you choose the base that makes your days easier, safer and more enjoyable.',
     bullets: [
       'Sea Point — the smartest first-timer base: ocean walks, cafés, Uber access and fewer Camps Bay prices.',
@@ -1632,7 +1632,7 @@ var PREVIEWS = {
     tip: 'The best tables disappear early. Book sunset dinners before tourists realise they need a reservation.'
   },
   'beaches': {
-    image: 'photos/llandudno-beach.jpg', eyebrow: 'Beaches', title: 'Beaches & coast',
+    image: 'photos/llandudno-beach.jpg', eyebrow: 'Beaches', title: 'Beaches',
     intro: 'Cape Town beach days are all about wind, timing and choosing the right side of the mountain.',
     bullets: [
       'Clifton — your best beach call when the south-easter makes Camps Bay uncomfortable.',
@@ -1643,7 +1643,7 @@ var PREVIEWS = {
     tip: 'If Cape Town is windy, don\u2019t fight the city. Move beaches. Clifton or Beta Beach can save your day.'
   },
   'wine': {
-    image: 'photos/winelands.webp', eyebrow: 'Wine', title: 'Wine & winelands',
+    image: 'photos/winelands.webp', eyebrow: 'Wine', title: 'Winelands & wineries',
     intro: 'The winelands can be a lazy half-day, a full postcard day or a polished food-and-wine escape \u2014 the trick is choosing the right route.',
     bullets: [
       'Constantia — the easiest winelands feeling without losing half your day in traffic.',
@@ -1654,7 +1654,7 @@ var PREVIEWS = {
     tip: 'Short on time? Choose Constantia. Want the full postcard wine day? Go Stellenbosch or Franschhoek.'
   },
   'outdoors': {
-    image: 'photos/signal-hill.webp', eyebrow: 'Outdoors', title: 'Hikes & the outdoors',
+    image: 'photos/signal-hill.webp', eyebrow: 'Outdoors', title: 'Outdoor activities',
     intro: 'Cape Town rewards people who move early, watch the weather and pick the right adventure for the day.',
     bullets: [
       'Lion\u2019s Head — sunrise or sunset classic, but only when wind and visibility are on your side.',
