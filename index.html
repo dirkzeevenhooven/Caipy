@@ -995,7 +995,8 @@
     }
     caipyOpen = false;
     document.getElementById('caipyPanel').classList.add('hidden');
-    document.getElementById('caipyBtn').style.display = 'flex';
+    const _caipyBtn = document.getElementById('caipyBtn');
+    if (_caipyBtn) _caipyBtn.style.display = 'flex';
     document.getElementById('voicePulse').classList.remove('active');
     setVoiceStatus('Connecting…');
   }
@@ -1140,7 +1141,7 @@
     const bubble = document.getElementById('caipyBubble');
     if (bubble) bubble.style.display = 'none';
     panel.classList.remove('hidden');
-    btn.style.display = 'none';
+    if (btn) btn.style.display = 'none';
 
     // Start voice call — SDK called within click handler, user activation preserved
     window._caipyMessages = [];
