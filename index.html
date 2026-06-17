@@ -74,7 +74,7 @@
     .ai-section .section-label { color: var(--gold-l); }
     .ai-section .section-title { color: var(--white); }
     .ai-section .section-sub { color: rgba(255,255,255,.55); }
-    .ubuntu-meet { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 220px 1fr; gap: 60px; align-items: start; }
+    .ubuntu-meet { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 60px; align-items: start; }
     .ubuntu-portrait-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .ubuntu-avatar-wrap { position: relative; display: inline-block; margin-bottom: 16px; }
     .ubuntu-portrait { width: 170px; height: 170px; border-radius: 50%; object-fit: cover; object-position: center 20%; border: 3px solid rgba(212,165,90,.4); box-shadow: 0 0 0 6px rgba(212,165,90,.08), 0 20px 60px rgba(0,0,0,.5); }
@@ -91,6 +91,13 @@
     .ubuntu-msg-body p { font-size: 14px; color: rgba(255,255,255,.72); line-height: 1.85; margin-bottom: 12px; font-weight: 300; }
     .ubuntu-msg-body p:last-child { margin-bottom: 0; }
     .ubuntu-msg-body strong { color: var(--white); font-weight: 500; }
+    .ubuntu-uses { display: flex; flex-direction: column; gap: 22px; margin: 30px 0 26px; max-width: 500px; }
+    .ubuntu-use { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; }
+    .ubuntu-use-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(212,165,90,.7); margin-top: 8px; flex-shrink: 0; }
+    .ubuntu-use-title { font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-l); margin-bottom: 6px; }
+    .ubuntu-use-text { font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.6; font-weight: 300; }
+    .ubuntu-trust { font-size: 12px; letter-spacing: .3px; color: rgba(255,255,255,.45); margin: 0 0 24px; font-style: italic; }
+    .ubuntu-cta-row { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
     @media (max-width: 700px) { .ubuntu-meet { grid-template-columns: 1fr; gap: 32px; } .ubuntu-portrait-col { flex-direction: row; gap: 20px; text-align: left; align-items: center; } .ubuntu-portrait { width: 80px; height: 80px; } }
     .ai-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
     .chat-widget { background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,.4); border: 1px solid var(--border); }
@@ -441,28 +448,42 @@
     <div>
       <div class="section-label" style="color:rgba(212,165,90,.8);text-align:left;margin-bottom:12px">Your Personal Cape Town Travel Butler</div>
       <h2 class="section-title" style="text-align:left;margin-bottom:18px">Meet Ubuntu.</h2>
-      <p class="section-sub" style="text-align:left;max-width:500px">Ubuntu turns the Guide’s local intelligence into advice for your trip — where to stay, what to skip, when to go. Human-filtered local knowledge, not generic AI.</p>
+      <p class="section-sub" style="text-align:left;max-width:500px">Ubuntu turns the Guide’s local intelligence into practical advice for your trip — where to stay, what to skip, when to go, and how to adapt when plans change.</p>
 
-      <!-- Morning briefing card -->
-      <p style="font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(212,165,90,0.6);text-align:left;margin:32px 0 14px;">A glimpse of Ubuntu at work</p>
-      <div class="ubuntu-msg-card">
-        <div class="ubuntu-msg-header">
-          <div class="ubuntu-msg-av"><img src="ubuntu-avatar.png" alt="Ubuntu"></div>
+      <div class="ubuntu-uses">
+        <div class="ubuntu-use">
+          <div class="ubuntu-use-dot"></div>
           <div>
-            <div class="ubuntu-msg-who">Ubuntu</div>
-            <div class="ubuntu-msg-when">Morning briefing · Today, 08:14</div>
+            <div class="ubuntu-use-title">Before you go</div>
+            <div class="ubuntu-use-text">Ask where to stay, what to book, what to avoid and how to shape your itinerary.</div>
           </div>
-          <div class="ubuntu-msg-live"></div>
         </div>
-        <div class="ubuntu-msg-body">
-          <p>Good morning, howzit? <strong>Cape Town’s showing off</strong> — clear skies, low wind.</p>
-          <p>Table Mountain first, before 09:00 to beat the queues. South-easter kicks in after 14:00, so save the beach for late afternoon.</p>
+        <div class="ubuntu-use">
+          <div class="ubuntu-use-dot"></div>
+          <div>
+            <div class="ubuntu-use-title">During the day</div>
+            <div class="ubuntu-use-text">Check what works with today’s weather, wind, timing and your energy.</div>
+          </div>
+        </div>
+        <div class="ubuntu-use">
+          <div class="ubuntu-use-dot"></div>
+          <div>
+            <div class="ubuntu-use-title">When plans change</div>
+            <div class="ubuntu-use-text">Get a smarter alternative instead of losing time scrolling or second-guessing.</div>
+          </div>
         </div>
       </div>
 
-      <button onclick="openLightbox(1)" style="background:transparent;color:#D4A85A;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 28px;border-radius:4px;border:1.5px solid rgba(212,165,90,.5);cursor:pointer;transition:all .25s;" onmouseover="this.style.borderColor='rgba(212,165,90,.9)';this.style.color='#e8c87a'" onmouseout="this.style.borderColor='rgba(212,165,90,.5)';this.style.color='#D4A85A'">
-        Preview the Personalised Plan →
-      </button>
+      <p class="ubuntu-trust">Human-filtered local knowledge. Not generic AI.</p>
+
+      <div class="ubuntu-cta-row">
+        <button onclick="openCaipy()" style="background:linear-gradient(135deg,#D4A85A,#c9a96e);color:#0F2430;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 30px;border-radius:4px;border:none;cursor:pointer;transition:all .25s;box-shadow:0 8px 28px rgba(212,165,90,.25);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 36px rgba(212,165,90,.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 28px rgba(212,165,90,.25)'">
+          Talk to Ubuntu — free
+        </button>
+        <a onclick="openLightbox(1)" style="color:rgba(212,165,90,.85);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:color .25s;" onmouseover="this.style.color='#e8c87a'" onmouseout="this.style.color='rgba(212,165,90,.85)'">
+          See the Personalised Travel Plan →
+        </a>
+      </div>
     </div>
 
   </div>
