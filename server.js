@@ -577,7 +577,7 @@ app.post('/create-checkout-session', async (req, res) => {
             name: 'Caipy — Personal Cape Town Interactive Travel Guide',
             description: 'A stunning personalised interactive travel guide with day-by-day itinerary, photos, local tips, booking links and more — curated from 15+ years of Cape Town local knowledge.',
           },
-          unit_amount: 4900,
+          unit_amount: 4700,
         },
         quantity: 1,
       }],
