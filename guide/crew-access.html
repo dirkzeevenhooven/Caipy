@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>KLM Crew Tester Access · The Cape Town Crew Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-2: #0c1e2e;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-d: #B8863A;
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(1200px 600px at 50% -10%, #16344a 0%, var(--ocean-dark) 55%, var(--ocean-2) 100%);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(201,169,110,0.22);
+      border-radius: 20px;
+      padding: 46px 38px 40px;
+      text-align: center;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+    }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .icon {
+      width: 60px; height: 60px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(201,169,110,0.14);
+      border: 1px solid rgba(201,169,110,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.1rem;
+      font-weight: 600;
+      line-height: 1.14;
+      margin-bottom: 12px;
+    }
+    h1 .gold { color: var(--gold); font-style: italic; font-weight: 500; }
+    p.lead {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--white-dim);
+      line-height: 1.7;
+      margin-bottom: 26px;
+    }
+    .field { display: flex; flex-direction: column; gap: 12px; margin-bottom: 6px; }
+    input[type="text"] {
+      width: 100%;
+      padding: 15px 16px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(201,169,110,0.35);
+      background: rgba(255,255,255,0.04);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      letter-spacing: 1.5px;
+      text-align: center;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color .2s, background .2s;
+    }
+    input[type="text"]::placeholder { color: rgba(250,248,244,0.4); letter-spacing: .5px; text-transform: none; }
+    input[type="text"]:focus { border-color: var(--gold); background: rgba(255,255,255,0.07); }
+    .btn {
+      width: 100%;
+      display: inline-block;
+      padding: 16px 28px;
+      border: none;
+      border-radius: 8px;
+      background: var(--gold-d);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 8px 26px rgba(184,134,58,0.4);
+      transition: background .2s, transform .15s;
+    }
+    .btn:hover { background: var(--gold); transform: translateY(-1px); }
+    .msg { min-height: 20px; font-size: 13px; margin-top: 14px; font-weight: 300; }
+    .msg.error { color: #e88a7d; }
+    .msg.ok { color: var(--gold-light); }
+    .micro {
+      margin-top: 22px;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: rgba(250,248,244,0.42);
+      font-weight: 300;
+    }
+    .joke { margin-top: 14px; font-size: 12px; letter-spacing: 1px; color: rgba(201,169,110,0.55); text-transform: uppercase; }
+    @media (max-width: 480px) {
+      .card { padding: 36px 22px 32px; border-radius: 16px; }
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="icon">&#9992;&#65039;</div>
+    <div class="eyebrow">KLM Crew Tester Access</div>
+    <h1>Unlock The Cape Town <span class="gold">Crew Guide</span></h1>
+    <p class="lead">Curated 3-day and 5-day layover plans for airline crew.</p>
+    <div class="field">
+      <input id="code-input" type="text" placeholder="Enter your crew code" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+      <button class="btn" id="code-btn" type="button">Unlock The Cape Town Crew Guide</button>
+    </div>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+    <p class="micro">This unlocks the Crew Guide only. Full The Cape Town Guide access is separate.</p>
+    <div class="joke">Layover, not hangover.</div>
+  </main>
+
+  <script>
+    (function () {
+      var CREW_KEY = 'ctg_crew_access';
+      var CREW_EXPIRY_KEY = 'ctg_crew_expiry';
+      var VALID_CODE = 'KLMCREW100';
+
+      function grantCrewAccess() {
+        var expiry = Date.now() + 365 * 24 * 60 * 60 * 1000; // 365 days
+        try {
+          localStorage.setItem(CREW_KEY, 'true');
+          localStorage.setItem(CREW_EXPIRY_KEY, expiry.toString());
+        } catch (e) {}
+      }
+
+      var input = document.getElementById('code-input');
+      var btn = document.getElementById('code-btn');
+      var msg = document.getElementById('msg');
+
+      function normalise(v) { return (v || '').trim().toUpperCase(); }
+
+      function attempt(code) {
+        if (normalise(code) === VALID_CODE) {
+          grantCrewAccess();
+          msg.className = 'msg ok';
+          msg.textContent = 'Access granted. Smooth landings — taking you in…';
+          window.location.replace('/guide/crew.html');
+        } else {
+          msg.className = 'msg error';
+          msg.textContent = 'That code is not valid. Please check your crew tester invite and try again.';
+          input.focus();
+        }
+      }
+
+      btn.addEventListener('click', function () { attempt(input.value); });
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') attempt(input.value); });
+
+      // Accept ?code=KLMCREW100 — prefill, but still verify before granting.
+      var params = new URLSearchParams(window.location.search);
+      var urlCode = (params.get('code') || '').trim();
+      if (urlCode) {
+        input.value = urlCode;
+        attempt(urlCode);
+      } else {
+        input.focus();
+      }
+    })();
+  </script>
+</body>
+</html>

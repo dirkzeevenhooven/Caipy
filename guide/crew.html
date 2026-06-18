@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>The Cape Town Crew Guide · Planet Curated</title>
+
+  <!-- INLINE ACCESS GATE — runs before render. Allows crew testers OR full Guide buyers. -->
+  <script>
+    (function () {
+      function valid(tokenKey, expiryKey) {
+        try {
+          var t = localStorage.getItem(tokenKey);
+          var e = parseInt(localStorage.getItem(expiryKey) || '0', 10);
+          return !!t && e > Date.now();
+        } catch (err) { return false; }
+      }
+      var crewOk = valid('ctg_crew_access', 'ctg_crew_expiry');
+      var guideOk = valid('ctg_access_token', 'ctg_access_expiry');
+      if (!crewOk && !guideOk) {
+        window.location.replace('/guide/crew-access.html');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #1B3A4B; --ocean-dark: #0F2430; --ocean-2: #0c1e2e; --ocean-mid: #1e3f52;
+      --gold: #C9A96E; --gold-light: #e0c48a; --gold-dim: rgba(201,169,110,0.3);
+      --white: #FAF8F4; --white-dim: rgba(250,248,244,0.65); --white-faint: rgba(250,248,244,0.4);
+      --card: rgba(255,255,255,0.035); --card-border: rgba(201,169,110,0.18);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--ocean-dark); color: var(--white); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 22px; }
+    section { padding: 56px 0; border-top: 1px solid rgba(201,169,110,0.10); }
+    section:first-of-type { border-top: none; }
+    .eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4vw, 38px); font-weight: 300; line-height: 1.12; margin-bottom: 10px; }
+    h2 em { font-style: italic; color: var(--gold); }
+    .sec-lead { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 640px; margin-bottom: 28px; font-weight: 300; }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 78vh;
+      display: flex; align-items: center;
+      background: radial-gradient(1100px 540px at 50% -10%, #16344a 0%, var(--ocean-dark) 58%, var(--ocean-2) 100%);
+      overflow: hidden;
+    }
+    .hero-inner { position: relative; z-index: 2; width: 100%; max-width: 1100px; margin: 0 auto; padding: 70px 22px; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 6vw, 64px); font-weight: 300; line-height: 1.06; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 16px; color: var(--white-dim); line-height: 1.7; max-width: 580px; margin-top: 18px; font-weight: 300; }
+    .hero-joke { display: inline-block; margin-top: 18px; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: rgba(201,169,110,0.7); }
+
+    /* ANCHOR NAV */
+    .anchors { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+    .anchor-btn {
+      display: inline-flex; align-items: center;
+      padding: 12px 22px;
+      border: 1px solid rgba(201,169,110,0.45);
+      border-radius: 999px;
+      color: var(--gold);
+      font-size: 13px; font-weight: 500; text-decoration: none;
+      transition: all .2s;
+    }
+    .anchor-btn:hover { background: rgba(201,169,110,0.12); color: var(--gold-light); }
+    .anchor-btn.solid { background: var(--gold); color: var(--ocean-dark); border-color: var(--gold); font-weight: 600; }
+    .anchor-btn.solid:hover { background: var(--gold-light); }
+
+    /* CARDS */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 22px 22px 20px;
+      transition: border-color .2s, transform .2s;
+    }
+    .card:hover { border-color: rgba(201,169,110,0.4); transform: translateY(-2px); }
+    .card h3 { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--white); }
+    .card p { font-size: 13.5px; color: var(--white-dim); line-height: 1.65; font-weight: 300; }
+    .card .tag { display: inline-block; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+
+    /* DAY / PLAN BLOCKS */
+    .days { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .day {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 24px 22px;
+    }
+    .day .num { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .day h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 10px; }
+    .day ul { list-style: none; }
+    .day li { position: relative; padding-left: 18px; font-size: 13.5px; color: var(--white-dim); line-height: 1.7; font-weight: 300; }
+    .day li::before { content: '›'; position: absolute; left: 0; color: var(--gold); }
+
+    /* SIMPLE LIST ROWS */
+    .rows { display: grid; gap: 12px; }
+    .row {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .row .rk { flex-shrink: 0; width: 120px; font-size: 13px; font-weight: 600; color: var(--gold); }
+    .row .rv { font-size: 13.5px; color: var(--white-dim); line-height: 1.65; font-weight: 300; }
+
+    .note {
+      margin-top: 20px;
+      background: rgba(201,169,110,0.07);
+      border: 1px solid rgba(201,169,110,0.25);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 13px; color: var(--white-dim); line-height: 1.7; font-weight: 300;
+    }
+    .note strong { color: var(--gold-light); font-weight: 500; }
+
+    /* FEEDBACK */
+    .feedback {
+      text-align: center;
+      background: radial-gradient(800px 360px at 50% 0%, #16344a 0%, var(--ocean-dark) 70%);
+      border-top: 1px solid rgba(201,169,110,0.18);
+    }
+    .feedback h2 { margin-bottom: 14px; }
+    .feedback p { font-size: 15px; color: var(--white-dim); line-height: 1.7; max-width: 540px; margin: 0 auto 26px; font-weight: 300; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 15px 30px;
+      background: var(--gold); color: var(--ocean-dark);
+      border-radius: 8px; font-size: 13px; font-weight: 600;
+      text-decoration: none; transition: background .2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); }
+
+    footer { text-align: center; padding: 30px 22px 44px; font-size: 11px; letter-spacing: 1px; color: var(--white-faint); }
+
+    @media (max-width: 600px) {
+      .hero { min-height: auto; }
+      .hero-inner { padding: 56px 22px; }
+      .row { flex-direction: column; gap: 4px; }
+      .row .rk { width: auto; }
+      section { padding: 44px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Planet Curated · KLM Crew Edition</div>
+      <h1>The Cape Town <em>Crew Guide</em></h1>
+      <p class="hero-sub">Curated 3-day and 5-day Cape Town layover plans for airline crew.</p>
+      <span class="hero-joke">Layover, not hangover.</span>
+      <nav class="anchors">
+        <a class="anchor-btn solid" href="#quick-start">Quick Start</a>
+        <a class="anchor-btn" href="#three-day">3-Day Plan</a>
+        <a class="anchor-btn" href="#five-day">5-Day Plan</a>
+        <a class="anchor-btn" href="#favourites">Crew Favourites</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SECTION 1 — QUICK START -->
+  <section id="quick-start">
+    <div class="wrap">
+      <div class="eyebrow">Quick Start</div>
+      <h2>Just landed? <em>Start here.</em></h2>
+      <p class="sec-lead">Pick how much time and energy you have. Each route is built for crew — minimal planning, maximum payoff.</p>
+      <div class="cards">
+        <div class="card"><span class="tag">3–4 hrs</span><h3>I have 3–4 hours free</h3><p>A tight, high-reward loop: coffee, a walk with a view, one good photo, back in time to rest. Jump to <a href="#three-four" style="color:var(--gold)">the 3–4 hour plan</a>.</p></div>
+        <div class="card"><span class="tag">Half day</span><h3>I have half a day</h3><p>One anchor experience — V&amp;A + lunch, or a beach + sunset — without rushing or over-committing before duty.</p></div>
+        <div class="card"><span class="tag">Full day</span><h3>I have a full day</h3><p>Go bigger: a wine half-day, a hike, or a coast drive. See the <a href="#three-day" style="color:var(--gold)">day plans</a> for ready-made routes.</p></div>
+        <div class="card"><span class="tag">Group</span><h3>We&rsquo;re going as a group</h3><p>Private driver, one shared plan, no logistics stress. Jump to <a href="#wine-group" style="color:var(--gold)">wine &amp; group options</a>.</p></div>
+        <div class="card"><span class="tag">Recover</span><h3>I need a low-energy day</h3><p>Promenade, easy food, a spa, and a sunset you don&rsquo;t have to work for. See the <a href="#low-energy" style="color:var(--gold)">low-energy day</a>.</p></div>
+        <div class="card"><span class="tag">Active</span><h3>I want something active</h3><p>Lion&rsquo;s Head, Signal Hill, Pipe Track or the promenade. See <a href="#active" style="color:var(--gold)">Active Cape Town</a>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 — 3-DAY PLAN -->
+  <section id="three-day">
+    <div class="wrap">
+      <div class="eyebrow">The 3-Day Layover Plan</div>
+      <h2>Three days, <em>paced for crew.</em></h2>
+      <p class="sec-lead">Land soft, peak in the middle, wind down before duty. No day overloads the next.</p>
+      <div class="days">
+        <div class="day">
+          <div class="num">Day 1 · Arrive &amp; reset</div>
+          <h3>Recover &amp; ease in</h3>
+          <ul>
+            <li>Slow morning, hydrate, short Sea Point promenade walk</li>
+            <li>Easy, healthy lunch near your hotel</li>
+            <li>Low-effort sunset — Sea Point or Camps Bay</li>
+            <li>Early, light dinner; protect your sleep</li>
+          </ul>
+        </div>
+        <div class="day">
+          <div class="num">Day 2 · Your big day</div>
+          <h3>Choose your adventure</h3>
+          <ul>
+            <li>Active: Lion&rsquo;s Head or Pipe Track in the morning</li>
+            <li>Beach: Camps Bay or Clifton, lunch on the strip</li>
+            <li>Wine: Constantia half-day, vineyard lunch</li>
+            <li>City: V&amp;A, Bo-Kaap, Company&rsquo;s Garden</li>
+          </ul>
+        </div>
+        <div class="day">
+          <div class="num">Day 3 · Pre-duty</div>
+          <h3>Light &amp; low-risk</h3>
+          <ul>
+            <li>Great coffee and a relaxed breakfast</li>
+            <li>Easy flat walk — promenade or V&amp;A</li>
+            <li>No alcohol, no sun-overload, no big effort</li>
+            <li>Pack early; rest before report time</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — 5-DAY PLAN -->
+  <section id="five-day">
+    <div class="wrap">
+      <div class="eyebrow">The 5-Day Layover Plan</div>
+      <h2>Five days to <em>do it properly.</em></h2>
+      <p class="sec-lead">A balanced week — one standout experience per day, with built-in recovery so nothing compounds.</p>
+      <div class="days">
+        <div class="day"><div class="num">Day 1</div><h3>City day</h3><ul><li>V&amp;A Waterfront &amp; harbour</li><li>Bo-Kaap &amp; Company&rsquo;s Garden</li><li>Easy dinner in town</li></ul></div>
+        <div class="day"><div class="num">Day 2</div><h3>Beach &amp; sunset day</h3><ul><li>Camps Bay or Clifton</li><li>Lunch on the strip</li><li>Sundowners with Atlantic views</li></ul></div>
+        <div class="day"><div class="num">Day 3</div><h3>Wine day</h3><ul><li>Constantia or Stellenbosch</li><li>Vineyard lunch</li><li>Private driver recommended</li></ul></div>
+        <div class="day"><div class="num">Day 4</div><h3>Hike / adventure day</h3><ul><li>Lion&rsquo;s Head or Table Mountain</li><li>Pipe Track for a gentler option</li><li>Refuel with a big recovery meal</li></ul></div>
+        <div class="day"><div class="num">Day 5</div><h3>Flexible low-energy day</h3><ul><li>Promenade &amp; coffee</li><li>Spa or slow brunch</li><li>Effortless final sunset</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 — BY THE MOMENT -->
+  <section id="favourites">
+    <div class="wrap">
+      <div class="eyebrow">By the Moment</div>
+      <h2>Crew <em>favourites.</em></h2>
+      <p class="sec-lead">Whatever the moment calls for — handpicked, not algorithm-picked.</p>
+      <div class="cards">
+        <div class="card"><span class="tag">Coffee</span><h3>Coffee</h3><p>Specialty roasters around Sea Point, the City Bowl and the V&amp;A — strong flat whites and a calm start.</p></div>
+        <div class="card"><span class="tag">Lunch</span><h3>Lunch</h3><p>Light, fresh and quick: waterfront tables, Sea Point bistros, vineyard terraces if you have the time.</p></div>
+        <div class="card"><span class="tag">Dinner</span><h3>Dinner</h3><p>From relaxed seafood to standout city spots — pick by how early your next duty starts.</p></div>
+        <div class="card"><span class="tag">Sundowners</span><h3>Sunset drinks</h3><p>Camps Bay strip, Sea Point cocktail bars, or a quiet Signal Hill view. From touchdown to sundowner.</p></div>
+        <div class="card"><span class="tag">Recovery</span><h3>Healthy food / recovery meals</h3><p>Smoothie bowls, grain bowls and clean plates to reset after a long-haul — easy on the system.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 — ACTIVE -->
+  <section id="active">
+    <div class="wrap">
+      <div class="eyebrow">Active Cape Town</div>
+      <h2>Move, <em>with a view.</em></h2>
+      <p class="sec-lead">Short, scenic and crew-friendly — earn the sunset without wrecking tomorrow.</p>
+      <div class="rows">
+        <div class="row"><div class="rk">Lion&rsquo;s Head</div><div class="rv">The iconic Cape Town climb — roughly 1.5–2 hrs return. Go early or for sunset; take water and grippy shoes.</div></div>
+        <div class="row"><div class="rk">Signal Hill</div><div class="rv">Minimal effort, maximum payoff. Drive or short walk up for the city&rsquo;s best easy sunset.</div></div>
+        <div class="row"><div class="rk">Pipe Track</div><div class="rv">A gentle, mostly-flat contour trail under the Twelve Apostles — great low-impact option with sea views.</div></div>
+        <div class="row"><div class="rk">Promenade walks</div><div class="rv">The Sea Point promenade is flat, safe by day and perfect for a recovery walk or run.</div></div>
+        <div class="row"><div class="rk">Beaches</div><div class="rv">Camps Bay, Clifton and Llandudno for Atlantic beauty; the water is cold but the views are worth it.</div></div>
+      </div>
+      <div class="note"><strong>Wind, weather &amp; safety:</strong> Cape Town&rsquo;s &ldquo;Cape Doctor&rdquo; south-easter can be fierce — check the wind before any hike, start early, carry water, and turn back in bad conditions. Hike in pairs and stick to popular, well-used trails.</div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 — WINE & GROUP -->
+  <section id="wine-group">
+    <div class="wrap">
+      <div class="eyebrow">Wine &amp; Group Options</div>
+      <h2>Vineyards &amp; <em>group days.</em></h2>
+      <p class="sec-lead">The easiest way for a crew to spend a day well — someone else drives, you enjoy.</p>
+      <div class="rows">
+        <div class="row"><div class="rk">Constantia</div><div class="rv">Half-day, closest to the city. Historic estates, vineyard lunches, back before sunset — ideal on a 3-day layover.</div></div>
+        <div class="row"><div class="rk">Stellenbosch / Franschhoek</div><div class="rv">Full-day winelands with world-class estates. Best with a driver so everyone can taste freely.</div></div>
+        <div class="row"><div class="rk">Private driver / bus</div><div class="rv">A chauffeured car or small bus is the crew favourite — no parking, no nominated driver, door to door.</div></div>
+        <div class="row"><div class="rk">Small group planning</div><div class="rv">Book the driver a day ahead, agree on 2–3 estates, lock a lunch reservation, and keep a soft finish time before duty.</div></div>
+      </div>
+      <div class="note"><strong>Crew tip:</strong> Wine days are best mid-layover, never the day before duty. Share the driver cost across the group and you&rsquo;ll often beat the price of individual Ubers.</div>
+    </div>
+  </section>
+
+  <!-- SECTION 7 — LOW-ENERGY -->
+  <section id="low-energy">
+    <div class="wrap">
+      <div class="eyebrow">Low-Energy Day</div>
+      <h2>Do <em>almost nothing</em>, beautifully.</h2>
+      <p class="sec-lead">For the day after a long-haul, when recovery is the whole plan.</p>
+      <div class="rows">
+        <div class="row"><div class="rk">Easy breakfast</div><div class="rv">Slow start, good coffee and a clean plate near your hotel — no rush, no agenda.</div></div>
+        <div class="row"><div class="rk">Sea Point promenade</div><div class="rv">A flat, gentle walk by the ocean. Fresh air and movement without effort or risk.</div></div>
+        <div class="row"><div class="rk">Spa / recovery</div><div class="rv">A massage or hotel spa session to reset body clock and tired legs.</div></div>
+        <div class="row"><div class="rk">Sunset without effort</div><div class="rv">Sea Point or Signal Hill — drive up, watch the sky, be home in minutes.</div></div>
+        <div class="row"><div class="rk">Good food, close by</div><div class="rv">Stay near common crew areas (Sea Point, V&amp;A, City Bowl) so dinner is a short, safe hop.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8 — 3–4 HOURS -->
+  <section id="three-four">
+    <div class="wrap">
+      <div class="eyebrow">I Only Have 3–4 Hours</div>
+      <h2>Short on time, <em>big on Cape Town.</em></h2>
+      <p class="sec-lead">Pick one — each fits comfortably inside a tight window with travel time included.</p>
+      <div class="cards">
+        <div class="card"><span class="tag">Classic</span><h3>Coffee + promenade</h3><p>Flat white in Sea Point, then a slow ocean walk. Calm, scenic, zero stress.</p></div>
+        <div class="card"><span class="tag">Easy</span><h3>V&amp;A + lunch</h3><p>Harbour views, shops and a relaxed waterfront lunch — all in one walkable spot.</p></div>
+        <div class="card"><span class="tag">Golden hour</span><h3>Sunset drink</h3><p>One sundowner with a view — Camps Bay strip or a quiet Signal Hill spot.</p></div>
+        <div class="card"><span class="tag">Scenic</span><h3>Quick scenic drive</h3><p>Sea Point &rarr; Camps Bay &rarr; Llandudno along the coast — the best 60–90 min loop in the city.</p></div>
+        <div class="card"><span class="tag">Beach</span><h3>Easy beach stop</h3><p>Toes in the sand at Camps Bay or Clifton, a cold drink, and back in time to rest.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 9 — SAFETY & GETTING AROUND -->
+  <section id="safety">
+    <div class="wrap">
+      <div class="eyebrow">Safety &amp; Getting Around</div>
+      <h2>Move smart, <em>land smooth.</em></h2>
+      <p class="sec-lead">Common-sense crew guidance — Cape Town rewards a little planning.</p>
+      <div class="rows">
+        <div class="row"><div class="rk">Uber vs rental</div><div class="rv">Uber/Bolt are cheap, reliable and stress-free in the city — usually the best crew choice. A rental only pays off for full-day coastal or winelands trips.</div></div>
+        <div class="row"><div class="rk">Group transport</div><div class="rv">For 3+ people, a private driver or small bus is often cheaper and far easier than multiple cars or rides.</div></div>
+        <div class="row"><div class="rk">Late-night returns</div><div class="rv">Use Uber/Bolt door-to-door at night, share your trip with a colleague, and avoid walking alone after dark.</div></div>
+        <div class="row"><div class="rk">Before duty</div><div class="rv">Don&rsquo;t overpack the day before report time — no big hikes, heavy sun or late nights. Hydrate and protect your rest.</div></div>
+        <div class="row"><div class="rk">Common sense</div><div class="rv">Keep valuables low-key, stick to busy areas, watch your belongings on the beach, and trust your instincts.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 10 — FEEDBACK -->
+  <section class="feedback">
+    <div class="wrap">
+      <div class="eyebrow">Crew Edition · v1</div>
+      <h2>Help shape the <em>first Crew Edition.</em></h2>
+      <p>Tell us what crew actually need during a Cape Town layover — what&rsquo;s missing, what you&rsquo;d use, and what would make this your go-to.</p>
+      <a class="btn-primary" href="mailto:hello@thecapetownguide.com?subject=Cape%20Town%20Crew%20Guide%20Feedback">Send feedback &rarr;</a>
+    </div>
+  </section>
+
+  <footer>
+    The Cape Town Crew Guide · Planet Curated &middot; Smooth landings. Better layovers.
+  </footer>
+
+</body>
+</html>
