@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Access Granted · Planet Curated Cape Town</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #0F2430; color: #FAF8F4; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; }
+    .wrap { padding: 40px; max-width: 460px; }
+    .icon { font-size: 48px; margin-bottom: 24px; }
+    h1 { font-family: Georgia, serif; font-size: 28px; font-weight: 400; margin-bottom: 12px; }
+    p { font-size: 15px; color: rgba(250,248,244,0.65); line-height: 1.7; }
+    .gold { color: #C9A96E; }
+    .btn {
+      display: inline-block;
+      margin-top: 26px;
+      padding: 14px 30px;
+      background: #B8863A;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    .btn:hover { background: #C9A96E; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- VERIFYING -->
+    <section id="state-verifying">
+      <div class="icon">✓</div>
+      <h1>Confirming your <span class="gold">access</span>…</h1>
+      <p>One moment while we verify your payment.</p>
+    </section>
+
+    <!-- ERROR -->
+    <section id="state-error" hidden>
+      <div class="icon">⚠️</div>
+      <h1>We couldn&rsquo;t confirm <span class="gold">your access</span></h1>
+      <p id="error-text">We weren&rsquo;t able to verify this payment. If you completed checkout, please open the link in your confirmation email.</p>
+      <a class="btn" href="/guide/access.html">Go to Access Page</a>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var TOKEN_KEY = 'ctg_access_token';
+      var EXPIRY_KEY = 'ctg_access_expiry';
+      var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000'
+        : 'https://caipy-sfau.onrender.com';
+
+      function showError(message) {
+        if (message) document.getElementById('error-text').textContent = message;
+        document.getElementById('state-verifying').hidden = true;
+        document.getElementById('state-error').hidden = false;
+      }
+
+      // Only ever called after the server confirms the Stripe payment is paid.
+      function activateAccess() {
+        var token = 'ctg_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        var expiry = Date.now() + 365 * 24 * 60 * 60 * 1000; // 365 days
+        try {
+          localStorage.setItem(TOKEN_KEY, token);
+          localStorage.setItem(EXPIRY_KEY, expiry.toString());
+        } catch (e) {}
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var sessionId = (params.get('session_id') || '').trim();
+
+      // No session id → do NOT grant access. Send the user to the access page.
+      if (!sessionId) {
+        showError('This page is only reachable after checkout. Please open the link in your confirmation email.');
+        return;
+      }
+
+      // Verify the Stripe session server-side before granting anything.
+      (async function () {
+        try {
+          var res = await fetch(API_BASE + '/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: sessionId })
+          });
+          var data = await res.json();
+          if (res.ok && data && data.success) {
+            activateAccess();
+            window.location.replace('/guide/home.html');
+          } else {
+            showError((data && data.error) ? data.error : 'We weren\u2019t able to verify your payment.');
+          }
+        } catch (e) {
+          showError('Something went wrong while verifying your payment. Please check your connection and try again.');
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

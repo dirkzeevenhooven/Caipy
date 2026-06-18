@@ -16,6 +16,13 @@ const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+// ─── Signed access-token secret ───────────────────────────────────────────────
+// Used to sign/verify per-buyer access links (HMAC). Never logged or exposed.
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || '';
+if (!ACCESS_TOKEN_SECRET) {
+  console.warn('[access] WARNING: ACCESS_TOKEN_SECRET is not set — signed access links cannot be issued or verified. Set ACCESS_TOKEN_SECRET in the environment.');
+}
+
 // ─── Voucher codes (single-use, 100% discount for friends & family testing) ───
 const VOUCHER_CODES = new Map([
   ['CAPETOWN-VIP', { used: false, multiUse: true }],  // unlimited use
@@ -78,6 +85,94 @@ function isValidToken(token) {
   const { createdAt } = sessions.get(token);
   // Tokens valid for 30 days
   return Date.now() - createdAt < 30 * 24 * 60 * 60 * 1000;
+}
+
+// ─── Signed access tokens (HMAC) + activation tracking ────────────────────────
+// A signed access token encodes { email, product, exp } and is signed with
+// ACCESS_TOKEN_SECRET. It is self-contained (stateless) so it survives restarts.
+// Activation tracking is persisted to the same Render disk used by storage.js
+// (DATA_DIR), so the per-token device/activation count also survives restarts.
+const ACCESS_DATA_DIR = process.env.DATA_DIR || (process.env.RENDER ? '/var/data' : path.join(__dirname, '.data'));
+const ACTIVATIONS_DIR = path.join(ACCESS_DATA_DIR, 'activations');
+try {
+  fs.mkdirSync(ACTIVATIONS_DIR, { recursive: true });
+} catch (e) {
+  console.error('[access] Could not create activations dir', ACTIVATIONS_DIR, '—', e.message);
+}
+
+function b64url(input) {
+  return Buffer.from(input).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function b64urlDecode(str) {
+  let s = String(str).replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  return Buffer.from(s, 'base64').toString('utf8');
+}
+
+// Sign a token for a buyer email. product defaults to "ctg" (main guide),
+// so the same mechanism can later sign "crew", or future city guides.
+function signAccessToken(email, product = 'ctg', daysValid = 30) {
+  if (!ACCESS_TOKEN_SECRET) throw new Error('ACCESS_TOKEN_SECRET not configured');
+  const payload = {
+    email: String(email || '').trim().toLowerCase(),
+    product: product || 'ctg',
+    exp: Date.now() + daysValid * 24 * 60 * 60 * 1000,
+  };
+  const payloadB64 = b64url(JSON.stringify(payload));
+  const sig = b64url(crypto.createHmac('sha256', ACCESS_TOKEN_SECRET).update(payloadB64).digest());
+  return payloadB64 + '.' + sig;
+}
+
+// Verify signature, expiry, and that the submitted email matches the token.
+// Returns { ok:true, payload } or { ok:false, error }.
+function verifySignedAccessToken(token, submittedEmail) {
+  if (!ACCESS_TOKEN_SECRET) return { ok: false, error: 'server_not_configured' };
+  if (!token || typeof token !== 'string' || token.indexOf('.') < 0) return { ok: false, error: 'malformed' };
+  const parts = token.split('.');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return { ok: false, error: 'malformed' };
+  const [payloadB64, sig] = parts;
+  const expected = b64url(crypto.createHmac('sha256', ACCESS_TOKEN_SECRET).update(payloadB64).digest());
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return { ok: false, error: 'bad_signature' };
+  let payload;
+  try { payload = JSON.parse(b64urlDecode(payloadB64)); } catch (e) { return { ok: false, error: 'malformed' }; }
+  if (!payload || !payload.email || !payload.exp) return { ok: false, error: 'malformed' };
+  if (Date.now() > Number(payload.exp)) return { ok: false, error: 'expired' };
+  const submitted = String(submittedEmail || '').trim().toLowerCase();
+  if (!submitted || submitted !== payload.email) return { ok: false, error: 'email_mismatch' };
+  return { ok: true, payload };
+}
+
+// The activation record is keyed by a hash of the token (the raw token is
+// never written to disk).
+function getActivationKey(token) {
+  return crypto.createHash('sha256').update(String(token || '')).digest('hex');
+}
+
+// Record one activation for this token, enforcing maxActivations.
+// Each successful call consumes one activation slot (≈ one device).
+// Returns { ok:true, count } or { ok:false, error:'activation_limit', count }.
+function checkAndRecordActivation(token, email, maxActivations = 2) {
+  const file = path.join(ACTIVATIONS_DIR, getActivationKey(token) + '.json');
+  let rec;
+  try { rec = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { rec = null; }
+  if (!rec || !Array.isArray(rec.activations)) rec = { activations: [] };
+  if (rec.activations.length >= maxActivations) {
+    return { ok: false, error: 'activation_limit', count: rec.activations.length };
+  }
+  rec.activations.push({ email: String(email || '').trim().toLowerCase(), at: new Date().toISOString() });
+  try {
+    const tmp = `${file}.${process.pid}.${Date.now()}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify(rec, null, 2), 'utf8');
+    fs.renameSync(tmp, file);
+    return { ok: true, count: rec.activations.length, persisted: true };
+  } catch (e) {
+    // If the disk isn't writable, don't lock out a paying buyer — grant access
+    // but log that this activation could not be persisted/counted.
+    console.error('[access] Could not persist activation:', e.message);
+    return { ok: true, count: rec.activations.length, persisted: false };
+  }
 }
 
 // ─── PDF Generator ───────────────────────────────────────────────────────────
@@ -763,10 +858,18 @@ app.post('/verify-payment', async (req, res) => {
     console.log('Payment verified. email:', email, 'pendingId:', pendingId, 'conversationId:', conversationId);
 
     if (email) {
-      // Send the access-confirmation email (independent of itinerary generation)
-      sendAccessEmail(email, 'https://www.thecapetownguide.com/guide/access.html?success=true').catch(err => {
-        console.error('sendAccessEmail (payment) error:', err.message);
-      });
+      // Send the access-confirmation email (independent of itinerary generation).
+      // Link carries a per-buyer signed token; the buyer confirms this email on
+      // access.html before access is granted (no public ?success=true unlock).
+      try {
+        const accessToken = signAccessToken(email, 'ctg', 30);
+        const accessUrl = 'https://www.thecapetownguide.com/guide/access.html?token=' + encodeURIComponent(accessToken);
+        sendAccessEmail(email, accessUrl).catch(err => {
+          console.error('sendAccessEmail (payment) error:', err.message);
+        });
+      } catch (err) {
+        console.error('signAccessToken (payment) error:', err.message);
+      }
 
       // Get transcript from memory cache (fast path)
       let transcript = '';
@@ -789,6 +892,36 @@ app.post('/verify-payment', async (req, res) => {
     console.error('Verify payment error:', err);
     res.status(500).json({ error: err.message });
   }
+});
+
+// Verify a signed access token + buyer email, then record an activation.
+// Returns { ok:true } only when signature, expiry, email match, and the
+// activation limit are all satisfied. Used by guide/access.html.
+app.post('/verify-access-token', (req, res) => {
+  const { token, email } = req.body || {};
+  if (!token || !email) return res.json({ ok: false, error: 'Please enter the email used for your purchase.' });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email))) {
+    return res.json({ ok: false, error: 'Please enter a valid email address.' });
+  }
+
+  const verified = verifySignedAccessToken(token, email);
+  if (!verified.ok) {
+    const messages = {
+      server_not_configured: 'Access verification is temporarily unavailable. Please contact us.',
+      malformed: 'This access link is not valid. Please use the link from your confirmation email.',
+      bad_signature: 'This access link is not valid. Please use the link from your confirmation email.',
+      expired: 'This access link has expired. Please contact us for a new one.',
+      email_mismatch: 'That email does not match this purchase. Please enter the email you used at checkout.',
+    };
+    return res.json({ ok: false, error: messages[verified.error] || 'This access link is not valid.' });
+  }
+
+  const activation = checkAndRecordActivation(token, email, 2);
+  if (!activation.ok) {
+    return res.json({ ok: false, error: 'This access link has already been activated on the maximum number of devices. Please contact us if you need help.' });
+  }
+
+  return res.json({ ok: true });
 });
 
 // Redeem voucher code — skips Stripe, generates itinerary for free
@@ -841,10 +974,17 @@ app.post('/redeem-voucher', async (req, res) => {
     }}).catch(() => {});
   }
 
-  // Send the access-confirmation email (independent of itinerary generation)
-  sendAccessEmail(email, 'https://www.thecapetownguide.com/guide/access.html?code=CTG-SOFTLAUNCH-2026').catch(err => {
-    console.error('sendAccessEmail (voucher) error:', err.message);
-  });
+  // Send the access-confirmation email (independent of itinerary generation).
+  // Link carries a per-redeemer signed token instead of a public global code.
+  try {
+    const accessToken = signAccessToken(email, 'ctg', 30);
+    const accessUrl = 'https://www.thecapetownguide.com/guide/access.html?token=' + encodeURIComponent(accessToken);
+    sendAccessEmail(email, accessUrl).catch(err => {
+      console.error('sendAccessEmail (voucher) error:', err.message);
+    });
+  } catch (err) {
+    console.error('signAccessToken (voucher) error:', err.message);
+  }
 
   // Fire itinerary generation in background
   generateAndEmailItinerary(email, (transcript || '').trim(), conversationId).catch(err => {
