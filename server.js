@@ -698,17 +698,22 @@ app.post('/create-checkout-session', async (req, res) => {
 // Guide purchase checkout (separate from Caipy itinerary flow)
 app.post('/create-guide-checkout', async (req, res) => {
   try {
-    const { email, name } = req.body;
+    const { email, name, offer } = req.body;
+    // Server-side price whitelist. Client may only send a string key — never an amount.
+    const OFFERS = {
+      'crew-upgrade': { unit_amount: 1777, name: 'The Cape Town Guide — Crew Upgrade' },
+    };
+    const sel = OFFERS[offer] || { unit_amount: 1995, name: 'The Cape Town Guide — Full Access' };
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
           currency: 'eur',
           product_data: {
-            name: 'The Cape Town Guide — Full Access',
+            name: sel.name,
             description: 'Interactive guide with 11 sections, Mapbox map, curated hotels, restaurants, hidden gems & more. Built on 10+ years of local Cape Town knowledge.',
           },
-          unit_amount: 1995,
+          unit_amount: sel.unit_amount,
         },
         quantity: 1,
       }],
@@ -716,7 +721,7 @@ app.post('/create-guide-checkout', async (req, res) => {
       customer_email: email || undefined,
       success_url: `https://thecapetownguide.com/paywall.html?success=true`,
       cancel_url: `https://thecapetownguide.com/paywall.html`,
-      metadata: { product: 'guide', name: (name || '').slice(0, 490) },
+      metadata: { product: 'guide', name: (name || '').slice(0, 490), offer: OFFERS[offer] ? offer : 'default' },
     });
     res.json({ url: session.url });
   } catch (err) {
